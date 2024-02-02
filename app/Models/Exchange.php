@@ -1,0 +1,22 @@
+<?php
+
+namespace App\Models;
+
+use Illuminate\Database\Eloquent\Factories\HasFactory;
+use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\SoftDeletes;
+
+class Exchange extends Model
+{
+    use HasFactory,SoftDeletes;
+
+    public function seller()
+    {
+        return $this->belongsTo(Seller::class);
+    }
+
+    public function currency()
+    {
+        return $this->belongsTo(Currency::class)->withTrashed();
+    }
+}
