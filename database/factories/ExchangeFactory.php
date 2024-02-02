@@ -2,6 +2,7 @@
 
 namespace Database\Factories;
 
+use App\Models\Currency;
 use Illuminate\Database\Eloquent\Factories\Factory;
 
 /**
@@ -17,7 +18,8 @@ class ExchangeFactory extends Factory
     public function definition(): array
     {
         return [
-            //
+            'currency_id' => Currency::get()->random()->id,
+            'rate' => random_int(10,1000),
         ];
     }
 }

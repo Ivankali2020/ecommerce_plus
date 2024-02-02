@@ -2,6 +2,8 @@
 
 namespace Database\Factories;
 
+use App\Models\Payment;
+use App\Models\UserAddress;
 use Illuminate\Database\Eloquent\Factories\Factory;
 
 /**
@@ -17,7 +19,12 @@ class OrderFactory extends Factory
     public function definition(): array
     {
         return [
-            //
+            'payment_id' => Payment::get()->random()->id,
+            'user_address_id' => UserAddress::get()->random()->id,
+            'status' => 'Pending',
+            'sub_total' => random_int(200,100000),
+            'delivery_fees' => random_int(300,2000),
+            'total_price' => random_int(30000,100000),
         ];
     }
 }

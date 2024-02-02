@@ -23,7 +23,9 @@ class ProductResource extends Resource
 {
     protected static ?string $model = Product::class;
 
-    protected static ?string $navigationIcon = 'heroicon-o-rectangle-stack';
+//    protected static ?string $navigationIcon = 'heroicon-o-rectangle-stack';
+
+    protected static ?string $navigationGroup = 'Business Section';
 
 
     public static function form(Form $form): Form
@@ -98,40 +100,40 @@ class ProductResource extends Resource
 
                    ])->columns(2),
 
-                    Forms\Components\Group::make()->schema([
+                   Forms\Components\Group::make()->schema([
 
                        Forms\Components\Section::make('Single Product Section')
                            ->description('If your product have a single item you should use this filed')
                            ->schema([
 
-                           Forms\Components\TextInput::make('price')
-                               ->numeric()
-                               ->required(fn(Forms\Get $get)=> !$get('has_variant'))
-                               ->prefix(fn(Forms\Get $get) => blank($get('exchange_id')) ? '' : Exchange::where('id',$get('exchange_id'))->with('currency')->first()->currency->symbol_native),
+                               Forms\Components\TextInput::make('price')
+                                   ->numeric()
+                                   ->required(fn(Forms\Get $get)=> !$get('has_variant'))
+                                   ->prefix(fn(Forms\Get $get) => blank($get('exchange_id')) ? '' : Exchange::where('id',$get('exchange_id'))->with('currency')->first()->currency->symbol_native),
 
-                           Forms\Components\TextInput::make('quantity')
-                               ->required(fn(Forms\Get $get)=> !$get('has_variant'))
-                               ->numeric(),
+                               Forms\Components\TextInput::make('quantity')
+                                   ->required(fn(Forms\Get $get)=> !$get('has_variant'))
+                                   ->numeric(),
 
-                           Forms\Components\TextInput::make('discount')
-                               ->numeric()->prefix('%')->minValue(0)->integer()->maxValue(100)
-                               ->live()
-                               ->afterStateUpdated(function(Forms\Get $get,Forms\Set $set){
-                                   //this is auto change discount price
-                                   if($get('discount') != null && $get('discount') != 0 &&  !blank($get('price'))){
+                               Forms\Components\TextInput::make('discount')
+                                   ->numeric()->prefix('%')->minValue(0)->integer()->maxValue(100)
+                                   ->live()
+                                   ->afterStateUpdated(function(Forms\Get $get,Forms\Set $set){
+                                       //this is auto change discount price
+                                       if($get('discount') != null && $get('discount') != 0 &&  !blank($get('price'))){
 
-                                       $discountCalculate =  $get('price') - ($get('discount') / $get('price') * 100);
-                                       $set('discount_price',$discountCalculate);
-                                   }
+                                           $discountCalculate =  $get('price') - ($get('discount') / $get('price') * 100);
+                                           $set('discount_price',$discountCalculate);
+                                       }
 
 //                                  dd($get('discount'));
-                               })
-                               ->default(0),
+                                   })
+                                   ->default(0),
 
-                           Forms\Components\TextInput::make('discount_price')
-                               ->numeric()->label('Discount Price')
-                               ->prefix(fn(Forms\Get $get) => blank($get('exchange_id')) ? '' : Exchange::where('id',$get('exchange_id'))->with('currency')->first()->currency->symbol_native)
-                               ->default(0.0000),
+                               Forms\Components\TextInput::make('discount_price')
+                                   ->numeric()->label('Discount Price')
+                                   ->prefix(fn(Forms\Get $get) => blank($get('exchange_id')) ? '' : Exchange::where('id',$get('exchange_id'))->with('currency')->first()->currency->symbol_native)
+                                   ->default(0.0000),
 
                                Forms\Components\Repeater::make('attributes')
                                    ->reorderableWithButtons()
@@ -156,64 +158,64 @@ class ProductResource extends Resource
                                    ->collection('images')->imageEditor()->multiple()
                                    ->image()->rules('required')->columnSpanFull(),
 
-                       ])->columns(2)
+                           ])->columns(2)
 
                    ])->hidden(fn (Forms\Get $get) => $get('has_variant')),
 
-                    Forms\Components\Group::make()->schema([
+                   Forms\Components\Group::make()->schema([
 
-                        Forms\Components\Repeater::make('variants')
-                            ->relationship('variants')
-                            ->collapsible()->reorderableWithButtons()->reorderable()
-                            ->schema([
+                       Forms\Components\Repeater::make('variants')
+                           ->relationship('variants')
+                           ->collapsible()->reorderableWithButtons()->reorderable()
+                           ->schema([
 
-                                Forms\Components\TextInput::make('sku')->required()->default(uniqid()),
+                               Forms\Components\TextInput::make('sku')->required()->default(uniqid()),
 
-                                Forms\Components\TextInput::make('price')
-                                    ->numeric()
-                                    ->prefix(fn(Forms\Get $get) => blank($get('../../exchange_id')) ? '' : Exchange::where('id',$get('../../exchange_id'))->with('currency')->first()->currency->symbol_native),
-
-
-                                Forms\Components\TextInput::make('quantity')
-                                    ->numeric(),
-
-                                Forms\Components\TextInput::make('discount')
-                                    ->numeric()->prefix('%')->integer()->maxValue(100)
-                                    ->default(0),
-
-                                Forms\Components\TextInput::make('discount_price')
-                                    ->numeric()->label('Discount Price')
-                                    ->default(0.0000),
+                               Forms\Components\TextInput::make('price')
+                                   ->numeric()
+                                   ->prefix(fn(Forms\Get $get) => blank($get('../../exchange_id')) ? '' : Exchange::where('id',$get('../../exchange_id'))->with('currency')->first()->currency->symbol_native),
 
 
-                                Forms\Components\Repeater::make('attributes')
-                                    ->reorderableWithButtons()
-                                    ->schema([
+                               Forms\Components\TextInput::make('quantity')
+                                   ->numeric(),
 
-                                        Forms\Components\Section::make()->schema([
-                                            Forms\Components\Select::make('attribute_id')->live()
-                                                ->required()->searchable()->preload()
-                                                ->afterStateUpdated(fn(Forms\Set $set)=>  $set('attribute_value_id',null))
-                                                ->options(Attribute::pluck('name')),
+                               Forms\Components\TextInput::make('discount')
+                                   ->numeric()->prefix('%')->integer()->maxValue(100)
+                                   ->default(0),
 
-                                            Forms\Components\Select::make('attribute_value_id')
-                                                ->hidden(fn(Forms\Get $get)=> blank($get('attribute_id')))
-                                                ->required()->searchable()->preload()
-                                                ->options(fn(Forms\Get $get) => AttributeValue::where('attribute_id',$get('attribute_id'))->pluck('value')),
-                                        ])->columns(2),
-
-                                    ])->columnSpanFull(),
-
-                                  Forms\Components\SpatieMediaLibraryFileUpload::make('images')
-                                      ->collection('images')->imageEditor()->multiple()
-                                      ->image()->rules('required')->columnSpanFull(),
+                               Forms\Components\TextInput::make('discount_price')
+                                   ->numeric()->label('Discount Price')
+                                   ->default(0.0000),
 
 
-                            ])
-                            ->columns(3)
-                            ->visible(fn (Forms\Get $get) => $get('has_variant'))
+                               Forms\Components\Repeater::make('attributes')
+                                   ->reorderableWithButtons()
+                                   ->schema([
 
-                    ])
+                                       Forms\Components\Section::make()->schema([
+                                           Forms\Components\Select::make('attribute_id')->live()
+                                               ->required()->searchable()->preload()
+                                               ->afterStateUpdated(fn(Forms\Set $set)=>  $set('attribute_value_id',null))
+                                               ->options(Attribute::pluck('name')),
+
+                                           Forms\Components\Select::make('attribute_value_id')
+                                               ->hidden(fn(Forms\Get $get)=> blank($get('attribute_id')))
+                                               ->required()->searchable()->preload()
+                                               ->options(fn(Forms\Get $get) => AttributeValue::where('attribute_id',$get('attribute_id'))->pluck('value')),
+                                       ])->columns(2),
+
+                                   ])->columnSpanFull(),
+
+                               Forms\Components\SpatieMediaLibraryFileUpload::make('images')
+                                   ->collection('images')->imageEditor()->multiple()
+                                   ->image()->rules('required')->columnSpanFull(),
+
+
+                           ])
+                           ->columns(3)
+                           ->visible(fn (Forms\Get $get) => $get('has_variant'))
+
+                   ])
 
                ])
 

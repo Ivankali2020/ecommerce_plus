@@ -2,6 +2,7 @@
 
 namespace Database\Factories;
 
+use App\Models\Currency;
 use Illuminate\Database\Eloquent\Factories\Factory;
 
 /**
@@ -18,6 +19,7 @@ class PaymentFactory extends Factory
     {
         $data = ['K Pay','Wave Pay','CB Pay','AYA Pay','KBZ Banking','CB Banking','AYA Bank',];
         return [
+            'currency_id' => Currency::get()->random()->id,
             'name' => $data[random_int(0,count($data)-1)],
         ];
     }

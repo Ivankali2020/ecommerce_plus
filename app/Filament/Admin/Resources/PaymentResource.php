@@ -17,7 +17,9 @@ class PaymentResource extends Resource
 {
     protected static ?string $model = Payment::class;
 
-    protected static ?string $navigationIcon = 'heroicon-o-rectangle-stack';
+//    protected static ?string $navigationIcon = 'heroicon-o-rectangle-stack';
+
+    protected static ?string $navigationGroup = 'Money Section';
 
     public static function form(Form $form): Form
     {
@@ -30,6 +32,10 @@ class PaymentResource extends Resource
                            Forms\Components\Select::make('seller_id')
                                ->searchable()->preload()
                                ->required()->relationship('seller','name'),
+
+                           Forms\Components\Select::make('currency_id')
+                               ->searchable()->preload()
+                               ->required()->relationship('currency','name'),
 
                            Forms\Components\TextInput::make('name')
                                ->helperText('K PAY, Wave Pay , CB Bank .. ')
@@ -69,6 +75,10 @@ class PaymentResource extends Resource
                 Tables\Columns\SpatieMediaLibraryImageColumn::make('thumb')->collection('logos'),
 
                 Tables\Columns\TextColumn::make('seller.name')
+                    ->numeric()
+                    ->sortable(),
+
+                Tables\Columns\TextColumn::make('currency.name')
                     ->numeric()
                     ->sortable(),
 

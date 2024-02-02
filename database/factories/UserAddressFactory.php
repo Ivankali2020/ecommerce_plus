@@ -2,6 +2,8 @@
 
 namespace Database\Factories;
 
+use App\Models\Region;
+use App\Models\Township;
 use Illuminate\Database\Eloquent\Factories\Factory;
 
 /**
@@ -17,7 +19,9 @@ class UserAddressFactory extends Factory
     public function definition(): array
     {
         return [
-            //
+            'region_id' => Region::get()->random()->id,
+            'township_id' => Township::get()->random()->id,
+            'address' => fake()->streetAddress()
         ];
     }
 }

@@ -2,12 +2,20 @@
 
 namespace App\Models;
 
+use App\Helper\MediaRegisterConversion;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
+use Spatie\MediaLibrary\HasMedia;
+use Spatie\MediaLibrary\InteractsWithMedia;
 
-class Order extends Model
+class Order extends Model implements HasMedia
 {
-    use HasFactory;
+    use HasFactory,InteractsWithMedia;
+
+    public function registerMediaCollections(): void
+    {
+        (new MediaRegisterConversion('profile_photo'))->registerMediaConversions();
+    }
 
     public function seller()
     {
@@ -21,11 +29,16 @@ class Order extends Model
 
     public function address()
     {
-        return $this->belongsTo(UserAddress::class)->withTrashed();
+        return $this->belongsTo(UserAddress::class,'user_address_id','id')->withTrashed();
     }
 
     public function payment()
     {
         return $this->belongsTo(Payment::class)->withTrashed();
+    }
+
+    public function products()
+    {
+        return $this->hasMany(OrderProduct::class);
     }
 }

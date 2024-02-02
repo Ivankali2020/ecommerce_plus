@@ -9,4 +9,14 @@ use Illuminate\Database\Eloquent\SoftDeletes;
 class UserAddress extends Model
 {
     use HasFactory,SoftDeletes;
+
+    public function region()
+    {
+        return $this->belongsTo(Region::class)->withTrashed();
+    }
+
+    public function township()
+    {
+        return $this->belongsTo(Township::class)->withTrashed();
+    }
 }

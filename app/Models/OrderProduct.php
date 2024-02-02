@@ -8,4 +8,13 @@ use Illuminate\Database\Eloquent\Model;
 class OrderProduct extends Model
 {
     use HasFactory;
+
+    protected $casts = [
+        'attributes' => 'json'
+    ];
+
+    public function product()
+    {
+        return $this->belongsTo(Product::class)->withTrashed();
+    }
 }

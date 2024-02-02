@@ -49,6 +49,11 @@ class Seller extends  Authenticatable implements HasMedia
         return $this->hasMany(Category::class)->withTrashed();
     }
 
+    public function products()
+    {
+        return $this->hasMany(Product::class)->withTrashed();
+    }
+
     public function payments()
     {
         return $this->hasMany(Payment::class)->with('accounts')->withTrashed();
@@ -72,5 +77,10 @@ class Seller extends  Authenticatable implements HasMedia
     public function exchanges()
     {
         return $this->hasMany(Exchange::class);
+    }
+
+    public function addresses()
+    {
+        return $this->hasMany(SellerAddress::class);
     }
 }

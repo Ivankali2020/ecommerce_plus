@@ -17,7 +17,9 @@ class TownshipResource extends Resource
 {
     protected static ?string $model = Township::class;
 
-    protected static ?string $navigationIcon = 'heroicon-o-rectangle-stack';
+//    protected static ?string $navigationIcon = 'heroicon-o-rectangle-stack';
+
+    protected static ?string $navigationGroup = 'Delivery Section';
 
     public static function form(Form $form): Form
     {

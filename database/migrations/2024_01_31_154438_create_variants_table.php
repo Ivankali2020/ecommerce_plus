@@ -26,10 +26,10 @@ return new class extends Migration
             $table->string('sku')->unique();
 
 
-            $table->decimal('price',8,4);
+            $table->decimal('price',8,2);
             $table->integer('quantity');
             $table->integer('discount')->default(0);
-            $table->decimal('discount_price',8,4)->default(0);
+            $table->decimal('discount_price',8,2)->default(0);
 
             $table->softDeletes();
             $table->timestamps();

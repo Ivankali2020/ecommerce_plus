@@ -20,7 +20,8 @@ class SellerResource extends Resource
 {
     protected static ?string $model = Seller::class;
 
-    protected static ?string $navigationIcon = 'heroicon-o-rectangle-stack';
+//    protected static ?string $navigationIcon = 'heroicon-o-rectangle-stack';
+    protected static ?string $navigationGroup = 'User Section';
 
     public static function form(Form $form): Form
     {
@@ -98,7 +99,7 @@ class SellerResource extends Resource
     public static function getRelations(): array
     {
         return [
-            //
+            RelationManagers\SellerAddressesRelationManager::class
         ];
     }
 
