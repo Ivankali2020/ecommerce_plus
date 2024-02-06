@@ -5,6 +5,7 @@ namespace App\Filament\Admin\Resources;
 use App\Filament\Admin\Resources\PaymentResource\Pages;
 use App\Filament\Admin\Resources\PaymentResource\RelationManagers;
 use App\Models\Payment;
+use Filament\Facades\Filament;
 use Filament\Forms;
 use Filament\Forms\Form;
 use Filament\Resources\Resource;
@@ -30,6 +31,7 @@ class PaymentResource extends Resource
                    Forms\Components\Group::make()->schema([
                        Forms\Components\Section::make()->schema([
                            Forms\Components\Select::make('seller_id')
+                               ->hidden(Filament::getAuthGuard() == 'seller')
                                ->searchable()->preload()
                                ->required()->relationship('seller','name'),
 
@@ -75,14 +77,20 @@ class PaymentResource extends Resource
                 Tables\Columns\SpatieMediaLibraryImageColumn::make('thumb')->collection('logos'),
 
                 Tables\Columns\TextColumn::make('seller.name')
+                    ->hidden(Filament::getAuthGuard() == 'seller')
                     ->numeric()
                     ->sortable(),
 
                 Tables\Columns\TextColumn::make('currency.name')
                     ->numeric()
+                    ->description(fn(Payment $payment) => $payment->currency->symbol)
                     ->sortable(),
 
                 Tables\Columns\TextColumn::make('name')
+                    ->searchable(),
+
+                Tables\Columns\TextColumn::make('accounts.name')
+                    ->badge()
                     ->searchable(),
 
                 Tables\Columns\TextColumn::make('deleted_at')
@@ -104,6 +112,7 @@ class PaymentResource extends Resource
             ->actions([
                 Tables\Actions\EditAction::make(),
             ])
+            ->defaultSort('id','desc')
             ->bulkActions([
                 Tables\Actions\BulkActionGroup::make([
                     Tables\Actions\DeleteBulkAction::make(),

@@ -2,6 +2,9 @@
 
 namespace App\Providers\Filament;
 
+use App\Http\Middleware\AssignGlobeScope;
+use App\Http\Middleware\SuperAdmin;
+use BezhanSalleh\FilamentShield\FilamentShieldPlugin;
 use Filament\Http\Middleware\Authenticate;
 use Filament\Http\Middleware\DisableBladeIconComponents;
 use Filament\Http\Middleware\DispatchServingFilamentEvent;
@@ -29,6 +32,7 @@ class AdminPanelProvider extends PanelProvider
                 'primary' => Color::Orange,
                 'gray' => Color::Slate
             ])
+            ->default()
             ->login()
             ->profile()
 //            ->topNavigation()
@@ -57,6 +61,10 @@ class AdminPanelProvider extends PanelProvider
                 SubstituteBindings::class,
                 DisableBladeIconComponents::class,
                 DispatchServingFilamentEvent::class,
+                SuperAdmin::class
+            ])
+            ->plugins([
+                FilamentShieldPlugin::make()
             ])
             ->authMiddleware([
                 Authenticate::class,

@@ -39,6 +39,9 @@ return new class extends Migration
             $table->boolean('is_public');
             $table->boolean('is_recommended');
 
+            $table->boolean('is_return')->default(false);
+            $table->boolean('is_shipped')->default(false);
+
             $table->softDeletes();
             $table->timestamps();
         });

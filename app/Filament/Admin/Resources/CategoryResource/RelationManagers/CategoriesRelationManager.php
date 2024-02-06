@@ -3,6 +3,7 @@
 namespace App\Filament\Admin\Resources\CategoryResource\RelationManagers;
 
 use App\Models\Category;
+use Filament\Facades\Filament;
 use Filament\Forms;
 use Filament\Forms\Form;
 use Filament\Resources\RelationManagers\RelationManager;
@@ -21,8 +22,22 @@ class CategoriesRelationManager extends RelationManager
         return $form
             ->schema([
 
+                //this is for seller
+                Forms\Components\Hidden::make('seller_id')
+                    ->default(function (){
+                        if (Filament::getAuthGuard() == 'seller'){
+                            return Filament::auth()->id();
+                        }
+                        return null;
+                    }),
+                //end
+
                 Forms\Components\Select::make('seller_id')
                     ->searchable()->preload()
+                    //this is for seller
+                        ->disabled(Filament::getAuthGuard() == 'seller')
+                        ->hidden(Filament::getAuthGuard() == 'seller')
+                    //end
                     ->required()->relationship('seller','name'),
 
                 Forms\Components\TextInput::make('name')
@@ -39,7 +54,8 @@ class CategoriesRelationManager extends RelationManager
         return $table
             ->recordTitleAttribute('name')
             ->columns([
-                Tables\Columns\TextColumn::make('seller.name'),
+                Tables\Columns\TextColumn::make('seller.name')
+                    ->hidden(Filament::getAuthGuard() == 'seller'),
                 Tables\Columns\TextColumn::make('name')
                     ->description(fn(Category $category)=> Str::limit($category->description,80)),
             ])

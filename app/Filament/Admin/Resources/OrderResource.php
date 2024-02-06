@@ -4,12 +4,18 @@ namespace App\Filament\Admin\Resources;
 
 use App\Filament\Admin\Resources\OrderResource\Pages;
 use App\Filament\Admin\Resources\OrderResource\RelationManagers;
+use App\Helper\CheckFilamentSellerUser;
+use App\Helper\OrderStatus;
 use App\Models\Attribute;
 use App\Models\AttributeValue;
 use App\Models\Exchange;
 use App\Models\Order;
+use App\Models\Payment;
+use Filament\Facades\Filament;
 use Filament\Forms;
 use Filament\Forms\Form;
+use Filament\Pages\Page;
+use Filament\Resources\Pages\EditRecord;
 use Filament\Resources\Resource;
 use Filament\Support\Enums\FontWeight;
 use Filament\Tables;
@@ -41,16 +47,16 @@ class OrderResource extends Resource
                                 ->required()->relationship('user','name')->preload(),
 
                             Forms\Components\Select::make('payment_id')
-                                ->searchable()
-                                ->required()->relationship('payment','name')->preload(),
+                                ->searchable()->disabled(fn(Page $livewire) => $livewire instanceof EditRecord)
+                                ->required()->options(Payment::where('seller_id',CheckFilamentSellerUser::getSellerId())->pluck('name','id'))->preload(),
 
                             Forms\Components\Select::make('user_address_id')
                                 ->searchable()
                                 ->required()->relationship('address','address')->preload(),
 
-                            Forms\Components\TextInput::make('status')
-                                ->required()
-                                ->maxLength(255),
+                            Forms\Components\Select::make('status')
+                                ->native(false)
+                                ->options(OrderStatus::class)->required(),
                         ])->columns(2),
 
 
@@ -96,11 +102,11 @@ class OrderResource extends Resource
                                                 Forms\Components\Section::make()->schema([
 
                                                     Forms\Components\Select::make('attribute_id')->live()
-                                                        ->required()->searchable()->preload()
+                                                        ->required()->searchable()->preload()->label('Attribute')
                                                         ->afterStateUpdated(fn(Forms\Set $set)=>  $set('attribute_value_id',null))
                                                         ->options(Attribute::pluck('name')),
 
-                                                    Forms\Components\Select::make('attribute_value_id')
+                                                    Forms\Components\Select::make('attribute_value_id')->label('Value')
                                                         ->hidden(fn(Forms\Get $get)=> blank($get('attribute_id')))
                                                         ->required()->searchable()->preload()
                                                         ->options(fn(Forms\Get $get) => AttributeValue::where('attribute_id',$get('attribute_id'))->pluck('value')),
@@ -110,7 +116,6 @@ class OrderResource extends Resource
                                     ])
                                 ])
                             ])
-
 
                     ])->columnSpan(2),
 
@@ -151,7 +156,7 @@ class OrderResource extends Resource
                     ->numeric()
                     ->sortable(),
                 Tables\Columns\TextColumn::make('payment.name')
-                    ->description(fn(Order $order)=> $order->payment->currency->name)
+                    ->description(fn(Order $order)=> $order->payment->currency->name ?? 'Other Person Just For Testing')
                     ->sortable(),
 
                 Tables\Columns\TextColumn::make('address.region.mm_name')
@@ -169,7 +174,7 @@ class OrderResource extends Resource
 
                 Tables\Columns\TextColumn::make('total_price')
                     ->numeric()->weight(FontWeight::Bold)->color('success')
-                    ->suffix(fn(Order $order)=> ' '.$order->payment->currency->symbol_native)
+                    ->suffix(fn(Order $order)=> ' '.$order->payment?->currency?->symbol_native ?? 'Other Person Just For Testing')
                     ->sortable(),
 
                 Tables\Columns\TextColumn::make('created_at')

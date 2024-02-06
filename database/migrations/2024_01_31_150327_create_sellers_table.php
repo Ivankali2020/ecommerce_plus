@@ -1,5 +1,6 @@
 <?php
 
+use App\Models\Seller;
 use Illuminate\Database\Migrations\Migration;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Support\Facades\Schema;
@@ -13,12 +14,14 @@ return new class extends Migration
     {
         Schema::create('sellers', function (Blueprint $table) {
             $table->id();
+            $table->foreignIdFor(Seller::class,'parent_id')->nullable()->constrained('sellers','id')->cascadeOnDelete()->cascadeOnUpdate();
             $table->string('name');
             $table->string('email')->unique();
             $table->string('phone')->nullable();
             $table->string('password');
-            $table->mediumText('description');
+            $table->mediumText('description')->nullable();
             $table->rememberToken();
+            $table->softDeletes();
             $table->timestamps();
         });
     }

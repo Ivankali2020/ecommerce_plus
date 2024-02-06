@@ -5,6 +5,7 @@ namespace App\Filament\Admin\Resources;
 use App\Filament\Admin\Resources\DeliveryResource\Pages;
 use App\Filament\Admin\Resources\DeliveryResource\RelationManagers;
 use App\Models\Delivery;
+use Filament\Facades\Filament;
 use Filament\Forms;
 use Filament\Forms\Form;
 use Filament\Resources\Resource;
@@ -26,40 +27,58 @@ class DeliveryResource extends Resource
     {
         return $form
             ->schema([
-                Forms\Components\Select::make('seller_id')
-                    ->required()->searchable()->preload()
-                    ->relationship('seller','name'),
 
-                Forms\Components\Select::make('region_id')->live()
-                    ->required()->searchable()->preload()
-                    ->afterStateUpdated(fn(Forms\Set $set)=>  $set('township_id',null))
-                    ->relationship('region','mm_name'),
+                Forms\Components\Group::make()->schema([
 
-                Forms\Components\Select::make('township_id')
-                    ->hidden(fn(Forms\Get $get)=> blank($get('region_id')))
-                    ->required()->searchable()->preload()
-                    ->relationship('township','mm_name',modifyQueryUsing: fn($query,Forms\Get $get)=> $query->where('region_id',$get('region_id'))),
+                    Forms\Components\Section::make()->schema([
+                        Forms\Components\Select::make('seller_id')
+                            ->required()->searchable()->preload()
+                            ->hidden(Filament::getAuthGuard() == 'seller')
+                            ->relationship('seller','name'),
 
-                Forms\Components\TextInput::make('fees')
-                    ->required()
-                    ->numeric()
-                    ->default(0.00),
+                        Forms\Components\Select::make('region_id')->live()
+                            ->required()->searchable()->preload()
+                            ->afterStateUpdated(fn(Forms\Set $set)=>  $set('township_id',null))
+                            ->relationship('region','mm_name'),
 
-                Forms\Components\Toggle::make('is_cod')->label('Cash On Delivery')
-                    ->offIcon('heroicon-m-squares-2x2')
-                    ->onIcon('heroicon-m-bolt')
-                    ->helperText('Cash on delivery စနစ်')
-                    ->required(),
+                        Forms\Components\Select::make('township_id')
+                            ->hidden(fn(Forms\Get $get)=> blank($get('region_id')))
+                            ->required()->searchable()->preload()
+                            ->relationship('township','mm_name',modifyQueryUsing: fn($query,Forms\Get $get)=> $query->where('region_id',$get('region_id'))),
 
-                Forms\Components\Toggle::make('is_pick_up')
-                    ->label('Self Pick Up')
-                    ->offIcon('heroicon-m-squares-2x2')
-                    ->onIcon('heroicon-m-shield-exclamation')
-                    ->helperText('ကိုယ်တိုင်လာယူစနစ်')
-                    ->required(),
+                        Forms\Components\TextInput::make('fees')
+                            ->required()
+                            ->numeric()
+                            ->default(0.00),
 
-                Forms\Components\TextInput::make('remark')
-                    ->maxLength(255),
+
+                    ])
+                ]),
+
+                Forms\Components\Group::make()->schema([
+
+                    Forms\Components\Section::make('Shipping Infomation')->schema([
+                        Forms\Components\Toggle::make('is_cod')->label('Cash On Delivery')
+                            ->offIcon('heroicon-m-squares-2x2')
+                            ->onIcon('heroicon-m-bolt')
+                            ->helperText('Cash on delivery စနစ်')
+                            ->required(),
+
+                        Forms\Components\Toggle::make('is_pick_up')
+                            ->label('Self Pick Up')
+                            ->offIcon('heroicon-m-squares-2x2')
+                            ->onIcon('heroicon-m-shield-exclamation')
+                            ->helperText('ကိုယ်တိုင်လာယူစနစ်')
+                            ->required(),
+
+                        Forms\Components\TextInput::make('remark')
+                            ->placeholder('၃ ကီလိုထက်ကျော်ရင် ထပ်မံ ကောက်ခံပါမည်')
+                            ->maxLength(255),
+                    ])
+
+                ])
+
+
             ]);
     }
 

@@ -9,6 +9,7 @@ use App\Models\AttributeValue;
 use App\Models\Exchange;
 use App\Models\Product;
 use CodeWithDennis\FilamentSelectTree\SelectTree;
+use Filament\Facades\Filament;
 use Filament\Forms;
 use Filament\Forms\Form;
 use Filament\Infolists\Components\Grid;
@@ -37,28 +38,33 @@ class ProductResource extends Resource
 
                        Forms\Components\Select::make('seller_id')
                            ->searchable()->preload()->live()
+                           ->hidden(Filament::getAuthGuard() == 'seller')
                            ->afterStateUpdated(fn(Forms\Set $set)=> $set('exchange_id',null))
                            ->required()->relationship('seller','name'),
 
                        Forms\Components\Select::make('exchange_id')
                            ->searchable()->preload()->label('Currency')
                            ->live()
-                           ->hidden(fn(Forms\Get $get)=>blank($get('seller_id')))
+                           ->hidden(fn(Forms\Get $get) => blank($get('seller_id')) &&  Filament::getAuthGuard() == 'admin' )
                            ->options(function(Forms\Get $get){
-                              $data = Exchange::where('seller_id',$get('seller_id'))->with('currency')->get()->map(function ($item){
-                                  return [$item->id => $item->currency->code];
-                              });
-                              $currencies = [];
-                              foreach ($data as $da){
-                                 $currencies += $da;
-                              }
-                              return $currencies;
+                               $seller_id = $get('seller_id') ?? Filament::auth()->id();
+                               $data = Exchange::where('seller_id',$seller_id)->with('currency')->get()->map(function ($item){
+                                            return [$item->id => $item->currency->code];
+                                        });
+                               $currencies = [];
+                               foreach ($data as $da){
+                                   $currencies += $da;
+                               }
+                               return $currencies;
                             })
                            ->required(),
 
                        Forms\Components\Select::make('brand_id')
                            ->searchable()->preload()->live()
-                           ->required()->relationship('brand','name'),
+                           ->required()->relationship('brand','name',modifyQueryUsing: function(Forms\Get $get,$query){
+                               $seller_id = $get('seller_id') ?? Filament::auth()->id();
+                               return $query->where('seller_id',$seller_id);
+                           }),
 
                        SelectTree::make('category_id')
                            ->searchable()->label('Category')
@@ -98,6 +104,24 @@ class ProductResource extends Resource
                            ->label('Recommend')
                            ->required(),
 
+                       Forms\Components\Section::make('Shipping')
+                            ->schema([
+
+                                Forms\Components\Toggle::make('is_return')
+                                    ->onIcon('heroicon-m-shield-check')
+                                    ->offIcon('heroicon-m-stop')
+                                    ->label('Return Product')
+                                    ->helperText('This product can be returned')
+                                    ->required(),
+
+                                Forms\Components\Toggle::make('is_shipped')
+                                    ->onIcon('heroicon-m-truck')
+                                    ->offIcon('heroicon-m-stop')
+                                    ->label('Shipping Product')
+                                    ->helperText('This product will be shipped')
+                                    ->required(),
+                            ])
+
                    ])->columns(2),
 
                    Forms\Components\Group::make()->schema([
@@ -108,6 +132,10 @@ class ProductResource extends Resource
 
                                Forms\Components\TextInput::make('price')
                                    ->numeric()
+                                   ->afterStateUpdated(function(Forms\Get $get,Forms\Set $set){
+                                       //this is auto change discount price
+                                       self::getDiscountPrice($get,$set);
+                                   })
                                    ->required(fn(Forms\Get $get)=> !$get('has_variant'))
                                    ->prefix(fn(Forms\Get $get) => blank($get('exchange_id')) ? '' : Exchange::where('id',$get('exchange_id'))->with('currency')->first()->currency->symbol_native),
 
@@ -116,17 +144,11 @@ class ProductResource extends Resource
                                    ->numeric(),
 
                                Forms\Components\TextInput::make('discount')
-                                   ->numeric()->prefix('%')->minValue(0)->integer()->maxValue(100)
+                                   ->numeric()->suffix('%')->minValue(0)->integer()->maxValue(100)
                                    ->live()
                                    ->afterStateUpdated(function(Forms\Get $get,Forms\Set $set){
                                        //this is auto change discount price
-                                       if($get('discount') != null && $get('discount') != 0 &&  !blank($get('price'))){
-
-                                           $discountCalculate =  $get('price') - ($get('discount') / $get('price') * 100);
-                                           $set('discount_price',$discountCalculate);
-                                       }
-
-//                                  dd($get('discount'));
+                                       self::getDiscountPrice($get,$set);
                                    })
                                    ->default(0),
 
@@ -172,21 +194,29 @@ class ProductResource extends Resource
                                Forms\Components\TextInput::make('sku')->required()->default(uniqid()),
 
                                Forms\Components\TextInput::make('price')
-                                   ->numeric()
+                                   ->numeric()->live()
+                                   ->afterStateUpdated(function(Forms\Get $get,Forms\Set $set){
+                                       //this is auto change discount price
+                                       self::getDiscountPrice($get,$set);
+                                   })
                                    ->prefix(fn(Forms\Get $get) => blank($get('../../exchange_id')) ? '' : Exchange::where('id',$get('../../exchange_id'))->with('currency')->first()->currency->symbol_native),
-
 
                                Forms\Components\TextInput::make('quantity')
                                    ->numeric(),
 
                                Forms\Components\TextInput::make('discount')
                                    ->numeric()->prefix('%')->integer()->maxValue(100)
+                                   ->live()
+                                   ->afterStateUpdated(function(Forms\Get $get,Forms\Set $set){
+                                       //this is auto change discount price
+                                       self::getDiscountPrice($get,$set);
+                                   })
                                    ->default(0),
 
                                Forms\Components\TextInput::make('discount_price')
                                    ->numeric()->label('Discount Price')
+                                   ->prefix(fn(Forms\Get $get) => blank($get('exchange_id')) ? '' : Exchange::where('id',$get('exchange_id'))->with('currency')->first()->currency->symbol_native)
                                    ->default(0.0000),
-
 
                                Forms\Components\Repeater::make('attributes')
                                    ->reorderableWithButtons()
@@ -210,11 +240,9 @@ class ProductResource extends Resource
                                    ->collection('images')->imageEditor()->multiple()
                                    ->image()->rules('required')->columnSpanFull(),
 
-
                            ])
                            ->columns(3)
                            ->visible(fn (Forms\Get $get) => $get('has_variant'))
-
                    ])
 
                ])
@@ -222,12 +250,22 @@ class ProductResource extends Resource
             ]);
     }
 
+    public static function getDiscountPrice($get,$set)
+    {
+
+        if($get('discount') != null && $get('discount') != 0 &&  !blank($get('price'))){
+            $discountCalculate =  $get('price') - ( $get('discount') / 100 * $get('price') );
+            $set('discount_price',$discountCalculate);
+        }
+
+    }
+
     public static function table(Table $table): Table
     {
         return $table
             ->columns([
                 Tables\Columns\TextColumn::make('brand.name')
-                    ->description(fn(Product $product)=> $product->category->name)
+//                    ->description(fn(Product $product)=> $product->category->name)
                     ->sortable(),
 
                 Tables\Columns\TextColumn::make('name')
@@ -267,6 +305,7 @@ class ProductResource extends Resource
             ])
             ->actions([
                 Tables\Actions\EditAction::make(),
+                Tables\Actions\ViewAction::make()->slideOver(),
             ])
             ->bulkActions([
                 Tables\Actions\BulkActionGroup::make([

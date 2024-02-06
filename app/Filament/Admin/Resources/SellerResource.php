@@ -5,6 +5,7 @@ namespace App\Filament\Admin\Resources;
 use App\Filament\Admin\Resources\SellerResource\Pages;
 use App\Filament\Admin\Resources\SellerResource\RelationManagers;
 use App\Models\Seller;
+use Filament\Facades\Filament;
 use Filament\Forms;
 use Filament\Forms\Form;
 use Filament\Pages\Page;
@@ -47,7 +48,7 @@ class SellerResource extends Resource
                     ->maxLength(255),
 
                 Forms\Components\Textarea::make('description')
-                    ->required()
+                    ->required()->hidden(Filament::getAuthGuard() == 'seller')
                     ->maxLength(16777215)
                     ->columnSpanFull(),
 
@@ -55,9 +56,15 @@ class SellerResource extends Resource
                     ->collection('logos')->imageEditor()
                     ->image()->rules('required'),
 
-                 Forms\Components\SpatieMediaLibraryFileUpload::make('cover_photo')
-                     ->collection('cover_photos')->imageEditor()
-                     ->image()->rules('required')
+                Forms\Components\SpatieMediaLibraryFileUpload::make('cover_photo')
+                    ->collection('cover_photos')->imageEditor()->hidden(Filament::getAuthGuard() == 'seller')
+                    ->image()->rules('required'),
+
+                Forms\Components\Select::make('roles')
+                    ->relationship('roles', 'name',modifyQueryUsing: fn($query) => $query->where('guard_name','seller'))
+                    ->multiple()
+                    ->preload()
+                    ->searchable()
 
             ]);
     }
@@ -87,6 +94,7 @@ class SellerResource extends Resource
                 //
             ])
             ->actions([
+                Tables\Actions\ViewAction::make(),
                 Tables\Actions\EditAction::make(),
             ])
             ->bulkActions([
@@ -99,7 +107,8 @@ class SellerResource extends Resource
     public static function getRelations(): array
     {
         return [
-            RelationManagers\SellerAddressesRelationManager::class
+            RelationManagers\SellerAddressesRelationManager::class,
+            RelationManagers\SellersRelationManager::class
         ];
     }
 

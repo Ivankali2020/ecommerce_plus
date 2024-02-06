@@ -5,6 +5,7 @@ namespace App\Filament\Admin\Resources;
 use App\Filament\Admin\Resources\BrandResource\Pages;
 use App\Filament\Admin\Resources\BrandResource\RelationManagers;
 use App\Models\Brand;
+use Filament\Facades\Filament;
 use Filament\Forms;
 use Filament\Forms\Form;
 use Filament\Resources\Resource;
@@ -28,7 +29,7 @@ class BrandResource extends Resource
                 Forms\Components\Group::make()->schema([
                     Forms\Components\Section::make()->schema([
                         Forms\Components\Select::make('seller_id')
-                            ->searchable()->preload()
+                            ->searchable()->preload()->hidden(Filament::getAuthGuard() == 'seller')
                             ->required()->relationship('seller','name'),
 
                         Forms\Components\TextInput::make('name')
@@ -54,7 +55,7 @@ class BrandResource extends Resource
             ->columns([
                 Tables\Columns\SpatieMediaLibraryImageColumn::make('thumb')->collection('logos'),
                 Tables\Columns\TextColumn::make('seller.name')
-                    ->numeric()
+                    ->numeric()->hidden(Filament::getAuthGuard() == 'seller')
                     ->sortable(),
                 Tables\Columns\TextColumn::make('name')
                     ->searchable(),
@@ -77,6 +78,7 @@ class BrandResource extends Resource
             ->actions([
                 Tables\Actions\EditAction::make(),
             ])
+            ->defaultSort('id','desc')
             ->bulkActions([
                 Tables\Actions\BulkActionGroup::make([
                     Tables\Actions\DeleteBulkAction::make(),

@@ -29,8 +29,7 @@ class SellerSeeder extends Seeder
     {
         $this->call([
            RegionSeeder::class,
-           CurrencySeeder::class
-
+           CurrencySeeder::class,
         ]);
 
         Seller::factory(5)
@@ -38,9 +37,7 @@ class SellerSeeder extends Seeder
             ->has(Attribute::factory(3)->has(AttributeValue::factory(3),'values'))
             ->has(Payment::factory(10)->has(PaymentAccount::factory(3),'accounts'))
             ->has(Product::factory(5)->has(Variant::factory(random_int(2,5)),'variants'))
-            ->create()->each(function ($seller){
-
-            });
+            ->create();
 
         User::factory(3)
             ->state([
@@ -48,7 +45,7 @@ class SellerSeeder extends Seeder
             ])
             ->has(UserAddress::factory(random_int(2,4)),'addresses')
             ->has(
-                Order::factory(random_int(2,4))->state([
+                Order::factory(random_int(2,10))->state([
                     'seller_id' => Seller::get()->random()->id,
                     'slip' => fake()->imageUrl(),
                 ])->has(

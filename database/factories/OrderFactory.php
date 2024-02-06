@@ -21,10 +21,10 @@ class OrderFactory extends Factory
         return [
             'payment_id' => Payment::get()->random()->id,
             'user_address_id' => UserAddress::get()->random()->id,
-            'status' => 'Pending',
             'sub_total' => random_int(200,100000),
             'delivery_fees' => random_int(300,2000),
             'total_price' => random_int(30000,100000),
+            'created_at' => now()->subDays(random_int(0,60))
         ];
     }
 }

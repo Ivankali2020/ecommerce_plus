@@ -1,5 +1,6 @@
 <?php
 
+use App\Helper\OrderStatus;
 use App\Models\Payment;
 use App\Models\Seller;
 use App\Models\User;
@@ -22,10 +23,11 @@ return new class extends Migration
             $table->foreignIdFor(Payment::class)->constrained()->cascadeOnUpdate()->cascadeOnDelete();
             $table->foreignIdFor(UserAddress::class)->constrained()->cascadeOnUpdate()->cascadeOnDelete();
             $table->string('slip');
-            $table->string('status');
+            $table->string('status')->default(OrderStatus::New);
             $table->decimal('sub_total');
             $table->decimal('delivery_fees');
             $table->decimal('total_price');
+            $table->softDeletes();
             $table->timestamps();
         });
     }

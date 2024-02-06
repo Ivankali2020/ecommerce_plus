@@ -631,8 +631,8 @@
 	},
 	"MMK": {
 		"symbol": "MMK",
-		"name": "Myanma Kyat",
-		"symbol_native": "Ks",
+		"name": "Myanmaမ Kyat",
+		"symbol_native": "ကျပ်",
 		"decimal_digits": 0,
 		"rounding": 0,
 		"code": "MMK",

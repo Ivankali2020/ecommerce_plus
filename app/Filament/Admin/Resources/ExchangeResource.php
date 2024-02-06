@@ -5,6 +5,7 @@ namespace App\Filament\Admin\Resources;
 use App\Filament\Admin\Resources\ExchangeResource\Pages;
 use App\Filament\Admin\Resources\ExchangeResource\RelationManagers;
 use App\Models\Exchange;
+use Filament\Facades\Filament;
 use Filament\Forms;
 use Filament\Forms\Form;
 use Filament\Resources\Resource;
@@ -26,22 +27,27 @@ class ExchangeResource extends Resource
     {
         return $form
             ->schema([
-                Forms\Components\Select::make('seller_id')
-                    ->required()->relationship('seller','name')
-                    ->searchable()->preload(),
+                Forms\Components\Group::make()->schema([
+                    Forms\Components\Section::make()->schema([
+                        Forms\Components\Select::make('seller_id')
+                            ->required()->relationship('seller','name')
+                            ->hidden(Filament::getAuthGuard() == 'seller')
+                            ->searchable()->preload(),
 
-                Forms\Components\Select::make('currency_id')
-                    ->required()->relationship('currency','code')
-                    ->unique(table: 'exchanges',column: 'currency_id',ignoreRecord: true,
-                        modifyRuleUsing: function (Unique $rule,Forms\Get $get){
-                        return $rule->where('seller_id',$get('seller_id'))
-                            ->where('currency_id',$get('currency_id'));
-                    })
-                    ->searchable()->preload(),
+                        Forms\Components\Select::make('currency_id')
+                            ->required()->relationship('currency','code')
+                            ->unique(table: 'exchanges',column: 'currency_id',ignoreRecord: true,
+                                modifyRuleUsing: function (Unique $rule,Forms\Get $get){
+                                    return $rule->where('seller_id',$get('seller_id')??Filament::auth()->id())
+                                        ->where('currency_id',$get('currency_id'));
+                                })
+                            ->searchable()->preload(),
 
-                Forms\Components\TextInput::make('rate')
-                    ->required()
-                    ->numeric(),
+                        Forms\Components\TextInput::make('rate')
+                            ->required()
+                            ->numeric(),
+                    ])->columns(2)
+                ])
             ]);
     }
 
@@ -50,6 +56,7 @@ class ExchangeResource extends Resource
         return $table
             ->columns([
                 Tables\Columns\TextColumn::make('seller.name')
+                    ->hidden(Filament::getAuthGuard() == 'seller')
                     ->numeric()
                     ->sortable(),
                 Tables\Columns\TextColumn::make('currency.code')
@@ -73,6 +80,7 @@ class ExchangeResource extends Resource
             ])
             ->actions([
                 Tables\Actions\EditAction::make(),
+                Tables\Actions\ViewAction::make()->modalWidth('sm'),
             ])
             ->bulkActions([
                 Tables\Actions\BulkActionGroup::make([

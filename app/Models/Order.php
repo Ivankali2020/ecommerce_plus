@@ -3,18 +3,24 @@
 namespace App\Models;
 
 use App\Helper\MediaRegisterConversion;
+use App\Helper\OrderStatus;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\SoftDeletes;
 use Spatie\MediaLibrary\HasMedia;
 use Spatie\MediaLibrary\InteractsWithMedia;
 
 class Order extends Model implements HasMedia
 {
-    use HasFactory,InteractsWithMedia;
+    use HasFactory,InteractsWithMedia,SoftDeletes;
+
+    protected $casts = [
+        'status' => OrderStatus::class
+    ];
 
     public function registerMediaCollections(): void
     {
-        (new MediaRegisterConversion('profile_photo'))->registerMediaConversions();
+        (new MediaRegisterConversion('photos'))->registerMediaConversions();
     }
 
     public function seller()
@@ -40,5 +46,10 @@ class Order extends Model implements HasMedia
     public function products()
     {
         return $this->hasMany(OrderProduct::class);
+    }
+
+    public function scopeGetOnlyConfirm($q)
+    {
+        return $q->whereIn('status',[OrderStatus::Processing,OrderStatus::Delivered,OrderStatus::Shipped]);
     }
 }

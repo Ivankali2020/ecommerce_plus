@@ -19,4 +19,9 @@ class Exchange extends Model
     {
         return $this->belongsTo(Currency::class)->withTrashed();
     }
+
+    public function exchange_histories()
+    {
+        return $this->hasMany(ExchangeHistory::class);
+    }
 }

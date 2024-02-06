@@ -18,7 +18,7 @@ class BrandFactory extends Factory
     {
         $data = ['Nike','Adidas','Purma','Apple','Sansumg','Huwai',''];
         return [
-            'name' => fake()->userName()
+            'name' => $data[random_int(0,count($data)-1)]
         ];
     }
 }

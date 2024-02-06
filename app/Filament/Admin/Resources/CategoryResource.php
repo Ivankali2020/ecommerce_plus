@@ -6,6 +6,7 @@ use App\Filament\Admin\Resources\CategoryResource\Pages;
 use App\Filament\Admin\Resources\CategoryResource\RelationManagers;
 use App\Models\Category;
 use CodeWithDennis\FilamentSelectTree\SelectTree;
+use Filament\Facades\Filament;
 use Filament\Forms;
 use Filament\Forms\Form;
 use Filament\Pages\Page;
@@ -45,7 +46,7 @@ class CategoryResource extends Resource
                                ->preload()->searchable(),
 
                            Forms\Components\Select::make('seller_id')
-                               ->searchable()->preload()
+                               ->searchable()->preload()->hidden(Filament::getAuthGuard() == 'seller')
                                ->required()->relationship('seller','name'),
 
                            Forms\Components\TextInput::make('name')
@@ -68,7 +69,7 @@ class CategoryResource extends Resource
     {
         return $table
             ->columns([
-                Tables\Columns\TextColumn::make('seller.name')
+                Tables\Columns\TextColumn::make('seller.name')->hidden(Filament::getAuthGuard() == 'seller')
                     ->sortable(),
 
                 Tables\Columns\TextColumn::make('name')

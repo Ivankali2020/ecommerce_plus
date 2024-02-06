@@ -5,6 +5,7 @@ namespace App\Filament\Admin\Resources;
 use App\Filament\Admin\Resources\AttributeResource\Pages;
 use App\Filament\Admin\Resources\AttributeResource\RelationManagers;
 use App\Models\Attribute;
+use Filament\Facades\Filament;
 use Filament\Forms;
 use Filament\Forms\Form;
 use Filament\Resources\Resource;
@@ -29,11 +30,13 @@ class AttributeResource extends Resource
                     Forms\Components\Group::make()->schema([
                         Forms\Components\Section::make()->schema([
                             Forms\Components\Select::make('seller_id')
+                                ->hidden(Filament::getAuthGuard() == 'seller')
                                 ->searchable()->preload()
                                 ->required()->relationship('seller','name'),
 
                             Forms\Components\TextInput::make('name')
                                 ->required()
+                                ->helperText('ဉပမာ - Sizes, Colors, Unit, Weight, Type, ...')
                                 ->maxLength(255),
 
                         ])
@@ -43,6 +46,7 @@ class AttributeResource extends Resource
                             ->relationship('values')->reorderable()
                             ->schema([
                                 Forms\Components\TextInput::make('value')
+                                    ->helperText('ဉပမာ - Sizes ဆိုရင် (xl,l,md), Colors ဆိုရင် (red,green,...), ...')
                                     ->required()
                                     ->maxLength(255),
                             ])
@@ -56,10 +60,15 @@ class AttributeResource extends Resource
         return $table
             ->columns([
                 Tables\Columns\TextColumn::make('seller.name')
-                    ->numeric()
+                    ->numeric()->hidden(Filament::getAuthGuard() == 'seller')
                     ->sortable(),
                 Tables\Columns\TextColumn::make('name')
                     ->searchable(),
+
+                Tables\Columns\TextColumn::make('values.value')
+                    ->badge()->color('gray')
+                    ->searchable(),
+
                 Tables\Columns\TextColumn::make('deleted_at')
                     ->dateTime()
                     ->sortable()
@@ -77,6 +86,7 @@ class AttributeResource extends Resource
                 Tables\Filters\TrashedFilter::make(),
             ])
             ->actions([
+                Tables\Actions\ViewAction::make(),
                 Tables\Actions\EditAction::make(),
             ])
             ->bulkActions([

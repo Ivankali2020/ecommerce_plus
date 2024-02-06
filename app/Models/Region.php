@@ -14,4 +14,9 @@ class Region extends Model
     {
         return $this->hasMany(Township::class)->withTrashed();
     }
+
+    public function orders()
+    {
+        return $this->hasManyThrough(Order::class,UserAddress::class,);
+    }
 }

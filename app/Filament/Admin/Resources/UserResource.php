@@ -5,6 +5,7 @@ namespace App\Filament\Admin\Resources;
 use App\Filament\Admin\Resources\UserResource\Pages;
 use App\Filament\Admin\Resources\UserResource\RelationManagers;
 use App\Models\User;
+use Filament\Facades\Filament;
 use Filament\Forms;
 use Filament\Forms\Form;
 use Filament\Pages\Page;
@@ -30,7 +31,7 @@ class UserResource extends Resource
 
                 Forms\Components\Select::make('seller_id')
                     ->relationship('seller','name')
-                    ->required()
+                    ->required()->hidden(Filament::getAuthGuard() == 'seller')
                     ->searchable()->preload(),
 
                 Forms\Components\TextInput::make('firebase_uid')
@@ -90,6 +91,7 @@ class UserResource extends Resource
                 //
             ])
             ->actions([
+                Tables\Actions\ViewAction::make(),
                 Tables\Actions\EditAction::make(),
             ])
             ->bulkActions([
