@@ -4,6 +4,7 @@ namespace App\Filament\Admin\Resources;
 
 use App\Filament\Admin\Resources\CategoryResource\Pages;
 use App\Filament\Admin\Resources\CategoryResource\RelationManagers;
+use App\Helper\CheckFilamentSellerUser;
 use App\Models\Category;
 use CodeWithDennis\FilamentSelectTree\SelectTree;
 use Filament\Facades\Filament;
@@ -40,7 +41,7 @@ class CategoryResource extends Resource
                                 ->helperText('If you want to create sub category please open'),
 
                            Forms\Components\Select::make('parent_id')->label('Parent Category')
-                               ->options(Category::pluck('name','id'))
+                               ->options(Category::where('seller_id',CheckFilamentSellerUser::getSellerId())->pluck('name','id'))
                                ->hidden(fn(Page $livewire) => $livewire instanceof EditRecord)
                                ->visible(fn(Forms\Get $get,Page $livewire) => ($get('is_sub_category')))
                                ->preload()->searchable(),
@@ -50,7 +51,7 @@ class CategoryResource extends Resource
                                ->required()->relationship('seller','name'),
 
                            Forms\Components\TextInput::make('name')
-                               ->helperText('NIKE , ADIDAS , PUMA,  .. ')
+                               ->helperText('ယော်ကျားလေးသုံး , မိန်းကလေးသုံး , အကုန်သုံး ')
                                ->required()
                                ->maxLength(255),
 

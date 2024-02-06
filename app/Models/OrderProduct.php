@@ -17,4 +17,9 @@ class OrderProduct extends Model
     {
         return $this->belongsTo(Product::class)->withTrashed();
     }
+
+    public function variant()
+    {
+        return $this->belongsTo(Variant::class)->withTrashed();
+    }
 }

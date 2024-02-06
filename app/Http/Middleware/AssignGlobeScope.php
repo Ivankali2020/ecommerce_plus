@@ -2,6 +2,7 @@
 
 namespace App\Http\Middleware;
 
+use App\Helper\CheckFilamentSellerUser;
 use App\Models\Attribute;
 use App\Models\Brand;
 use App\Models\Category;
@@ -23,53 +24,49 @@ class AssignGlobeScope
     public function handle(Request $request, Closure $next): Response
     {
 
-        Brand::addGlobalScope(function ($q){
-            //to add for parent_id
-//            if(Filament::auth()->user()->parent_id){
+//        Brand::addGlobalScope(function ($q){
+//            //to add for parent_id
+////            if(Filament::auth()->user()->parent_id){
+////
+////            }
+//            return $q->where('seller_id',Filament::auth()->id());
+//        });
 //
-//            }
-            return $q->where('seller_id',Filament::auth()->id());
-        });
-
         Attribute::addGlobalScope(function ($q){
-            //to add for parent_id
-//            if(Filament::auth()->user()->parent_id){
-//
-//            }
-            return $q->where('seller_id',Filament::auth()->id());
+            return $q->where('seller_id',CheckFilamentSellerUser::getSellerId());
         });
-
-        Category::addGlobalScope(function ($q){
-            //to add for parent_id
-//            if(Filament::auth()->user()->parent_id){
 //
-//            }
-            return $q->where('seller_id',Filament::auth()->id());
-        });
-
-        Product::addGlobalScope(function ($q){
-            //to add for parent_id
-//            if(Filament::auth()->user()->parent_id){
+//        Category::addGlobalScope(function ($q){
+//            //to add for parent_id
+////            if(Filament::auth()->user()->parent_id){
+////
+////            }
+//            return $q->where('seller_id',Filament::auth()->id());
+//        });
 //
-//            }
-            return $q->where('seller_id',Filament::auth()->id());
-        });
-
-        Exchange::addGlobalScope(function ($q){
-            //to add for parent_id
-//            if(Filament::auth()->user()->parent_id){
+//        Product::addGlobalScope(function ($q){
+//            //to add for parent_id
+////            if(Filament::auth()->user()->parent_id){
+////
+////            }
+//            return $q->where('seller_id',Filament::auth()->id());
+//        });
 //
-//            }
-            return $q->where('seller_id',Filament::auth()->id());
-        });
-
-        Payment::addGlobalScope(function ($q){
-            //to add for parent_id
-//            if(Filament::auth()->user()->parent_id){
+//        Exchange::addGlobalScope(function ($q){
+//            //to add for parent_id
+////            if(Filament::auth()->user()->parent_id){
+////
+////            }
+//            return $q->where('seller_id',Filament::auth()->id());
+//        });
 //
-//            }
-            return $q->where('seller_id',Filament::auth()->id());
-        });
+//        Payment::addGlobalScope(function ($q){
+//            //to add for parent_id
+////            if(Filament::auth()->user()->parent_id){
+////
+////            }
+//            return $q->where('seller_id',Filament::auth()->id());
+//        });
 
         return $next($request);
     }

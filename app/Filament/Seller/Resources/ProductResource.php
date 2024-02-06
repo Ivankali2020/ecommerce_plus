@@ -4,6 +4,7 @@ namespace App\Filament\Seller\Resources;
 
 use App\Filament\Seller\Resources\ProductResource\Pages;
 use App\Filament\Seller\Resources\ProductResource\RelationManagers;
+use App\Helper\CheckFilamentSellerUser;
 use App\Models\Product;
 use Filament\Facades\Filament;
 use Filament\Forms;
@@ -51,7 +52,7 @@ class ProductResource extends Resource
     public static function getEloquentQuery(): Builder
     {
         return parent::getEloquentQuery()
-            ->where('seller_id',Filament::auth()->id())
+            ->where('seller_id',CheckFilamentSellerUser::getSellerId())
             ->withoutGlobalScopes([
                 SoftDeletingScope::class,
             ]);

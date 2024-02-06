@@ -12,6 +12,7 @@ class CheckFilamentSellerUser
         if (Filament::getAuthGuard() == 'seller'){
            return Filament::auth()->user()->parent_id == null ? Filament::auth()->id() : Filament::auth()->user()->parent_id;
         }
+
     }
 
     public static function checkAdminSuperUser()

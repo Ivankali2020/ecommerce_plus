@@ -61,6 +61,7 @@ class SellerPanelProvider extends PanelProvider
             ->sidebarWidth('17rem')
             ->brandName('SELLER DASHBOARD')
             ->font('jost')
+            ->sidebarCollapsibleOnDesktop()
             ->databaseNotifications()
             ->databaseNotificationsPolling(null) // this is testing purpose
                 ->plugins([

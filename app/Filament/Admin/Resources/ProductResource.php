@@ -4,8 +4,10 @@ namespace App\Filament\Admin\Resources;
 
 use App\Filament\Admin\Resources\ProductResource\Pages;
 use App\Filament\Admin\Resources\ProductResource\RelationManagers;
+use App\Helper\CheckFilamentSellerUser;
 use App\Models\Attribute;
 use App\Models\AttributeValue;
+use App\Models\Brand;
 use App\Models\Exchange;
 use App\Models\Product;
 use CodeWithDennis\FilamentSelectTree\SelectTree;
@@ -47,7 +49,7 @@ class ProductResource extends Resource
                            ->live()
                            ->hidden(fn(Forms\Get $get) => blank($get('seller_id')) &&  Filament::getAuthGuard() == 'admin' )
                            ->options(function(Forms\Get $get){
-                               $seller_id = $get('seller_id') ?? Filament::auth()->id();
+                               $seller_id = $get('seller_id') ?? CheckFilamentSellerUser::getSellerId();
                                $data = Exchange::where('seller_id',$seller_id)->with('currency')->get()->map(function ($item){
                                             return [$item->id => $item->currency->code];
                                         });
@@ -61,14 +63,18 @@ class ProductResource extends Resource
 
                        Forms\Components\Select::make('brand_id')
                            ->searchable()->preload()->live()
-                           ->required()->relationship('brand','name',modifyQueryUsing: function(Forms\Get $get,$query){
-                               $seller_id = $get('seller_id') ?? Filament::auth()->id();
-                               return $query->where('seller_id',$seller_id);
+                           ->required()->options(function (Forms\Get $get){
+                               $seller_id = $get('seller_id') ?? CheckFilamentSellerUser::getSellerId();
+                               return Brand::where('seller_id',$seller_id)->pluck('name','id');
                            }),
 
                        SelectTree::make('category_id')
-                           ->searchable()->label('Category')
-                           ->required()->relationship('category','name','parent_id'),
+                           ->searchable()->label('Category')->searchable()
+                           ->required()->enableBranchNode()->placeholder('Please select a category')
+                           ->relationship('category','name','parent_id',modifyQueryUsing: function (Forms\Get $get,$query){
+                               $seller_id = $get('seller_id') ?? CheckFilamentSellerUser::getSellerId();
+                               return $query->where('seller_id',$seller_id);
+                           }),
 
                        Forms\Components\TextInput::make('name')
                            ->required()
@@ -165,12 +171,17 @@ class ProductResource extends Resource
                                            Forms\Components\Select::make('attribute_id')->live()
                                                ->required()->searchable()->preload()
                                                ->afterStateUpdated(fn(Forms\Set $set)=>  $set('attribute_value_id',null))
-                                               ->options(Attribute::pluck('name')),
+                                               ->options(function (Forms\Get $get){
+                                                   if (Filament::getAuthGuard() == 'seller'){
+                                                       return Attribute::where('seller_id',CheckFilamentSellerUser::getSellerId())->pluck('name','id');
+                                                   }
+                                                   return Attribute::where('seller_id',$get('../../seller_id'))->pluck('name','id');
+                                               }),
 
                                            Forms\Components\Select::make('attribute_value_id')
                                                ->hidden(fn(Forms\Get $get)=> blank($get('attribute_id')))
                                                ->required()->searchable()->preload()
-                                               ->options(fn(Forms\Get $get) => AttributeValue::where('attribute_id',$get('attribute_id'))->pluck('value')),
+                                               ->options(fn(Forms\Get $get) => AttributeValue::where('attribute_id',$get('attribute_id'))->pluck('value','id')),
 
                                        ])->columns(2),
 
@@ -223,18 +234,33 @@ class ProductResource extends Resource
                                    ->schema([
 
                                        Forms\Components\Section::make()->schema([
-                                           Forms\Components\Select::make('attribute_id')->live()
-                                               ->required()->searchable()->preload()
-                                               ->afterStateUpdated(fn(Forms\Set $set)=>  $set('attribute_value_id',null))
-                                               ->options(Attribute::pluck('name')),
 
-                                           Forms\Components\Select::make('attribute_value_id')
-                                               ->hidden(fn(Forms\Get $get)=> blank($get('attribute_id')))
-                                               ->required()->searchable()->preload()
-                                               ->options(fn(Forms\Get $get) => AttributeValue::where('attribute_id',$get('attribute_id'))->pluck('value')),
+                                       Forms\Components\Select::make('attribute_id')->live()
+                                           ->required()->searchable()->preload()
+                                           ->afterStateUpdated(fn(Forms\Set $set)=>  $set('attribute_value_id',null))
+                                           ->options(function (Forms\Get $get){
+                                               // ဒါက admin အတွက်စစ်တာပါ ဗျာ
+                                               if (Filament::getAuthGuard() == 'seller'){
+                                                   return Attribute::where('seller_id',CheckFilamentSellerUser::getSellerId())->pluck('name','id');
+                                               }
+                                               return Attribute::where('seller_id',$get('../../../../seller_id'))->pluck('name','id');
+                                           }),
+
+                                       Forms\Components\Select::make('attribute_value_id')
+                                           ->hidden(fn(Forms\Get $get)=> blank($get('attribute_id')))
+                                           ->required()->searchable()->preload()
+                                           ->options(fn(Forms\Get $get) => AttributeValue::where('attribute_id',$get('attribute_id'))->pluck('value','id')),
+
+
                                        ])->columns(2),
 
-                                   ])->columnSpanFull(),
+                                   ])->columnSpanFull()->hidden(function(Forms\Get $get){
+                                       // ဒါက admin အတွက်စစ်တာပါ ဗျာ
+                                       if (Filament::getAuthGuard() == 'admin'){
+                                           return blank($get('../../seller_id'));
+                                       }
+                                       return false;
+                                   }),
 
                                Forms\Components\SpatieMediaLibraryFileUpload::make('images')
                                    ->collection('images')->imageEditor()->multiple()
