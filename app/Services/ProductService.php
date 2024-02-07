@@ -46,16 +46,32 @@ class ProductService
      * @param Request $parms
      * @return LengthAwarePaginator $products
      */
-    public function getProducts($parms, $sellerId): LengthAwarePaginator
+    public function getProducts($params, $sellerId): LengthAwarePaginator
     {
         $seller = Seller::findOrFail($sellerId);
-        $query = Product::query();
 
-        $query->where('seller_id', $seller->id);
+        $query = Product::where('seller_id', $seller->id)
+            ->when(isset($params['brand_id']), function ($q) use ($params) {
+                $q->where('brand_id', $params['brand_id']);
+            })
+            ->when(isset($params['category_id']), function ($q) use ($params) {
+                $q->where('category_id', $params['category_id']);
+            })
+            ->when(isset($params['min_price']), function ($q) use ($params) {
+                $q->where('price', '>=', $params['min_price']);
+            })
+            ->when(isset($params['max_price']), function ($q) use ($params) {
+                $q->where('price', '<=', $params['max_price']);
+            })
+            ->when(isset($params['q']), function ($q) use ($params) {
+                $q->where(function ($query) use ($params) {
+                    $query->where('name', 'like', '%' . $params['q'] . '%')
+                        ->orWhere('description', 'like', '%' . $params['q'] . '%');
+                });
+            });
 
-        //TODO::By Topic, Search and filters
-
-        $products = $query->paginate(20);
+        $perPage = $params['limit'] ?? 20;
+        $products = $query->paginate($perPage);
 
         return $products;
     }

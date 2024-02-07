@@ -50,10 +50,6 @@ class ProductController extends Controller
                 'total' => $products->total(),
                 'per_page' => $products->perPage(),
             ],
-            'links' => [
-                'next' => $products->nextPageUrl(),
-                'prev' => $products->previousPageUrl(),
-            ],
         ];
         return $this->success('Get products successful', $data);
     }

@@ -18,25 +18,25 @@ class ProductResource extends JsonResource
             'id' => $this->id,
             'name' => $this->name,
             'description' => $this->description,
-            'brand' => new BrandResource($this->brand),
-            'category' => new CategoryResource($this->category),
+            // 'brand' => new BrandResource($this->brand),
+            // 'category' => new CategoryResource($this->category),
 
-            'price' => $this->price,
-            'discount' => $this->discount,
-            'discount_price' => $this->discount_price,
+            // 'price' => $this->price,
+            // 'discount' => $this->discount,
+            // 'discount_price' => $this->discount_price,
 
-            'exchange' => new ExchangeResource($this->exchange),
+            // 'exchange' => new ExchangeResource($this->exchange),
 
-            'sku' => $this->sku,
-            'quantity' => $this->quantity,
+            // 'sku' => $this->sku,
+            // 'quantity' => $this->quantity,
 
 
-            //TODO::odot
-            'attributes' => $this->attributes,
-            'variants' => $this->variants,
+            // //TODO::odot
+            // 'attributes' => $this->attributes,
+            // 'variants' => $this->variants,
 
-            'thumbnail' => $this->getFirstMediaUrl('images', 'thumb'),
-            'images' => $this->getImages(),
+            // 'thumbnail' => $this->getFirstMediaUrl('images', 'thumb'),
+            // 'images' => $this->getImages(),
         ];
     }
 
