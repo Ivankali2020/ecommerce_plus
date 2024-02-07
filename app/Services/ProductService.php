@@ -10,6 +10,8 @@ use App\Models\User;
 use Illuminate\Database\Eloquent\Collection;
 use Illuminate\Pagination\LengthAwarePaginator;
 use Illuminate\Support\Facades\Auth;
+use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
+use Symfony\Component\Routing\Exception\ResourceNotFoundException;
 
 class ProductService
 {
@@ -74,5 +76,22 @@ class ProductService
         $products = $query->paginate($perPage);
 
         return $products;
+    }
+
+    /**
+     * Get Product Detail
+     *
+     * @param int $sellerId
+     * @param int $productId
+     * @return Product $product
+     */
+    public function getProductDetail($sellerId, $productId): Product
+    {
+        Seller::findOrFail($sellerId);
+        $product = Product::findOrFail($productId);
+        if ($sellerId != $product->seller_id) {
+            throw new ResourceNotFoundException("Product not found");
+        }
+        return $product;
     }
 }

@@ -53,4 +53,10 @@ class ProductController extends Controller
         ];
         return $this->success('Get products successful', $data);
     }
+
+    public function getProductDetail($sellerId, $productId)
+    {
+        $product = $this->productService->getProductDetail($sellerId, $productId);
+        return $this->success('Get product successful', new ProductResource($product));
+    }
 }
