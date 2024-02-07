@@ -8,14 +8,34 @@ use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\SoftDeletes;
 use Spatie\MediaLibrary\HasMedia;
 use Spatie\MediaLibrary\InteractsWithMedia;
+use Spatie\MediaLibrary\MediaCollections\Models\Media;
+use Spatie\MediaLibrary\MediaCollections\File;
 
 class Product extends Model implements HasMedia
 {
-    use HasFactory,SoftDeletes,InteractsWithMedia;
+    use HasFactory, SoftDeletes, InteractsWithMedia;
 
     public function registerMediaCollections(): void
     {
-        (new MediaRegisterConversion('images'))->registerMediaConversions();
+        $this->addMediaCollection('images')
+            ->singleFile()
+            ->useFallbackUrl('https://default_image_url.png') //TODO::URL အမှန်နဲ့ပြန်ပြောင်းထည့်ရန်
+            ->acceptsFile(function (File $file) {
+                $allowedMimeTypes = [
+                    'image/jpeg',
+                    'image/png',
+                    'image/gif',
+                    'image/svg+xml',
+                    'image/webp',
+                ];
+                return in_array($file->mimeType, $allowedMimeTypes);
+            })
+            ->registerMediaConversions(function (Media $media) {
+                $this
+                    ->addMediaConversion('thumb')
+                    ->width(200)
+                    ->height(200);
+            });
     }
 
     protected $casts = [
@@ -39,7 +59,7 @@ class Product extends Model implements HasMedia
 
     public function subCategory()
     {
-        return $this->belongsTo(Category::class,'sub_category_id','id')->withTrashed();
+        return $this->belongsTo(Category::class, 'sub_category_id', 'id')->withTrashed();
     }
 
     public function brand()

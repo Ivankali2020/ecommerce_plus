@@ -12,7 +12,7 @@
 # carefully migrate
 
 + အရင် ဆုံး php artisan migrate 
-+ php artisan db:seed 
++ php artisan db:seed
 + php artisan shield:super-admin --user=1
 + ပြီးမှာ seller seeder လုပ်
 
