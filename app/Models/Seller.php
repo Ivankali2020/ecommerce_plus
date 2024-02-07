@@ -18,13 +18,13 @@ use Spatie\MediaLibrary\InteractsWithMedia;
 use Spatie\Permission\Models\Role;
 use Spatie\Permission\Traits\HasRoles;
 
-class Seller extends Authenticatable implements HasMedia,FilamentUser
+class Seller extends Authenticatable implements HasMedia, FilamentUser
 {
-    use HasApiTokens, HasFactory, Notifiable,InteractsWithMedia,SoftDeletes,HasRoles,HasPanelShield;
+    use HasApiTokens, HasFactory, Notifiable, InteractsWithMedia, SoftDeletes, HasRoles, HasPanelShield;
 
     public function registerMediaCollections(): void
     {
-       (new MediaRegisterConversion('logo'))->registerMediaConversions();
+        (new MediaRegisterConversion('logo'))->registerMediaConversions();
     }
 
     protected $guarded = 'seller';
@@ -48,7 +48,7 @@ class Seller extends Authenticatable implements HasMedia,FilamentUser
 
     public function staffs()
     {
-        return $this->hasMany(Seller::class,'parent_id','id');
+        return $this->hasMany(Seller::class, 'parent_id', 'id');
     }
 
     public function brands()
@@ -98,6 +98,6 @@ class Seller extends Authenticatable implements HasMedia,FilamentUser
 
     public function canAccessPanel(Panel $panel): bool
     {
-       return  true;
+        return  true;
     }
 }

@@ -13,7 +13,7 @@ use Spatie\MediaLibrary\InteractsWithMedia;
 
 class User extends Authenticatable implements HasMedia
 {
-    use HasApiTokens, HasFactory, Notifiable,InteractsWithMedia;
+    use HasApiTokens, HasFactory, Notifiable, InteractsWithMedia;
 
     public function registerMediaCollections(): void
     {

@@ -1,0 +1,33 @@
+<?php
+
+namespace App\Http\Middleware;
+
+use Closure;
+use Illuminate\Auth\AuthenticationException;
+use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Auth;
+use Illuminate\Validation\UnauthorizedException;
+use Symfony\Component\HttpFoundation\Response;
+use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
+use Symfony\Component\HttpKernel\Exception\UnauthorizedHttpException;
+use Symfony\Component\Routing\Exception\ResourceNotFoundException;
+
+class CheckUserBelongsToSeller
+{
+    /**
+     * Handle an incoming request.
+     *
+     * @param  \Closure(\Illuminate\Http\Request): (\Symfony\Component\HttpFoundation\Response)  $next
+     */
+    public function handle(Request $request, Closure $next)
+    {
+        $sellerId = $request->sellerId;
+        $user = Auth::guard('user')->user();
+
+        if (is_null($user) || $user->seller->id != $sellerId) {
+            throw new AuthenticationException();
+        }
+
+        return $next($request);
+    }
+}
