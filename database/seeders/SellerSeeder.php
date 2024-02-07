@@ -28,28 +28,29 @@ class SellerSeeder extends Seeder
     public function run(): void
     {
         $this->call([
-           RegionSeeder::class,
-           CurrencySeeder::class,
+            RegionSeeder::class,
+            CurrencySeeder::class,
         ]);
 
         Seller::factory(5)
             ->has(Exchange::factory(3))
-            ->has(Attribute::factory(3)->has(AttributeValue::factory(3),'values'))
-            ->has(Payment::factory(10)->has(PaymentAccount::factory(3),'accounts'))
-            ->has(Product::factory(5)->has(Variant::factory(random_int(2,5)),'variants'))
+            ->has(Attribute::factory(3)->has(AttributeValue::factory(3), 'values'))
+            ->has(Payment::factory(10)->has(PaymentAccount::factory(3), 'accounts'))
+            ->has(Product::factory(5)->has(Variant::factory(random_int(2, 5)), 'variants'))
             ->create();
 
         User::factory(3)
             ->state([
                 'seller_id' => Seller::get()->random()->id
             ])
-            ->has(UserAddress::factory(random_int(2,4)),'addresses')
+            ->has(UserAddress::factory(random_int(2, 4)), 'addresses')
             ->has(
-                Order::factory(random_int(2,10))->state([
+                Order::factory(random_int(2, 10))->state([
                     'seller_id' => Seller::get()->random()->id,
-                    'slip' => fake()->imageUrl(),
+                    // 'slip' => fake()->imageUrl(),
                 ])->has(
-                    OrderProduct::factory(random_int(2,5)),'products'
+                    OrderProduct::factory(random_int(2, 5)),
+                    'products'
                 )
             )->create();
     }
