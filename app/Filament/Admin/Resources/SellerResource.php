@@ -28,43 +28,52 @@ class SellerResource extends Resource
     {
         return $form
             ->schema([
-                Forms\Components\TextInput::make('name')
-                    ->required()
-                    ->maxLength(255),
 
-                Forms\Components\TextInput::make('email')
-                    ->email()
-                    ->required()
-                    ->maxLength(255),
+                Forms\Components\Group::make()->schema([
+                    Forms\Components\TextInput::make('name')
+                        ->required()
+                        ->maxLength(255),
 
-                Forms\Components\TextInput::make('phone')
-                    ->maxLength(255),
+                    Forms\Components\TextInput::make('email')
+                        ->email()
+                        ->required()
+                        ->maxLength(255),
 
-                Forms\Components\TextInput::make('password')
-                    ->password()
-                    ->dehydrateStateUsing(fn($state) => Hash::make($state))
-                    ->dehydrated(fn($state)=>filled($state))
-                    ->required(fn(Page $livewire) => $livewire instanceof CreateRecord)
-                    ->maxLength(255),
+                    Forms\Components\TextInput::make('phone')
+                        ->maxLength(255),
 
-                Forms\Components\Textarea::make('description')
-                    ->required()->hidden(Filament::getAuthGuard() == 'seller')
-                    ->maxLength(16777215)
-                    ->columnSpanFull(),
+                    Forms\Components\TextInput::make('password')
+                        ->password()
+                        ->dehydrateStateUsing(fn($state) => Hash::make($state))
+                        ->formatStateUsing(fn($state) => $state)
+                        ->revealable()->autocomplete()
+                        ->required(fn(Page $livewire) => $livewire instanceof CreateRecord)
+                        ->maxLength(255),
 
-                Forms\Components\SpatieMediaLibraryFileUpload::make('logo')
-                    ->collection('logos')->imageEditor()
-                    ->image()->rules('required'),
+                    Forms\Components\RichEditor::make('description')
+                        ->required()->hidden(Filament::getAuthGuard() == 'seller')
+                        ->maxLength(16777215)
+                        ->columnSpanFull(),
+                ])->columns(2),
 
-                Forms\Components\SpatieMediaLibraryFileUpload::make('cover_photo')
-                    ->collection('cover_photos')->imageEditor()->hidden(Filament::getAuthGuard() == 'seller')
-                    ->image()->rules('required'),
+                Forms\Components\Group::make()->schema([
 
-                Forms\Components\Select::make('roles')
-                    ->relationship('roles', 'name',modifyQueryUsing: fn($query) => $query->where('guard_name','seller'))
-                    ->multiple()
-                    ->preload()
-                    ->searchable()
+                    Forms\Components\SpatieMediaLibraryFileUpload::make('logo')
+                        ->collection('logos')->imageEditor()
+                        ->image()->rules('required'),
+
+                    Forms\Components\SpatieMediaLibraryFileUpload::make('cover_photo')
+                        ->collection('cover_photos')->imageEditor()->hidden(Filament::getAuthGuard() == 'seller')
+                        ->image()->rules('required'),
+
+                    Forms\Components\Select::make('roles')
+                        ->relationship('roles', 'name',modifyQueryUsing: fn($query) => $query->where('guard_name','seller'))
+                        ->multiple()
+                        ->preload()
+                        ->searchable()
+                ])
+
+
 
             ]);
     }
@@ -75,6 +84,7 @@ class SellerResource extends Resource
             ->columns([
                 Tables\Columns\SpatieMediaLibraryImageColumn::make('logo')->collection('logos'),
                 Tables\Columns\SpatieMediaLibraryImageColumn::make('cover_photo')->collection('cover_photos'),
+                Tables\Columns\TextColumn::make('roles.name')->badge(),
                 Tables\Columns\TextColumn::make('name')
                     ->searchable(),
                 Tables\Columns\TextColumn::make('email')

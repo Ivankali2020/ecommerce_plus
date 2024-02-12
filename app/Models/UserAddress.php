@@ -10,6 +10,8 @@ class UserAddress extends Model
 {
     use HasFactory,SoftDeletes;
 
+    protected $appends = ['modAddress'];
+
     public function region()
     {
         return $this->belongsTo(Region::class)->withTrashed();
@@ -18,5 +20,10 @@ class UserAddress extends Model
     public function township()
     {
         return $this->belongsTo(Township::class)->withTrashed();
+    }
+
+    public function getModAddressAttribute()
+    {
+        return $this->region->mm_name .','. $this->township->mm_name .','.$this->address;
     }
 }

@@ -26,6 +26,11 @@ class Variant extends Model implements HasMedia
     {
         return $this->belongsTo(Exchange::class);
     }
+
+    public function product()
+    {
+        return $this->belongsTo(Product::class)->with('exchange.currency');
+    }
 //
 //    public function attributeValues()
 //    {

@@ -2,6 +2,7 @@
 
 namespace Database\Factories;
 
+use App\Helper\AttributeType;
 use Illuminate\Database\Eloquent\Factories\Factory;
 
 /**
@@ -18,7 +19,8 @@ class AttributeFactory extends Factory
     {
         $data = ['Color','Size','Unit','Weight','Taste'];
         return [
-            'name' => $data[random_int(0,count($data)-1)]
+            'name' => $data[random_int(0,count($data)-1)],
+            'type' => AttributeType::Text
         ];
     }
 }

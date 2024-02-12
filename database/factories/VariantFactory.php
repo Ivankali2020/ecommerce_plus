@@ -20,6 +20,8 @@ class VariantFactory extends Factory
     public function definition(): array
     {
         return [
+            'name' => fake()->name,
+            'MOQ' => random_int(1,10),
             'sku' => Str::upper(uniqid()),
             'price' => random_int(0,100),
             'quantity' => random_int(10,100),

@@ -3,6 +3,7 @@
 namespace App\Filament\Seller\Resources\ExchangeResource\Pages;
 
 use App\Filament\Seller\Resources\ExchangeResource;
+use App\Models\Exchange;
 use Filament\Actions;
 use Filament\Resources\Pages\EditRecord;
 
@@ -13,9 +14,9 @@ class EditExchange extends EditRecord
     protected function getHeaderActions(): array
     {
         return [
-            Actions\DeleteAction::make(),
-            Actions\ForceDeleteAction::make(),
-            Actions\RestoreAction::make(),
+            Actions\DeleteAction::make()->hidden(fn (Exchange $exchange)=> $exchange->currency->code == 'MMK')->modalDescription('ဖျက်လိုပါက သက်ဆိုင်ရာ products မှား အားလုံး ဖျက်သွားပါမည်'),
+            Actions\ForceDeleteAction::make()->hidden(fn (Exchange $exchange)=> $exchange->currency->code == 'MMK'),
+            Actions\RestoreAction::make()->hidden(fn (Exchange $exchange)=> $exchange->currency->code == 'MMK'),
         ];
     }
 }

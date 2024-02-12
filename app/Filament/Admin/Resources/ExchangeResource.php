@@ -35,7 +35,7 @@ class ExchangeResource extends Resource
                             ->searchable()->preload(),
 
                         Forms\Components\Select::make('currency_id')
-                            ->required()->relationship('currency','code')
+                            ->required()->relationship('currency','name')
                             ->unique(table: 'exchanges',column: 'currency_id',ignoreRecord: true,
                                 modifyRuleUsing: function (Unique $rule,Forms\Get $get){
                                     return $rule->where('seller_id',$get('seller_id')??Filament::auth()->id())
@@ -44,6 +44,7 @@ class ExchangeResource extends Resource
                             ->searchable()->preload(),
 
                         Forms\Components\TextInput::make('rate')
+                            ->helperText('Calculate based on 1 USD')
                             ->required()
                             ->numeric(),
                     ])->columns(2)

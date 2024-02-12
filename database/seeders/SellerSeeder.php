@@ -47,7 +47,6 @@ class SellerSeeder extends Seeder
             ->has(
                 Order::factory(random_int(2, 10))->state([
                     'seller_id' => Seller::get()->random()->id,
-                    // 'slip' => fake()->imageUrl(),
                 ])->has(
                     OrderProduct::factory(random_int(2, 5)),
                     'products'

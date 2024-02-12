@@ -46,6 +46,12 @@ class SellersRelationManager extends RelationManager
                     ->label('avatar')
                     ->collection('logos')->imageEditor()
                     ->image()->rules('required'),
+
+                Forms\Components\Select::make('roles')
+                    ->relationship('roles', 'name',modifyQueryUsing: fn($query) => $query->where('guard_name','seller'))
+                    ->multiple()
+                    ->preload()
+                    ->searchable()
             ]);
     }
 
@@ -55,12 +61,16 @@ class SellersRelationManager extends RelationManager
             ->recordTitleAttribute('name')
             ->columns([
                 Tables\Columns\SpatieMediaLibraryImageColumn::make('logo')->collection('logos'),
+
                 Tables\Columns\TextColumn::make('name')
                     ->searchable(),
+                Tables\Columns\TextColumn::make('roles.name')->badge(),
+
                 Tables\Columns\TextColumn::make('email')
                     ->searchable(),
                 Tables\Columns\TextColumn::make('phone')
                     ->searchable(),
+
             ])
             ->filters([
                 //
