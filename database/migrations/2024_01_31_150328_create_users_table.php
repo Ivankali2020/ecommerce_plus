@@ -18,17 +18,16 @@ return new class extends Migration
             $table->foreignIdFor(Seller::class)->constrained()->cascadeOnDelete()->cascadeOnUpdate();
 
             $table->string('firebase_uid')->nullable();
-            $table->string('device_uid')->nullable();
-            $table->string('device_name')->nullable();
 
-            $table->string('name')->nullable();
+            $table->string('name');
             $table->string('email')->nullable();
             $table->string('phone')->nullable();
-
-            $table->string('profile_photo')->nullable();
+            //profile_picture
 
             $table->timestamp('email_verified_at')->nullable();
-            $table->string('password');
+            $table->string('password')->nullable();
+
+            $table->text('fmc_token')->nullable();
             $table->rememberToken();
             $table->timestamps();
         });

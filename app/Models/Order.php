@@ -12,7 +12,7 @@ use Spatie\MediaLibrary\InteractsWithMedia;
 
 class Order extends Model implements HasMedia
 {
-    use HasFactory,InteractsWithMedia,SoftDeletes;
+    use HasFactory, InteractsWithMedia, SoftDeletes;
 
     protected $with = ['products','address','user'];
 
@@ -37,7 +37,7 @@ class Order extends Model implements HasMedia
 
     public function address()
     {
-        return $this->belongsTo(UserAddress::class,'user_address_id','id')->withTrashed();
+        return $this->belongsTo(UserAddress::class, 'user_address_id', 'id')->withTrashed();
     }
 
     public function payment()
@@ -52,6 +52,6 @@ class Order extends Model implements HasMedia
 
     public function scopeGetOnlyConfirm($q)
     {
-        return $q->whereIn('status',[OrderStatus::Processing,OrderStatus::Delivered,OrderStatus::Shipped]);
+        return $q->whereIn('status', [OrderStatus::Processing, OrderStatus::Delivered, OrderStatus::Shipped]);
     }
 }

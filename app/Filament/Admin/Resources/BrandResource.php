@@ -18,7 +18,7 @@ class BrandResource extends Resource
 {
     protected static ?string $model = Brand::class;
 
-//    protected static ?string $navigationIcon = 'heroicon-o-rectangle-stack';
+    //    protected static ?string $navigationIcon = 'heroicon-o-rectangle-stack';
 
     protected static ?string $navigationGroup = 'Business Section';
 
@@ -30,7 +30,7 @@ class BrandResource extends Resource
                     Forms\Components\Section::make()->schema([
                         Forms\Components\Select::make('seller_id')
                             ->searchable()->preload()->hidden(Filament::getAuthGuard() == 'seller')
-                            ->required()->relationship('seller','name'),
+                            ->required()->relationship('seller', 'name'),
 
                         Forms\Components\TextInput::make('name')
                             ->helperText('NIKE , ADIDAS , PUMA,  .. ')
@@ -78,7 +78,7 @@ class BrandResource extends Resource
             ->actions([
                 Tables\Actions\EditAction::make(),
             ])
-            ->defaultSort('id','desc')
+            ->defaultSort('id', 'desc')
             ->bulkActions([
                 Tables\Actions\BulkActionGroup::make([
                     Tables\Actions\DeleteBulkAction::make(),
