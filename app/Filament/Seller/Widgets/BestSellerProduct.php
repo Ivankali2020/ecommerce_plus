@@ -10,7 +10,7 @@ use Filament\Widgets\ChartWidget;
 
 class BestSellerProduct extends ChartWidget
 {
-    protected static ?string $heading = 'Top Five Best Product';
+    protected static ?string $heading = 'Top Ten Best Seller';
 
     protected static ?int $sort = 2;
 

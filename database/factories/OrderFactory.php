@@ -19,6 +19,9 @@ class OrderFactory extends Factory
     public function definition(): array
     {
         return [
+            'invoice_number' => uniqid(),
+            'tax' => random_int(0,5),
+            'tax_price' => random_int(100,1000),
             'payment_id' => Payment::get()->random()->id,
             'user_address_id' => UserAddress::get()->random()->id,
             'sub_total' => random_int(200,100000),

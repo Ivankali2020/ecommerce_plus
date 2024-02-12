@@ -15,6 +15,7 @@ return new class extends Migration
             $table->id();
             $table->foreignIdFor(\App\Models\Attribute::class)->constrained()->cascadeOnUpdate()->cascadeOnDelete();
             $table->string('value');
+            $table->string('color_code')->nullable();
             $table->softDeletes();
             $table->timestamps();
         });

@@ -51,7 +51,7 @@ class CategoryResource extends Resource
                                ->required()->relationship('seller','name'),
 
                            Forms\Components\TextInput::make('name')
-                               ->helperText('ယော်ကျားလေးသုံး , မိန်းကလေးသုံး , အကုန်သုံး ')
+                               ->helperText('Man , Women , Unisex ')
                                ->required()
                                ->maxLength(255),
 

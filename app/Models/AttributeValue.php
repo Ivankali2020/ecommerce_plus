@@ -10,4 +10,9 @@ class AttributeValue extends Model
 {
     use HasFactory,SoftDeletes;
 
+    public function attribute()
+    {
+        return $this->belongsTo(Attribute::class)->withTrashed();
+    }
+
 }

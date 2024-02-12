@@ -18,6 +18,7 @@ return new class extends Migration
             $table->foreignIdFor(Seller::class)->constrained()->cascadeOnDelete()->cascadeOnUpdate();
             $table->foreignIdFor(Currency::class)->constrained()->cascadeOnDelete()->cascadeOnUpdate();
             $table->string('name');
+            $table->boolean('is_published')->default(false);
             $table->softDeletes();
             $table->timestamps();
         });

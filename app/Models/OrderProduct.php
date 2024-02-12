@@ -22,4 +22,9 @@ class OrderProduct extends Model
     {
         return $this->belongsTo(Variant::class)->withTrashed();
     }
+
+    public function currency()
+    {
+        return $this->belongsTo(Currency::class)->withTrashed();
+    }
 }

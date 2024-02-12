@@ -48,7 +48,7 @@ class DeliveryResource extends Resource
 
                         Forms\Components\TextInput::make('fees')
                             ->required()
-                            ->numeric()
+                            ->numeric()->helperText('for only customer MMK')
                             ->default(0.00),
 
 

@@ -14,6 +14,8 @@ class Order extends Model implements HasMedia
 {
     use HasFactory,InteractsWithMedia,SoftDeletes;
 
+    protected $with = ['products','address','user'];
+
     protected $casts = [
         'status' => OrderStatus::class
     ];

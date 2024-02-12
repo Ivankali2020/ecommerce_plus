@@ -19,6 +19,7 @@ use Illuminate\Foundation\Http\Middleware\VerifyCsrfToken;
 use Illuminate\Routing\Middleware\SubstituteBindings;
 use Illuminate\Session\Middleware\AuthenticateSession;
 use Illuminate\Session\Middleware\StartSession;
+use Illuminate\Support\Str;
 use Illuminate\View\Middleware\ShareErrorsFromSession;
 
 class SellerPanelProvider extends PanelProvider
@@ -58,6 +59,7 @@ class SellerPanelProvider extends PanelProvider
                 AssignGlobeScope::class
 
             ])
+            ->spa(fn()=>  Str::contains(request()->userAgent(),'Chrome'))
             ->sidebarWidth('17rem')
             ->brandName('SELLER DASHBOARD')
             ->font('jost')

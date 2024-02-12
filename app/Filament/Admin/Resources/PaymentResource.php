@@ -4,6 +4,7 @@ namespace App\Filament\Admin\Resources;
 
 use App\Filament\Admin\Resources\PaymentResource\Pages;
 use App\Filament\Admin\Resources\PaymentResource\RelationManagers;
+use App\Models\Currency;
 use App\Models\Payment;
 use Filament\Facades\Filament;
 use Filament\Forms;
@@ -36,7 +37,9 @@ class PaymentResource extends Resource
                                ->required()->relationship('seller','name'),
 
                            Forms\Components\Select::make('currency_id')
-                               ->searchable()->preload()
+                               ->searchable()->preload()->disabled()
+                               ->default(fn()=> Currency::where('code','MMK')->first()->id)
+                               ->helperText('We decided to use only mmk currency for phase one')
                                ->required()->relationship('currency','name'),
 
                            Forms\Components\TextInput::make('name')
@@ -47,6 +50,8 @@ class PaymentResource extends Resource
                            Forms\Components\SpatieMediaLibraryFileUpload::make('logo')
                                ->collection('logos')->imageEditor()
                                ->image()->rules('required'),
+
+
                        ])
                    ]),
 
@@ -54,14 +59,15 @@ class PaymentResource extends Resource
                     Forms\Components\Group::make()->schema([
                         Forms\Components\Section::make()->schema([
                             Forms\Components\Repeater::make('accounts')
+                                ->collapsible()->reorderableWithButtons()->reorderable()
                                 ->relationship('accounts')
                                 ->schema([
                                     Forms\Components\TextInput::make('name')
-                                        ->required()
+                                        ->required()->placeholder('U Ivan Phyo')
                                         ->maxLength(255),
 
                                     Forms\Components\TextInput::make('number')
-                                        ->required()
+                                        ->required()->placeholder('09 453183072')
                                         ->maxLength(255),
                                 ])->columns(2)
                         ])
@@ -92,6 +98,12 @@ class PaymentResource extends Resource
                 Tables\Columns\TextColumn::make('accounts.name')
                     ->badge()
                     ->searchable(),
+
+                Tables\Columns\ToggleColumn::make('is_published')
+                    ->onIcon('heroicon-m-bolt')
+                    ->offIcon('heroicon-m-stop')
+                    ->onColor('success')
+                    ->offColor('danger'),
 
                 Tables\Columns\TextColumn::make('deleted_at')
                     ->dateTime()

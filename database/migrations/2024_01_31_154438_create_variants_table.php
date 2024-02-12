@@ -19,17 +19,21 @@ return new class extends Migration
             $table->id();
             $table->foreignIdFor(Product::class)->constrained()->cascadeOnUpdate()->cascadeOnDelete();
 
-//            $table->foreignIdFor(\App\Models\Attribute::class)->constrained()->cascadeOnUpdate()->cascadeOnDelete();
-//            $table->foreignIdFor(AttributeValue::class)->constrained()->cascadeOnDelete()->cascadeOnUpdate();
-
             $table->json('attributes');
             $table->string('sku')->unique();
 
-
-            $table->decimal('price',8,2);
+            $table->integer('MOQ')->default(0);
+            $table->string('name');
+            $table->decimal('buy_price',15,2)->nullable();
+            $table->decimal('price',15,2);
             $table->integer('quantity');
             $table->integer('discount')->default(0);
-            $table->decimal('discount_price',8,2)->default(0);
+            $table->decimal('discount_price',15,2)->default(0);
+
+            $table->decimal('mmk_price',15)->nullable();
+            $table->decimal('mmk_discount_price',15)->default(0)->nullable();
+
+            $table->boolean('is_whole_sale')->default(false);
 
             $table->softDeletes();
             $table->timestamps();
@@ -41,6 +45,8 @@ return new class extends Migration
      */
     public function down(): void
     {
+        Schema::disableForeignKeyConstraints();
         Schema::dropIfExists('variants');
+        Schema::enableForeignKeyConstraints();
     }
 };

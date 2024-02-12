@@ -29,15 +29,23 @@ return new class extends Migration
 
             $table->json('attributes')->nullable();
 
+            $table->integer('MOQ')->default(0);
             $table->string('sku')->nullable()->unique();
-            $table->decimal('price',8,4)->nullable();
+
+            $table->decimal('buy_price',15,2)->nullable();
+            $table->decimal('price',15,2)->nullable();
             $table->integer('quantity')->nullable();
             $table->integer('discount')->default(0)->nullable();
-            $table->decimal('discount_price',8,4)->default(0)->nullable();
+            $table->decimal('discount_price')->default(0)->nullable();
+
+            $table->decimal('mmk_price',15,2)->nullable();
+            $table->decimal('mmk_discount_price',15,2)->default(0)->nullable();
 
             $table->boolean('has_variant');
             $table->boolean('is_public');
             $table->boolean('is_recommended');
+
+            $table->boolean('is_whole_sale')->default(false);
 
             $table->boolean('is_return')->default(false);
             $table->boolean('is_shipped')->default(false);
@@ -52,6 +60,8 @@ return new class extends Migration
      */
     public function down(): void
     {
+        Schema::disableForeignKeyConstraints();
         Schema::dropIfExists('products');
+        Schema::enableForeignKeyConstraints();
     }
 };

@@ -2,14 +2,18 @@
 
 namespace App\Models;
 
+use App\Helper\AttributeType;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\SoftDeletes;
-use function Symfony\Component\Translation\t;
 
 class Attribute extends Model
 {
     use HasFactory,SoftDeletes;
+
+    protected $casts = [
+        'type' => AttributeType::class
+    ];
 
     public function values()
     {

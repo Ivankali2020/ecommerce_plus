@@ -18,14 +18,20 @@ return new class extends Migration
     {
         Schema::create('orders', function (Blueprint $table) {
             $table->id();
+            $table->string('invoice_number')->unique();
             $table->foreignIdFor(Seller::class)->constrained()->cascadeOnUpdate()->cascadeOnDelete();
+            $table->foreignIdFor(Seller::class,'staff_id')->nullable()->constrained('sellers','id')->cascadeOnUpdate()->cascadeOnDelete();
             $table->foreignIdFor(User::class)->constrained()->cascadeOnUpdate()->cascadeOnDelete();
-            $table->foreignIdFor(Payment::class)->constrained()->cascadeOnUpdate()->cascadeOnDelete();
-            $table->foreignIdFor(UserAddress::class)->constrained()->cascadeOnUpdate()->cascadeOnDelete();
+
+            $table->foreignIdFor(Payment::class)->nullable()->constrained()->cascadeOnUpdate()->cascadeOnDelete();
+            $table->foreignIdFor(UserAddress::class)->nullable()->constrained()->cascadeOnUpdate()->cascadeOnDelete();
+
             $table->string('status')->default(OrderStatus::New);
-            $table->decimal('sub_total');
+            $table->decimal('sub_total',15,2);
             $table->decimal('delivery_fees');
-            $table->decimal('total_price');
+            $table->decimal('total_price',15,2);
+            $table->decimal('tax')->default(0);
+            $table->decimal('tax_price')->default(0);
             $table->softDeletes();
             $table->timestamps();
         });

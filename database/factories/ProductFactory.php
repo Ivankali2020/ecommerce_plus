@@ -34,6 +34,7 @@ class ProductFactory extends Factory
             'is_public' => fake()->boolean(),
             'is_recommended' => fake()->boolean(),
 
+            'MOQ' => random_int(1,10),
             'sku' => Str::upper(uniqid()),
             'price' => random_int(0,100),
             'quantity' => random_int(10,100),

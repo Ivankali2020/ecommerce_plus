@@ -3,9 +3,8 @@
 namespace App\Observers;
 
 use App\Models\Order;
-use App\Models\Seller;
-use Filament\Facades\Filament;
-use Filament\Notifications\Events\DatabaseNotificationsSent;
+use App\Models\OrderProduct;
+use App\Models\Product;
 use Filament\Notifications\Notification;
 
 class OrderObserver
@@ -19,6 +18,7 @@ class OrderObserver
         Notification::make()
             ->title('New order arrived')
             ->sendToDatabase($order->seller);
+
     }
 
     /**
@@ -26,15 +26,9 @@ class OrderObserver
      */
     public function updated(Order $order): void
     {
-        //send to user
-        $seller = Seller::where('id',$order->seller_id)->first();
-
         Notification::make()
             ->title('Order has been '.$order->status->value)
-//            ->broadcast($seller);
-            ->sendToDatabase($seller);
-
-//        event(new DatabaseNotificationsSent($seller));
+            ->sendToDatabase($order->seller);
 
     }
 
