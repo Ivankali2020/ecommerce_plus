@@ -48,19 +48,21 @@ class OrderResource extends Resource
                         Forms\Components\Repeater::make('products')
                             ->relationship('products')->reorderable()
                             ->reorderableWithButtons()
+                            ->helperText('* မြန်မာကျပ် နဲ့ တွက်ပြီးသားပါပြသထားပါသည် *')
                             ->collapsible()
                             ->schema([
                                 Forms\Components\Section::make()
                                     ->compact()->collapsed()->description('Details Information')
                                     ->schema([
                                     Forms\Components\Group::make()->schema([
-                                        Forms\Components\TextInput::make('original_price')->readOnly(),
-                                        Forms\Components\TextInput::make('original_discount_price')->readOnly(),
+                                        Forms\Components\TextInput::make('original_buy_price')->label('Buy Price')->readOnly(),
+                                        Forms\Components\TextInput::make('original_price')->label('Old Price')->readOnly(),
+                                        Forms\Components\TextInput::make('original_discount_price')->label('Old Dis Price')->readOnly(),
                                         Forms\Components\TextInput::make('exchange_rate')->readOnly(),
                                         Forms\Components\Select::make('currency_id')
                                             ->disabled()
                                             ->relationship('currency','name')
-                                    ])->columns(4),
+                                    ])->columns(5),
                                 ]),
                                 Forms\Components\Grid::make()->schema([
 
@@ -74,7 +76,9 @@ class OrderResource extends Resource
                                                })
                                                ->live(true,500)
                                                ->relationship('product','name',modifyQueryUsing: function(Forms\Get $get,$query){
-                                                   return $query->where('seller_id',CheckFilamentSellerUser::getSellerId())->whereNull('deleted_at');
+                                                   return $query->when(CheckFilamentSellerUser::getSellerId() != null,function ($q){
+                                                      $q->where('seller_id',CheckFilamentSellerUser::getSellerId());
+                                                   })->whereNull('deleted_at');
                                                })->columnSpan(2),
 
                                            Forms\Components\TextInput::make('quantity')
@@ -153,6 +157,7 @@ class OrderResource extends Resource
 
                                         Forms\Components\Repeater::make('attributes')
                                             ->collapsible()->reorderable(false)
+                                            ->addable(false)
                                             ->schema([
 
                                                    Forms\Components\Group::make()->schema([
@@ -190,21 +195,27 @@ class OrderResource extends Resource
                                 ->searchable()->hidden(fn()=>Filament::getAuthGuard() == 'seller')
                                 ->required()->relationship('seller','name')->preload(),
 
-                            Forms\Components\Select::make('user_id')
-                                ->searchable()->createOptionForm(self::customerFormFields())->label('Customer Name')
-                                ->required()->relationship('user','name')->preload()->columnSpanFull(),
+                            Forms\Components\Toggle::make('walk-in-customer')
+                                ->live(onBlur: true)
+                                ->label('Walk In')->helperText('customer walk in type'),
 
-                            Forms\Components\Select::make('user_address_id')
-                                ->searchable()->columnSpanFull()
-                                ->required()->relationship('address','address')->preload(),
+                           Forms\Components\Group::make()->schema([
+                               Forms\Components\Select::make('user_id')
+                                   ->searchable()->createOptionForm(self::customerFormFields())->label('Customer Name')
+                                   ->required()->relationship('user','name')->preload()->columnSpanFull(),
+
+                               Forms\Components\Select::make('user_address_id')
+                                   ->searchable()->columnSpanFull()
+                                   ->required()->relationship('address','address')->preload(),
+                           ])->columnSpanFull()->hidden(fn(Forms\Get $get) => $get('walk-in-customer')),
 
                             Forms\Components\Select::make('payment_id')
                                 ->label('Payment')
                                 ->searchable()->disabled(fn(Page $livewire) => $livewire instanceof EditRecord)
                                 ->required()->options(Payment::where('seller_id',CheckFilamentSellerUser::getSellerId())->pluck('name','id'))->preload(),
 
-
                             Forms\Components\Select::make('status')
+                                ->default(OrderStatus::New)
                                 ->native(false)
                                 ->options(OrderStatus::class)->required(),
 
@@ -268,6 +279,7 @@ class OrderResource extends Resource
     public static function table(Table $table): Table
     {
         return $table
+            ->groupsOnly()
             ->columns([
                 Tables\Columns\TextColumn::make('user.name')
                     ->description(fn(Order $order)=> $order->user->phone)
@@ -282,19 +294,28 @@ class OrderResource extends Resource
                     ->sortable()->toggleable(),
 
                 Tables\Columns\TextColumn::make('status')
-                    ->badge()
+                    ->badge()->description(fn(Order $order) => 'Deli ' . $order->delivery_fees .' ks')
                     ->searchable()
                     ->sortable()->toggleable(),
 
+                Tables\Columns\TextColumn::make('tax_price')->alignEnd()
+                    ->description(fn(Order $order)=> 'tax : '. $order->tax.' %' ?? ''),
+
                 Tables\Columns\TextColumn::make('sub_total')
-                    ->numeric()
+                    ->numeric()->alignEnd()
                     ->description(fn(Order $order) => $order->delivery_fees)
                     ->sortable()->toggleable(isToggledHiddenByDefault: true),
 
                 Tables\Columns\TextColumn::make('total_price')
-                    ->numeric()->weight(FontWeight::Bold)->color('success')
-                    ->suffix(fn(Order $order)=> ' '.$order->payment?->currency?->symbol_native ?? 'Other Person Just For Testing')
+                    ->alignEnd()
+                    ->numeric()
                     ->sortable(),
+
+                Tables\Columns\TextColumn::make('sub_total')->alignEnd()
+                    ->summarize(Tables\Columns\Summarizers\Sum::make('sub_total')->money('mmk')->label('Total Amount')),
+
+                Tables\Columns\TextColumn::make('total_price')->alignEnd()
+                    ->summarize(Tables\Columns\Summarizers\Sum::make('total_price')->money('mmk')->label('Total Amount')),
 
                 Tables\Columns\TextColumn::make('created_at')
                     ->dateTime()
@@ -310,18 +331,21 @@ class OrderResource extends Resource
                 Tables\Filters\TrashedFilter::make(),
             ])
             ->actions([
-                Tables\Actions\Action::make('Invoice')
-                    ->modalContent(fn (Order $record): View => view(
-                        'livewire.invoice',['record' => $record]
-                    ))
-                    ->modalWidth('2xl')
-                    ->color('success')
-                    ->modalSubmitAction(false)
-                    ->modalCancelAction(false)
-                    ->icon('heroicon-o-viewfinder-circle'),
+                Tables\Actions\ActionGroup::make([
+                    Tables\Actions\Action::make('Invoice')
+                        ->modalContent(fn (Order $record): View => view(
+                            'livewire.invoice',['record' => $record]
+                        ))
+                        ->modalWidth('2xl')
+                        ->color('success')
+                        ->modalSubmitAction(false)
+                        ->modalCancelAction(false)
 
-                Tables\Actions\ViewAction::make()->slideOver(),
-                Tables\Actions\EditAction::make(),
+                        ->icon('heroicon-o-viewfinder-circle'),
+
+                    Tables\Actions\ViewAction::make()->slideOver(),
+                    Tables\Actions\EditAction::make(),
+                ])
             ])
             ->defaultSort('id','desc')
             ->bulkActions([
@@ -431,6 +455,8 @@ class OrderResource extends Resource
                     $set('discount', $product->discount);
                     $set('discount_price', $product->discount_price);
 
+
+                    $set('original_buy_price', $product->buy_price);
                     $set('original_price', $product->price);
                     $set('original_discount_price', $product->discount_price);
 
@@ -439,6 +465,7 @@ class OrderResource extends Resource
                     $set('discount', $product->discount);
                     $set('discount_price', $product->mmk_discount_price);
 
+                    $set('original_buy_price', $product->mmk_buy_price);
                     $set('original_price', $product->mmk_price);
                     $set('original_discount_price', $product->mmk_discount_price);
                 }
@@ -534,6 +561,7 @@ class OrderResource extends Resource
                     $set('discount', $variant->discount);
                     $set('discount_price', $variant->discount_price);
 
+                    $set('original_buy_price', $variant->buy_price);
                     $set('original_price', $variant->price);
                     $set('original_discount_price', $variant->discount_price);
                 } else {
@@ -541,6 +569,7 @@ class OrderResource extends Resource
                     $set('discount', $variant->discount);
                     $set('discount_price', $variant->mmk_discount_price);
 
+                    $set('original_buy_price', $variant->mmk_buy_price);
                     $set('original_price', $variant->mmk_price);
                     $set('original_discount_price', $variant->mmk_discount_price);
                 }

@@ -38,6 +38,7 @@ return new class extends Migration
             $table->integer('discount')->default(0)->nullable();
             $table->decimal('discount_price')->default(0)->nullable();
 
+            $table->decimal('mmk_buy_price',15,2)->nullable();
             $table->decimal('mmk_price',15,2)->nullable();
             $table->decimal('mmk_discount_price',15,2)->default(0)->nullable();
 

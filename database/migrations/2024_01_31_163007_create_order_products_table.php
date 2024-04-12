@@ -28,6 +28,7 @@ return new class extends Migration
             $table->integer('discount')->default(0);
             $table->integer('quantity');
 
+            $table->decimal('original_buy_price')->default(0);
             $table->decimal('original_price')->default(0);
             $table->decimal('original_discount_price')->default(0);
             $table->foreignIdFor(Currency::class)->nullable()->constrained()->cascadeOnUpdate()->cascadeOnDelete();

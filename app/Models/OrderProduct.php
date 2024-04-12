@@ -13,6 +13,11 @@ class OrderProduct extends Model
         'attributes' => 'json'
     ];
 
+    public function order()
+    {
+        return $this->belongsTo(Order::class)->withTrashed();
+    }
+
     public function product()
     {
         return $this->belongsTo(Product::class)->withTrashed();

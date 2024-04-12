@@ -19,18 +19,19 @@ return new class extends Migration
             $table->id();
             $table->foreignIdFor(Product::class)->constrained()->cascadeOnUpdate()->cascadeOnDelete();
 
-
             $table->json('attributes');
             $table->string('sku')->unique();
 
             $table->integer('MOQ')->default(0);
             $table->string('name');
+
             $table->decimal('buy_price',15,2)->nullable();
             $table->decimal('price',15,2);
             $table->integer('quantity');
             $table->integer('discount')->default(0);
             $table->decimal('discount_price',15,2)->default(0);
 
+            $table->decimal('mmk_buy_price',15,2)->nullable();
             $table->decimal('mmk_price',15)->nullable();
             $table->decimal('mmk_discount_price',15)->default(0)->nullable();
 

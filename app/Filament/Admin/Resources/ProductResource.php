@@ -154,11 +154,12 @@ class ProductResource extends Resource
 
                                Forms\Components\TextInput::make('buy_price')
                                    ->placeholder('Original price')
+                                   ->live(onBlur: true)
                                    ->helperText('Calculate for profit and loss')->required(),
 
                                Forms\Components\TextInput::make('price')
                                    ->placeholder('Resell price')
-                                   ->numeric()
+                                   ->numeric()->hidden(fn(Forms\Get $get)=> blank($get('buy_price')))
                                    ->live(onBlur: true,debounce: 200)
                                    ->afterStateUpdated(function(Forms\Get $get,Forms\Set $set){
                                        //this is auto change discount price
@@ -167,10 +168,15 @@ class ProductResource extends Resource
                                    ->required(fn(Forms\Get $get)=> !$get('has_variant'))
                                    ->prefix(fn(Forms\Get $get) => blank($get('exchange_id')) ? '' : Exchange::where('id',$get('exchange_id'))->with('currency')->first()->currency->symbol_native),
 
-
                                Forms\Components\TextInput::make('quantity')
-                                   ->placeholder('Your in stock amount')
+                                   ->helperText('Your in stock total amount')
                                    ->numeric()->required(fn(Forms\Get $get)=> !$get('has_variant')),
+
+                               Forms\Components\TextInput::make('MOQ')
+                                   ->label('Min Amount Of Quantity(MOQ)')
+                                   ->helperText('minimum amount of order quantity ')
+                                   ->default(1)->numeric()
+                                   ->required(fn(Forms\Get $get)=> !$get('has_variant')),
 
 
                                Forms\Components\TextInput::make('discount')
@@ -188,18 +194,49 @@ class ProductResource extends Resource
                                    ->prefix(fn(Forms\Get $get) => blank($get('exchange_id')) ? '' : Exchange::where('id',$get('exchange_id'))->with('currency')->first()->currency->symbol_native)
                                    ->default(0.0000),
 
-                               Forms\Components\TextInput::make('MOQ')
-                                   ->label('Min Amount Of Quantity(MOQ)')
-                                   ->helperText('MOQ means  minimum amount of  of order quantity for wholesale')
-                                   ->default(1)->numeric()
-                                   ->required(fn(Forms\Get $get)=> !$get('has_variant')),
 
-                                  Forms\Components\Toggle::make('is_whole_sale')
-                                      ->onIcon('heroicon-m-hand-thumb-up')
-                                      ->offIcon('heroicon-m-hand-thumb-down')
-                                      ->helperText('For your product`s wholesale')
-                                      ->label('WholeSales')
-                                      ->required(),
+                               Forms\Components\Grid::make()->schema([
+
+                                   Forms\Components\Group::make()->schema([
+
+
+
+                                       Forms\Components\Toggle::make('is_whole_sale')
+                                           ->onIcon('heroicon-m-hand-thumb-up')
+                                           ->offIcon('heroicon-m-hand-thumb-down')
+                                           ->helperText('For your product`s wholesale')
+                                           ->label('WholeSales')
+                                           ->required(),
+                                   ]),
+
+                                   Forms\Components\Group::make()->schema([
+                                       Forms\Components\Section::make('မြန်မာ ကျပ် ပြပုံစံ')
+                                           ->compact()
+                                           ->schema([
+                                               Forms\Components\TextInput::make('mmk_buy_price')
+                                                   ->label('၀ယ်ရင်းစျေး')
+                                                   ->readOnly(),
+
+                                               Forms\Components\TextInput::make('mmk_price')
+                                                   ->label('ရောင်းစျေး')
+                                                   ->readOnly(),
+
+                                               Forms\Components\TextInput::make('mmk_discount_price')
+                                                   ->readOnly()->label('လျော့စျေး'),
+
+                                           ])->columns(3)->visible(function(Forms\Get $get){
+                                               if (!blank($get('exchange_id'))){
+                                                   $exchange = Exchange::where('id', $get('exchange_id'))->with('currency:id,code')->first();
+                                                   if ($exchange->currency->code != 'MMK'){
+                                                       return  true;
+                                                   }
+                                               }
+                                               return false;
+                                           }),
+                                   ])->columnSpan(2)
+
+                               ])->columns(3),
+
 
                                Forms\Components\Repeater::make('attributes')
                                    ->reorderableWithButtons()
@@ -226,25 +263,6 @@ class ProductResource extends Resource
 
                                    ])->columnSpanFull(),
 
-                               Forms\Components\Section::make('မြန်မာ ကျပ် ပြပုံစံ')
-                                   ->compact()
-                                   ->schema([
-                                       Forms\Components\TextInput::make('mmk_price')
-                                           ->label('မူရင်းစျေး')
-                                           ->readOnly(),
-
-                                       Forms\Components\TextInput::make('mmk_discount_price')
-                                           ->readOnly()->label('လျော့စျေး'),
-
-                               ])->columns(2)->visible(function(Forms\Get $get){
-                                   if (!blank($get('exchange_id'))){
-                                       $exchange = Exchange::where('id', $get('exchange_id'))->with('currency:id,code')->first();
-                                       if ($exchange->currency->code != 'MMK'){
-                                            return  true;
-                                       }
-                                   }
-                                   return false;
-                               }),
 
                                Forms\Components\SpatieMediaLibraryFileUpload::make('images')
                                    ->collection('images')->imageEditor()->multiple()
@@ -273,11 +291,12 @@ class ProductResource extends Resource
                                            ->required(),
 
                                        Forms\Components\TextInput::make('buy_price')
-
+                                            ->live(onBlur: true)
                                            ->helperText('Calculate for profit and loss')->required(),
 
                                        Forms\Components\TextInput::make('price')
                                            ->placeholder('Resell price')
+                                           ->readOnly(fn(Forms\Get $get)=>blank($get('buy_price')))
                                            ->numeric()->live(onBlur: true,debounce: 200)->required()
                                            ->afterStateUpdated(function(Forms\Get $get,Forms\Set $set){
                                                //this is auto change discount price
@@ -321,12 +340,17 @@ class ProductResource extends Resource
                                            ->description('မြန်မာ ကျပ် ပြပုံစံ')
                                            ->compact()
                                            ->schema([
+
+                                               Forms\Components\TextInput::make('mmk_buy_price')
+                                                   ->label('၀ယ်ရင်းစျေး')
+                                                   ->readOnly()->columnSpanFull(),
+
                                                Forms\Components\TextInput::make('mmk_price')
-                                                   ->label('မူရင်းစျေး')
-                                                   ->readOnly()->columnSpan(fn(Page $livewire) => $livewire instanceof ViewRecord ? 'full' : ''),
+                                                   ->label('ရောင်းစျေး')
+                                                   ->readOnly()->columnSpanFull(),
 
                                                Forms\Components\TextInput::make('mmk_discount_price')
-                                                   ->readOnly()->label('လျော့စျေး')->columnSpan(fn(Page $livewire) => $livewire instanceof ViewRecord ? dd($livewire) : '1'),
+                                                   ->readOnly()->label('လျော့စျေး')->columnSpanFull(),
 
                                            ])->columns(2)->visible(function(Forms\Get $get){
                                                if (!blank($get('../../exchange_id'))){
@@ -364,27 +388,6 @@ class ProductResource extends Resource
 
                                                ])->columns(2),
 
-
-                                               Forms\Components\Section::make('မြန်မာ ကျပ် ပြပုံစံ')
-                                                   ->compact()
-                                                   ->schema([
-                                                       Forms\Components\TextInput::make('mmk_price')
-                                                           ->label('မူရင်းစျေး')->numeric()->readOnly(),
-
-                                                       Forms\Components\TextInput::make('mmk_discount_price')
-                                                           ->readOnly()->label('လျော့စျေး')->numeric(),
-
-                                                   ])->columns(2)->visible(function(Forms\Get $get){
-                                                       if (!blank($get('exchange_id'))){
-                                                           $exchange = Exchange::where('id', $get('exchange_id'))->with('currency:id,code')->first();
-                                                           if ($exchange->currency->code != 'MMK'){
-                                                               return  true;
-                                                           }
-                                                       }
-                                                       return false;
-                                                   }),
-
-
                                            ])->columnSpanFull()->hidden(function(Forms\Get $get){
                                                // ဒါက admin အတွက်စစ်တာပါ ဗျာ
                                                if (Filament::getAuthGuard() == 'admin'){
@@ -421,10 +424,10 @@ class ProductResource extends Resource
 
         if( $get('discount') == 0){
             $set('discount_price',0.00);
-         }else{
-            if (!blank($get('price'))){
-                self::getDiscountMmk($get,$set,$forVariants);
-            }
+         }
+
+        if (!blank($get('price'))){
+            self::getDiscountMmk($get,$set,$forVariants);
         }
     }
 
@@ -448,6 +451,10 @@ class ProductResource extends Resource
                 $getMMKExchange = Exchange::whereHas('currency',function ($q){
                     return $q->where('code','MMK');
                 })->first();
+
+                $getBuyMMKPriceFromSelectedCurrency = ($getMMKExchange->rate / $exchange->rate) * $get('buy_price');
+                $removeLastTowDigitsToZeroForBuyPrice = self::modifyPrice($getBuyMMKPriceFromSelectedCurrency);
+                $set('mmk_buy_price', $removeLastTowDigitsToZeroForBuyPrice);
 
                 $getMMKPriceFromSelectedCurrency = ($getMMKExchange->rate / $exchange->rate) * $get('price');
                 $removeLastTowDigitsToZero = self::modifyPrice($getMMKPriceFromSelectedCurrency);

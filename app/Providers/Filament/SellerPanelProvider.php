@@ -32,7 +32,8 @@ class SellerPanelProvider extends PanelProvider
             ->login()
             ->colors([
                 'primary' => Color::Emerald,
-                'gray' => Color::Slate
+                'gray' => Color::Slate,
+                'orange' => Color::Orange
             ])
             ->authGuard('seller')
             ->discoverResources(in: app_path('Filament/Seller/Resources'), for: 'App\\Filament\\Seller\\Resources')

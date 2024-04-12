@@ -21,10 +21,13 @@ return new class extends Migration
             $table->string('invoice_number')->unique();
             $table->foreignIdFor(Seller::class)->constrained()->cascadeOnUpdate()->cascadeOnDelete();
             $table->foreignIdFor(Seller::class,'staff_id')->nullable()->constrained('sellers','id')->cascadeOnUpdate()->cascadeOnDelete();
-            $table->foreignIdFor(User::class)->constrained()->cascadeOnUpdate()->cascadeOnDelete();
+
+            $table->boolean('walk_in_customer')->default(0);
+
+            $table->foreignIdFor(User::class)->nullable()->constrained()->cascadeOnUpdate()->cascadeOnDelete();
+            $table->foreignIdFor(UserAddress::class)->nullable()->constrained()->cascadeOnUpdate()->cascadeOnDelete();
 
             $table->foreignIdFor(Payment::class)->nullable()->constrained()->cascadeOnUpdate()->cascadeOnDelete();
-            $table->foreignIdFor(UserAddress::class)->nullable()->constrained()->cascadeOnUpdate()->cascadeOnDelete();
 
             $table->string('status')->default(OrderStatus::New);
             $table->decimal('sub_total',15,2);
