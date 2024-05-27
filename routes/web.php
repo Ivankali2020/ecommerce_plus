@@ -1,5 +1,6 @@
 <?php
 
+use App\Filament\Seller\Pages\Pos;
 use App\Livewire\Invoice;
 use Illuminate\Support\Facades\Route;
 
@@ -19,3 +20,4 @@ Route::get('/', function () {
 });
 
 Route::get('invoice',Invoice::class)->name('invoice');
+Route::get('pos',\App\Livewire\POS::class)->name('pos');

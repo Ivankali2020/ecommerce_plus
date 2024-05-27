@@ -11,6 +11,8 @@ class Attribute extends Model
 {
     use HasFactory,SoftDeletes;
 
+    protected $with = ['values'];
+
     protected $casts = [
         'type' => AttributeType::class
     ];
