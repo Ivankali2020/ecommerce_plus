@@ -61,7 +61,7 @@ class SellerPanelProvider extends PanelProvider
                 AssignGlobeScope::class
 
             ])
-            ->spa(fn()=>  Str::contains(request()->userAgent(),'Chrome'))
+//            ->spa(fn()=>  Str::contains(request()->userAgent(),'Chrome'))
             ->sidebarWidth('17rem')
             ->brandName('SELLER DASHBOARD')
             ->font('jost')

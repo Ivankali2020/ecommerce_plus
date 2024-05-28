@@ -4,6 +4,7 @@ namespace App\Filament\Admin\Resources;
 
 use App\Filament\Admin\Resources\ProductResource\Pages;
 use App\Filament\Admin\Resources\ProductResource\RelationManagers;
+use App\Filament\Exports\ProductExporter;
 use App\Helper\CheckFilamentSellerUser;
 use App\Models\Attribute;
 use App\Models\AttributeValue;
@@ -14,6 +15,7 @@ use App\Models\Product;
 use App\Models\Variant;
 use CodeWithDennis\FilamentSelectTree\SelectTree;
 use Filament\Actions\Action;
+use Filament\Actions\ExportAction;
 use Filament\Facades\Filament;
 use Filament\Forms;
 use Filament\Forms\Components\Repeater;
@@ -199,8 +201,6 @@ class ProductResource extends Resource
 
                                    Forms\Components\Group::make()->schema([
 
-
-
                                        Forms\Components\Toggle::make('is_whole_sale')
                                            ->onIcon('heroicon-m-hand-thumb-up')
                                            ->offIcon('heroicon-m-hand-thumb-down')
@@ -241,11 +241,12 @@ class ProductResource extends Resource
                                Forms\Components\Repeater::make('attributes')
                                    ->reorderableWithButtons()
                                    ->schema([
-
+//
                                        Forms\Components\Group::make()->schema([
                                            Forms\Components\Select::make('attribute_id')->live(onBlur: true,debounce: 200)
                                                ->required()->searchable()->preload()->label('Attribute')->placeholder('Select')
                                                ->afterStateUpdated(fn(Forms\Set $set)=>  $set('attribute_value_id',null))
+                                               ->disableOptionsWhenSelectedInSiblingRepeaterItems()
                                                ->options(function (Forms\Get $get){
                                                    if (Filament::getAuthGuard() == 'seller'){
                                                        return Attribute::where('seller_id',CheckFilamentSellerUser::getSellerId())->pluck('name','id');
@@ -260,9 +261,8 @@ class ProductResource extends Resource
                                                ->options(fn(Forms\Get $get) => AttributeValue::where('attribute_id',$get('attribute_id'))->pluck('value','id')),
 
                                        ])->columns(2),
-
+//
                                    ])->columnSpanFull(),
-
 
                                Forms\Components\SpatieMediaLibraryFileUpload::make('images')
                                    ->collection('images')->imageEditor()->multiple()
@@ -487,7 +487,7 @@ class ProductResource extends Resource
         return $table
             ->columns([
                 Tables\Columns\TextColumn::make('brand.name')
-                    ->description(fn(Product $product)=> $product->category->name)
+                    ->description(fn(Product $product)=> $product->category?->name)
                     ->sortable(),
 
                 Tables\Columns\TextColumn::make('name')
