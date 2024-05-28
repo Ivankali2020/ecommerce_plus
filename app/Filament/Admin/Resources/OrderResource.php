@@ -70,7 +70,7 @@ class OrderResource extends Resource
 
                                        Forms\Components\Group::make()->schema([
                                            Forms\Components\Select::make('product_id')->required()
-                                               ->searchable()->preload()
+                                               ->searchable()->preload()->autofocus()
                                                ->afterStateUpdated(function(Forms\Get $get,Forms\Set $set){
                                                    self::updateAttributes($get,$set);
                                                })
@@ -209,15 +209,18 @@ class OrderResource extends Resource
                                    ->required()->relationship('address','address')->preload(),
                            ])->columnSpanFull()->hidden(fn(Forms\Get $get) => $get('walk-in-customer')),
 
-                            Forms\Components\Select::make('payment_id')
-                                ->label('Payment')
-                                ->searchable()->disabled(fn(Page $livewire) => $livewire instanceof EditRecord)
-                                ->required()->options(Payment::where('seller_id',CheckFilamentSellerUser::getSellerId())->pluck('name','id'))->preload(),
+                            Forms\Components\ToggleButtons::make('payment_id')
+                                ->columnSpanFull()->inline()
+                                ->label('Payment')->disabled(fn(Page $livewire) => $livewire instanceof EditRecord)
+                                ->required()->options(Payment::where('seller_id',CheckFilamentSellerUser::getSellerId())->pluck('name','id')),
 
-                            Forms\Components\Select::make('status')
-                                ->default(OrderStatus::New)
-                                ->native(false)
-                                ->options(OrderStatus::class)->required(),
+                            Forms\Components\ToggleButtons::make('status')
+                                ->default(OrderStatus::New->value)
+                                ->columnSpanFull()->inline()
+                                ->options([
+                                    'new' => 'New',
+                                    'processing' => 'Processing',
+                                ])->required(),
 
                             Forms\Components\DateTimePicker::make('created_at')
                                 ->native(false)->label('Purchase Date')

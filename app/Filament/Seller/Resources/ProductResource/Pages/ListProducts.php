@@ -2,6 +2,8 @@
 
 namespace App\Filament\Seller\Resources\ProductResource\Pages;
 
+use App\Filament\Exports\ProductExporter;
+use App\Filament\Imports\ProductImporter;
 use App\Filament\Seller\Resources\ProductResource;
 use Filament\Actions;
 use Filament\Resources\Pages\ListRecords;
@@ -13,6 +15,8 @@ class ListProducts extends ListRecords
     protected function getHeaderActions(): array
     {
         return [
+            Actions\ImportAction::make()->importer(ProductImporter::class),
+            Actions\ExportAction::make()->exporter(ProductExporter::class),
             Actions\CreateAction::make(),
         ];
     }
