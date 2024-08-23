@@ -15,35 +15,35 @@ class ProductImporter extends Importer
     {
         return [
             ImportColumn::make('seller_id')
-//                ->relationship(resolveUsing: 'name')
-                ->requiredMapping()
+//                ->relationship()
+//                ->requiredMapping()
                 ->rules(['required']),
 
             ImportColumn::make('brand')
-                ->relationship(resolveUsing: 'name')
+                ->relationship()
                 ->rules(['required']),
 
             ImportColumn::make('category')
-                ->relationship(resolveUsing: 'name')
+                ->relationship()
                 ->rules(['required']),
 
             ImportColumn::make('exchange_id')
-                ->requiredMapping()
+//                ->requiredMapping()
                 ->numeric()
                 ->rules(['required', 'integer']),
 
             ImportColumn::make('name')
-                ->requiredMapping()
+//                ->requiredMapping()
                 ->rules(['required', 'max:255']),
 
             ImportColumn::make('description')
-                ->requiredMapping()
+//                ->requiredMapping()
                 ->rules(['required', 'max:16777215']),
 
             ImportColumn::make('attributes'),
 
             ImportColumn::make('MOQ')
-                ->requiredMapping()
+//                ->requiredMapping()
                 ->numeric()
                 ->rules(['required', 'integer']),
 
@@ -78,27 +78,27 @@ class ProductImporter extends Importer
                 ->numeric()
                 ->rules(['integer']),
             ImportColumn::make('has_variant')
-                ->requiredMapping()
+//                ->requiredMapping()
                 ->boolean()
                 ->rules(['required', 'boolean']),
             ImportColumn::make('is_public')
-                ->requiredMapping()
+//                ->requiredMapping()
                 ->boolean()
                 ->rules(['required', 'boolean']),
             ImportColumn::make('is_recommended')
-                ->requiredMapping()
+//                ->requiredMapping()
                 ->boolean()
                 ->rules(['required', 'boolean']),
             ImportColumn::make('is_whole_sale')
-                ->requiredMapping()
+//                ->requiredMapping()
                 ->boolean()
                 ->rules(['required', 'boolean']),
             ImportColumn::make('is_return')
-                ->requiredMapping()
+//                ->requiredMapping()
                 ->boolean()
                 ->rules(['required', 'boolean']),
             ImportColumn::make('is_shipped')
-                ->requiredMapping()
+//                ->requiredMapping()
                 ->boolean()
                 ->rules(['required', 'boolean']),
         ];

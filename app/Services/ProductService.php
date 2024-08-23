@@ -87,7 +87,7 @@ class ProductService
      */
     public function getProductDetail($sellerId, $productId): Product
     {
-        Seller::findOrFail($sellerId);
+//        Seller::findOrFail($sellerId);
         $product = Product::findOrFail($productId);
         if ($sellerId != $product->seller_id) {
             throw new ResourceNotFoundException("Product not found");

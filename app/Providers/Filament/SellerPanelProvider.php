@@ -59,7 +59,6 @@ class SellerPanelProvider extends PanelProvider
                 DisableBladeIconComponents::class,
                 DispatchServingFilamentEvent::class,
                 AssignGlobeScope::class
-
             ])
 //            ->spa(fn()=>  Str::contains(request()->userAgent(),'Chrome'))
             ->sidebarWidth('17rem')

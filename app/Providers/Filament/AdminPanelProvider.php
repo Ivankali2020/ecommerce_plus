@@ -49,7 +49,7 @@ class AdminPanelProvider extends PanelProvider
                 Widgets\AccountWidget::class,
                 Widgets\FilamentInfoWidget::class,
             ])
-            ->brandName('IT PLUS')
+            ->brandName('POS PLUS')
             ->sidebarCollapsibleOnDesktop()
             ->sidebarWidth('18rem')
             //            ->maxContentWidth('xxl')

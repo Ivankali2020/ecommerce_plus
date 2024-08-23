@@ -21,6 +21,7 @@ return new class extends Migration
             $table->string('phone');
             $table->mediumText('about');
             $table->foreignIdFor(Township::class)->constrained()->cascadeOnUpdate()->cascadeOnDelete();
+            $table->softDeletes();
             $table->timestamps();
         });
     }

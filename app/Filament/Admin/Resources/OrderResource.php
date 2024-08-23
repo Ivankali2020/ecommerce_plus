@@ -195,9 +195,9 @@ class OrderResource extends Resource
                                 ->searchable()->hidden(fn()=>Filament::getAuthGuard() == 'seller')
                                 ->required()->relationship('seller','name')->preload(),
 
-                            Forms\Components\Toggle::make('walk-in-customer')
-                                ->live(onBlur: true)
-                                ->label('Walk In')->helperText('customer walk in type'),
+//                            Forms\Components\Toggle::make('walk-in-customer')
+//                                ->live(onBlur: true)
+//                                ->label('Walk In')->helperText('customer walk in type'),
 
                            Forms\Components\Group::make()->schema([
                                Forms\Components\Select::make('user_id')

@@ -17,8 +17,8 @@ class ProductExporter extends Exporter
             ExportColumn::make('id')
                 ->label('ID'),
             ExportColumn::make('seller_id'),
-            ExportColumn::make('brand_id'),
-            ExportColumn::make('category_id'),
+            ExportColumn::make('brand.name'),
+            ExportColumn::make('category.name'),
             ExportColumn::make('exchange_id'),
             ExportColumn::make('name'),
             ExportColumn::make('description'),

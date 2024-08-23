@@ -39,7 +39,7 @@ class PaymentResource extends Resource
                            Forms\Components\Select::make('currency_id')
                                ->searchable()->preload()->disabled()
                                ->default(fn()=> Currency::where('code','MMK')->first()->id)
-                               ->helperText('We decided to use only mmk currency for phase one')
+                               ->helperText('Available only mmk currency for purchase products')
                                ->required()->relationship('currency','name'),
 
                            Forms\Components\TextInput::make('name')

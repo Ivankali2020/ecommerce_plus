@@ -15,7 +15,7 @@ class ListProducts extends ListRecords
     protected function getHeaderActions(): array
     {
         return [
-            Actions\ImportAction::make()->importer(ProductImporter::class),
+//            Actions\ImportAction::make()->importer(ProductImporter::class),
             Actions\ExportAction::make()->exporter(ProductExporter::class),
             Actions\CreateAction::make(),
         ];

@@ -7,6 +7,7 @@ use App\Helper\CheckFilamentSellerUser;
 use Filament\Actions;
 use Filament\Facades\Filament;
 use Filament\Resources\Pages\CreateRecord;
+use Illuminate\Support\Facades\Auth;
 
 class CreateExchange extends CreateRecord
 {

@@ -14,7 +14,7 @@ class EditExchange extends EditRecord
     protected function getHeaderActions(): array
     {
         return [
-            Actions\DeleteAction::make()->hidden(fn (Exchange $exchange)=> $exchange->currency->code == 'MMK')->modalDescription('ဖျက်လိုပါက သက်ဆိုင်ရာ products မှား အားလုံး ဖျက်သွားပါမည်'),
+            Actions\DeleteAction::make()->hidden(fn (Exchange $exchange)=> $exchange->currency->code == 'MMK')->modalDescription('ဖျက်လိုက်ပါက သက်ဆိုင်ရာ products များ အားလုံး ဖျက်သွားပါမည်'),
             Actions\ForceDeleteAction::make()->hidden(fn (Exchange $exchange)=> $exchange->currency->code == 'MMK'),
             Actions\RestoreAction::make()->hidden(fn (Exchange $exchange)=> $exchange->currency->code == 'MMK'),
         ];

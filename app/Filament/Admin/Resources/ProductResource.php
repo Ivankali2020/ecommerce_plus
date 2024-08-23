@@ -12,6 +12,7 @@ use App\Models\Brand;
 use App\Models\Currency;
 use App\Models\Exchange;
 use App\Models\Product;
+use App\Models\Supplier;
 use App\Models\Variant;
 use CodeWithDennis\FilamentSelectTree\SelectTree;
 use Filament\Actions\Action;
@@ -65,7 +66,7 @@ class ProductResource extends Resource
                            ->options(function(Forms\Get $get){
                                $seller_id = $get('seller_id') ?? CheckFilamentSellerUser::getSellerId();
                                $data = Exchange::where('seller_id',$seller_id)->with('currency')->get()->map(function ($item){
-                                            return [$item->id => $item->currency->code];
+                                            return [$item->id => $item->currency->code . ' - '. $item->rate];
                                         });
                                $currencies = [];
                                foreach ($data as $da){
@@ -75,12 +76,14 @@ class ProductResource extends Resource
                             })
                            ->required(),
 
-                       Forms\Components\Select::make('brand_id')
+                       Forms\Components\Select::make('brand_id')->label('Brand')
                            ->searchable()->preload()->live(onBlur: true,debounce: 200)
                            ->required()->options(function (Forms\Get $get){
                                $seller_id = $get('seller_id') ?? CheckFilamentSellerUser::getSellerId();
                                return Brand::where('seller_id',$seller_id)->pluck('name','id');
                            }),
+
+
 
                        SelectTree::make('category_id')
                            ->searchable()->label('Category')->searchable()
@@ -88,6 +91,13 @@ class ProductResource extends Resource
                            ->relationship('category','name','parent_id',modifyQueryUsing: function (Forms\Get $get,$query){
                                $seller_id = $get('seller_id') ?? CheckFilamentSellerUser::getSellerId();
                                return $query->where('seller_id',$seller_id);
+                           }),
+
+                       Forms\Components\Select::make('supplier_id')->label('Supplier')
+                           ->searchable()->preload()->live(onBlur: true,debounce: 200)
+                           ->required()->options(function (Forms\Get $get){
+                               $seller_id = $get('seller_id') ?? CheckFilamentSellerUser::getSellerId();
+                               return Supplier::where('seller_id',$seller_id)->pluck('name','id');
                            }),
 
                        Forms\Components\TextInput::make('name')
@@ -154,47 +164,53 @@ class ProductResource extends Resource
                            ->compact()
                            ->schema([
 
-                               Forms\Components\TextInput::make('buy_price')
-                                   ->placeholder('Original price')
-                                   ->live(onBlur: true)
-                                   ->helperText('Calculate for profit and loss')->required(),
+                               Forms\Components\Group::make()->schema([
 
-                               Forms\Components\TextInput::make('price')
-                                   ->placeholder('Resell price')
-                                   ->numeric()->hidden(fn(Forms\Get $get)=> blank($get('buy_price')))
-                                   ->live(onBlur: true,debounce: 200)
-                                   ->afterStateUpdated(function(Forms\Get $get,Forms\Set $set){
-                                       //this is auto change discount price
-                                       self::getDiscountPrice($get,$set);
-                                   })
-                                   ->required(fn(Forms\Get $get)=> !$get('has_variant'))
-                                   ->prefix(fn(Forms\Get $get) => blank($get('exchange_id')) ? '' : Exchange::where('id',$get('exchange_id'))->with('currency')->first()->currency->symbol_native),
+                                   Forms\Components\TextInput::make('buy_price')
+                                       ->placeholder('Original price')
+                                       ->live(onBlur: true)->required(),
 
-                               Forms\Components\TextInput::make('quantity')
-                                   ->helperText('Your in stock total amount')
-                                   ->numeric()->required(fn(Forms\Get $get)=> !$get('has_variant')),
-
-                               Forms\Components\TextInput::make('MOQ')
-                                   ->label('Min Amount Of Quantity(MOQ)')
-                                   ->helperText('minimum amount of order quantity ')
-                                   ->default(1)->numeric()
-                                   ->required(fn(Forms\Get $get)=> !$get('has_variant')),
+                                   Forms\Components\TextInput::make('price')
+                                       ->placeholder('Resell price')
+                                       ->numeric()
+                                       ->live(onBlur: true,debounce: 200)
+                                       ->afterStateUpdated(function(Forms\Get $get,Forms\Set $set){
+                                           //this is auto change discount price
+                                           self::getDiscountPrice($get,$set);
+                                       })
+                                       ->required(fn(Forms\Get $get)=> !$get('has_variant'))
+                                       ->prefix(fn(Forms\Get $get) => blank($get('exchange_id')) ? '' : Exchange::where('id',$get('exchange_id'))->with('currency')->first()->currency->symbol_native),
 
 
-                               Forms\Components\TextInput::make('discount')
-                                   ->numeric()->suffix('%')->minValue(0)
-                                   ->integer()->rules('max:100')
-                                   ->live(onBlur: true,debounce: 200)
-                                   ->afterStateUpdated(function(Forms\Get $get,Forms\Set $set){
-                                       //this is auto change discount price
-                                       self::getDiscountPrice($get,$set);
-                                   })
-                                   ->default(0),
+                                   Forms\Components\TextInput::make('quantity')->label('Stocks')
+                                       ->numeric()->required(fn(Forms\Get $get)=> !$get('has_variant')),
+                               ])->columns(3)->columnSpanFull(),
 
-                               Forms\Components\TextInput::make('discount_price')
-                                   ->numeric()->label('Discount Price')
-                                   ->prefix(fn(Forms\Get $get) => blank($get('exchange_id')) ? '' : Exchange::where('id',$get('exchange_id'))->with('currency')->first()->currency->symbol_native)
-                                   ->default(0.0000),
+
+                               Forms\Components\Group::make()->schema([
+
+
+                                   Forms\Components\TextInput::make('MOQ')
+                                       ->label('MOQ')
+                                       ->default(1)->numeric()
+                                       ->required(fn(Forms\Get $get)=> !$get('has_variant')),
+
+
+                                   Forms\Components\TextInput::make('discount')
+                                       ->numeric()->suffix('%')->minValue(0)
+                                       ->integer()->rules('max:100')
+                                       ->live(onBlur: true,debounce: 200)
+                                       ->afterStateUpdated(function(Forms\Get $get,Forms\Set $set){
+                                           //this is auto change discount price
+                                           self::getDiscountPrice($get,$set);
+                                       })
+                                       ->default(0),
+
+                                   Forms\Components\TextInput::make('discount_price')
+                                       ->numeric()->label('Discount Price')
+                                       ->prefix(fn(Forms\Get $get) => blank($get('exchange_id')) ? '' : Exchange::where('id',$get('exchange_id'))->with('currency')->first()->currency->symbol_native)
+                                       ->default(0.0000),
+                               ])->columns(3)->columnSpanFull(),
 
 
                                Forms\Components\Grid::make()->schema([
@@ -202,11 +218,20 @@ class ProductResource extends Resource
                                    Forms\Components\Group::make()->schema([
 
                                        Forms\Components\Toggle::make('is_whole_sale')
-                                           ->onIcon('heroicon-m-hand-thumb-up')
+                                           ->onIcon('heroicon-m-hand-thumb-up')->live()
                                            ->offIcon('heroicon-m-hand-thumb-down')
                                            ->helperText('For your product`s wholesale')
                                            ->label('WholeSales')
                                            ->required(),
+
+                                       Forms\Components\TextInput::make('whole_sale_price')
+                                           ->label('Whole Sales Price')
+                                           ->numeric()->step(0.01)
+                                           ->afterStateUpdated(fn($state,Forms\Set $set) => $set('mmk_whole_sale_price',$state))
+                                           ->placeholder('လက်ကားစျေး')
+                                           ->prefix(fn(Forms\Get $get) => blank($get('exchange_id')) ? '' : Exchange::where('id',$get('exchange_id'))->with('currency')->first()->currency->symbol_native)
+                                           ->hidden(fn(Forms\Get $get) => !$get('is_whole_sale'))
+                                           ->live(onBlur: true)->required(),
                                    ]),
 
                                    Forms\Components\Group::make()->schema([
@@ -224,7 +249,10 @@ class ProductResource extends Resource
                                                Forms\Components\TextInput::make('mmk_discount_price')
                                                    ->readOnly()->label('လျော့စျေး'),
 
-                                           ])->columns(3)->visible(function(Forms\Get $get){
+                                               Forms\Components\TextInput::make('mmk_whole_sale_price')
+                                                   ->readOnly()->label('လက်ကားစျေး')->hidden(fn(Forms\Get $get) => !$get('is_whole_sale')),
+
+                                           ])->columns(2)->visible(function(Forms\Get $get){
                                                if (!blank($get('exchange_id'))){
                                                    $exchange = Exchange::where('id', $get('exchange_id'))->with('currency:id,code')->first();
                                                    if ($exchange->currency->code != 'MMK'){
@@ -241,7 +269,6 @@ class ProductResource extends Resource
                                Forms\Components\Repeater::make('attributes')
                                    ->reorderableWithButtons()
                                    ->schema([
-//
                                        Forms\Components\Group::make()->schema([
                                            Forms\Components\Select::make('attribute_id')->live(onBlur: true,debounce: 200)
                                                ->required()->searchable()->preload()->label('Attribute')->placeholder('Select')
@@ -261,14 +288,16 @@ class ProductResource extends Resource
                                                ->options(fn(Forms\Get $get) => AttributeValue::where('attribute_id',$get('attribute_id'))->pluck('value','id')),
 
                                        ])->columns(2),
-//
                                    ])->columnSpanFull(),
 
-                               Forms\Components\SpatieMediaLibraryFileUpload::make('images')
-                                   ->collection('images')->imageEditor()->multiple()
-                                   ->image()->rules('required')->columnSpanFull(),
 
-                           ])->columns(2)
+
+                           ])->columns(2),
+
+                       Forms\Components\SpatieMediaLibraryFileUpload::make('images')
+                           ->collection('images')->imageEditor()
+                           ->multiple()->required()->imageEditor()
+                           ->image()->rules('required')->columnSpanFull(),
 
                    ])->hidden(fn (Forms\Get $get) => $get('has_variant') || blank($get('exchange_id'))),
 
@@ -448,9 +477,14 @@ class ProductResource extends Resource
         if ($exchangeID){
             $exchange = Exchange::where('id', $exchangeID)->with('currency:id,code')->first();
             if ($exchange->currency->code != 'MMK'){
-                $getMMKExchange = Exchange::whereHas('currency',function ($q){
+                $getMMKExchange = Exchange::where('seller_id',CheckFilamentSellerUser::getSellerId())->whereHas('currency',function ($q){
                     return $q->where('code','MMK');
                 })->first();
+
+                if (!$getMMKExchange){
+                    Notification::make()->title('မြန်မာ ငွေကြေးသတ်မှတ်ချက်မတွေ့ပါ')->color('danger')->send();
+                    return;
+                }
 
                 $getBuyMMKPriceFromSelectedCurrency = ($getMMKExchange->rate / $exchange->rate) * $get('buy_price');
                 $removeLastTowDigitsToZeroForBuyPrice = self::modifyPrice($getBuyMMKPriceFromSelectedCurrency);
@@ -491,20 +525,25 @@ class ProductResource extends Resource
                     ->sortable(),
 
                 Tables\Columns\TextColumn::make('name')
-                    ->description(fn(Product $product)=> $product->sku)
+                    ->description(fn(Product $product)=> $product->price)
                     ->searchable(),
 
                 Tables\Columns\TextColumn::make('exchange.currency.code')
                     ->description(fn(Product $product)=> $product->exchange->currency->name)
                     ->sortable(),
 
+                Tables\Columns\ViewColumn::make('sku')->view('tables.columns.bar-code'),
+
                 Tables\Columns\IconColumn::make('has_variant')
+                    ->toggleable(isToggledHiddenByDefault: true)
                     ->boolean(),
 
                 Tables\Columns\IconColumn::make('is_public')
+                    ->toggleable(isToggledHiddenByDefault: true)
                     ->boolean(),
 
                 Tables\Columns\IconColumn::make('is_recommended')
+                    ->toggleable(isToggledHiddenByDefault: true)
                     ->boolean(),
 
                 Tables\Columns\TextColumn::make('deleted_at')
@@ -527,6 +566,12 @@ class ProductResource extends Resource
 
             ])
             ->actions([
+                Tables\Actions\Action::make('print')
+                    ->modalWidth('sm')
+                    ->modalCancelAction(false)
+                    ->modalSubmitAction(false)
+                    ->modalContent(fn(Product $product) => view('livewire.code',compact('product'))),
+
                 Tables\Actions\ReplicateAction::make()
                     ->modalWidth('sm')
                     ->form([
@@ -544,7 +589,9 @@ class ProductResource extends Resource
                         $replica->fill($data);
                     })->after(function (Model $replica,Product $product){
                         $medias = $product->getMedia('images')->first();
-                         $medias->copy($replica,'images');
+                        if ($medias){
+                            $medias->copy($replica,'images');
+                        }
                     })
                     ->hidden(fn(Product $product)=>$product->has_variant),
                 Tables\Actions\EditAction::make(),

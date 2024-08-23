@@ -5,6 +5,7 @@ namespace App\Filament\Seller\Resources;
 use App\Filament\Admin\Resources\CategoryResource\RelationManagers\CategoriesRelationManager;
 use App\Filament\Seller\Resources\CategoryResource\Pages;
 use App\Filament\Seller\Resources\CategoryResource\RelationManagers;
+use App\Helper\CheckFilamentSellerUser;
 use App\Models\Category;
 use Filament\Facades\Filament;
 use Filament\Forms;
@@ -52,7 +53,7 @@ class CategoryResource extends Resource
     public static function getEloquentQuery(): Builder
     {
         return parent::getEloquentQuery()
-            ->where('seller_id',Filament::auth()->id())
+            ->orWhere('seller_id',CheckFilamentSellerUser::getSellerId())
             ->withoutGlobalScopes([
                 SoftDeletingScope::class,
             ]);

@@ -10,7 +10,7 @@ class CheckFilamentSellerUser
     public static function getSellerId()
     {
         if (Filament::getAuthGuard() == 'seller'){ //null ဆို ရင် seller ဖြစ်ပါတယ်
-           return Filament::auth()->user()->parent_id == null ? Filament::auth()->id() : Filament::auth()->user()->parent_id;
+           return Filament::auth()->user()->parent_id ?? Filament::auth()->id() ;
         }
 
         return null;
