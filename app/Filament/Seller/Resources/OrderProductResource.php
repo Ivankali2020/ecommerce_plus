@@ -61,8 +61,8 @@ class OrderProductResource extends Resource
                     ->getStateUsing(function($record){
                         $data = '';
                         foreach ($record->attributes as $attribute){
-                            $array = implode(' - ',collect($attribute['value'])->toArray());
-                            $data .= "<span class='border text-sm text-orange-500 dark:text-orange-400 border-gray-500 dark:border-gray-700 py-1  px-2 rounded '>".$array." </span>";
+                            $array = implode(' - ',collect($attribute['value']??[])->toArray());
+                            $data .= "<span class='border text-xs text-orange-500 dark:text-orange-400 border-gray-500 dark:border-gray-700 py-1  px-2 rounded '>".$array." </span>";
                         }
                         return $data;
                     })->color('orange')

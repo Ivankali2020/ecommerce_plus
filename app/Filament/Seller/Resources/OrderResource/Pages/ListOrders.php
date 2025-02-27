@@ -21,7 +21,7 @@ class ListOrders extends ListRecords
     protected function getHeaderWidgets(): array
     {
         return [
-            (OrderResource\Widgets\OrderChart::class)
+            // (OrderResource\Widgets\OrderChart::class)
         ];
     }
 

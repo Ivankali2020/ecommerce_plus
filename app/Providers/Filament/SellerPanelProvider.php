@@ -2,12 +2,17 @@
 
 namespace App\Providers\Filament;
 
+use App\Filament\Seller\Pages\EditProfile;
 use App\Filament\Seller\Resources\OrderResource\Widgets\OrderChart;
+use App\Helper\CheckFilamentSellerUser;
 use App\Http\Middleware\AssignGlobeScope;
+use App\Models\Seller;
+use App\Models\User;
 use BezhanSalleh\FilamentShield\FilamentShieldPlugin;
 use Filament\Http\Middleware\Authenticate;
 use Filament\Http\Middleware\DisableBladeIconComponents;
 use Filament\Http\Middleware\DispatchServingFilamentEvent;
+use Filament\Navigation\NavigationItem;
 use Filament\Pages;
 use Filament\Panel;
 use Filament\PanelProvider;
@@ -19,7 +24,7 @@ use Illuminate\Foundation\Http\Middleware\VerifyCsrfToken;
 use Illuminate\Routing\Middleware\SubstituteBindings;
 use Illuminate\Session\Middleware\AuthenticateSession;
 use Illuminate\Session\Middleware\StartSession;
-use Illuminate\Support\Str;
+use Illuminate\Support\Facades\Auth;
 use Illuminate\View\Middleware\ShareErrorsFromSession;
 
 class SellerPanelProvider extends PanelProvider
@@ -35,6 +40,8 @@ class SellerPanelProvider extends PanelProvider
                 'gray' => Color::Slate,
                 'orange' => Color::Orange
             ])
+            ->profile(EditProfile::class)
+//            ->profile()
             ->authGuard('seller')
             ->discoverResources(in: app_path('Filament/Seller/Resources'), for: 'App\\Filament\\Seller\\Resources')
             ->discoverPages(in: app_path('Filament/Seller/Pages'), for: 'App\\Filament\\Seller\\Pages')
@@ -62,13 +69,22 @@ class SellerPanelProvider extends PanelProvider
             ])
 //            ->spa(fn()=>  Str::contains(request()->userAgent(),'Chrome'))
             ->sidebarWidth('17rem')
-            ->brandName('SELLER DASHBOARD')
+            ->brandLogoHeight(fn() => Auth::guard('seller')->check() ? '3rem' : '5rem')
+            ->brandLogo(fn() => Auth::guard('seller')->check() ? Seller::where('id',CheckFilamentSellerUser::getSellerId())->first()->getFirstMediaUrl('logos') : null) //->getFirstMediaUrl('logos')
+            ->brandName(fn() => Auth::guard('seller')->check() ?   Seller::find(CheckFilamentSellerUser::getSellerId()) : 'SELLER DASHBOARD')
             ->font('jost')
             ->sidebarCollapsibleOnDesktop()
             ->databaseNotifications()
             ->databaseNotificationsPolling(null) // this is testing purpose
                 ->plugins([
                     FilamentShieldPlugin::make()
+            ])
+            ->navigationItems([
+                NavigationItem::make('dashboard')
+                    ->label(fn(): string => 'Go to Website')
+                    ->url(fn(): string => route('store', CheckFilamentSellerUser::getSellerId()))
+                    ->sort(sort: 10)
+                    ->icon('heroicon-o-link')
             ])
             ->authMiddleware([
                 Authenticate::class,

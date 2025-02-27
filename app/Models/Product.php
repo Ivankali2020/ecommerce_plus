@@ -3,6 +3,7 @@
 namespace App\Models;
 
 use App\Helper\MediaRegisterConversion;
+use App\Observers\ProductObserver;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\SoftDeletes;
@@ -18,11 +19,57 @@ class Product extends Model implements HasMedia
 {
     use HasFactory, SoftDeletes, InteractsWithMedia;
 
+    public $preventObserver = false;
+
+    protected $appends = ['productImg','attributeValues'];
+
+    public function getProductImgAttribute()
+    {
+        if ($this->has_variant) {
+            // Get first variant's image
+            $firstVariant = $this->variants()->first();
+            return $firstVariant ? $firstVariant->getFirstMediaUrl('images') : $this->getFirstMediaUrl('images');
+        }
+        
+        // Return product's own image
+        return $this->getFirstMediaUrl('images');
+    }
+
+    public function getAttributeValuesAttribute()
+    {
+        if (!$this->attributes) {
+            return [];
+        }
+
+        $formattedAttributes = [];
+        $attributeData = json_decode($this->attributes['attributes'], true);
+
+        if(!$attributeData) {
+            return [];
+        }
+
+        foreach ($attributeData as $item) {
+            $attribute = Attribute::find($item['attribute_id']);
+            if ($attribute) {
+                $values = AttributeValue::whereIn('id', $item['attribute_value_id'])
+                    ->pluck('value')
+                    ->toArray();
+
+                $formattedAttributes[] = [
+                    'attribute' => $attribute->name,
+                    'value' => $values
+                ];
+            }
+        }
+
+        return $formattedAttributes;
+    }
+    
     public function registerMediaCollections(): void
     {
         $this->addMediaCollection('images')
             ->singleFile()
-            ->useFallbackUrl('https://default_image_url.png') //TODO::URL အမှန်နဲ့ပြန်ပြောင်းထည့်ရန်
+            ->useFallbackUrl(asset('assets/img.jpg')) 
             ->acceptsFile(function (File $file) {
                 $allowedMimeTypes = [
                     'image/jpeg',
@@ -57,7 +104,7 @@ class Product extends Model implements HasMedia
 
     public function category()
     {
-        return $this->belongsTo(Category::class)->whereNull('parent_id')->withTrashed();
+        return $this->belongsTo(Category::class)->withTrashed(); //->whereNull('parent_id')
     }
 
     public function subCategory()
@@ -68,6 +115,11 @@ class Product extends Model implements HasMedia
     public function brand()
     {
         return $this->belongsTo(Brand::class)->withTrashed();
+    }
+
+    public function supplier()
+    {
+        return $this->belongsTo(Supplier::class);
     }
 
     public function variants()
@@ -89,4 +141,10 @@ class Product extends Model implements HasMedia
     {
         return $this->hasMany(OrderProduct::class);
     }
+
+    protected static function booted()
+    {
+        self::observe(ProductObserver::class);
+    }
+
 }

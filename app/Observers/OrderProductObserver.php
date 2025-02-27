@@ -25,23 +25,9 @@ class OrderProductObserver
 
     }
 
-    /**
-     * Handle the OrderProduct "updated" event.
-     */
-    public function saving(OrderProduct $orderProduct): void
-    {
-        //add original price and currency
-//        $orderProduct->original_price = $orderProduct->price;
-//        $orderProduct->original_discount_price = $orderProduct->discount_price;
-//        $orderProduct->exchange_rate = $orderProduct->product->exchange->rate;
-//        $orderProduct->currency_id = $orderProduct->product->exchange->currency_id;
-//        $orderProduct->update();
-
-    }
-
     public function updated(OrderProduct $orderProduct)
     {
-        if ($orderProduct->getOriginal('quantity') != $orderProduct->quantity && $orderProduct->getOriginal('product_id') == $orderProduct->product_id) {
+        if ($orderProduct->getOriginal('quantity') != $orderProduct->quantity ) { //&& $orderProduct->getOriginal('product_id') == $orderProduct->product_id
             $product = Product::where('id', $orderProduct->product_id)->first();
             if ($orderProduct->getOriginal('quantity') > $orderProduct->quantity) {
                 //if reduce quantity we will increment the original quantity
@@ -65,18 +51,6 @@ class OrderProductObserver
             }
         }
     }
-
-//    public function updated(OrderProduct $orderProduct): void
-//    {
-//        if ($orderProduct->getOriginal('quantity') == $orderProduct->quantity) {
-//            //add original price and currency
-//            $orderProduct->original_price = $orderProduct->price;
-//            $orderProduct->original_discount_price = $orderProduct->discount_price;
-//            $orderProduct->exchange_rate = $orderProduct->product->exchange->rate;
-//            $orderProduct->currency_id = $orderProduct->product->exchange->currency_id;
-//            $orderProduct->update();
-//        }
-//    }
 
     /**
      * Handle the OrderProduct "deleted" event.

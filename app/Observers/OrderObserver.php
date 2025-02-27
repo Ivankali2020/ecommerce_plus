@@ -3,9 +3,8 @@
 namespace App\Observers;
 
 use App\Models\Order;
-use App\Models\OrderProduct;
-use App\Models\Product;
 use Filament\Notifications\Notification;
+use Filament\Notifications\Actions\Action;
 
 class OrderObserver
 {
@@ -15,9 +14,12 @@ class OrderObserver
     public function created(Order $order): void
     {
         //send notification to admin
-        Notification::make()
-            ->title('New order arrived')
-            ->sendToDatabase($order->seller);
+        // Notification::make()
+        //     ->title('New order arrived')
+        //     ->actions([
+        //         Action::make('View Order')->button()->url(route('filament.seller.resources.orders.index'))
+        //     ])
+        //     ->sendToDatabase($order->seller);
 
     }
 
@@ -26,9 +28,9 @@ class OrderObserver
      */
     public function updated(Order $order): void
     {
-        Notification::make()
-            ->title('Order has been '.$order->status->value)
-            ->sendToDatabase($order->seller);
+        // Notification::make()
+        //     ->title('Order has been '.$order->status->value)
+        //     ->sendToDatabase($order->seller);
 
     }
 

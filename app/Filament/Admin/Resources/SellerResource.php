@@ -83,7 +83,9 @@ class SellerResource extends Resource
         return $table
             ->columns([
                 Tables\Columns\SpatieMediaLibraryImageColumn::make('logo')->collection('logos'),
-                Tables\Columns\SpatieMediaLibraryImageColumn::make('cover_photo')->collection('cover_photos'),
+                Tables\Columns\SpatieMediaLibraryImageColumn::make('cover_photo')
+                    ->hidden(Filament::getAuthGuard() == 'seller')
+                    ->collection('cover_photos'),
                 Tables\Columns\TextColumn::make('roles.name')->badge(),
                 Tables\Columns\TextColumn::make('name')
                     ->searchable(),

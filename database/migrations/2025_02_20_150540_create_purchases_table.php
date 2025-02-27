@@ -1,7 +1,9 @@
 <?php
 
+use App\Helper\OrderStatus;
+use App\Helper\PurchaseStatus;
 use App\Models\Seller;
-use App\Models\Township;
+use App\Models\Supplier;
 use Illuminate\Database\Migrations\Migration;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Support\Facades\Schema;
@@ -13,14 +15,14 @@ return new class extends Migration
      */
     public function up(): void
     {
-        Schema::create('suppliers', function (Blueprint $table) {
+        Schema::create('purchases', function (Blueprint $table) {
             $table->id();
             $table->foreignIdFor(Seller::class)->constrained()->cascadeOnDelete()->cascadeOnUpdate();
-            $table->string('name');
-            $table->string('email')->nullable();
-            $table->string('phone');
-            $table->mediumText('about');
-            $table->foreignIdFor(Township::class)->constrained()->cascadeOnUpdate()->cascadeOnDelete();
+            $table->foreignIdFor(Supplier::class)->constrained()->cascadeOnDelete()->cascadeOnUpdate();
+            $table->string('status')->default(PurchaseStatus::Waiting);
+            $table->decimal('total_amount');
+            $table->decimal('paid_amount')->default(0);
+            $table->decimal('remaining_amount')->default(0);
             $table->timestamps();
         });
     }
@@ -30,6 +32,6 @@ return new class extends Migration
      */
     public function down(): void
     {
-        Schema::dropIfExists('suppliers');
+        Schema::dropIfExists('purchases');
     }
 };

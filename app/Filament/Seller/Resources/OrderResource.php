@@ -24,6 +24,9 @@ class OrderResource extends Resource
 
     protected static ?string $navigationGroup = 'Order Section';
 
+    protected static ?string $modelLabel = 'Point Of Sales';
+
+
     public static function getNavigationBadge(): ?string
     {
         return static::getModel()::where('seller_id',CheckFilamentSellerUser::getSellerId())->where('status',OrderStatus::New)->count();

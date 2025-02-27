@@ -58,6 +58,10 @@ class ProductResource extends Resource
                            ->afterStateUpdated(fn(Forms\Set $set)=> $set('exchange_id',null))
                            ->required()->relationship('seller','name'),
 
+                       Forms\Components\Select::make('supplier_id')
+                           ->searchable()->preload()->live(onBlur: true,debounce: 200)
+                           ->nullable()->relationship('supplier','name'),
+
                        Forms\Components\Select::make('exchange_id')
                            ->searchable()->preload()->label('Currency')
                            ->live(onBlur: true,debounce: 200)
@@ -266,6 +270,7 @@ class ProductResource extends Resource
 
                                Forms\Components\SpatieMediaLibraryFileUpload::make('images')
                                    ->collection('images')->imageEditor()->multiple()
+                                   ->panelLayout('grid')
                                    ->image()->rules('required')->columnSpanFull(),
 
                            ])->columns(2)
@@ -401,6 +406,7 @@ class ProductResource extends Resource
 
                                Forms\Components\SpatieMediaLibraryFileUpload::make('images')
                                    ->collection('images')->imageEditor()->multiple()
+                                   ->panelLayout('grid')
                                    ->helperText('Clone Action လုပ်ပါက images ကို နောက်ဆုံးမှ ထည့်ပေးပါရန် (သို့) edit မှာ clone ပေးပါရန်')
                                    ->rules('required')->columnSpanFull(),
 
@@ -486,20 +492,23 @@ class ProductResource extends Resource
     {
         return $table
             ->columns([
-                Tables\Columns\TextColumn::make('brand.name')
-                    ->description(fn(Product $product)=> $product->category?->name)
+                Tables\Columns\TextColumn::make('category.name')->size('sm')
+                    ->description(fn(Product $product)=> $product->brand?->name)
                     ->sortable(),
 
                 Tables\Columns\TextColumn::make('name')
                     ->description(fn(Product $product)=> $product->sku)
                     ->searchable(),
 
+                Tables\Columns\TextColumn::make('supplier.name')
+                    ->searchable(),
+
                 Tables\Columns\TextColumn::make('exchange.currency.code')
                     ->description(fn(Product $product)=> $product->exchange->currency->name)
                     ->sortable(),
 
-                Tables\Columns\IconColumn::make('has_variant')
-                    ->boolean(),
+//                Tables\Columns\IconColumn::make('has_variant')
+//                    ->boolean(),
 
                 Tables\Columns\IconColumn::make('is_public')
                     ->boolean(),
@@ -523,9 +532,18 @@ class ProductResource extends Resource
                     ->toggleable(isToggledHiddenByDefault: true),
             ])
             ->filters([
+                Tables\Filters\SelectFilter::make('brand_id')
+                    ->searchable()->preload()->label('Brand Name')
+                    ->relationship('brand', 'name'),
+                Tables\Filters\SelectFilter::make('category_id')
+                    ->searchable()->preload()->label('Category Name')
+                    ->relationship('category', 'name'),
+                Tables\Filters\SelectFilter::make('supplier_id')
+                    ->searchable()->preload()->label('Supplier Name')
+                    ->relationship('supplier', 'name'),
                 Tables\Filters\TrashedFilter::make(),
 
-            ])
+            ],layout: Tables\Enums\FiltersLayout::AboveContent)
             ->actions([
                 Tables\Actions\ReplicateAction::make()
                     ->modalWidth('sm')

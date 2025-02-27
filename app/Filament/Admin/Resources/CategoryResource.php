@@ -79,7 +79,7 @@ class CategoryResource extends Resource
                     ->searchable(),
 
                 Tables\Columns\TextColumn::make('subCategories.name')
-                    ->sortable()->badge(),
+                    ->badge(),
 
                 Tables\Columns\TextColumn::make('deleted_at')
                     ->dateTime()
