@@ -32,7 +32,7 @@ class Product extends Component
 
     public function mount($storeID)
     {
-        Validator::make(
+        $validate = Validator::make(
             ['storeID' => $storeID],
             ['storeID' => 'required|exists:sellers,id']
         )->validate();

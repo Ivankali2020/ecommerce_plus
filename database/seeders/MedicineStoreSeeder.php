@@ -14,6 +14,7 @@ use App\Models\Product;
 use App\Models\Seller;
 use Illuminate\Database\Seeder;
 use Illuminate\Support\Facades\DB;
+use App\Helper\AttributeType;
 
 class MedicineStoreSeeder extends Seeder
 {
@@ -155,6 +156,8 @@ class MedicineStoreSeeder extends Seeder
                 foreach ($attributes as $att){
                     $attribute = new Attribute();
                     $attribute->name = $att['name'];
+                    $attribute->type = AttributeType::Text;
+                    $attribute->seller_id = $medicine['id'];
                     $attribute->save();
                     foreach ($att['values'] as $val){
                         $attributeValue = new AttributeValue();
@@ -414,9 +417,10 @@ class MedicineStoreSeeder extends Seeder
                     'name' => $index,
                     'buy_price' => $price / 100 * 10 ,
                     'price' => $price,
-                    'buy_mmk_price' => $price / 100 * 10 ,
+                    'mmk_buy_price' => $price / 100 * 10 ,
                     'mmk_price' => $price,
                     'discount_price' => $price / 100 * 10,
+                    'mmk_discount_price' => $price / 100 * 10,
                     'brand_id' => null,
                     'category_id' => Category::where('seller_id',$medicine['id'])->get()->random()->id,
                     'sku' => uniqid(),

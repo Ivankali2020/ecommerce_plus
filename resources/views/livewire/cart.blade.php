@@ -9,8 +9,7 @@
                     class="flex flex-col sm:flex-row items-start sm:items-center gap-4 p-4 mb-4 bg-white rounded-lg shadow-sm animate-fade-in-up">
                     <!-- Product Image -->
                     <img src="{{ $item->product->productImg }}" alt="{{ $item->product->name }}"
-                        class="w-24 h-24 object-cover rounded-lg">
-
+                        class="w-20 h-20 object-cover rounded-lg">
                     <!-- Product Details -->
                     <div class="flex-grow">
                         <h3 class="font-bold text-lg">{{ $item->product->name }}</h3>
