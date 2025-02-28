@@ -132,7 +132,7 @@
     </div>
 </nav>
 
-
+    
     @livewire('slider')
 
     @livewire('product',['storeID' => $this->store_id])
