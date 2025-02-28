@@ -12,6 +12,7 @@ class Authenticate extends Middleware
      */
     protected function redirectTo(Request $request): ?string
     {
-        return $request->expectsJson() ? null : route('login');
+        return abort(401, 'Session has expired, please re-login');
+        // return $request->expectsJson() ? null : route('login');
     }
 }

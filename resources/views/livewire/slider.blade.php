@@ -1,4 +1,4 @@
-<div class="p-8 container mx-auto ">
+<div class="p-8 container mx-auto " 4ZAJfkUpeEXC4sGpLkP0>
     <div x-data="{            
         slides: [                
             {
@@ -51,9 +51,9 @@
        
         <!-- slides -->
         <!-- Change min-h-[50svh] to your preferred height size -->
-        <div class="relative min-h-[40svh] w-full">
+        <div class="relative min-h-[20svh] lg:min-h-[40svh] w-full"  >
             <template x-for="(slide, index) in slides">
-                <div x-cloak x-show="currentSlideIndex == index + 1" class="absolute inset-0" x-transition.opacity.duration.1000ms>
+                <div x-cloak x-show="currentSlideIndex == index + 1" :key="index" class="absolute inset-0" x-transition.opacity.duration.1000ms>
                     <img class="absolute   rounded-lg  w-full h-full inset-0 object-cover text-on-surface dark:text-on-surface-dark" x-bind:src="slide.imgSrc" x-bind:alt="slide.imgAlt" />
                 </div>
             </template>

@@ -9,10 +9,14 @@ class ProductDetail extends Component
 {
     public Product $product;
 
-    public function mount($product)
+    public string $type;
+
+    public function mount($product,$type)
     {
         $this->product = $product;
+        $this->type = $type;
     }
+
     public function render()
     {
         return view('livewire.product-detail');

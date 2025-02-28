@@ -12,9 +12,10 @@
     @filamentStyles
     @vite('resources/css/app.css')
 
-    <title>{{ $title ?? 'Page Title' }}</title>
+    <title>{{ $title ?? 'Store' }}</title>
 </head>
 <body>
+
     {{ $slot }}
 
     @livewire('notifications')

@@ -24,4 +24,9 @@ class Category extends Model
     {
         return $this->belongsTo(Seller::class);
     }
+
+    public function products()
+    {
+        return $this->hasMany(Product::class);
+    }
 }
