@@ -75,7 +75,7 @@
                                 </div>
 
                                 <a href="{{ route('order.detail', $order) }}"
-                                   class="inline-flex items-center px-4 py-2 border border-transparent text-sm font-medium rounded-md shadow-sm text-white bg-slate-900 hover:bg-slate-800 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-slate-500">
+                                   class="inline-flex items-center px-4 py-2 border border-transparent text-sm font-medium rounded-md shadow-sm text-white bg-slate-900 hover:bg-slate-600 transition-all focus:outline-none focus:ring-0 focus:ring-offset-0 focus:ring-slate-500">
                                     View Details
                                 </a>
                             </div>

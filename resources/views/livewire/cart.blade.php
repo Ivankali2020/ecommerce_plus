@@ -120,7 +120,7 @@
 
         <!-- Order Summary -->
         @if ($cartItems->isNotEmpty())
-            <div class="lg:w-1/3" x-cloak x-data="deliveryHandler({{ json_encode($this->deliveries) }}, {{ json_encode($this->payments) }}, {{ $cartItems->sum(fn($item) => $item->total) }})" >
+            <div class="lg:w-1/3 font-jost " x-cloak x-data="deliveryHandler({{ json_encode($this->deliveries) }}, {{ json_encode($this->payments) }}, {{ $cartItems->sum(fn($item) => $item->total) }})" >
                 <div class="bg-white p-6 rounded-lg shadow-sm animate-fade-in">
                     <h2 class="text-2xl font-bebas mb-4">Order Summary</h2>
                     <div class="space-y-4">
@@ -224,7 +224,7 @@
                             </div>
 
                             <div class="space-y-4">
-                                <h3 class="text-lg font-medium text-gray-900">Select Address</h3>
+                                <label class="block text-sm font-medium text-gray-700">Select Address</label>
                                 <div class="grid grid-cols-1 gap-4">
                                     @forelse ($addresses as $address)
                                         <label
@@ -263,7 +263,7 @@
 
                                 <div class="space-y-4">
                                     <div class="space-y-2">
-                                        <h3 class="text-lg mb-4 font-medium text-gray-900">Select Payment Method</h3>
+                                        <h3  class="block text-sm font-medium text-gray-700">Payment Method</h3>
                                         <template x-for="payment in payments" :key="payment.id">
                                             <div class="flex items-center">
                                                 <input type="radio" :value="payment.id" x-model="selectedPayment" :id="'payment_' + payment.id"
@@ -302,7 +302,6 @@
 
                                 <div class="mt-4">
                                     <label for="paymentSlip" class="block text-sm font-medium text-gray-700">Payment Slip</label>
-
                                     <div x-data="{ fileName: '' }"
                                         class="relative border-2 mt-2  border-dashed border-gray-300 p-4 rounded-md cursor-pointer">
                                         <input type="file" wire:model="paymentSlip"

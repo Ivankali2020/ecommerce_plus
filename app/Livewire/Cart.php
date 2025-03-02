@@ -187,6 +187,18 @@ class Cart extends Component
 
             // Create order products from cart items
             foreach ($this->cartItems as $cartItem) {
+                if ($cartItem->variant) {
+                    if ($cartItem->quantity > $cartItem->variant->quantity) {
+                        throw new Exception($cartItem->product->name . ' stock is not enough');
+                    }
+                    $cartItem->variant->decrement('quantity', $cartItem->quantity);
+
+                } else {
+                    if ($cartItem->quantity > $cartItem->product->quantity) {
+                        throw new Exception($cartItem->product->name . ' stock is not enough');
+                    }
+                    $cartItem->decrement('quantity', $cartItem->quantity);
+                }
                 $order->products()->create([
                     'product_id' => $cartItem->product_id,
                     'variant_id' => $cartItem->variant_id,

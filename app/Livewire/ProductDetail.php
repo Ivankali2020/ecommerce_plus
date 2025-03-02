@@ -4,6 +4,8 @@ namespace App\Livewire;
 
 use App\Models\Product;
 use App\Traits\WithCart;
+use Illuminate\Support\Facades\Auth;
+use Livewire\Attributes\Computed;
 use Livewire\Component;
 
 class ProductDetail extends Component
@@ -19,6 +21,22 @@ class ProductDetail extends Component
         $this->type = $type;
     }
 
+
+    #[Computed]
+    public function relatedProducts()
+    {
+        return Product::query()
+            ->when(Auth::check(),function($q){
+                return $q->where('seller_id',Auth::user()->seller_id);
+            })
+            ->where('is_public',true)
+            ->where('category_id', $this->product->category_id)
+            ->where('id', '!=', $this->product->id)
+            ->with(['variants','category'])
+            ->latest()
+            ->limit(5)
+            ->get();
+    }
 
     public function render()
     {
