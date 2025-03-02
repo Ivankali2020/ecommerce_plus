@@ -4,6 +4,7 @@ namespace App\Filament\Seller\Resources;
 
 use App\Filament\Seller\Resources\OrderProductResource\Pages;
 use App\Filament\Seller\Resources\OrderProductResource\RelationManagers;
+use App\Helper\CheckFilamentSellerUser;
 use App\Models\Order;
 use App\Models\OrderProduct;
 use Filament\Forms;
@@ -127,6 +128,7 @@ class OrderProductResource extends Resource
     public static function getEloquentQuery(): Builder
     {
         return parent::getEloquentQuery()
+            ->whereRelation('order','seller_id',CheckFilamentSellerUser::getSellerId())
             ->withoutGlobalScopes([
 //                SoftDeletingScope::class,
             ]);

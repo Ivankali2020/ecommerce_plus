@@ -1,6 +1,6 @@
 <div>
     <div class="container mx-auto px-4 py-4 lg:p-8">
-       
+
         <h1 class="lg:text-5xl text-2xl font-bold mb-3 font-bebas">Recommended Products</h1>
 
         <!-- Recommended Products Section -->
@@ -12,18 +12,18 @@
             @endforelse
         </div>
 
-       
+
          <div class="mb-8">
             <h2 class="text-2lg lg:text-4xl font-bold lg:mt-8  mb-4 font-bebas">Categories</h2>
             <div  class="flex flex-wrap gap-2" >
                 <button wire:key="category-all" wire:loading.class="opacity-50" wire:click="filterByCategory(null)"
-                    class="px-4 py-2 text-sm rounded-full transition-colors duration-150 
+                    class="px-4 py-2 text-sm rounded-full transition-colors duration-150
                     {{ is_null($selectedCategory) ? 'bg-slate-900 text-white' : 'bg-slate-100 hover:bg-slate-200 text-slate-700' }}">
                     All
                 </button>
                 @foreach($this->categories as $category)
                     <button wre:key="category-{{ $category->id }}" wire:click="filterByCategory({{ $category->id }})"
-                        class="px-4 py-2 text-sm rounded-full transition-colors duration-150 
+                        class="px-4 py-2 text-sm rounded-full transition-colors duration-150
                             {{ $selectedCategory == $category->id ? 'bg-slate-900 text-white' : 'bg-slate-100 hover:bg-slate-200 text-slate-700' }}">
                         {{ $category->name }}
                         <span class="ml-1 text-xs opacity-75">({{ $category->products_count }})</span>
@@ -32,7 +32,6 @@
             </div>
         </div>
 
-        
 
         <div class="flex justify-between items-center">
             <h1 class="lg:text-5xl mt-10 font-bold mb-3 font-bebas">
@@ -70,9 +69,9 @@
         <!-- Latest Products Section -->
         <div wire:key="products-container" class="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-5 lg:gap-6 gap-4">
             @forelse ($this->products as $product)
-                <x-product-item 
-                    :product="$product" 
-                    type="latest" 
+                <x-product-item
+                    :product="$product"
+                    type="latest"
                 />
             @empty
                 <div wire:key="no-products-{{ $selectedCategory ?? 'all' }}">No Products Found</div>
@@ -80,15 +79,15 @@
         </div>
 
         @if($hasMorePages)
-            <div 
-                x-intersect.full="$wire.loadMore()" 
+            <div
+                x-intersect.full="$wire.loadMore()"
                 wire:key="load-more"
                 class="p-4 w-full flex justify-center items-center"
             >
-                <x-filament::loading-indicator 
-                    wire:loading 
-                    wire:target="loadMore" 
-                    class="h-5 w-5" 
+                <x-filament::loading-indicator
+                    wire:loading
+                    wire:target="loadMore"
+                    class="h-5 w-5"
                 />
             </div>
         @endif

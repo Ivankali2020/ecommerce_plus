@@ -3,6 +3,7 @@
 namespace App\Livewire;
 
 use App\Helper\CheckFilamentSellerUser;
+use App\Traits\WithCart;
 use Filament\Notifications\Notification;
 use Illuminate\Database\Eloquent\Collection;
 use Illuminate\Support\Facades\Validator;
@@ -18,7 +19,7 @@ use Illuminate\Support\Facades\Auth;
 
 class Product extends Component
 {
-    use WithPagination;
+    use WithPagination, WithCart;
 
     public $storeID;
     public $brand_id;
@@ -28,21 +29,36 @@ class Product extends Component
     public ?Collection $products;
     public $selectedCategory = null;
 
+
     protected $listeners = ['refreshProducts' => '$refresh'];
+
+    public function __construct()
+    {
+        $this->products = new Collection();
+    }
 
     public function mount($storeID)
     {
-        $validate = Validator::make(
-            ['storeID' => $storeID],
-            ['storeID' => 'required|exists:sellers,id']
-        )->validate();
-
-        $this->storeID = $storeID;
         // Initialize empty collection
-        $this->products = new Collection();
-        // Load initial products
-        $this->getProductData();
-        $this->selectedCategory = null;
+        try {
+            $validate = Validator::make(
+                ['storeID' => $storeID],
+                ['storeID' => 'required|exists:sellers,id']
+            )->validate();
+
+            $this->storeID = $storeID;
+            // Load initial products
+            $this->getProductData();
+            $this->selectedCategory = null;
+        } catch (\Illuminate\Validation\ValidationException $e) {
+            // Handle validation error
+            Notification::make()
+                ->title('Invalid store ID')
+                ->body('The store ID provided is invalid')
+                ->danger()
+                ->send();
+            session()->flash('error', 'Store not exists');
+        }
     }
 
     #[Computed]
@@ -152,56 +168,88 @@ class Product extends Component
             ->take(5)->get();
     }
 
-    public function addToCart($productId, $variantId = null)
-    {
-        try {
-            if (!Auth::check()) {
-                return redirect()->route('login');
-            }
+    // #[On('add-to-cart')]
+    // public function addToCart($productId, $variantId = null, $quantity = 1)
+    // {
+    //     try {
+    //         if (!Auth::check()) {
+    //             return redirect()->route('login');
+    //         }
 
-            $product = ProductModel::with(['variants'])->findOrFail($productId);
+    //         // Check if $productId is an array containing all parameters
+    //         if (is_array($productId) && isset($productId['productId'])) {
+    //             $params = $productId;
+    //             $productId = $params['productId'];
+    //             $variantId = $params['variantId'];
+    //             $quantity = $params['quantity'];
+    //         }
 
-            // Get the selected variant or default to first variant if product has variants
-            $variant = $variantId
-                ? $product->variants->find($variantId)
-                : ($product->has_variant ? $product->variants->first() : null);
+    //         $product = ProductModel::where('id', $productId)
+    //             ->with(['variants'])
+    //             ->first();
 
-            // Determine price based on variant and discount
-            $price = $variant
-                ? ($variant->discount > 0 ? $variant->mmk_discount_price : $variant->mmk_price)
-                : ($product->discount > 0 ? $product->mmk_discount_price : $product->mmk_price);
+    //         // Rest of your existing code...
+    //         $variant = $variantId
+    //             ? $product->variants->find($variantId)
+    //             : ($product->has_variant ? $product->variants->first() : null);
 
-            // Update or create cart item
-            $cartItem = Cart::updateOrCreate(
-                [
-                    'user_id' => Auth::id(),
-                    'product_id' => $productId,
-                    'variant_id' => $variant?->id
-                ],
-                [
-                    'quantity' => \DB::raw('quantity + 1'),
-                    'price' => $price,
-                    'total' => \DB::raw('(quantity + 1) * ' . $price)
-                ]
-            );
+    //         $price = $variant
+    //             ? ($variant->discount > 0 ? $variant->mmk_discount_price : $variant->mmk_price)
+    //             : ($product->discount > 0 ? $product->mmk_discount_price : $product->mmk_price);
 
-            Notification::make()
-                ->title('Product added to cart successfully!')
-                ->success()
-                ->send();
+    //         // Check existing cart item
+    //         $existingCart = Cart::where([
+    //             'user_id' => Auth::id(),
+    //             'product_id' => $productId,
+    //             'variant_id' => $variant?->id
+    //         ])->first();
 
-            $this->dispatch('cart-updated');
+    //         $newQuantity = $existingCart ? $existingCart->quantity + 1 : $quantity;
 
-        } catch (\Exception $e) {
-            logger()->error('Error adding to cart: ' . $e->getMessage());
+    //         // Check MOQ
+    //         if ($newQuantity < ( $variant?->MOQ ?? $product->MOQ)) {
+    //             Notification::make()
+    //                 ->title('Minimum Order Quantity not met')
+    //                 ->body("Minimum order quantity is {$product->MOQ} pieces")
+    //                 ->warning()
+    //                 ->send();
+    //             return;
+    //         }
 
-            Notification::make()
-                ->title('Failed to add product to cart')
-                ->body($e->getMessage())
-                ->danger()
-                ->send();
-        }
-    }
+
+    //         // Update or create cart item
+    //         Cart::updateOrCreate(
+    //             [
+    //                 'seller_id' => $this->storeID,
+    //                 'user_id' => Auth::id(),
+    //                 'product_id' => $productId,
+    //                 'price' => $price,
+    //                 'variant_id' => $variant?->id
+    //             ],
+    //             [
+    //                 'quantity' => $newQuantity,
+    //                 'price' => $price,
+    //                 'total' => $newQuantity * $price
+    //             ]
+    //         );
+
+    //         Notification::make()
+    //             ->title('Product added to cart successfully!')
+    //             ->success()
+    //             ->send();
+
+    //         // $this->dispatch('cart-updated');
+
+    //     } catch (\Exception $e) {
+    //         logger()->error('Error adding to cart: ' . $e->getMessage());
+
+    //         Notification::make()
+    //             ->title('Failed to add product to cart')
+    //             ->body($e->getMessage())
+    //             ->danger()
+    //             ->send();
+    //     }
+    // }
 
     public function render()
     {

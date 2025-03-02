@@ -45,6 +45,11 @@ class Order extends Model implements HasMedia
         return $this->belongsTo(Payment::class)->withTrashed();
     }
 
+    public function paymentAccount()
+    {
+        return $this->belongsTo(PaymentAccount::class)->withTrashed();
+    }
+
     public function products()
     {
         return $this->hasMany(OrderProduct::class);

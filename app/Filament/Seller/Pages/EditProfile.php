@@ -49,7 +49,7 @@ class EditProfile extends \Filament\Pages\Auth\EditProfile implements HasForms
                 SpatieMediaLibraryFileUpload::make('cover_photo')
                     ->multiple()->maxFiles(5)->label('Cover Photos')
                     ->collection('cover_photos')->imageEditor()
-                    ->image()->rules('required|mimes:jpeg,png,jpg|dimensions:ratio=16/9'),
+                    ->image()->rules('required|mimes:jpeg,png,jpg,webp'), //|dimensions:ratio=16/9
             ])
             ->statePath('data')
             ->model(auth()->user());

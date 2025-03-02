@@ -31,6 +31,11 @@ class PurchaseResource extends Resource
 
     protected static ?string $navigationIcon = 'heroicon-o-clipboard';
 
+    public static function getEloquentQuery(): Builder
+    {
+        return parent::getEloquentQuery()->where('seller_id',CheckFilamentSellerUser::getSellerId());
+    }
+
     public static function form(Form $form): Form
     {
         return $form
@@ -267,7 +272,7 @@ class PurchaseResource extends Resource
                             // Update variant stock and prices
                             $variant = $purchaseProduct->variant;
                             $variant->increment('quantity', $purchaseProduct->stocks);
-                            
+
                             // Update variant prices if buy price has changed
                             if ($variant->buy_price != $purchaseProduct->buy_price) {
                                 $exchange = $purchaseProduct->product->exchange;
@@ -275,7 +280,7 @@ class PurchaseResource extends Resource
                                     'buy_price' => $purchaseProduct->buy_price,
                                     'price' => $purchaseProduct->sell_price,
                                 ];
-            
+
                                 // If currency is not MMK, calculate MMK prices
                                 if ($exchange && $exchange->currency->code !== 'MMK') {
                                     $mmkPrice = Exchange::where('seller_id', $exchange->seller_id)->whereRelation('currency','code', 'MMK')->first();
@@ -283,48 +288,48 @@ class PurchaseResource extends Resource
                                     $updateData['mmk_price'] = $purchaseProduct->sell_price / $exchange->rate * $mmkPrice->rate;
                                     $updateData['mmk_discount_price'] = $variant->discount_price  / $exchange->rate * $mmkPrice->rate;
                                 } else {
-                                  
+
                                     $updateData['mmk_buy_price'] = $purchaseProduct->buy_price;
                                     $updateData['mmk_price'] = $purchaseProduct->sell_price;
                                     $updateData['mmk_discount_price'] = $variant->discount_price;
                                 }
-            
+
                                 $variant->update($updateData);
                             }
                         } else {
                             // Update product stock and prices
                             $product = $purchaseProduct->product;
                             $product->increment('quantity', $purchaseProduct->stocks);
-                            
+
                             if ($product->buy_price != $purchaseProduct->buy_price) {
                                 $exchange = $product->exchange;
                                 $updateData = [
                                     'buy_price' => $purchaseProduct->buy_price,
                                     'price' => $purchaseProduct->sell_price,
                                 ];
-            
+
                                 // If currency is not MMK, calculate MMK prices
                                 if ($exchange && $exchange->currency->code !== 'MMK') {
                                     $mmkPrice = Exchange::where('seller_id', $exchange->seller_id)->whereRelation('currency','code', 'MMK')->first();
                                     $updateData['mmk_buy_price'] = $purchaseProduct->buy_price / $exchange->rate * $mmkPrice->rate;
                                     $updateData['mmk_price'] = $purchaseProduct->sell_price / $exchange->rate * $mmkPrice->rate;
                                     $updateData['mmk_discount_price'] = $product->discount_price  / $exchange->rate * $mmkPrice->rate;
-                                    
+
                                 } else {
                                     // If currency is MMK, set MMK prices same as original prices
                                     $updateData['mmk_buy_price'] = $purchaseProduct->buy_price;
                                     $updateData['mmk_price'] = $purchaseProduct->sell_price;
                                     $updateData['mmk_discount_price'] = $product->discount_price;
                                 }
-            
+
                                 $product->update($updateData);
                             }
                         }
                     }
-                    
+
                     // Update purchase status to completed
                     $record->update(['status' => PurchaseStatus::Complete]);
-                    
+
                     Notification::make()
                         ->title('Stock imported successfully')
                         ->success()

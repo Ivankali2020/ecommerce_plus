@@ -22,7 +22,13 @@ class Variant extends Model implements HasMedia
         'attributes' => 'json'
     ];
 
-    protected $appends = ['attribute_values'];
+    protected $appends = ['attribute_values','product_img'];
+
+    public function getProductImgAttribute()
+    {
+        // Return product's own image
+        return $this->getFirstMediaUrl('images');
+    }
     
     public function exchange()
     {

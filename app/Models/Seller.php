@@ -81,6 +81,16 @@ class Seller extends Authenticatable implements HasMedia, FilamentUser
         return $this->hasMany(Delivery::class)->withTrashed();
     }
 
+    public function regions()
+    {
+        return $this->hasManyThrough(Region::class, Delivery::class, 'seller_id', 'id', 'id', 'region_id');
+    }
+
+    public function townships()
+    {
+        return $this->hasManyThrough(Township::class, Delivery::class, 'seller_id', 'id', 'id', 'township_id');
+    }
+
     public function users()
     {
         return $this->hasMany(User::class);

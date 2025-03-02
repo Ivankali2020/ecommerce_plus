@@ -6,6 +6,8 @@ use App\Filament\Seller\Pages\EditProfile;
 use App\Filament\Seller\Resources\OrderResource\Widgets\OrderChart;
 use App\Helper\CheckFilamentSellerUser;
 use App\Http\Middleware\AssignGlobeScope;
+use App\Http\Middleware\RedirectIfAuthenticated;
+use App\Http\Middleware\RedirectIfUnauthenticated;
 use App\Models\Seller;
 use App\Models\User;
 use BezhanSalleh\FilamentShield\FilamentShieldPlugin;
@@ -64,14 +66,14 @@ class SellerPanelProvider extends PanelProvider
                 SubstituteBindings::class,
                 DisableBladeIconComponents::class,
                 DispatchServingFilamentEvent::class,
-                AssignGlobeScope::class
+                AssignGlobeScope::class,
 
             ])
 //            ->spa(fn()=>  Str::contains(request()->userAgent(),'Chrome'))
             ->sidebarWidth('17rem')
             ->brandLogoHeight(fn() => Auth::guard('seller')->check() ? '3rem' : '5rem')
             ->brandLogo(fn() => Auth::guard('seller')->check() ? Seller::where('id',CheckFilamentSellerUser::getSellerId())->first()->getFirstMediaUrl('logos') : null) //->getFirstMediaUrl('logos')
-            ->brandName(fn() => Auth::guard('seller')->check() ?   Seller::find(CheckFilamentSellerUser::getSellerId()) : 'SELLER DASHBOARD')
+            ->brandName(fn() => Auth::guard('seller')->check() ?   Seller::find(CheckFilamentSellerUser::getSellerId())->name : 'SELLER DASHBOARD')
             ->font('jost')
             ->sidebarCollapsibleOnDesktop()
             ->databaseNotifications()
@@ -87,7 +89,9 @@ class SellerPanelProvider extends PanelProvider
                     ->icon('heroicon-o-link')
             ])
             ->authMiddleware([
-                Authenticate::class,
+                RedirectIfUnauthenticated::class,
+                // Authenticate::class,
+
             ]);
     }
 }

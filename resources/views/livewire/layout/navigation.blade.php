@@ -2,6 +2,8 @@
 
 use App\Livewire\Actions\Logout;
 use Livewire\Volt\Component;
+use App\Helper\UserHelper;
+
 
 new class extends Component
 {
@@ -14,27 +16,69 @@ new class extends Component
 
         $this->redirect('/', navigate: true);
     }
+
+    public function sellerId()
+    {
+        return UserHelper::getUserSellerId();
+    }
 }; ?>
 
 <nav x-data="{ open: false }" class="bg-white dark:bg-slate-800 border-b border-slate-100 dark:border-slate-700">
     <!-- Primary Navigation Menu -->
-    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+    <div class="container  mx-auto px-4 sm:px-6 lg:px-8">
         <div class="flex justify-between h-16">
             <div class="flex">
                 <!-- Logo -->
+                @auth
                 <div class="shrink-0 flex items-center">
-                    <a href="{{ route('dashboard') }}" wire:navigate>
-                        <x-application-logo class="block h-9 w-auto fill-current text-slate-800 dark:text-slate-200" />
+                    <a href="{{ route('welcome') }}" >
+                        <img src="{{ auth()->user()->seller->getFirstMediaUrl('logos') }}" class="block h-9 w-auto fill-current text-slate-800 dark:text-slate-200" />
                     </a>
                 </div>
 
-                <!-- Navigation Links -->
-                <div class="hidden space-x-8 sm:-my-px sm:ms-10 sm:flex">
-                    <x-nav-link :href="route('dashboard')" :active="request()->routeIs('dashboard')" wire:navigate>
-                        {{ __('Dashboard') }}
-                    </x-nav-link>
+                @else
+                <div class="shrink-0 flex items-center">
+                    <a href="{{ route('welcome') }}" >
+                        <x-application-logo class="block h-9 w-auto fill-current text-slate-800 dark:text-slate-200" />
+                    </a>
                 </div>
+                @endauth
+
+
+                @auth
+
+                    <div class="hidden space-x-8 sm:-my-px sm:ms-10 sm:flex">
+                        <x-nav-link :href="route('store', $this->sellerId())" :active="request()->routeIs('store')" wire:navigate>
+                            {{ __('Main Store') }}
+                        </x-nav-link>
+                    </div>
+
+                     <!-- Navigation Links -->
+                    <div class="hidden space-x-8 sm:-my-px sm:ms-10 sm:flex">
+                        <x-nav-link :href="route('dashboard')" :active="request()->routeIs('dashboard')" >
+                            {{ __('Dashboard') }}
+                        </x-nav-link>
+                    </div>
+
+
+                    <div class="hidden space-x-8 sm:-my-px sm:ms-10 sm:flex">
+                        <x-nav-link :href="route('cart')" :active="request()->routeIs('cart')" >
+                            {{ __('Cart') }}
+                        </x-nav-link>
+                    </div>
+
+
+                    <div class="hidden space-x-8 sm:-my-px sm:ms-10 sm:flex">
+                        <x-nav-link :href="route('order')" :active="request()->routeIs('order')" wire:navigate>
+                            {{ __('Order') }}
+                        </x-nav-link>
+                    </div>
+
+                @endauth
+
             </div>
+
+            @auth
 
             <!-- Settings Dropdown -->
             <div class="hidden sm:flex sm:items-center sm:ms-6">
@@ -65,6 +109,23 @@ new class extends Component
                     </x-slot>
                 </x-dropdown>
             </div>
+            @else
+
+            <div class="flex ">
+                <div class="hidden space-x-4 sm:-my-px sm:ms-4 sm:flex">
+                    <x-nav-link :href="route('login')" :active="request()->routeIs('login')" wire:navigate>
+                        {{ __('Login') }}
+                    </x-nav-link>
+                </div>
+
+                <div class="hidden space-x-4 sm:-my-px sm:ms-4 sm:flex">
+                    <x-nav-link :href="route('register')" :active="request()->routeIs('register')" wire:navigate>
+                        {{ __('Register') }}
+                    </x-nav-link>
+                </div>
+            </div>
+
+            @endauth
 
             <!-- Hamburger -->
             <div class="-me-2 flex items-center sm:hidden">
@@ -88,11 +149,11 @@ new class extends Component
 
         <!-- Responsive Settings Options -->
         <div class="pt-4 pb-1 border-t border-gray-200 dark:border-gray-600">
+            @auth
             <div class="px-4">
                 <div class="font-medium text-base text-gray-800 dark:text-gray-200" x-data="{{ json_encode(['name' => auth()->user()->name]) }}" x-text="name" x-on:profile-updated.window="name = $event.detail.name"></div>
                 <div class="font-medium text-sm text-gray-500">{{ auth()->user()->email }}</div>
             </div>
-
             <div class="mt-3 space-y-1">
                 <x-responsive-nav-link :href="route('profile')" wire:navigate>
                     {{ __('Profile') }}
@@ -105,6 +166,20 @@ new class extends Component
                     </x-responsive-nav-link>
                 </button>
             </div>
+            @else
+
+            <div class="hidden space-x-8 sm:-my-px sm:ms-10 sm:flex">
+                <x-nav-link :href="route('login')" :active="request()->routeIs('login')" wire:navigate>
+                    {{ __('Login') }}
+                </x-nav-link>
+            </div>
+            <div class="hidden space-x-8 sm:-my-px sm:ms-10 sm:flex">
+                <x-nav-link :href="route('register')" :active="request()->routeIs('register')" wire:navigate>
+                    {{ __('Register') }}
+                </x-nav-link>
+            </div>
+
+            @endauth
         </div>
     </div>
 </nav>

@@ -8,6 +8,7 @@ use App\Filament\Seller\Resources\ExpanseResource\RelationManagers;
 use App\Helper\CheckFilamentSellerUser;
 use App\Models\Expanse;
 use Filament\Forms;
+use Filament\Forms\Components\Group;
 use Filament\Forms\Components\Select;
 use Filament\Forms\Components\ToggleButtons;
 use Filament\Forms\Form;
@@ -24,11 +25,17 @@ class ExpanseResource extends Resource
 
     protected static ?string $navigationIcon = 'heroicon-o-banknotes';
 
+    public static function getEloquentQuery(): Builder
+    {
+        return parent::getEloquentQuery()->where('seller_id',CheckFilamentSellerUser::getSellerId());
+    }
+
     public static function form(Form $form): Form
     {
         return $form
             ->schema([
-                Forms\Components\Select::make('expanse_category_id')
+                Group::make()->schema([
+                    Forms\Components\Select::make('expanse_category_id')
                     ->required()->searchable()->preload()
                     ->relationship('category', 'name', modifyQueryUsing: function (Builder $query) {
                         $query->where('seller_id', CheckFilamentSellerUser::getSellerId());
@@ -64,6 +71,7 @@ class ExpanseResource extends Resource
                 Forms\Components\Textarea::make('description')
                     ->columnSpanFull(),
 
+                ])
             ]);
     }
 

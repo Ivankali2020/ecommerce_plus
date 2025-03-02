@@ -20,6 +20,7 @@ return new class extends Migration
             $table->foreignIdFor(Region::class)->constrained()->cascadeOnUpdate()->cascadeOnDelete();
             $table->foreignIdFor(Township::class)->constrained()->cascadeOnUpdate()->cascadeOnDelete();
             $table->string('address');
+            $table->string('phone')->nullable();
             $table->softDeletes();
             $table->timestamps();
         });
@@ -30,6 +31,8 @@ return new class extends Migration
      */
     public function down(): void
     {
+        Schema::disableForeignKeyConstraints();
         Schema::dropIfExists('user_addresses');
+        Schema::enableForeignKeyConstraints();
     }
 };

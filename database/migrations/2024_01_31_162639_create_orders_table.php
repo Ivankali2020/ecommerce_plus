@@ -2,6 +2,7 @@
 
 use App\Helper\OrderStatus;
 use App\Models\Payment;
+use App\Models\PaymentAccount;
 use App\Models\Seller;
 use App\Models\User;
 use App\Models\UserAddress;
@@ -23,21 +24,31 @@ return new class extends Migration
             $table->foreignIdFor(Seller::class,'staff_id')->nullable()->constrained('sellers','id')->cascadeOnUpdate()->cascadeOnDelete();
 
             $table->boolean('walk_in_customer')->default(0);
+            $table->boolean('is_cod')->default(0);
 
             $table->foreignIdFor(User::class)->nullable()->constrained()->cascadeOnUpdate()->cascadeOnDelete();
             $table->foreignIdFor(UserAddress::class)->nullable()->constrained()->cascadeOnUpdate()->cascadeOnDelete();
 
             $table->foreignIdFor(Payment::class)->nullable()->constrained()->cascadeOnUpdate()->cascadeOnDelete();
+            $table->foreignIdFor(PaymentAccount::class)->nullable()->constrained()->cascadeOnUpdate()->cascadeOnDelete();
 
             $table->string('status')->default(OrderStatus::New);
+
             $table->decimal('sub_total',15,2);
             $table->decimal('delivery_fees');
             $table->decimal('total_price',15,2);
+
+            $table->string('payment_slip')->nullable();
+
             $table->decimal('tax')->default(0);
             $table->decimal('tax_price')->default(0);
             $table->softDeletes();
             $table->timestamps();
+
+            $table->index(['user_id', 'seller_id']);
+            $table->index('created_at');
         });
+
     }
 
     /**

@@ -70,5 +70,6 @@ class Kernel extends HttpKernel
         'assignGlobeScope' => AssignGlobeScope::class,
         'superAdmin' => SuperAdmin::class,
         'checkUserSeller' => CheckUserBelongsToSeller::class,
+        'auth.redirect' => \App\Http\Middleware\RedirectIfUnauthenticated::class,
     ];
 }
