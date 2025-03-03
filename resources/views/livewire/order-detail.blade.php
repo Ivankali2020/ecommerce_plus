@@ -12,7 +12,7 @@
                <div class="">
                  <!-- Status Badge -->
                 <div class="text-end">
-                    <p class="inline  text-end w-full  uppercase px-3 py-1 rounded-full text-xs font-medium
+                    <p class="inline text-end w-full uppercase px-3 py-1 rounded-full text-xs font-medium {{ app()->currentLocale() === 'my' ? 'font-mm' : '' }}
                     @switch($order->status)
                         @case(\App\Helper\OrderStatus::New)
                             bg-yellow-100 text-yellow-800
@@ -29,11 +29,15 @@
                         @default
                             bg-gray-100 text-gray-800
                     @endswitch">
-                    {{ $order->status }}
+                    {{ __('messages.order_detail.status.' . strtolower($order->status->value)) }}
                   </p>
                 </div>
-                <p class="text-sm text-gray-600 my-2">Invoice #{{ $order->invoice_number }}</p>
-                 <p class="text-sm text-gray-600">Date: {{ $order->created_at->format('M d, Y') }}</p>
+                <p class="text-sm text-gray-600 my-2 {{ app()->currentLocale() === 'my' ? 'font-mm' : '' }}">
+                    {{ __('messages.order_detail.invoice_number') }}{{ $order->invoice_number }}
+                </p>
+                <p class="text-sm text-gray-600 {{ app()->currentLocale() === 'my' ? 'font-mm' : '' }}">
+                    {{ __('messages.order_detail.date') }}: {{ $order->created_at->format('M d, Y') }}
+                </p>
                </div>
             </div>
         </div>
@@ -44,10 +48,18 @@
             <table class="w-full">
                 <thead>
                     <tr class="border-b">
-                        <th class="text-left py-2 text-sm font-semibold text-gray-600">Item</th>
-                        <th class="text-center py-2 text-sm font-semibold text-gray-600">Qty</th>
-                        <th class="text-right py-2 text-sm font-semibold text-gray-600">Price</th>
-                        <th class="text-right py-2 text-sm font-semibold text-gray-600">Total</th>
+                        <th class="text-left py-2 text-sm font-semibold text-gray-600 {{ app()->currentLocale() === 'my' ? 'font-mm' : '' }}">
+                            {{ __('messages.order_detail.item') }}
+                        </th>
+                        <th class="text-center py-2 text-sm font-semibold text-gray-600 {{ app()->currentLocale() === 'my' ? 'font-mm' : '' }}">
+                            {{ __('messages.order_detail.quantity') }}
+                        </th>
+                        <th class="text-right py-2 text-sm font-semibold text-gray-600 {{ app()->currentLocale() === 'my' ? 'font-mm' : '' }}">
+                            {{ __('messages.order_detail.price') }}
+                        </th>
+                        <th class="text-right py-2 text-sm font-semibold text-gray-600 {{ app()->currentLocale() === 'my' ? 'font-mm' : '' }}">
+                            {{ __('messages.order_detail.total') }}
+                        </th>
                     </tr>
                 </thead>
                 <tbody class="divide-y divide-slate-100 divide-dotted ">
@@ -75,17 +87,23 @@
                 <tfoot class="border-t border-dotted ">
                     <tr>
                         <td colspan="2" class="py-3"></td>
-                        <td class="py-3 text-right text-sm font-medium text-gray-600">Subtotal</td>
+                        <td class="py-3 text-right text-sm font-medium text-gray-600 {{ app()->currentLocale() === 'my' ? 'font-mm' : '' }}">
+                            {{ __('messages.order_detail.subtotal') }}
+                        </td>
                         <td class="py-3 text-right text-sm text-gray-600">{{ number_format($order->products->sum(fn($item) => $item->price * $item->quantity)) }} Ks</td>
                     </tr>
                     <tr>
                         <td colspan="2"></td>
-                        <td class="py-3 text-right text-sm font-medium text-gray-600">Delivery Fee</td>
+                        <td class="py-3 text-right text-sm font-medium text-gray-600 {{ app()->currentLocale() === 'my' ? 'font-mm' : '' }}">
+                            {{ __('messages.order_detail.delivery_fee') }}
+                        </td>
                         <td class="py-3 text-right text-sm text-gray-600">{{ number_format($order->delivery_fees) }} Ks</td>
                     </tr>
                     <tr class="border-slate-700  border-t-2 ">
                         <td colspan="2"></td>
-                        <td class="py-3 text-right text-sm font-bold text-gray-800">Total</td>
+                        <td class="py-3 text-right text-sm font-bold text-gray-800 {{ app()->currentLocale() === 'my' ? 'font-mm' : '' }}">
+                            {{ __('messages.order_detail.total') }}
+                        </td>
                         <td class="py-3 text-right text-xl font-bold text-gray-800">{{ number_format($order->total_price) }} Ks</td>
                     </tr>
                 </tfoot>
@@ -96,17 +114,21 @@
           <div class="p-8 border-t">
             <div class="grid grid-cols-2 gap-8">
                 <div>
-                    <h2 class="text-2xl text-gray-800 mb-2 font-bebas ">Customer Details</h2>
+                    <h2 class="text-2xl text-gray-800 mb-2 font-bebas {{ app()->currentLocale() === 'my' ? 'font-mm' : '' }}">
+                        {{ __('messages.order_detail.customer_details') }}
+                    </h2>
                     <p class="text-sm text-gray-600">{{ auth()->user()->name }}</p>
                     <p class="text-sm my-2 text-gray-600">{{ $order->address?->address }}</p>
                     <p class="text-sm text-gray-600">{{ $order->address?->township?->mm_name }}, {{ $order->address?->region?->mm_name }}</p>
                 </div>
                 <div class="text-end">
-                    <h2 class="text-2xl text-gray-800 mb-2 font-bebas">Payment Method</h2>
+                    <h2 class="text-2xl text-gray-800 mb-2 font-bebas {{ app()->currentLocale() === 'my' ? 'font-mm' : '' }}">
+                        {{ __('messages.order_detail.payment_method') }}
+                    </h2>
 
                         @if($order->is_cod)
-                            <p class="text-sm text-gray-600">
-                                Cash on Delivery
+                            <p class="text-sm text-gray-600 {{ app()->currentLocale() === 'my' ? 'font-mm' : '' }}">
+                                {{ __('messages.order_detail.cash_on_delivery') }}
                             </p>
                         @else
                             <p class="text-sm text-gray-600 font-bold "> {{ $order->payment?->name }}</p>

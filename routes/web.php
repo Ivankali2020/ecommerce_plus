@@ -32,7 +32,12 @@ require __DIR__.'/auth.php';
 
 Route::get('store/{id}', Store::class)->name('store');
 Route::get('product/{product}', ProductDetail::class)->name('product');
-
+Route::get('language/{locale}', function ($locale) {
+    if (in_array($locale, ['en', 'my'])) {
+        session()->put('locale', $locale);
+    }
+    return redirect()->back();
+})->name('language.switch');
 
 Route::middleware(['auth'])->group(function(){
     Route::get('cart', Cart::class)->name('cart');

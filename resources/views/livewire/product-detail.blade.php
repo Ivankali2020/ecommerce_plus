@@ -1,21 +1,42 @@
-<div class="container mx-auto ">
+<div class="container mx-auto lg:mt-10 ">
     <div x-data="productDetail({{ json_encode($product) }}, {{ json_encode($product->variants) }})" class="space-y-4 grid grid-cols-1 md:grid-cols-2 gap-6">
         <!-- Image Gallery -->
         <div class="space-y-4">
             <div class="aspect-w-1 aspect-h-1 w-full overflow-hidden rounded-lg relative lg:p-8 ">
                 <!-- Discount Tag -->
                 <template x-if="selectedVariant?.discount > 0 ">
-                    <div class="absolute top-4 right-4 bg-red-500 text-white px-2 py-1 rounded-md z-10">
-                        <span x-text="selectedVariant?.discount"></span>% OFF
-                    </div>
+                    {{-- <div class="absolute top-4 right-4 bg-red-500 text-white px-2 py-1 rounded-md z-10">
+                        <span ></span>% OFF
+                    </div> --}}
+                    <div class="absolute top-5 right-5 z-10">
+                        <div class="bg-red-500 text-white px-3 py-1 rounded-full shadow-md transform transition-transform duration-300 hover:scale-105 flex items-center gap-1">
+                            <span class="font-bold {{ app()->currentLocale() === 'my' ? 'font-mm' : '' }}" x-text="selectedVariant?.discount">
+                                %
+                            </span>
+                            <span class="text-xs {{ app()->currentLocale() === 'my' ? 'font-mm' : '' }}">
+                                {{ __('messages.off') }}
+                            </span>
+                        </div>
                 </template>
+
                 @if($product->discount > 0 )
                 <template>
-                    <div class="absolute top-4 right-4 bg-red-500 text-white px-2 py-1 rounded-md z-10">
+                    {{-- <div class="absolute top-4 right-4 bg-red-500 text-white px-2 py-1 rounded-md z-10">
                         <span x-text="{{ $product->discount }}"></span>% OFF
+                    </div> --}}
+                    <div class="absolute top-0 right-0 z-10">
+                        <div class="bg-red-500 text-white px-3 py-1 rounded-full shadow-md transform transition-transform duration-300 hover:scale-105 flex items-center gap-1">
+                            <span class="font-bold {{ app()->currentLocale() === 'my' ? 'font-mm' : '' }}">
+                                {{ $product->has_variant ? $product->variants()->first()->discount : $product->discount }}%
+                            </span>
+                            <span class="text-xs {{ app()->currentLocale() === 'my' ? 'font-mm' : '' }}">
+                                {{ __('messages.off') }}
+                            </span>
+                        </div>
                     </div>
                 </template>
                 @endif
+
                 <img :src="selectedVariant ? selectedVariant.product_img : currentImage"
                      class="h-full w-full object-cover object-center">
 
@@ -77,8 +98,8 @@
 
                 </div>
                 <template x-if="selectedVariant?.discount > 0 ">
-                    <p class="text-red-600 text-sm">
-                        Save <span x-text="selectedVariant?.discount "></span>%
+                    <p class="text-red-600 text-sm {{ app()->currentLocale() === 'my' ? 'font-mm' : '' }}">
+                        {{ __('messages.product_detail.save') }} <span x-text="selectedVariant?.discount"></span>%
                     </p>
                 </template>
                 @if($product->discount > 0 )
@@ -94,7 +115,9 @@
             <!-- Variants Selection -->
             @if($product->has_variant)
                 <div class="space-y-3">
-                    <h3 class="text-sm font-medium text-gray-900">Available Variants</h3>
+                    <h3 class="text-sm font-medium text-gray-900 {{ app()->currentLocale() === 'my' ? 'font-mm' : '' }}">
+                        {{ __('messages.product_detail.available_variants') }}
+                    </h3>
                     <div class="flex items-center  gap-2">
                         @foreach($product->variants as $variant)
                             <button @click="
@@ -117,7 +140,9 @@
                 <!-- Dynamic Variant Attributes -->
                 <template x-if="selectedVariant?.attribute_values">
                     <div class="space-y-3">
-                        <h3 class="text-sm font-medium text-gray-900">Specifications</h3>
+                        <h3 class="text-sm font-medium text-gray-900 {{ app()->currentLocale() === 'my' ? 'font-mm' : '' }}">
+                            {{ __('messages.product_detail.specifications') }}
+                        </h3>
                         <dl class="space-y-2">
                             <template x-for="(attribute, index) in selectedVariant.attribute_values" :key="index">
                                 <div class="flex gap-4">
@@ -178,8 +203,8 @@
 
 
             <!-- MOQ -->
-            <div class="text-sm text-gray-500">
-                Minimum Order: {{ $product->MOQ }} pcs
+            <div class="text-sm text-gray-500 {{ app()->currentLocale() === 'my' ? 'font-mm' : '' }}">
+                {{ __('messages.product_detail.min_order') }}: {{ $product->MOQ }} {{ __('messages.product_detail.pieces') }}
             </div>
 
             <!-- Quantity Selector and Add to Cart -->
@@ -199,14 +224,13 @@
                 </div>
                 <button
                     @click="addToCart"  wire:loading.attr="disabled"
-                    class="w-full bg-slate-900 text-white py-2 px-4 rounded hover:bg-slate-800 transition-colors"
-                >
-                    Add to Cart
+                    class="w-full bg-slate-900 text-white py-2 px-4 rounded hover:bg-slate-800 transition-colors {{ app()->currentLocale() === 'my' ? 'font-mm' : '' }}">
+                    {{ __('messages.product_detail.add_to_cart') }}
                 </button>
 
             </div>
 
-            <div class="mt-10 font-thin font-mm " style="line-height: 2rem;"> {!! $product->description !!} </div>
+            <div class="mt-10 font-thin font-jost text-justify" style="line-height: 2rem;"> {!! $product->description !!} </div>
 
         </div>
     </div>
@@ -214,7 +238,9 @@
     <!-- Related Products Section -->
     @if($this->relatedProducts->isNotEmpty())
         <div class="mt-16 mb-10">
-            <h2 class="text-2xl font-bold text-gray-900 font-bebas  mb-6">Related Products</h2>
+            <h2 class="text-2xl font-bold text-gray-900 font-bebas  mb-6 {{ app()->currentLocale() === 'my' ? 'font-mm' : '' }}">
+                {{ __('messages.product_detail.related_products') }}
+            </h2>
             <div class="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-5 gap-4">
                 @foreach($this->relatedProducts as $product)
                     <x-product-item :$product/>
@@ -227,8 +253,12 @@
                 <svg class="w-16 h-16 mx-auto text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                     <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M9.879 7.519c1.171-1.025 3.071-1.025 4.242 0 1.172 1.025 1.172 2.687 0 3.712-.203.179-.43.326-.67.442-.745.361-1.45.999-1.45 1.827v.75M21 12a9 9 0 11-18 0 9 9 0 0118 0zm-9 5.25h.008v.008H12v-.008z"/>
                 </svg>
-                <h3 class="text-lg font-medium text-gray-900">No Related Products</h3>
-                <p class="text-gray-500">We couldn't find any related products at this time.</p>
+                <h3 class="text-lg font-medium text-gray-900 {{ app()->currentLocale() === 'my' ? 'font-mm' : '' }}">
+                    {{ __('messages.product_detail.no_related_products') }}
+                </h3>
+                <p class="text-gray-500 {{ app()->currentLocale() === 'my' ? 'font-mm' : '' }}">
+                    {{ __('messages.product_detail.no_related_description') }}
+                </p>
             </div>
         </div>
     @endif

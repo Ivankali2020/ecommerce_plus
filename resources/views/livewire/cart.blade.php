@@ -3,7 +3,9 @@
     <div class="flex flex-col lg:flex-row gap-8">
         <!-- Cart Items -->
         <div class="lg:w-2/3">
-            <h2 class="text-3xl font-bebas mb-6">Shopping Cart</h2>
+            <h2 class="text-3xl font-bebas mb-6 {{ app()->currentLocale() === 'my' ? 'font-mm' : '' }}">
+                {{ __('messages.cart.shopping_cart') }}
+            </h2>
 
 
             @forelse($cartItems as $item)
@@ -105,12 +107,16 @@
                         <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
                             d="M16 11V7a4 4 0 00-8 0v4M5 9h14l1 12H4L5 9z" />
                     </svg>
-                    <h3 class="mt-2 text-sm font-medium text-gray-900">Your cart is empty</h3>
-                    <p class="mt-1 text-sm text-gray-500">Start adding some items to your cart.</p>
+                    <h3 class="mt-2 text-sm font-medium text-gray-900 {{ app()->currentLocale() === 'my' ? 'font-mm' : '' }}">
+                        {{ __('messages.cart.empty_cart') }}
+                    </h3>
+                    <p class="mt-1 text-sm text-gray-500 {{ app()->currentLocale() === 'my' ? 'font-mm' : '' }}">
+                        {{ __('messages.cart.start_adding') }}
+                    </p>
                     <div class="mt-6">
                         <a href="{{ route('store', $this->seller_id) }}"
-                            class="inline-flex items-center px-4 py-2 border border-transparent shadow-sm text-sm font-medium rounded-md text-white bg-slate-900 hover:bg-slate-800 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-slate-500">
-                            Continue Shopping
+                            class="inline-flex items-center px-4 py-2 border border-transparent shadow-sm text-sm font-medium rounded-md text-white bg-slate-900 hover:bg-slate-800 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-slate-500 {{ app()->currentLocale() === 'my' ? 'font-mm' : '' }}">
+                            {{ __('messages.cart.continue_shopping') }}
                         </a>
                     </div>
                 </div>
@@ -122,29 +128,41 @@
         @if ($cartItems->isNotEmpty())
             <div class="lg:w-1/3 font-jost " x-cloak x-data="deliveryHandler({{ json_encode($this->deliveries) }}, {{ json_encode($this->payments) }}, {{ $cartItems->sum(fn($item) => $item->total) }})" >
                 <div class="bg-white p-6 rounded-lg shadow-sm animate-fade-in">
-                    <h2 class="text-2xl font-bebas mb-4">Order Summary</h2>
+                    <h2 class="text-2xl font-bebas mb-4 {{ app()->currentLocale() === 'my' ? 'font-mm' : '' }}">
+                        {{ __('messages.cart.order_summary') }}
+                    </h2>
                     <div class="space-y-4">
                         <div class="flex justify-between">
-                            <span class="text-gray-600">Subtotal</span>
+                            <span class="text-gray-600 {{ app()->currentLocale() === 'my' ? 'font-mm' : '' }}">
+                                {{ __('messages.cart.subtotal') }}
+                            </span>
                             <span class="font-bold" x-text="formatPrice(total) + ' ks'">   </span>
                         </div>
                         <div class="flex justify-between" x-show="deliveryDetails != null">
-                            <span class="text-gray-600">Delivery Fee</span>
+                            <span class="text-gray-600 {{ app()->currentLocale() === 'my' ? 'font-mm' : '' }}">
+                                {{ __('messages.cart.delivery_fee') }}
+                            </span>
                             <span class="font-bold" x-text="deliveryDetails?.fees ?? 0"></span>
                         </div>
                         <hr>
                         <div class="flex justify-between text-lg font-bold">
-                            <span>Total</span>
+                            <span class="{{ app()->currentLocale() === 'my' ? 'font-mm' : '' }}">
+                                {{ __('messages.cart.total') }}
+                            </span>
                             <span x-text="formatPrice(total + parseInt(deliveryDetails?.fees ?? 0)) + ' ks'">  </span>
                         </div>
 
-                        <h2 class="text-2xl pt-4 font-bebas mb-4">Checkout Process</h2>
+                        <h2 class="text-2xl pt-4 font-bebas mb-4 {{ app()->currentLocale() === 'my' ? 'font-mm' : '' }}">
+                            {{ __('messages.cart.checkout_process') }}
+                        </h2>
 
                         <div class="space-y-4">
 
                             <!-- Region Selection -->
                             <div class="space-y-2">
-                                <label class="block text-sm font-medium text-gray-700">Select Region</label>
+                                <label class="block text-sm font-medium text-gray-700 {{ app()->currentLocale() === 'my' ? 'font-mm' : '' }}">
+                                    {{ __('messages.cart.select_region') }}
+                                </label>
                                 <select x-model="selectedRegion"
                                     class="mt-1 block w-full pl-3 pr-10 py-2 text-base border-gray-300 focus:outline-none focus:ring-slate-500 focus:border-slate-500 sm:text-sm rounded-md">
                                     <option value="">Select a region</option>
@@ -159,7 +177,9 @@
 
                             <!-- Township Selection -->
                             <div class="space-y-2" x-show="selectedRegion">
-                                <label class="block text-sm font-medium text-gray-700">Select Township</label>
+                                <label class="block text-sm font-medium text-gray-700 {{ app()->currentLocale() === 'my' ? 'font-mm' : '' }}">
+                                    {{ __('messages.cart.select_township') }}
+                                </label>
                                 <select x-model="selectedTownship"
                                     class="mt-1 block w-full pl-3 pr-10 py-2 text-base border-gray-300 focus:outline-none focus:ring-slate-500 focus:border-slate-500 sm:text-sm rounded-md">
                                     <option value="">Select a township</option>
@@ -183,7 +203,7 @@
                                                         <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="size-5">
                                                             <path stroke-linecap="round" stroke-linejoin="round" d="M8.25 18.75a1.5 1.5 0 0 1-3 0m3 0a1.5 1.5 0 0 0-3 0m3 0h6m-9 0H3.375a1.125 1.125 0 0 1-1.125-1.125V14.25m17.25 4.5a1.5 1.5 0 0 1-3 0m3 0a1.5 1.5 0 0 0-3 0m3 0h1.125c.621 0 1.129-.504 1.09-1.124a17.902 17.902 0 0 0-3.213-9.193 2.056 2.056 0 0 0-1.58-.86H14.25M16.5 18.75h-2.25m0-11.177v-.958c0-.568-.422-1.048-.987-1.106a48.554 48.554 0 0 0-10.026 0 1.106 1.106 0 0 0-.987 1.106v7.635m12-6.677v6.677m0 4.5v-4.5m0 0h-12" />
                                                           </svg>
-                                                        <span class="text-sm text-gray-600">Delivery Fee</span>
+                                                        <span class="text-sm text-gray-600" {{ app()->currentLocale() === 'my' ? 'font-mm' : '' }}> {{ __('messages.cart.delivery_fee') }}</span>
                                                     </div>
                                                     <div class="flex items-center gap-1">
                                                         <span class="text-sm font-medium text-gray-900" x-text="deliveryDetails ? formatPrice(deliveryDetails.fees) : '0'"></span>
@@ -197,7 +217,7 @@
                                                         <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="size-5">
                                                             <path stroke-linecap="round" stroke-linejoin="round" d="M2.25 18.75a60.07 60.07 0 0 1 15.797 2.101c.727.198 1.453-.342 1.453-1.096V18.75M3.75 4.5v.75A.75.75 0 0 1 3 6h-.75m0 0v-.375c0-.621.504-1.125 1.125-1.125H20.25M2.25 6v9m18-10.5v.75c0 .414.336.75.75.75h.75m-1.5-1.5h.375c.621 0 1.125.504 1.125 1.125v9.75c0 .621-.504 1.125-1.125 1.125h-.375m1.5-1.5H21a.75.75 0 0 0-.75.75v.75m0 0H3.75m0 0h-.375a1.125 1.125 0 0 1-1.125-1.125V15m1.5 1.5v-.75A.75.75 0 0 0 3 15h-.75M15 10.5a3 3 0 1 1-6 0 3 3 0 0 1 6 0Zm3 0h.008v.008H18V10.5Zm-12 0h.008v.008H6V10.5Z" />
                                                           </svg>
-                                                        <span class="text-sm font-medium text-slate-700">Total Amount</span>
+                                                        <span class="text-sm font-medium text-slate-700 {{ app()->currentLocale() === 'my' ? 'font-mm' : '' }}"> {{ __('messages.cart.total') }}</span>
                                                     </div>
                                                     <div class="flex items-baseline gap-1">
                                                         <span class="text-lg font-bold text-slate-900" x-text="formatPrice(total + parseInt(deliveryDetails?.fees ?? 0))"></span>
@@ -209,8 +229,9 @@
                                                 <div class="flex items-center">
                                                     <input id="is_cod" x-model="is_cod" type="checkbox"
                                                         class="h-4 w-4 text-slate-600 border-gray-300 rounded focus:ring-0 ring-0 ">
-                                                    <label for="is_cod" class="ml-2 block text-sm text-gray-900">Cash
-                                                        on Delivery</label>
+                                                    <label for="is_cod" class="ml-2 block text-sm text-gray-900">
+                                                        {{ __('messages.cart.cash_on_delivery') }}
+                                                    </label>
                                                 </div>
                                             </template>
 
@@ -224,7 +245,9 @@
                             </div>
 
                             <div class="space-y-4">
-                                <label class="block text-sm font-medium text-gray-700">Select Address</label>
+                                <label class="block text-sm font-medium text-gray-700 {{ app()->currentLocale() === 'my' ? 'font-mm' : '' }}">
+                                    {{ __('messages.cart.select_address') }}
+                                </label>
                                 <div class="grid grid-cols-1 gap-4">
                                     @forelse ($addresses as $address)
                                         <label
@@ -248,8 +271,12 @@
                                                 <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17.657 16.657L13.414 20.9a1.998 1.998 0 01-2.827 0l-4.244-4.243a8 8 0 1111.314 0z" />
                                                 <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 11a3 3 0 11-6 0 3 3 0 016 0z" />
                                             </svg>
-                                            <p class="text-sm my-2  text-slate-600">No addresses found !</p>
-                                            <p class="text-xs text-slate-400 ">Create New One</a>
+                                            <p class="text-sm my-2 text-slate-600 {{ app()->currentLocale() === 'my' ? 'font-mm' : '' }}">
+                                                {{ __('messages.cart.no_addresses') }}
+                                            </p>
+                                            <p class="text-xs text-slate-400 {{ app()->currentLocale() === 'my' ? 'font-mm' : '' }}">
+                                                {{ __('messages.cart.create_new_address') }}
+                                            </p>
                                          </div>
                                     @endforelse
                                 </div>
@@ -263,7 +290,9 @@
 
                                 <div class="space-y-4">
                                     <div class="space-y-2">
-                                        <h3  class="block text-sm font-medium text-gray-700">Payment Method</h3>
+                                        <h3 class="block text-sm font-medium text-gray-700 {{ app()->currentLocale() === 'my' ? 'font-mm' : '' }}">
+                                            {{ __('messages.cart.payment_method') }}
+                                        </h3>
                                         <template x-for="payment in payments" :key="payment.id">
                                             <div class="flex items-center">
                                                 <input type="radio" :value="payment.id" x-model="selectedPayment" :id="'payment_' + payment.id"
@@ -301,14 +330,14 @@
                                 </div>
 
                                 <div class="mt-4">
-                                    <label for="paymentSlip" class="block text-sm font-medium text-gray-700">Payment Slip</label>
+                                    <label for="paymentSlip" class="block text-sm font-medium text-gray-700 {{ app()->currentLocale() === 'my' ? 'font-mm' : '' }}">  {{ __('messages.cart.payment_slip') }}</label>
                                     <div x-data="{ fileName: '' }"
                                         class="relative border-2 mt-2  border-dashed border-gray-300 p-4 rounded-md cursor-pointer">
                                         <input type="file" wire:model="paymentSlip"
                                             @change="fileName = $event.target.files[0].name"
                                             class="absolute inset-0 opacity-0 w-full h-full cursor-pointer">
                                         <div class="text-center">
-                                            <span x-text="fileName ? fileName : 'Click to upload or drag and drop'"
+                                            <span x-text="fileName ? fileName : '{{ __('messages.cart.upload_message')}}'"
                                                 class="text-gray-500"></span>
                                         </div>
                                     </div>
@@ -327,8 +356,8 @@
 
                         </div>
                         <button @click="handleCheckout"
-                            class="w-full bg-slate-900 text-white py-3 rounded-lg hover:bg-slate-800 transition-colors">
-                            Proceed to Checkout
+                            class="w-full bg-slate-900 text-white py-3 rounded-lg hover:bg-slate-800 transition-colors {{ app()->currentLocale() === 'my' ? 'font-mm' : '' }}">
+                            {{ __('messages.cart.proceed_checkout') }}
                         </button>
                     </div>
                 </div>

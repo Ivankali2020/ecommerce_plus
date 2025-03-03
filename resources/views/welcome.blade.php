@@ -40,27 +40,24 @@
                     <div class="mx-auto max-w-7xl px-6 lg:px-8">
                         <div class="mx-auto max-w-2xl text-center">
                             <div class="mb-8 flex justify-center">
-                                <div
-                                    class="font-jost  relative rounded-full px-3 py-1 text-sm leading-6 text-gray-600 ring-1 ring-gray-900/10 hover:ring-gray-900/20 dark:text-gray-300 dark:ring-gray-700 dark:hover:ring-gray-600">
-                                    Premium IT Solutions Provider
+                                <div class="font-jost relative rounded-full px-3 py-1 text-sm leading-6 text-gray-600 ring-1 ring-gray-900/10 hover:ring-gray-900/20 dark:text-gray-300 dark:ring-gray-700 dark:hover:ring-gray-600">
+                                    {{ __('messages.tagline') }}
                                 </div>
                             </div>
 
                             <div class="flex justify-center">
-                                <img class="w-40" src="{{ asset('assets/logo.png')}}" alt="" >
+                                <img class="w-40" src="{{ asset('assets/logo.png')}}" alt="Logo">
                             </div>
-
 
                             <!-- Main Heading -->
                             <h1 style="letter-spacing: 1rem"
                                 class="text-8xl font-bebas  font-bold tracking-tight text-gray-900 sm:text-6xl bg-gradient-to-r from-slate-500 via-[#c2a03d] to-slate-500 bg-clip-text text-transparent dark:from-slate-400 dark:via-sky-400 dark:to-slate-400">
-                                PADAUNG MARKET
+                                {{ __('messages.title') }}
                             </h1>
 
                             <!-- Subheading -->
                             <p class="mt-6 font-jost text-md text-gray-600 dark:text-gray-300">
-                                Your one-stop destination for all tech solutions. Explore our trusted sellers and find
-                                the perfect products and services for your needs.
+                                {{ __('messages.description') }}
                             </p>
 
                             <!-- Call to Action Buttons -->
@@ -69,7 +66,7 @@
                                 @guest
                                 <a href="{{ route('login') }}"
                                     class="text-sm font-semibold leading-6 text-gray-900 dark:text-gray-300">
-                                    Sign In <span aria-hidden="true">→</span>
+                                    {{ __('messages.sign_in') }} <span aria-hidden="true">→</span>
                                 </a>
                                 @endguest
                             </div>
@@ -97,7 +94,7 @@
                                         {{ $seller->name }}</h2>
                                     @if ($seller->addresses)
                                         <div class="font-jost  border-gray-300   mt-4 ">
-                                            <h2 class=" font-bold mb-2 header_invoice"> လိပ်စာများ </h2>
+                                            <h2 class=" font-bold mb-2 header_invoice">{{ __('messages.addresses') }}</h2>
                                             @forelse ($seller->addresses as $index=>$address)
                                                 <div class="mt-2 text-xs">
                                                     <p class=" text-xs">{{ $address->address }}</p>

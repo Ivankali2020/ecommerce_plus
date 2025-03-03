@@ -15,15 +15,20 @@ export default {
     ],
 
     theme: {
+
         extend: {
             fontFamily: {
                 sans: ["Figtree", ...defaultTheme.fontFamily.sans],
                 bebas: ['"Bebas Neue"', "cursive"],
                 jost: ["Jost", "sans-serif"],
+                mm: ["mm","Jost", "sans-serif"],
             },
             animation: {
                 "fade-in": "fadeIn 0.5s ease-in-out",
                 "fade-in-up": "fadeInUp 0.5s ease-in-out",
+            },
+            fontFeatureSettings: {
+                'myanmar': '"kern" 1, "mymr" 1',
             },
             keyframes: {
                 fadeIn: {

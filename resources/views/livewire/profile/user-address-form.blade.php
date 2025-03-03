@@ -1,10 +1,13 @@
-
-<div class="w-full  grid grid-cols-1  lg:grid-cols-2  gap-4 ">
+<div class="w-full grid grid-cols-1 lg:grid-cols-2 gap-4">
     <!-- Address Table -->
     <div class="">
         <div class="px-4 py-5 sm:px-6 flex justify-between items-center">
-            <h3 class="text-lg leading-6 font-medium text-gray-900">My Addresses</h3>
-            <span class="text-sm text-gray-500">{{ count($addresses) }}/3 addresses</span>
+            <h3 class="text-lg leading-6 font-medium text-gray-900 {{ app()->currentLocale() === 'my' ? 'font-mm' : '' }}">
+                {{ __('messages.address.my_addresses') }}
+            </h3>
+            <span class="text-sm text-gray-500 {{ app()->currentLocale() === 'my' ? 'font-mm' : '' }}">
+                {{ count($addresses) }}/3 {{ __('messages.address.addresses_count') }}
+            </span>
         </div>
 
         <div class="grid grid-cols-1 gap-4">
@@ -59,8 +62,12 @@
                         <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17.657 16.657L13.414 20.9a1.998 1.998 0 01-2.827 0l-4.244-4.243a8 8 0 1111.314 0z" />
                         <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 11a3 3 0 11-6 0 3 3 0 016 0z" />
                     </svg>
-                    <h3 class="mt-2 text-sm font-medium text-gray-900">No addresses</h3>
-                    <p class="mt-1 text-sm text-gray-500">Get started by adding a new address.</p>
+                    <h3 class="mt-2 text-sm font-medium text-gray-900 {{ app()->currentLocale() === 'my' ? 'font-mm' : '' }}">
+                        {{ __('messages.address.no_addresses') }}
+                    </h3>
+                    <p class="mt-1 text-sm text-gray-500 {{ app()->currentLocale() === 'my' ? 'font-mm' : '' }}">
+                        {{ __('messages.address.start_message') }}
+                    </p>
                 </div>
             @endforelse
         </div>
@@ -68,78 +75,78 @@
 
     @if(count($addresses) < 4)
         <!-- Address Form -->
-        <div class=" p-6">
-            <h3 class="text-lg leading-6 font-medium text-gray-900 mb-4">
-                {{ $editId ? 'Edit Address' : 'Add New Address' }}
+        <div class="p-6">
+            <h3 class="text-lg leading-6 font-medium text-gray-900 mb-4 {{ app()->currentLocale() === 'my' ? 'font-mm' : '' }}">
+                {{ $editId ? __('messages.address.edit') : __('messages.address.add_new') }}
             </h3>
 
             <div class="space-y-4">
-                    <div>
-                        <label for="region" class="block text-sm font-medium text-gray-700">Region</label>
-                        <select id="region" wire:model.live="selectedRegion"
-                                class="mt-1 block w-full pl-3 pr-10 py-2 text-base border-gray-300 focus:outline-none focus:ring-slate-500 focus:border-slate-500 sm:text-sm rounded-md">
-                            <option value="">Select Region</option>
-                            @foreach($regions as $region)
-                                <option value="{{ $region->id }}">{{ $region->mm_name }}</option>
-                            @endforeach
-                        </select>
-                        @error('selectedRegion')
-                            <p class="mt-1 text-sm text-red-600">{{ $message }}</p>
-                        @enderror
-                    </div>
+                <div>
+                    <label for="region" class="block text-sm font-medium text-gray-700 {{ app()->currentLocale() === 'my' ? 'font-mm' : '' }}">
+                        {{ __('messages.address.region') }}
+                    </label>
+                    <select id="region" wire:model.live="selectedRegion"
+                            class="mt-1 block w-full pl-3 pr-10 py-2 text-base border-gray-300 focus:outline-none focus:ring-slate-500 focus:border-slate-500 sm:text-sm rounded-md {{ app()->currentLocale() === 'my' ? 'font-mm' : '' }}">
+                        <option value="">{{ __('messages.address.select_region') }}</option>
+                        @foreach($regions as $region)
+                            <option value="{{ $region->id }}">{{ $region->mm_name }}</option>
+                        @endforeach
+                    </select>
+                    @error('selectedRegion')
+                        <p class="mt-1 text-sm text-red-600">{{ $message }}</p>
+                    @enderror
+                </div>
 
-                    <div>
-                        <label for="township" class="block text-sm font-medium text-gray-700">Township</label>
-                        <select id="township" wire:model.live="selectedTownship"
-                                class="mt-1 block w-full pl-3 pr-10 py-2 text-base border-gray-300 focus:outline-none focus:ring-slate-500 focus:border-slate-500 sm:text-sm rounded-md">
-                            <option value="">Select Township</option>
-                            @foreach($townships as $township)
-                                <option value="{{ $township->id }}">{{ $township->mm_name }}</option>
-                            @endforeach
-                        </select>
-                        @error('selectedTownship')
-                            <p class="mt-1 text-sm text-red-600">{{ $selectedTownship }}</p>
-                        @enderror
-                    </div>
+                <div>
+                    <label for="township" class="block text-sm font-medium text-gray-700 {{ app()->currentLocale() === 'my' ? 'font-mm' : '' }}">
+                        {{ __('messages.address.township') }}
+                    </label>
+                    <select id="township" wire:model.live="selectedTownship"
+                            class="mt-1 block w-full pl-3 pr-10 py-2 text-base border-gray-300 focus:outline-none focus:ring-slate-500 focus:border-slate-500 sm:text-sm rounded-md {{ app()->currentLocale() === 'my' ? 'font-mm' : '' }}">
+                        <option value="">{{ __('messages.address.select_township') }}</option>
+                        @foreach($townships as $township)
+                            <option value="{{ $township->id }}">{{ $township->mm_name }}</option>
+                        @endforeach
+                    </select>
+                    @error('selectedTownship')
+                        <p class="mt-1 text-sm text-red-600">{{ $selectedTownship }}</p>
+                    @enderror
+                </div>
 
-                    <div>
-                        <label for="address" class="block text-sm font-medium text-gray-700">Address</label>
-                        <textarea id="address" wire:model="address" rows="3"
-                                  class="mt-1 block w-full border-gray-300 rounded-md shadow-sm focus:ring-slate-500 focus:border-slate-500 sm:text-sm"
-                                  placeholder="Enter your full address"></textarea>
-                        @error('address')
-                            <p class="mt-1 text-sm text-red-600">{{ $address }}</p>
-                        @enderror
-                    </div>
+                <div>
+                    <label for="address" class="block text-sm font-medium text-gray-700 {{ app()->currentLocale() === 'my' ? 'font-mm' : '' }}">
+                        {{ __('messages.address.address_label') }}
+                    </label>
+                    <textarea id="address" wire:model="address" rows="3"
+                              class="mt-1 block w-full border-gray-300 rounded-md shadow-sm focus:ring-slate-500 focus:border-slate-500 sm:text-sm {{ app()->currentLocale() === 'my' ? 'font-mm' : '' }}"
+                              placeholder="{{ __('messages.address.address_placeholder') }}"></textarea>
+                    @error('address')
+                        <p class="mt-1 text-sm text-red-600">{{ $address }}</p>
+                    @enderror
+                </div>
 
-                    <div>
-                        <label for="phone" class="block text-sm font-medium text-gray-700">Phone Number</label>
-                        <input type="text" id="phone" wire:model="phone"
-                               class="mt-1 block w-full border-gray-300 rounded-md shadow-sm focus:ring-slate-500 focus:border-slate-500 sm:text-sm"
-                               placeholder="Enter phone number">
-                        @error('phone')
-                            <p class="mt-1 text-sm text-red-600">{{ $phone }}</p>
-                        @enderror
-                    </div>
-
-                    {{-- <div class="flex justify-end">
-                        <button wire:click="save"
-                                class="inline-flex items-center px-4 py-2 border border-transparent text-sm font-medium rounded-md shadow-sm text-white bg-slate-900 hover:bg-slate-800 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-slate-500">
-                            Save Address
-                        </button>
-                    </div> --}}
-
+                <div>
+                    <label for="phone" class="block text-sm font-medium text-gray-700 {{ app()->currentLocale() === 'my' ? 'font-mm' : '' }}">
+                        {{ __('messages.address.phone') }}
+                    </label>
+                    <input type="text" id="phone" wire:model="phone"
+                           class="mt-1 block w-full border-gray-300 rounded-md shadow-sm focus:ring-slate-500 focus:border-slate-500 sm:text-sm {{ app()->currentLocale() === 'my' ? 'font-mm' : '' }}"
+                           placeholder="{{ __('messages.address.phone_placeholder') }}">
+                    @error('phone')
+                        <p class="mt-1 text-sm text-red-600">{{ $phone }}</p>
+                    @enderror
+                </div>
 
                 <div class="flex justify-end gap-3">
                     @if($editId)
                         <button wire:click="cancelEdit" type="button"
-                                class="inline-flex items-center px-4 py-2 border border-gray-300 text-sm font-medium rounded-md text-gray-700 bg-white hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-slate-500">
-                            Cancel
+                                class="inline-flex items-center px-4 py-2 border border-gray-300 text-sm font-medium rounded-md text-gray-700 bg-white hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-slate-500 {{ app()->currentLocale() === 'my' ? 'font-mm' : '' }}">
+                            {{ __('messages.address.cancel') }}
                         </button>
                     @endif
                     <button wire:click="save"
-                            class="inline-flex items-center px-4 py-2 border border-transparent text-sm font-medium rounded-md shadow-sm text-white bg-slate-900 hover:bg-slate-800 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-slate-500">
-                        {{ $editId ? 'Update Address' : 'Save Address' }}
+                            class="inline-flex items-center px-4 py-2 border border-transparent text-sm font-medium rounded-md shadow-sm text-white bg-slate-900 hover:bg-slate-800 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-slate-500 {{ app()->currentLocale() === 'my' ? 'font-mm' : '' }}">
+                        {{ $editId ? __('messages.address.update') : __('messages.address.save') }}
                     </button>
                 </div>
             </div>

@@ -6,19 +6,19 @@
         </div>
     </div>
 
-    <h1 class="text-3xl font-bold mb-8 font-bebas">Order History</h1>
+    <h1 class="text-3xl font-bold mb-8 font-bebas {{ app()->currentLocale() === 'my' ? 'font-mm' : '' }}">
+        {{ __('messages.orders.history') }}
+    </h1>
 
     <!-- Group orders by seller -->
     @forelse($groupedOrders as $sellerName => $sellerOrders)
         <div class="mb-8">
-            <h2 class="text-2xl font-semibold mb-4 flex items-center gap-2">
+            <h2 class="text-2xl font-semibold mb-4 flex items-center gap-2 {{ app()->currentLocale() === 'my' ? 'font-mm' : '' }}">
                 <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6 text-slate-600" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                     <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M16 11V7a4 4 0 00-8 0v4M5 9h14l1 12H4L5 9z" />
                 </svg>
                 {{ $sellerName }}
             </h2>
-
-
 
             <div class="space-y-4">
                 @foreach($sellerOrders as $order)
@@ -26,20 +26,22 @@
                         <div class="p-6">
                             <div class="flex justify-between items-start">
                                 <div class="space-y-2">
-                                    <p class="text-sm text-gray-500">Order ID: {{ $order->invoice_number }}</p>
-                                    <p class="text-sm text-gray-500">Date: {{ $order->created_at->format('M d, Y') }}</p>
-
-                                    <!-- Order Status Badge -->
-
+                                    <p class="text-sm text-gray-500 {{ app()->currentLocale() === 'my' ? 'font-mm' : '' }}">
+                                        {{ __('messages.orders.order_id') }}: {{ $order->invoice_number }}
+                                    </p>
+                                    <p class="text-sm text-gray-500 {{ app()->currentLocale() === 'my' ? 'font-mm' : '' }}">
+                                        {{ __('messages.orders.date') }}: {{ $order->created_at->format('M d, Y') }}
+                                    </p>
                                 </div>
-
 
                                 <div class="text-right">
                                     <p class="text-lg font-bold">{{ number_format($order->total_price) }} Ks</p>
-                                    <p class="inline-flex items-center my-3  px-2.5 py-0.5 rounded-full text-xs font-medium bg-slate-100 text-slate-800">
-                                        Delivery Fee: {{ number_format($order->delivery_fees) }} Ks
-                                    </span>
-                                    <p class="text-sm text-gray-500">{{ $order->products->count() }} items</p>
+                                    <p class="inline-flex items-center my-3  px-2.5 py-0.5 rounded-full text-xs font-medium bg-slate-100 text-slate-800 {{ app()->currentLocale() === 'my' ? 'font-mm' : '' }}">
+                                        {{ __('messages.orders.delivery_fee') }}: {{ number_format($order->delivery_fees) }} Ks
+                                    </p>
+                                    <p class="text-sm text-gray-500 {{ app()->currentLocale() === 'my' ? 'font-mm' : '' }}">
+                                        {{ $order->products->count() }} {{ __('messages.orders.items') }}
+                                    </p>
                                 </div>
                             </div>
 
@@ -47,12 +49,12 @@
                             <div class="mt-4 flex justify-between items-center">
                                 <div class="flex gap-2">
                                     @if($order->is_cod)
-                                        <span class="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-slate-100 text-slate-800">
-                                            COD
+                                        <span class="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-slate-100 text-slate-800 {{ app()->currentLocale() === 'my' ? 'font-mm' : '' }}">
+                                            {{ __('messages.orders.cash_on_delivery') }}
                                         </span>
                                     @endif
 
-                                    <div class="inline-flex items-center uppercase px-2.5 py-0.5 rounded-full text-xs font-medium
+                                    <div class="inline-flex items-center uppercase px-2.5 py-0.5 rounded-full text-xs font-medium {{ app()->currentLocale() === 'my' ? 'font-mm' : '' }}
                                         @switch($order->status)
                                             @case(\App\Helper\OrderStatus::New)
                                                 bg-yellow-100 text-yellow-800
@@ -69,14 +71,14 @@
                                             @default
                                                 bg-gray-100 text-gray-800
                                         @endswitch">
-                                        {{ $order->status }}
+                                        {{ __('messages.orders.status.' . strtolower($order->status->value)) }}
                                     </div>
 
                                 </div>
 
                                 <a href="{{ route('order.detail', $order) }}"
-                                   class="inline-flex items-center px-4 py-2 border border-transparent text-sm font-medium rounded-md shadow-sm text-white bg-slate-900 hover:bg-slate-600 transition-all focus:outline-none focus:ring-0 focus:ring-offset-0 focus:ring-slate-500">
-                                    View Details
+                                   class="inline-flex items-center px-4 py-2 border border-transparent text-sm font-medium rounded-md shadow-sm text-white bg-slate-900 hover:bg-slate-600 transition-all focus:outline-none focus:ring-0 focus:ring-offset-0 focus:ring-slate-500 {{ app()->currentLocale() === 'my' ? 'font-mm' : '' }}">
+                                    {{ __('messages.orders.view_details') }}
                                 </a>
                             </div>
                         </div>
@@ -90,12 +92,16 @@
                 <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
                       d="M16 11V7a4 4 0 00-8 0v4M5 9h14l1 12H4L5 9z" />
             </svg>
-            <h3 class="mt-2 text-sm font-medium text-gray-900">No orders yet</h3>
-            <p class="mt-1 text-sm text-gray-500">Start shopping to see your orders here.</p>
+            <h3 class="mt-2 text-sm font-medium text-gray-900 {{ app()->currentLocale() === 'my' ? 'font-mm' : '' }}">
+                {{ __('messages.orders.no_orders') }}
+            </h3>
+            <p class="mt-1 text-sm text-gray-500 {{ app()->currentLocale() === 'my' ? 'font-mm' : '' }}">
+                {{ __('messages.orders.start_shopping_message') }}
+            </p>
             <div class="mt-6">
                 <a href="{{ route('welcome') }}"
-                   class="inline-flex items-center px-4 py-2 border border-transparent shadow-sm text-sm font-medium rounded-md text-white bg-slate-900 hover:bg-slate-800 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-slate-500">
-                    Start Shopping
+                   class="inline-flex items-center px-4 py-2 border border-transparent shadow-sm text-sm font-medium rounded-md text-white bg-slate-900 hover:bg-slate-800 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-slate-500 {{ app()->currentLocale() === 'my' ? 'font-mm' : '' }}">
+                    {{ __('messages.orders.start_shopping') }}
                 </a>
             </div>
         </div>
