@@ -10,10 +10,10 @@
 
             @forelse($cartItems as $item)
                 <div wire:key="cart-item-{{ $item->id }}"
-                    class="flex flex-col sm:flex-row items-start relative  sm:items-center gap-2 sm:gap-4 p-3 sm:p-4 mb-4 bg-white rounded-lg shadow-sm animate-fade-in-up">
+                    class="flex flex-col sm:flex-row items-start relative  {{ app()->currentLocale() === 'my' ? 'font-mm' : 'font-jost' }} sm:items-center gap-2 sm:gap-4 p-3 sm:p-4 mb-4 bg-white rounded-lg shadow-sm animate-fade-in-up">
                     <!-- Product Image -->
                     <img src="{{ $item->product->productImg }}" alt="{{ $item->product->name }}"
-                    class="w-20 h-20 sm:w-24 sm:h-24 object-cover rounded-lg">
+                    class="w-20 h-20 sm:w-24 sm:h-24 hidden lg:block  object-cover rounded-lg">
 
                     <!-- Product Details -->
                     <div class="flex-grow w-full sm:w-auto">
@@ -57,12 +57,16 @@
                         <div class="flex items-center gap-2">
                         <button wire:click="updateQuantity({{ $item->id }}, {{ $item->quantity - 1 }})"
                             class="px-2 py-1 bg-gray-100 hover:bg-gray-200 rounded transition-colors">
-                            -
+                            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 16 16" fill="currentColor" class="size-4">
+                                <path d="M3.75 7.25a.75.75 0 0 0 0 1.5h8.5a.75.75 0 0 0 0-1.5h-8.5Z" />
+                              </svg>
                         </button>
                         <span class="w-12 text-center">{{ $item->quantity }}</span>
                         <button wire:click="updateQuantity({{ $item->id }}, {{ $item->quantity + 1 }})"
                             class="px-2 py-1 bg-gray-100 hover:bg-gray-200 rounded transition-colors">
-                            +
+                            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 16 16" fill="currentColor" class="size-4">
+                                <path d="M8.75 3.75a.75.75 0 0 0-1.5 0v3.5h-3.5a.75.75 0 0 0 0 1.5h3.5v3.5a.75.75 0 0 0 1.5 0v-3.5h3.5a.75.75 0 0 0 0-1.5h-3.5v-3.5Z" />
+                              </svg>
                         </button>
                         </div>
                          <!-- Price - stack on mobile -->
@@ -168,7 +172,7 @@
                                     {{ __('messages.cart.select_region') }}
                                 </label>
                                 <select x-model="selectedRegion"
-                                    class="mt-1 block w-full pl-3 pr-10 py-2 text-base border-gray-300 focus:outline-none focus:ring-slate-500 focus:border-slate-500 sm:text-sm rounded-md">
+                                    class="mt-1 block w-full pl-3 pr-10 py-2 text-base border-gray-300 focus:outline-none focus:ring-slate-500 focus:border-slate-500 sm:text-sm rounded-md ">
                                     <option value="">Select a region</option>
                                     <template x-for="region in deliveries" :key="region.region_name">
                                         <option :value="region.region_name" x-text="region.region_name"></option>
@@ -185,7 +189,7 @@
                                     {{ __('messages.cart.select_township') }}
                                 </label>
                                 <select x-model="selectedTownship"
-                                    class="mt-1 block w-full pl-3 pr-10 py-2 text-base border-gray-300 focus:outline-none focus:ring-slate-500 focus:border-slate-500 sm:text-sm rounded-md">
+                                    class="mt-1 block w-full pl-3 pr-10 py-2 text-base border-gray-300 focus:outline-none focus:ring-slate-500 focus:border-slate-500 sm:text-sm rounded-md ">
                                     <option value="">Select a township</option>
                                     <template x-for="township in getTownships()" :key="township.township_id">
                                         <option :value="township.township_id" x-text="township.name"></option>

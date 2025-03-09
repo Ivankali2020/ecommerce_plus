@@ -1,4 +1,5 @@
-<?php
+<div>
+    <?php
 
 use App\Livewire\Actions\Logout;
 use Livewire\Volt\Component;
@@ -27,19 +28,21 @@ new class extends Component
     <!-- Primary Navigation Menu -->
     <div class="container  mx-auto px-4 sm:px-6 lg:px-8">
         <div class="flex justify-between h-16">
-            <div class="flex">
+            <div class="flex items-center ">
                 <!-- Logo -->
                 @auth
+
                 <div class="shrink-0 flex items-center">
                     <a href="{{ route('welcome') }}" >
-                        <img src="{{ auth()->user()->seller->getFirstMediaUrl('logos') }}" class="block h-9 w-auto fill-current text-slate-800 dark:text-slate-200" />
+                        <img src="{{ auth('web')->user()->seller_id == null ?  asset('assets/logo.png')  :  auth('web')->user()->seller->getFirstMediaUrl('logos') }}" class="block h-9 w-auto fill-current text-slate-800 dark:text-slate-200" />
                     </a>
                 </div>
 
                 @else
                 <div class="shrink-0 flex items-center">
                     <a href="{{ route('welcome') }}" >
-                        <x-application-logo class="block h-9 w-auto fill-current text-slate-800 dark:text-slate-200" />
+                        <img src="{{ asset('assets/logo.png') }}" class="block h-12 w-auto fill-current text-slate-800 dark:text-slate-200" />
+                        {{-- <x-application-logo class="block h-9 w-auto fill-current text-slate-800 dark:text-slate-200" /> --}}
                     </a>
                 </div>
                 @endauth
@@ -47,46 +50,67 @@ new class extends Component
 
                 @auth
 
-                    <div class="hidden space-x-8 sm:-my-px sm:ms-10 sm:flex">
+                    <div class="hidden space-x-8 sm:-my-px sm:ms-10 sm:flex h-[100%] ">
                         <x-nav-link :href="route('store', $this->sellerId())" :active="request()->routeIs('store')" wire:navigate>
                             {{ __('messages.navigation.main_store') }}
                         </x-nav-link>
                     </div>
 
+                    <div class="hidden space-x-8 sm:-my-px sm:ms-10 sm:flex h-[100%] ">
+                        <x-nav-link :href="route('products', $this->sellerId())" :active="request()->routeIs('products')" wire:navigate>
+                            {{ __('messages.navigation.products') }}
+                        </x-nav-link>
+                    </div>
+
                      <!-- Navigation Links -->
-                    <div class="hidden space-x-8 sm:-my-px sm:ms-10 sm:flex">
+                    <div class="hidden space-x-8 sm:-my-px sm:ms-10 sm:flex h-[100%] ">
                         <x-nav-link :href="route('dashboard')" :active="request()->routeIs('dashboard')" >
                             {{ __('messages.navigation.dashboard') }}
                         </x-nav-link>
                     </div>
 
 
-                    <div class="hidden space-x-8 sm:-my-px sm:ms-10 sm:flex">
+                    <div class="hidden space-x-8 sm:-my-px sm:ms-10 sm:flex h-[100%] ">
                         <x-nav-link :href="route('cart')" :active="request()->routeIs('cart')" >
                             {{ __('messages.navigation.cart') }}
                         </x-nav-link>
                     </div>
 
 
-                    <div class="hidden space-x-8 sm:-my-px sm:ms-10 sm:flex">
+                    <div class="hidden space-x-8 sm:-my-px sm:ms-10 sm:flex h-[100%] ">
                         <x-nav-link :href="route('order')" :active="request()->routeIs('order')" wire:navigate>
                             {{ __('messages.navigation.order') }}
                         </x-nav-link>
                     </div>
+{{-- 
+                     <!-- Search Component -->
+                     <div class="hidden space-x-8 sm:-my-px sm:ms-10 sm:flex text-end ">
+                        <div class="relative mr-4 ">
+                            <div class="relative">
+                                <div class="absolute z-10  inset-y-0 start-0 flex items-center ps-3 pointer-events-none">
+                                    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="currentColor" class="size-5 text-gray-500 ">
+                                        <path fill-rule="evenodd" d="M9 3.5a5.5 5.5 0 1 0 0 11 5.5 5.5 0 0 0 0-11ZM2 9a7 7 0 1 1 12.452 4.391l3.328 3.329a.75.75 0 1 1-1.06 1.06l-3.329-3.328A7 7 0 0 1 2 9Z" clip-rule="evenodd" />
+                                      </svg>
+                                </div>
+                                <x-text-input  id="keyword"
+                                class="appearance-none rounded-lg relative block ps-10 focus:ps-2  w-full px-3 py-2 border border-gray-300 dark:border-gray-700 placeholder-gray-500 text-gray-900 dark:text-gray-100 focus:outline-none focus:ring-slate-500 focus:border-slate-500  focus:z-20 sm:text-sm"
+                                type="text" name="keyword" placeholder="search" />
+                            </div>
+                        </div>
 
+                    </div> --}}
+                    
                 @endauth
 
             </div>
 
             @auth
 
-
-
             <!-- Settings Dropdown -->
             <div class="hidden sm:flex sm:items-center sm:ms-6 ">
                 <x-dropdown align="right" width="48">
-                    <x-slot name="trigger">
-                        <button class="{{ app()->currentLocale() === 'my' ? 'font-mm' : '' }} inline-flex items-center px-3 py-2 border border-transparent text-sm leading-4 font-medium rounded-md text-gray-500 dark:text-gray-400 bg-white dark:bg-gray-800 hover:text-gray-700 dark:hover:text-gray-300 focus:outline-none transition ease-in-out duration-150">
+                    <x-slot name="trigger" >
+                        <button class="{{ app()->currentLocale() === 'my' ? 'font-mm' : '' }} hover:bg-gray-50 inline-flex items-center px-3 py-2 border border-transparent text-sm leading-4 font-medium rounded-md text-gray-500 dark:text-gray-400 bg-white dark:bg-gray-800 hover:text-gray-700 dark:hover:text-gray-300 focus:outline-none transition ease-in-out duration-150">
                             <div x-data="{{ json_encode(['name' => auth()->user()->name]) }}" x-text="name" x-on:profile-updated.window="name = $event.detail.name"></div>
 
                             <div class="ms-1">
@@ -111,19 +135,17 @@ new class extends Component
                                 <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="currentColor" class="size-5">
                                     <path fill-rule="evenodd" d="M10 1a4.5 4.5 0 0 0-4.5 4.5V9H5a2 2 0 0 0-2 2v6a2 2 0 0 0 2 2h10a2 2 0 0 0 2-2v-6a2 2 0 0 0-2-2h-.5V5.5A4.5 4.5 0 0 0 10 1Zm3 8V5.5a3 3 0 1 0-6 0V9h6Z" clip-rule="evenodd" />
                                   </svg>
-
-
                                 {{ __('messages.auth.logout') }}
                             </x-dropdown-link>
                         </button>
                     </x-slot>
-                </x-dropdown>
+                </x-dropdown>   
 
 
-            <!-- Add this right before the Settings Dropdown -->
-            <div class="hidden sm:flex sm:items-center sm:ms-6">
-                <x-language-switcher />
-            </div>
+                <!-- Add this right before the Settings Dropdown -->
+                <div class="hidden sm:flex sm:items-center ">
+                    <x-language-switcher />
+                </div>
             </div>
             @else
 
@@ -144,8 +166,17 @@ new class extends Component
             @endauth
 
 
-            <!-- Hamburger -->
-            <div class="-me-2 flex items-center sm:hidden">
+            <!-- Hamburger -->  
+            <div class="-me-2 flex items-center sm:hidden  {{ app()->currentLocale() === 'my' ? 'font-mm' : '' }}">
+
+                @guest
+                    <div class=" space-x-8 sm:-my-px sm:ms-10 sm:flex">
+                        <x-responsive-nav-link :href="route('login')" :active="request()->routeIs('login')" wire:navigate>
+                            {{ __('messages.auth.login') }}
+                        </x-responsive-nav-link>
+                    </div>
+                @endguest
+                
                 <button @click="open = ! open" class="inline-flex items-center justify-center p-2 rounded-md text-gray-400 dark:text-gray-500 hover:text-gray-500 dark:hover:text-gray-400 hover:bg-gray-100 dark:hover:bg-gray-900 focus:outline-none focus:bg-gray-100 dark:focus:bg-gray-900 focus:text-gray-500 dark:focus:text-gray-400 transition duration-150 ease-in-out">
                     <svg class="h-6 w-6" stroke="currentColor" fill="none" viewBox="0 0 24 24">
                         <path :class="{'hidden': open, 'inline-flex': ! open }" class="inline-flex" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16M4 18h16" />
@@ -156,12 +187,14 @@ new class extends Component
         </div>
     </div>
 
+
     <!-- Responsive Navigation Menu -->
     <div :class="{'block': open, 'hidden': ! open}" class="hidden sm:hidden">
-        <div class="pt-2 pb-3 space-y-1">
-            <x-responsive-nav-link :href="route('dashboard')" :active="request()->routeIs('dashboard')" wire:navigate>
+        <div class="pt-2 pb-3 space-y-1 {{ app()->currentLocale() === 'my' ? 'font-mm' : '' }}">
+            {{-- <x-responsive-nav-link :href="route('dashboard')" :active="request()->routeIs('dashboard')" wire:navigate>
                 {{ __('messages.navigation.dashboard') }}
-            </x-responsive-nav-link>
+            </x-responsive-nav-link> --}}
+
         </div>
 
         <!-- Responsive Settings Options -->
@@ -201,18 +234,67 @@ new class extends Component
             </div>
             @else
 
-            <div class="hidden space-x-8 sm:-my-px sm:ms-10 sm:flex">
-                <x-nav-link :href="route('login')" :active="request()->routeIs('login')" wire:navigate>
+            <div class=" space-x-8 sm:-my-px sm:ms-10 sm:flex">
+                <x-responsive-nav-link :href="route('login')" :active="request()->routeIs('login')" wire:navigate>
                     {{ __('messages.auth.login') }}
-                </x-nav-link>
+                </x-responsive-nav-link>
             </div>
-            <div class="hidden space-x-8 sm:-my-px sm:ms-10 sm:flex">
-                <x-nav-link :href="route('register')" :active="request()->routeIs('register')" wire:navigate>
+            <div class=" space-x-8 sm:-my-px sm:ms-10 sm:flex">
+                <x-responsive-nav-link :href="route('register')" :active="request()->routeIs('register')" wire:navigate>
                     {{ __('messages.auth.register') }}
-                </x-nav-link>
+                </x-responsive-nav-link>
             </div>
 
             @endauth
+           
         </div>
     </div>
 </nav>
+
+
+
+<!-- Mobile Bottom Navigation -->
+@auth
+<div class="fixed bottom-0 left-0 z-50 w-full h-16 bg-white border-t border-gray-200 sm:hidden {{ app()->currentLocale() === 'my' ? 'font-mm' : '' }}">
+    <div class="grid h-full grid-cols-5">
+        <a href="{{ route('store', Auth::user()->seller_id) }}"  class="inline-flex flex-col items-center justify-center px-1 hover:bg-gray-50 {{ request()->routeIs('welcome') ? 'text-[#c2a03d]' : 'text-gray-500' }}">
+            <svg class="w-6 h-6 mb-1" fill="currentColor" viewBox="0 0 20 20" xmlns="http://www.w3.org/2000/svg">
+                <path d="M10.707 2.293a1 1 0 00-1.414 0l-7 7a1 1 0 001.414 1.414L4 10.414V17a1 1 0 001 1h2a1 1 0 001-1v-2a1 1 0 011-1h2a1 1 0 011 1v2a1 1 0 001 1h2a1 1 0 001-1v-6.586l.293.293a1 1 0 001.414-1.414l-7-7z"></path>
+            </svg>
+            <span class="text-xs">{{ __('messages.store') }}</span>
+        </a>
+        
+        <a href="{{ route('products') }}" class="inline-flex flex-col items-center justify-center px-1 hover:bg-gray-50 {{ request()->routeIs('products') ? 'text-[#c2a03d]' : 'text-gray-500' }}">
+            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor" class="size-6">
+                <path d="M8.25 10.875a2.625 2.625 0 1 1 5.25 0 2.625 2.625 0 0 1-5.25 0Z" />
+                <path fill-rule="evenodd" d="M12 2.25c-5.385 0-9.75 4.365-9.75 9.75s4.365 9.75 9.75 9.75 9.75-4.365 9.75-9.75S17.385 2.25 12 2.25Zm-1.125 4.5a4.125 4.125 0 1 0 2.338 7.524l2.007 2.006a.75.75 0 1 0 1.06-1.06l-2.006-2.007a4.125 4.125 0 0 0-3.399-6.463Z" clip-rule="evenodd" />
+              </svg>
+            <span class="text-xs">{{ __('messages.navigation.products') }}</span>
+        </a>
+        
+        <a href="{{ route('cart') }}" class="inline-flex flex-col items-center justify-center px-1 hover:bg-gray-50 {{ request()->routeIs('cart') ? 'text-[#c2a03d]' : 'text-gray-500' }}">
+            <svg class="w-6 h-6 mb-1" fill="currentColor" viewBox="0 0 20 20" xmlns="http://www.w3.org/2000/svg">
+                <path fill-rule="evenodd" d="M10 2a4 4 0 00-4 4v1H5a1 1 0 00-.994.89l-1 9A1 1 0 004 18h12a1 1 0 00.994-1.11l-1-9A1 1 0 0015 7h-1V6a4 4 0 00-4-4zm2 5V6a2 2 0 10-4 0v1h4zm-6 3a1 1 0 112 0 1 1 0 01-2 0zm7-1a1 1 0 100 2 1 1 0 000-2z" clip-rule="evenodd"></path>
+            </svg>
+            <span class="text-xs">{{ __('messages.navigation.cart') }}</span>
+        </a>
+        
+        <a href="{{ route('order') }}" class="inline-flex flex-col items-center justify-center px-1 hover:bg-gray-50 {{ request()->routeIs('order') ? 'text-[#c2a03d]' : 'text-gray-500' }}">
+            <svg class="w-6 h-6 mb-1" fill="currentColor" viewBox="0 0 20 20" xmlns="http://www.w3.org/2000/svg">
+                <path d="M9 2a1 1 0 000 2h2a1 1 0 100-2H9z"></path>
+                <path fill-rule="evenodd" d="M4 5a2 2 0 012-2 3 3 0 003 3h2a3 3 0 003-3 2 2 0 012 2v11a2 2 0 01-2 2H6a2 2 0 01-2-2V5zm3 4a1 1 0 000 2h.01a1 1 0 100-2H7zm3 0a1 1 0 000 2h3a1 1 0 100-2h-3zm-3 4a1 1 0 100 2h.01a1 1 0 100-2H7zm3 0a1 1 0 100 2h3a1 1 0 100-2h-3z" clip-rule="evenodd"></path>
+            </svg>
+            <span class="text-xs">{{ __('messages.navigation.order') }}</span>
+        </a>
+        
+        <a href="{{ route('profile') }}" class="inline-flex flex-col items-center justify-center px-1 hover:bg-gray-50 {{ request()->routeIs('profile') ? 'text-[#c2a03d]' : 'text-gray-500' }}">
+            <svg class="w-6 h-6 mb-1" fill="currentColor" viewBox="0 0 20 20" xmlns="http://www.w3.org/2000/svg">
+                <path fill-rule="evenodd" d="M18 10a8 8 0 11-16 0 8 8 0 0116 0zm-6-3a2 2 0 11-4 0 2 2 0 014 0zm-2 4a5 5 0 00-4.546 2.916A5.986 5.986 0 0010 16a5.986 5.986 0 004.546-2.084A5 5 0 0010 11z" clip-rule="evenodd"></path>
+            </svg>
+            <span class="text-xs">{{ __('messages.auth.profile.title') }}</span>
+        </a>
+    </div>
+</div>
+
+@endauth
+</div>

@@ -14,7 +14,6 @@ use Livewire\Component;
 class Store extends Component
 {
     public $store_id;
-
     public Seller $seller;
     public function mount($id)
     {

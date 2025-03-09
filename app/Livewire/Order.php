@@ -13,6 +13,13 @@ class Order extends Component
 
     protected $paginationTheme = 'tailwind';
 
+    public $seller_id;
+
+    public function mount()
+    {
+        $this->seller_id = auth('web')->user()->seller_id;
+    }
+
     public function render()
     {
         $orders = OrderModel::query()

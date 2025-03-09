@@ -29,3 +29,14 @@
 .hide-scrollbar::-webkit-scrollbar {
     display: none;
 }
+
+
+/* English placeholder font */
+.placeholder-font::placeholder {
+    font-family: 'jost', sans-serif;
+}
+
+/* Myanmar placeholder font */
+.placeholder-font-mm::placeholder {
+    font-family: 'mm', 'jost', sans-serif;
+}

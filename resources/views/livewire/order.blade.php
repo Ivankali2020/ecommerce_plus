@@ -105,7 +105,7 @@
                 {{ __('messages.orders.start_shopping_message') }}
             </p>
             <div class="mt-6">
-                <a href="{{ route('welcome') }}"
+               <a href="{{ route('store', $this->seller_id) }}"
                    class="inline-flex items-center px-4 py-2 border border-transparent shadow-sm text-sm font-medium rounded-md text-white bg-slate-900 hover:bg-slate-800 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-slate-500 ">
                     {{ __('messages.orders.start_shopping') }}
                 </a>

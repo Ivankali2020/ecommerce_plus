@@ -14,7 +14,7 @@
 
     <title>{{ $title ?? 'Store' }}</title>
 </head>
-<body>
+<body class=' hide-scrollbar'>
 
     <div class="fixed inset-x-0 -top-[30%] -z-10 transform-gpu overflow-hidden blur-3xl sm:-top-80"
         aria-hidden="true">

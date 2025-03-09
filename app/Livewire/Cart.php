@@ -55,23 +55,23 @@ class Cart extends Component
 
     public $payment_account_id;
 
-
     public $seller_id;
     public function mount()
     {
-        if (!Auth::check()) {
+        if (!Auth::check('web')) {
             return redirect()->route('login');
         }
+      
         $this->seller_id = UserHelper::getUserSellerId();
         $this->cartItems = CartModel::with(['product', 'variant'])
-            ->where('user_id', auth()->id())->where('seller_id',$this->seller_id)
+            ->where('user_id', auth('web')->id())
+            ->where('seller_id',$this->seller_id)
             ->get();
-
 
         // $this->deliveries = self::getDeliveriresData();
 
         $this->regions = Seller::find($this->seller_id)->regions;
-        $this->addresses = UserAddress::where('user_id', auth()->id())->get();
+        $this->addresses = UserAddress::where('user_id', auth('web')->id())->get();
         // $this->payments = self::getPaymentsData();
 
     }
@@ -128,20 +128,43 @@ class Cart extends Component
     {
         CartModel::find($cartItemId)->delete();
         $this->cartItems = CartModel::with(['product', 'variant'])
-            ->where('user_id', auth()->id())
+            ->where('user_id', auth('web')->id())
             ->get();
     }
 
     public function updateQuantity($cartItemId, $quantity)
     {
-        $cart = CartModel::where('id', $cartItemId)->first();
-        if ($quantity > 0) {
-            CartModel::find($cartItemId)->update(['quantity' => $quantity , 'total' => $cart->price * $quantity]);
-
-            $this->cartItems = CartModel::with(['product', 'variant'])
-                ->where('user_id', auth()->id())
-                ->get();
+        $cart = CartModel::where('id', $cartItemId)->with(['product', 'variant'])->first();
+        
+        // Check if quantity is valid
+        if ($quantity <= 0) {
+            return;
         }
+        
+        // Check available stock
+        $availableStock = $cart->variant ? $cart->variant->quantity : $cart->product->quantity;
+        
+        if ($quantity > $availableStock) {
+            Notification::make()
+                ->title(__('messages.cart.out_of_stock'))
+                ->body(__('messages.cart.limited_stock', ['quantity' => $availableStock]))
+                ->warning()
+                ->send();
+                
+            // Set quantity to maximum available
+            $quantity = $availableStock;
+        }
+        
+        // Update cart item
+        CartModel::find($cartItemId)->update([
+            'quantity' => $quantity, 
+            'total' => $cart->price * $quantity
+        ]);
+        
+        $this->cartItems = CartModel::with(['product', 'variant'])
+            ->where('user_id', auth('web')->id())
+            ->where('seller_id', $this->seller_id)
+            ->get();
     }
 
     public function checkout()

@@ -1,6 +1,6 @@
 <div>
     <div class="container mx-auto px-4 py-4 lg:p-8">
-        <x-locale-text class="text-2xl mb-8 lg:text-4xl font-bold">
+        <x-locale-text class="text-xl mb-2  lg:mb-8 lg:text-4xl font-bold">
             {{ __('messages.recommended_products') }}
         </x-locale-text>
 
@@ -13,18 +13,18 @@
             @endforelse
         </div>
 
-        <div class="mb-8">
-            <x-locale-text class="text-2xl mb-8  lg:text-4xl font-bold lg:mt-8">
+        <div class="lg:mb-4  mt-2 lg:mt-0 ">
+            <x-locale-text class="text-xl mb-4  lg:mb-8  lg:text-4xl font-bold lg:mt-8">
                 {{ __('messages.categories') }}
             </x-locale-text>
 
-            <div class="overflow-x-auto pb-4 hide-scrollbar">
-                <div class="flex flex-nowrap gap-2 md:flex-wrap min-w-full">
+            <div class=" pb-4 overflow-x-auto hide-scrollbar">
+                <div class="flex flex-nowrap gap-2  min-w-full">
                     <!-- All Categories Button -->
-                    <button wire:key="category-all"
+                    <button wire:key="category-all" 
                             wire:loading.class="opacity-50"
                             wire:click="filterByCategory(null)"
-                            class="flex-none px-4 py-2.5 text-sm font-medium rounded-full transition-all duration-200 shadow-sm {{ app()->currentLocale() === 'my' ? 'font-mm' : '' }}
+                            class="flex-none px-4 py-1.5 lg:py-2.5 text-sm font-medium rounded-full transition-all duration-200 shadow-sm {{ app()->currentLocale() === 'my' ? 'font-mm' : '' }}
                                 {{ is_null($selectedCategory)
                                     ? 'bg-slate-900 text-white ring-2 ring-slate-900/20'
                                     : 'bg-white hover:bg-slate-50 text-slate-700 border border-slate-200' }}">
@@ -35,7 +35,7 @@
                     @foreach($this->categories as $category)
                         <button wire:key="category-{{ $category->id }}"
                                 wire:click="filterByCategory({{ $category->id }})"
-                                class="flex-none px-4 py-2.5 text-sm font-medium rounded-full transition-all duration-200 shadow-sm {{ app()->currentLocale() === 'my' ? 'font-mm' : '' }}
+                                class="flex-none px-4 py-1.5 lg:py-2.5 text-sm font-medium rounded-full transition-all duration-200 shadow-sm {{ app()->currentLocale() === 'my' ? 'font-mm' : '' }}
                                     {{ $selectedCategory == $category->id
                                         ? 'bg-slate-900 text-white ring-2 ring-slate-900/20'
                                         : 'bg-white hover:bg-slate-50 text-slate-700 border border-slate-200' }}">
@@ -53,13 +53,13 @@
             <div class="absolute right-0 top-0 h-full w-8 bg-gradient-to-l from-white to-transparent pointer-events-none md:hidden"></div>
         </div>
 
-        <div class="flex justify-between items-center">
-            <x-locale-text class="text-2xl lg:text-4xl mb-8  font-bold lg:mt-8">
+        <div class="flex justify-between items-center ">
+            <x-locale-text class="text-xl lg:text-4xl mb-2  lg:mb-8  font-bold mt-4  lg:mt-8">
                 {{ $selectedCategory ? $this->categories->find($selectedCategory)->name : __('messages.latest_products') }}
             </x-locale-text>
 
-            <nav class="flex justify-between px-3.5 py-1 mb-4">
-                <ol class="inline-flex items-center mb-3 space-x-1 text-xs text-neutral-500 [&_.active-breadcrumb]:text-neutral-600 [&_.active-breadcrumb]:font-medium sm:mb-0">
+            <nav class="flex justify-between hidden lg:block  px-3.5 py-1 ">
+                <ol class="inline-flex items-center  space-x-1 text-xs text-neutral-500 [&_.active-breadcrumb]:text-neutral-600 [&_.active-breadcrumb]:font-medium sm:mb-0">
                     <li class="flex items-center h-full">
                         <a href="/" class="py-1 hover:text-neutral-900" title="{{ __('messages.home') }}">
                             <svg class="w-3.5 h-3.5" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor">

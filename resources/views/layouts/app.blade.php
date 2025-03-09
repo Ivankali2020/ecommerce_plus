@@ -18,7 +18,7 @@
     @filamentStyles
 </head>
 
-<body class="font-sans antialiased">
+<body class="font-sans antialiased  hide-scrollbar">
     <div class="min-h-screen ">
         <div class="fixed inset-x-0 -top-[30%] -z-10 transform-gpu overflow-hidden blur-3xl sm:-top-80"
         aria-hidden="true">

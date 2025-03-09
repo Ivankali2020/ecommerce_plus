@@ -14,6 +14,15 @@
                     </div>
                 </div>
             @endif
+
+            <!-- Out of Stock Indicator -->
+            @if($product->quantity == 0 && !$product->has_variant)
+                <div class="absolute z-20  inset-0 bg-black bg-opacity-40 flex items-center justify-center">
+                    <div class="bg-red-500 text-white px-3 py-1 rounded-full font-medium transform -rotate-12 text-sm">
+                        {{ __('messages.out_of_stock') }}
+                    </div>
+                </div>
+            @endif
                 
             <img src="{{ $product->productImg }}"
                  class="rounded w-full object-cover transition duration-700 ease-out group-hover:scale-105"
@@ -21,9 +30,9 @@
         </a>
 
         <div class="flex flex-col flex-grow justify-between lg:gap-3 gap-2 lg:p-6 p-3">
-            <span class="text-xs">{{ $product->category?->name }}</span>
+            <span class="text-xs">{{ $product->category?->name }}</span>    
 
-            <h3 class="lg:text-sm font-bold" aria-describedby="featureDescription">
+            <h3 class="text-sm lg:text-lg font-bold" aria-describedby="featureDescription">
                 {{ $product->has_variant ? $product->variants()->first()->name : $product->name }}
             </h3>
 

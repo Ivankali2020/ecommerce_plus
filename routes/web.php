@@ -5,6 +5,7 @@ use App\Livewire\Order;
 use App\Livewire\OrderDetail;
 use App\Livewire\ProductDetail;
 use App\Livewire\Store;
+use App\Livewire\AllProduct;
 use App\Models\Seller;
 use Illuminate\Support\Facades\Route;
 
@@ -43,4 +44,5 @@ Route::middleware(['auth'])->group(function(){
     Route::get('cart', Cart::class)->name('cart');
     Route::get('order', Order::class)->name('order');
     Route::get('order/{order}', OrderDetail::class)->name('order.detail');
+    Route::get('products', AllProduct::class)->name('products');
 });

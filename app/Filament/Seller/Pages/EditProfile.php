@@ -29,8 +29,9 @@ class EditProfile extends \Filament\Pages\Auth\EditProfile implements HasForms
 
     public function mount(): void
     {
+        // dd(auth('seller')->user());
         $this->form->fill(
-            auth()->user()->attributesToArray()
+            auth('seller')->user()->attributesToArray()
         );
     }
 
@@ -44,7 +45,7 @@ class EditProfile extends \Filament\Pages\Auth\EditProfile implements HasForms
                 $this->getPasswordConfirmationFormComponent(),
                SpatieMediaLibraryFileUpload::make('logo')
                     ->collection('logos')->imageEditor()
-                    ->image()->rules('required|mimes:jpeg,png,jpg|dimensions:ratio=1/1'),
+                    ->image()->rules('required|mimes:jpeg,png,jpg,svg|dimensions:ratio=1/1'),
 
                 SpatieMediaLibraryFileUpload::make('cover_photo')
                     ->multiple()->maxFiles(5)->label('Cover Photos')
@@ -52,13 +53,14 @@ class EditProfile extends \Filament\Pages\Auth\EditProfile implements HasForms
                     ->image()->rules('required|mimes:jpeg,png,jpg,webp'), //|dimensions:ratio=16/9
             ])
             ->statePath('data')
-            ->model(auth()->user());
+            ->model(auth('seller')->user());
     }
 
     public function update()
     {
         $this->save();
         $this->getSavedNotification();
+        return redirect()->route('filament.seller.pages.dashboard');
     }
 
     protected function getFormActions(): array

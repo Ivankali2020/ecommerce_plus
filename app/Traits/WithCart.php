@@ -28,6 +28,7 @@ trait WithCart
                 ? ($variant->discount > 0 ? $variant->mmk_discount_price : $variant->mmk_price)
                 : ($product->discount > 0 ? $product->mmk_discount_price : $product->mmk_price);
 
+
             // Check existing cart item
             $existingCart = Cart::where([
                 'user_id' => Auth::id(),
@@ -40,8 +41,17 @@ trait WithCart
             // Check MOQ
             if ($newQuantity < ($variant?->MOQ ?? $product->MOQ)) {
                 Notification::make()
-                    ->title('Minimum Order Quantity not met')
-                    ->body("Minimum order quantity is {$product->MOQ} pieces")
+                    ->title(__('messages.cart.min_order_not_met'))
+                    ->body(__('messages.cart.min_order_quantity', ['quantity' => $product->MOQ]))
+                    ->warning()
+                    ->send();
+                return;
+            }
+            // Check stock
+            if ($newQuantity > ($variant?->quantity ?? $product->quantity)) {
+                Notification::make()
+                    ->title(__('messages.cart.out_of_stock'))
+                    ->body(__('messages.cart.limited_stock', ['quantity' => $product->quantity]))
                     ->warning()
                     ->send();
                 return;
@@ -64,15 +74,13 @@ trait WithCart
             );
 
             if($existingCart){
-
                 Notification::make()
-                ->title('Product Quantity Updated!')
+                ->title(__('messages.cart.quantity_updated'))
                 ->success()
                 ->send();
-
             }else{
                 Notification::make()
-                ->title('Product added to cart successfully!')
+                ->title(__('messages.cart.product_added'))
                 ->success()
                 ->send();
             }

@@ -22,5 +22,6 @@ class UserHelper
         if (Auth::guard('web')->check()) {
             return Auth::guard('web')->user()->seller_id;
         }
+        return 1;
     }
 }
