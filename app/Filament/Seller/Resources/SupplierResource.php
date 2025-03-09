@@ -20,6 +20,18 @@ class SupplierResource extends Resource
 
     protected static ?string $navigationIcon = 'heroicon-o-link';
 
+    // protected static ?string $navigationGroup = 'Management';
+
+    public static function getNavigationLabel(): string
+    {
+        return __('filament/resources/supplier-resource.navigation.label');
+    }
+
+    public static function getModelLabel(): string
+    {
+        return __('filament/resources/supplier-resource.navigation.label');
+    }
+
     public static function form(Form $form): Form
     {
         return $form
@@ -27,19 +39,24 @@ class SupplierResource extends Resource
                Forms\Components\Section::make()->schema([
 
                    Forms\Components\TextInput::make('name')
+                       ->label(__('filament/resources/supplier-resource.form.name'))
                        ->required()
                        ->maxLength(255),
                    Forms\Components\TextInput::make('email')
+                       ->label(__('filament/resources/supplier-resource.form.email'))
                        ->email()
                        ->maxLength(255),
                    Forms\Components\TextInput::make('phone')
+                       ->label(__('filament/resources/supplier-resource.form.phone'))
                        ->tel()
                        ->required()
                        ->maxLength(255),
                    Forms\Components\Textarea::make('about')
+                       ->label(__('filament/resources/supplier-resource.form.about'))
                        ->required()
                        ->columnSpanFull(),
                    Forms\Components\Select::make('township_id')
+                       ->label(__('filament/resources/supplier-resource.form.township_id'))
                        ->searchable()->preload()
                        ->relationship('township', 'mm_name')
                        ->required(),
@@ -53,22 +70,29 @@ class SupplierResource extends Resource
         return $table
             ->columns([
                 Tables\Columns\TextColumn::make('seller.name')
+                    ->label(__('filament/resources/supplier-resource.table.columns.seller.name'))
                     ->numeric()
                     ->sortable(),
                 Tables\Columns\TextColumn::make('name')
+                    ->label(__('filament/resources/supplier-resource.table.columns.name'))
                     ->searchable(),
                 Tables\Columns\TextColumn::make('email')
+                    ->label(__('filament/resources/supplier-resource.table.columns.email'))
                     ->searchable(),
                 Tables\Columns\TextColumn::make('phone')
+                    ->label(__('filament/resources/supplier-resource.table.columns.phone'))
                     ->searchable(),
                 Tables\Columns\TextColumn::make('township.mm_name')
+                    ->label(__('filament/resources/supplier-resource.table.columns.township.mm_name'))
                     ->numeric()
                     ->sortable(),
                 Tables\Columns\TextColumn::make('created_at')
+                    ->label(__('filament/resources/supplier-resource.table.columns.created_at'))
                     ->dateTime()
                     ->sortable()
                     ->toggleable(isToggledHiddenByDefault: true),
                 Tables\Columns\TextColumn::make('updated_at')
+                    ->label(__('filament/resources/supplier-resource.table.columns.updated_at'))
                     ->dateTime()
                     ->sortable()
                     ->toggleable(isToggledHiddenByDefault: true),

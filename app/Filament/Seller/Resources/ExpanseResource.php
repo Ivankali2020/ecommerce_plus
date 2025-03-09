@@ -21,9 +21,28 @@ use Illuminate\Database\Eloquent\SoftDeletingScope;
 
 class ExpanseResource extends Resource
 {
+    
     protected static ?string $model = Expanse::class;
 
     protected static ?string $navigationIcon = 'heroicon-o-banknotes';
+
+    // protected static ?string $navigationGroup = 'Finance';
+
+    public static function getNavigationLabel(): string
+    {
+        return __('filament/resources/expanse-resource.navigation.label');
+    }
+
+    public static function getNavigationGroup(): string
+    {
+        return __('filament/resources/payment-resource.navigation.group');
+    }
+
+
+    // public static function getNavigationGroup(): ?string
+    // {
+    //     return __("filament/resources/expanse-resource.navigation.group");
+    // }
 
     public static function getEloquentQuery(): Builder
     {
@@ -37,6 +56,7 @@ class ExpanseResource extends Resource
                 Group::make()->schema([
                     Forms\Components\Select::make('expanse_category_id')
                     ->required()->searchable()->preload()
+                    ->label(__('filament/resources/expanse-resource.form.expanse_category_id.label'))
                     ->relationship('category', 'name', modifyQueryUsing: function (Builder $query) {
                         $query->where('seller_id', CheckFilamentSellerUser::getSellerId());
                     })
@@ -55,10 +75,11 @@ class ExpanseResource extends Resource
                         ]),
                 Forms\Components\TextInput::make('amount')
                     ->required()
-                    ->numeric(),
+                    ->numeric()
+                    ->label(__('filament/resources/expanse-resource.form.amount.label')),
 
                 ToggleButtons::make('payment_method')
-                    ->label('Payment Method')->grouped()
+                    ->label(__('filament/resources/expanse-resource.form.payment_method.label'))->grouped()
                     ->options(PaymentMethodExpanse::class)
                     ->required(),
 
@@ -69,6 +90,7 @@ class ExpanseResource extends Resource
                     ->required()->default(CheckFilamentSellerUser::getSellerId()),
 
                 Forms\Components\Textarea::make('description')
+                    ->label(__('filament/resources/expanse-resource.form.description.label'))
                     ->columnSpanFull(),
 
                 ])
@@ -80,25 +102,31 @@ class ExpanseResource extends Resource
         return $table
             ->columns([
                 Tables\Columns\TextColumn::make('category.name')
+                    ->label(__('filament/resources/expanse-resource.table.columns.category_name'))
                     ->numeric()
                     ->sortable(),
 
                 Tables\Columns\TextColumn::make('payment_method')
+                    ->label(__('filament/resources/expanse-resource.table.columns.payment_method'))
                     ->badge()
                     ->searchable(),
 
                 TextColumn::make('description')
+                    ->label(__('filament/resources/expanse-resource.table.columns.description'))
                     ->searchable(),
 
                 Tables\Columns\TextColumn::make('amount')
+                    ->label(__('filament/resources/expanse-resource.table.columns.amount'))
                     ->numeric()
                     ->sortable(),
 
                 Tables\Columns\TextColumn::make('created_at')
+                    ->label(__('filament/resources/expanse-resource.table.columns.created_at'))
                     ->dateTime()
                     ->sortable()
                     ->toggleable(isToggledHiddenByDefault: true),
                 Tables\Columns\TextColumn::make('updated_at')
+                    ->label(__('filament/resources/expanse-resource.table.columns.updated_at'))
                     ->dateTime()
                     ->sortable()
                     ->toggleable(isToggledHiddenByDefault: true),

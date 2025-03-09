@@ -41,11 +41,17 @@ class UserResource extends Resource
                 Forms\Components\TextInput::make('device_name')
                     ->maxLength(255),
                 Forms\Components\TextInput::make('name')
+                    ->label(__('filament/resources/user-resource.form.name.label'))
+                    ->placeholder(__('filament/resources/user-resource.form.name.placeholder'))
                     ->maxLength(255)->required(),
                 Forms\Components\TextInput::make('email')
+                    ->label(__('filament/resources/user-resource.form.email.label'))
+                    ->placeholder(__('filament/resources/user-resource.form.email.placeholder'))
                     ->email()
                     ->maxLength(255)->required(),
                 Forms\Components\TextInput::make('phone')
+                    ->label(__('filament/resources/user-resource.form.phone.label'))
+                    ->placeholder(__('filament/resources/user-resource.form.phone.placeholder'))
                     ->maxLength(255)->required(),
 
                 Forms\Components\SpatieMediaLibraryFileUpload::make('profile_photo')
@@ -55,6 +61,8 @@ class UserResource extends Resource
                 Forms\Components\DateTimePicker::make('email_verified_at'),
 
                 Forms\Components\TextInput::make('password')
+                    ->label(__('filament/resources/user-resource.form.password.label'))
+                    ->placeholder(__('filament/resources/user-resource.form.password.placeholder'))
                     ->password()
                     ->dehydrateStateUsing(fn($state) => Hash::make($state))
                     ->dehydrated(fn($state)=>filled($state))
@@ -69,10 +77,13 @@ class UserResource extends Resource
             ->columns([
                Tables\Columns\SpatieMediaLibraryImageColumn::make('thumb')->collection('profile_photos'),
                 Tables\Columns\TextColumn::make('name')
+                    ->label(__('filament/resources/user-resource.table.columns.name'))
                     ->searchable(),
                 Tables\Columns\TextColumn::make('email')
+                    ->label(__('filament/resources/user-resource.table.columns.email'))
                     ->searchable(),
                 Tables\Columns\TextColumn::make('phone')
+                    ->label(__('filament/resources/user-resource.table.columns.phone'))
                     ->searchable(),
 
                 Tables\Columns\TextColumn::make('email_verified_at')

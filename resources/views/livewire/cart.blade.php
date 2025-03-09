@@ -1,8 +1,8 @@
-<div class="container mx-auto px-4 py-8" >
+<div class="container mx-auto px-2 sm:px-4 py-4 sm:py-8" >
 
-    <div class="flex flex-col lg:flex-row gap-8">
+    <div class="flex flex-col lg:flex-row gap-4 lg:gap-8">
         <!-- Cart Items -->
-        <div class="lg:w-2/3">
+        <div class="w-full lg:w-2/3">
             <h2 class="text-3xl font-bebas mb-6 {{ app()->currentLocale() === 'my' ? 'font-mm' : '' }}">
                 {{ __('messages.cart.shopping_cart') }}
             </h2>
@@ -10,14 +10,14 @@
 
             @forelse($cartItems as $item)
                 <div wire:key="cart-item-{{ $item->id }}"
-                    class="flex flex-col sm:flex-row items-start sm:items-center gap-4 p-4 mb-4 bg-white rounded-lg shadow-sm animate-fade-in-up">
+                    class="flex flex-col sm:flex-row items-start relative  sm:items-center gap-2 sm:gap-4 p-3 sm:p-4 mb-4 bg-white rounded-lg shadow-sm animate-fade-in-up">
                     <!-- Product Image -->
                     <img src="{{ $item->product->productImg }}" alt="{{ $item->product->name }}"
-                        class="w-24 h-24 object-cover rounded-lg">
+                    class="w-20 h-20 sm:w-24 sm:h-24 object-cover rounded-lg">
 
                     <!-- Product Details -->
-                    <div class="flex-grow">
-                        <h3 class="font-bold text-lg" style="line-height: 1.5rem">{{ $item->product->name }}</h3>
+                    <div class="flex-grow w-full sm:w-auto">
+                        <h3 class="text-base sm:text-lg font-bold line-clamp-2">{{ $item->product->name }}</h3>
                         <p class="text-sm mb-1 text-gray-500" style="line-height: 1.5rem">
                             {{ $item->product->category?->name }}</p>
 
@@ -53,7 +53,8 @@
                     </div>
 
                     <!-- Quantity Controls -->
-                    <div class="flex items-center gap-2">
+                    <div class="flex justify-between items-center w-full sm:w-auto mt-2 sm:mt-0">
+                        <div class="flex items-center gap-2">
                         <button wire:click="updateQuantity({{ $item->id }}, {{ $item->quantity - 1 }})"
                             class="px-2 py-1 bg-gray-100 hover:bg-gray-200 rounded transition-colors">
                             -
@@ -63,42 +64,45 @@
                             class="px-2 py-1 bg-gray-100 hover:bg-gray-200 rounded transition-colors">
                             +
                         </button>
+                        </div>
+                         <!-- Price - stack on mobile -->
+                         <div class="text-right min-w-[100px] sm:min-w-40">
+                            <!-- Price -->
+                            <div class="text-right min-w-40 ">
+                                <p class="text-xs text-slate-300 ">
+                                    @if ($item->variant)
+                                    {{ number_format($item->variant->mmk_price) }} Ks / pcs
+                                    @else
+                                    {{ number_format($item->product->mmk_price) }} Ks / pcs
+                                    @endif
+                                </p>
+                                <p class="font-bold my-1 ">
+                                    {{ number_format($item->price * $item->quantity) }} Ks
+                                </p>
+                                @if ($item->variant && $item->variant->discount > 0)
+                                    <p class="text-sm text-gray-400 ">
+                                        <span class="line-through">
+                                            {{ number_format($item->variant->mmk_price * $item->quantity) }}
+                                        </span>
+                                        <sub class="text-xs text-red-500">
+                                            {{ $item->variant->discount }}% OFF
+                                        </sub>
+                                    </p>
+
+                                @endif
+                            </div>
+                        </div>
                     </div>
 
-                    <!-- Price -->
-                    <div class="text-right min-w-40 ">
-                        <p class="text-xs text-slate-300 ">
-                            @if ($item->variant)
-                            {{ number_format($item->variant->mmk_price) }} Ks / pcs
-                            @else
-                            {{ number_format($item->product->mmk_price) }} Ks / pcs
-                            @endif
-                        </p>
-                        <p class="font-bold my-1 ">
-                            {{ number_format($item->price * $item->quantity) }} Ks
-                        </p>
-                        @if ($item->variant && $item->variant->discount > 0)
-                            <p class="text-sm text-gray-400 ">
-                                <span class="line-through">
-                                    {{ number_format($item->variant->mmk_price * $item->quantity) }}
-                                </span>
-                                <sub class="text-xs text-red-500">
-                                     {{ $item->variant->discount }}% OFF
-                                </sub>
-                            </p>
-
-                        @endif
-                    </div>
-
-                    <!-- Remove Button -->
                     <button wire:click="removeItem({{ $item->id }})"
-                        class="text-red-500 hover:text-red-700 transition-colors">
+                        class="absolute top-2 right-2 sm:relative sm:top-auto sm:right-auto text-red-500 hover:text-red-700">
                         <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" viewBox="0 0 20 20" fill="currentColor">
                             <path fill-rule="evenodd"
                                 d="M4.293 4.293a1 1 0 011.414 0L10 8.586l4.293-4.293a1 1 0 111.414 1.414L11.414 10l4.293 4.293a1 1 0 01-1.414 1.414L10 11.414l-4.293 4.293a1 1 0 01-1.414-1.414L8.586 10 4.293 5.707a1 1 0 010-1.414z"
                                 clip-rule="evenodd" />
                         </svg>
                     </button>
+
                 </div>
             @empty
                 <div class="text-center py-12 animate-fade-in">
@@ -296,9 +300,8 @@
                                         <template x-for="payment in payments" :key="payment.id">
                                             <div class="flex items-center">
                                                 <input type="radio" :value="payment.id" x-model="selectedPayment" :id="'payment_' + payment.id"
-                                                    class="mr-2 ring-none text-slate-800  focus:right-none focus:outline-none  focus:ring-slate-50 ">
-                                                <label :for="'payment_' + payment.id"><span x-text="payment.name"></span>
-                                                    </lable>
+                                                    class="mr-2 ring-none text-slate-800  focus:right-none focus:outline-none   cursor-pointer focus:ring-slate-50 ">
+                                                <label :for="'payment_' + payment.id" class="  cursor-pointer"><span x-text="payment.name"></span></lable>
                                             </div>
                                         </template>
                                         @error('selectedPayment')
@@ -310,7 +313,7 @@
                                     <div x-show="selectedPayment" class="mt-4 p-4 bg-gray-50 rounded-md">
                                         <template x-if="paymentDetails">
                                             <template x-for="account in paymentDetails" :key="account.id">
-                                                <div class="flex items-center gap-2  border rounded py-3 px-6 ">
+                                                {{-- <div class="flex items-center gap-2  border rounded py-3 px-6 ">
                                                     <input :id="'account-' + account.id" type="radio"
                                                         :value="account.id" x-model="selectedPaymentAccount"
                                                         class="mr-2 text-slate-800 ring-none  focus:right-none focus:outline-none  focus:ring-slate-50 ">
@@ -320,7 +323,39 @@
                                                         <p class="text-sm"> Number: <span class="font-bold"
                                                                 x-text="account.number"></span></p>
                                                     </label>
+                                                </div> --}}
+                                                <div class="flex items-center gap-2 border rounded-lg  py-4 px-6 bg-white hover:shadow-md transition-all">
+                                                    <input :id="'account-' + account.id" type="radio" :value="account.id" x-model="selectedPaymentAccount"
+                                                        class="mr-2 text-slate-800 ring-none focus:ring-none focus:outline-none focus:ring-slate-50 cursor-pointer ">
+                                                    <label :for="'account-' + account.id" class="flex-grow ">
+                                                        <p class="text-sm font-medium text-gray-900">Name: <span x-text="account.name"></span></p>
+                                                        <div class="flex items-center justify-between">
+                                                            <p class="text-sm text-gray-600">Number:
+                                                                <span class="font-bold" x-text="account.number"></span>
+                                                            </p>
+                                                            <button type="button"
+                                                                x-data="{ copied: false }"
+                                                                @click="
+                                                                    navigator.clipboard.writeText(account.number);
+                                                                    copied = true;
+                                                                    setTimeout(() => copied = false, 1000);
+                                                                "
+                                                                class="ml-2 p-1.5 text-gray-500 hover:text-slate-700 rounded-md hover:bg-gray-100 transition-all">
+                                                                <span x-show="!copied">
+                                                                    <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="w-4 h-4">
+                                                                        <path stroke-linecap="round" stroke-linejoin="round" d="M15.75 17.25v3.375c0 .621-.504 1.125-1.125 1.125h-9.75a1.125 1.125 0 0 1-1.125-1.125V7.875c0-.621.504-1.125 1.125-1.125H6.75a9.06 9.06 0 0 1 1.5.124m7.5 10.376h3.375c.621 0 1.125-.504 1.125-1.125V11.25c0-4.46-3.243-8.161-7.5-8.876a9.06 9.06 0 0 0-1.5-.124H9.375c-.621 0-1.125.504-1.125 1.125v3.5m7.5 10.375H9.375a1.125 1.125 0 0 1-1.125-1.125v-9.25m12 6.625v-1.875a3.375 3.375 0 0 0-3.375-3.375h-1.5a1.125 1.125 0 0 1-1.125-1.125v-1.5a3.375 3.375 0 0 0-3.375-3.375H9.75" />
+                                                                    </svg>
+                                                                </span>
+                                                                <span x-show="copied">
+                                                                    <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="w-4 h-4 text-green-500">
+                                                                        <path stroke-linecap="round" stroke-linejoin="round" d="M4.5 12.75l6 6 9-13.5" />
+                                                                    </svg>
+                                                                </span>
+                                                            </button>
+                                                        </div>
+                                                    </label>
                                                 </div>
+
                                             </template>
                                         </template>
                                         @error('selectedPaymentAccount')

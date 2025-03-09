@@ -5,6 +5,7 @@ import preset from "./vendor/filament/support/tailwind.config.preset";
 /** @type {import('tailwindcss').Config} */
 export default {
     presets: [preset],
+    darkMode: 'class',
     content: [
         "./vendor/laravel/framework/src/Illuminate/Pagination/resources/views/*.blade.php",
         "./storage/framework/views/*.php",
@@ -19,8 +20,8 @@ export default {
         extend: {
             fontFamily: {
                 sans: ["Figtree", ...defaultTheme.fontFamily.sans],
-                bebas: ['"Bebas Neue"', "cursive"],
-                jost: ["Jost", "sans-serif"],
+                bebas: ['"Bebas Neue"', "mm", "Jost" , "cursive"],
+                jost: ["Jost", "mm" , "sans-serif"],
                 mm: ["mm","Jost", "sans-serif"],
             },
             animation: {

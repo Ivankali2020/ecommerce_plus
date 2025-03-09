@@ -22,6 +22,16 @@ class AttributeResource extends Resource
 
     protected static ?string $navigationGroup = 'Business Section';
 
+    public static function getNavigationLabel(): string
+    {
+        return __('filament/resources/attribute-resource.navigation_label');
+    }
+
+    public static function getModelLabel(): string
+    {
+        return __('filament/resources/attribute-resource.navigation_label');
+    }
+
     public static function form(Form $form): Form
     {
         return \App\Filament\Admin\Resources\AttributeResource::form($form);

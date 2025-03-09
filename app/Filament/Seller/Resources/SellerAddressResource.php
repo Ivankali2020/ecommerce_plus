@@ -19,8 +19,25 @@ class SellerAddressResource extends Resource
 {
     protected static ?string $model = SellerAddress::class;
 
-    protected static ?string $modelLabel = 'Address';
+    protected static ?string $modelLabel = null;
+    protected static ?string $pluralModelLabel = null;
+    protected static ?string $navigationLabel = null;
     protected static ?string $navigationIcon = 'heroicon-o-map-pin';
+
+    public static function getModelLabel(): string
+    {
+        return __('filament/resources.seller-address.label');
+    }
+
+    public static function getPluralModelLabel(): string
+    {
+        return __('filament/resources.seller-address.plural_label');
+    }
+
+    public static function getNavigationLabel(): string
+    {
+        return __('filament/resources.seller-address.navigation_label');
+    }
 
     public static function form(Form $form): Form
     {
@@ -29,15 +46,19 @@ class SellerAddressResource extends Resource
                 Forms\Components\Select::make('region_id')->live()
                     ->required()->searchable()->preload()
                     ->afterStateUpdated(fn(Forms\Set $set)=>  $set('township_id',null))
-                    ->relationship('region','mm_name'),
+                    ->relationship('region','mm_name')
+                    ->label(__('filament/resources.seller-address.form.region_id')),
 
                 Forms\Components\Select::make('township_id')
                     ->hidden(fn(Forms\Get $get)=> blank($get('region_id')))
                     ->required()->searchable()->preload()
-                    ->relationship('township','mm_name',modifyQueryUsing: fn($query,Forms\Get $get)=> $query->where('region_id',$get('region_id'))),
+                    ->relationship('township','mm_name',modifyQueryUsing: fn($query,Forms\Get $get)=> $query->where('region_id',$get('region_id')))
+                    ->label(__('filament/resources.seller-address.form.township_id')),
 
                 Forms\Components\Textarea::make('address')
-                    ->required()->placeholder('Enter your address eg. No. 123, Street 456, Township, Region PH : 1234 xxx xx ')
+                    ->required()
+                    ->placeholder(__('filament/resources.seller-address.form.address_placeholder'))
+                    ->label(__('filament/resources.seller-address.form.address'))
                     ->maxLength(255),   
             ]);
     }
@@ -46,15 +67,17 @@ class SellerAddressResource extends Resource
     {
         return $table
             ->columns([
-              
                 Tables\Columns\TextColumn::make('region.mm_name')
                     ->numeric()
-                    ->sortable(),
+                    ->sortable()
+                    ->label(__('filament/resources.seller-address.table.region')),
                 Tables\Columns\TextColumn::make('township.mm_name')
                     ->numeric()
-                    ->sortable(),
+                    ->sortable()
+                    ->label(__('filament/resources.seller-address.table.township')),
                 Tables\Columns\TextColumn::make('address')
-                    ->searchable(),
+                    ->searchable()
+                    ->label(__('filament/resources.seller-address.table.address')),
                 Tables\Columns\TextColumn::make('deleted_at')
                     ->dateTime()
                     ->sortable()

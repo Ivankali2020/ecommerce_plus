@@ -70,7 +70,7 @@ class Product extends Component
                     ->whereNotIn('id', $this->recommendedProducts->pluck('id'))
                     ->where('is_public', true);
             }
-        ])->get()->where('products_count', '>', 0);
+        ])->latest()->get()->where('products_count', '>', 0);
     }
 
     public function filterByCategory($categoryId)

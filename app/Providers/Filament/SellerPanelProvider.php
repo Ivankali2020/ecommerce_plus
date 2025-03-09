@@ -11,6 +11,7 @@ use App\Http\Middleware\RedirectIfUnauthenticated;
 use App\Models\Seller;
 use App\Models\User;
 use BezhanSalleh\FilamentShield\FilamentShieldPlugin;
+use Filament\FontProviders\LocalFontProvider;
 use Filament\Http\Middleware\Authenticate;
 use Filament\Http\Middleware\DisableBladeIconComponents;
 use Filament\Http\Middleware\DispatchServingFilamentEvent;
@@ -74,7 +75,6 @@ class SellerPanelProvider extends PanelProvider
             ->brandLogoHeight(fn() => Auth::guard('seller')->check() ? '3rem' : '5rem')
             ->brandLogo(fn() => Auth::guard('seller')->check() ? Seller::where('id',CheckFilamentSellerUser::getSellerId())->first()->getFirstMediaUrl('logos') : null) //->getFirstMediaUrl('logos')
             ->brandName(fn() => Auth::guard('seller')->check() ?   Seller::find(CheckFilamentSellerUser::getSellerId())->name : 'SELLER DASHBOARD')
-            ->font('jost')
             ->sidebarCollapsibleOnDesktop()
             ->databaseNotifications()
             ->databaseNotificationsPolling(null) // this is testing purpose
@@ -86,12 +86,18 @@ class SellerPanelProvider extends PanelProvider
                     ->label(fn(): string => 'Go to Website')
                     ->url(fn(): string => route('store', CheckFilamentSellerUser::getSellerId()))
                     ->sort(sort: 10)
-                    ->icon('heroicon-o-link')
+                    ->icon('heroicon-o-link'),
+                NavigationItem::make('Create POS')
+                    ->label(fn(): string => 'Create POS')
+                    ->url(fn(): string => route('filament.seller.resources.orders.create'))
+                    ->sort(sort: -1)
+                    ->icon('heroicon-o-computer-desktop')
             ])
+            // ->font('mm',url: asset('css/admin-font.css'), provider: LocalFontProvider::class)
+            ->font('Jost')
             ->authMiddleware([
                 RedirectIfUnauthenticated::class,
                 // Authenticate::class,
-
             ]);
     }
 }

@@ -22,6 +22,16 @@ class BrandResource extends Resource
 
     protected static ?string $navigationGroup = 'Business Section';
 
+    public static function getModelLabel(): string
+    {
+        return __('filament/resources/brand-resource.navigation.label');
+    }
+
+    // public static function getNavigationGroup(): ?string
+    // {
+    //     return __("filament/resources/brand-resource.navigation.group");
+    // }
+
     public static function form(Form $form): Form
     {
         return \App\Filament\Admin\Resources\BrandResource::form($form);

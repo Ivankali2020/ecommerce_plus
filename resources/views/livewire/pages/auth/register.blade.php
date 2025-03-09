@@ -36,53 +36,80 @@ new #[Layout('layouts.guest')] class extends Component
     }
 }; ?>
 
-<div>
-    <form wire:submit="register">
-        <!-- Name -->
-        <div>
-            <x-input-label for="name" :value="__('Name')" />
-            <x-text-input wire:model="name" id="name" class="block mt-1 w-full" type="text" name="name" required autofocus autocomplete="name" />
-            <x-input-error :messages="$errors->get('name')" class="mt-2" />
-        </div>
 
-        <!-- Email Address -->
-        <div class="mt-4">
-            <x-input-label for="email" :value="__('Email')" />
-            <x-text-input wire:model="email" id="email" class="block mt-1 w-full" type="email" name="email" required autocomplete="username" />
-            <x-input-error :messages="$errors->get('email')" class="mt-2" />
-        </div>
-
-        <!-- Password -->
-        <div class="mt-4">
-            <x-input-label for="password" :value="__('Password')" />
-
-            <x-text-input wire:model="password" id="password" class="block mt-1 w-full"
-                            type="password"
-                            name="password"
-                            required autocomplete="new-password" />
-
-            <x-input-error :messages="$errors->get('password')" class="mt-2" />
-        </div>
-
-        <!-- Confirm Password -->
-        <div class="mt-4">
-            <x-input-label for="password_confirmation" :value="__('Confirm Password')" />
-
-            <x-text-input wire:model="password_confirmation" id="password_confirmation" class="block mt-1 w-full"
-                            type="password"
-                            name="password_confirmation" required autocomplete="new-password" />
-
-            <x-input-error :messages="$errors->get('password_confirmation')" class="mt-2" />
-        </div>
-
-        <div class="flex items-center justify-end mt-4">
-            <a class="underline text-sm text-gray-600 dark:text-gray-400 hover:text-gray-900 dark:hover:text-gray-100 rounded-md focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500 dark:focus:ring-offset-gray-800" href="{{ route('login') }}" wire:navigate>
-                {{ __('Already registered?') }}
+<div class="min-h-screen flex items-center animate-fade-in justify-center py-12 px-4 sm:px-6 lg:px-8 bg-gray-50 dark:bg-gray-900">
+    <div class="max-w-md w-full space-y-8">
+        <!-- Logo and Header -->
+        <div class="text-center">
+            <a href="/">
+                <img class="mx-auto h-16 w-auto" src="{{ asset('assets/logo.png') }}" alt="Your Logo">
             </a>
-
-            <x-primary-button class="ms-4">
-                {{ __('Register') }}
-            </x-primary-button>
+            <h2 class="mt-6 text-3xl font-extrabold text-gray-900 dark:text-white {{ app()->currentLocale() === 'my' ? 'font-mm' : '' }}">
+                {{ __('messages.auth.register_page.title') }}
+            </h2>
+            <p class="mt-2 text-sm text-gray-600 dark:text-gray-400 {{ app()->currentLocale() === 'my' ? 'font-mm' : '' }}">
+                {{ __('messages.auth.register_page.subtitle') }}
+            </p>
         </div>
-    </form>
+
+        <!-- Registration Form -->
+        <form wire:submit="register" class="mt-8 space-y-6">
+            <div class="rounded-md shadow-sm space-y-4">
+                <!-- Name -->
+                <div>
+                    <x-input-label for="name" :value="__('messages.auth.register_page.name')"
+                        class="mb-2 {{ app()->currentLocale() === 'my' ? 'font-mm' : '' }}" />
+                    <x-text-input wire:model="name" id="name" type="text"
+                        class="appearance-none rounded-lg relative block w-full px-3 py-2 border border-gray-300 dark:border-gray-700 placeholder-gray-500 text-gray-900 dark:text-gray-100 focus:outline-none focus:ring-slate-500 focus:border-slate-500 focus:z-10 sm:text-sm {{ app()->currentLocale() === 'my' ? 'font-mm' : '' }}"
+                        required autofocus autocomplete="name" />
+                    <x-input-error :messages="$errors->get('name')" class="mt-2" />
+                </div>
+
+                <!-- Email -->
+                <div>
+                    <x-input-label for="email" :value="__('messages.auth.register_page.email')"
+                        class="mb-2 {{ app()->currentLocale() === 'my' ? 'font-mm' : '' }}" />
+                    <x-text-input wire:model="email" id="email" type="email"
+                        class="appearance-none rounded-lg relative block w-full px-3 py-2 border border-gray-300 dark:border-gray-700 placeholder-gray-500 text-gray-900 dark:text-gray-100 focus:outline-none focus:ring-slate-500 focus:border-slate-500 focus:z-10 sm:text-sm {{ app()->currentLocale() === 'my' ? 'font-mm' : '' }}"
+                        required autocomplete="username" />
+                    <x-input-error :messages="$errors->get('email')" class="mt-2" />
+                </div>
+
+                <!-- Password -->
+                <div>
+                    <x-input-label for="password" :value="__('messages.auth.register_page.password')"
+                        class="mb-2 {{ app()->currentLocale() === 'my' ? 'font-mm' : '' }}" />
+                    <x-text-input wire:model="password" id="password" type="password"
+                        class="appearance-none rounded-lg relative block w-full px-3 py-2 border border-gray-300 dark:border-gray-700 placeholder-gray-500 text-gray-900 dark:text-gray-100 focus:outline-none focus:ring-slate-500 focus:border-slate-500 focus:z-10 sm:text-sm"
+                        required autocomplete="new-password" />
+                    <x-input-error :messages="$errors->get('password')" class="mt-2" />
+                </div>
+
+                <!-- Confirm Password -->
+                <div>
+                    <x-input-label for="password_confirmation" :value="__('messages.auth.register_page.confirm_password')"
+                        class="mb-2 {{ app()->currentLocale() === 'my' ? 'font-mm' : '' }}" />
+                    <x-text-input wire:model="password_confirmation" id="password_confirmation" type="password"
+                        class="appearance-none rounded-lg relative block w-full px-3 py-2 border border-gray-300 dark:border-gray-700 placeholder-gray-500 text-gray-900 dark:text-gray-100 focus:outline-none focus:ring-slate-500 focus:border-slate-500 focus:z-10 sm:text-sm"
+                        required autocomplete="new-password" />
+                    <x-input-error :messages="$errors->get('password_confirmation')" class="mt-2" />
+                </div>
+            </div>
+
+            <!-- Register Button -->
+            <div>
+                <x-primary-button class="group relative w-full flex justify-center py-2 px-4 border border-transparent text-sm font-medium rounded-md text-white bg-slate-600 hover:bg-slate-700 {{ app()->currentLocale() === 'my' ? 'font-mm' : '' }}">
+                    {{ __('messages.auth.register_page.register_button') }}
+                </x-primary-button>
+            </div>
+
+            <!-- Login Link -->
+            <p class="mt-2 text-center text-sm text-gray-600 dark:text-gray-400 {{ app()->currentLocale() === 'my' ? 'font-mm' : '' }}">
+                {{ __('messages.auth.register_page.have_account') }}
+                <a href="{{ route('login') }}" wire:navigate class="font-medium text-slate-600 hover:text-slate-500">
+                    {{ __('messages.auth.register_page.login') }}
+                </a>
+            </p>
+        </form>
+    </div>
 </div>

@@ -4,7 +4,7 @@
         <div class="mx-auto  max-w-2xl above_margin" >
             <div class="flex items-center justify-between mb-8">
                 <div class="flex items-center gap-4 ">
-                    
+
                     @if($record->seller->getFirstMediaUrl('logos'))
                     <img class="h-16 w-16 mr-2 rounded-full mb-4 " src="{{ $record->seller->getFirstMediaUrl('logos') }}" alt="{{ $record->seller->name}}" />
                     @endif
@@ -85,7 +85,7 @@
                 <p class=" text-xs">{{ $address->address }}</p>
             </div>
          @empty
-             
+
          @endforelse
         </div>
         @endif
@@ -95,7 +95,7 @@
     <div id="small" class=" rounded-lg " x-show="isSmall" style="font-size: 12px !important" >
         <div id="invoice" class="m-5 shadow-sm mx-auto p-3 rounded  lg:m-10"  style="max-width: 320px;">
             <div class="mx-auto p-sm-2 w-md " >
-    
+
                 <div class="flex justify-between items-center">
                     <div class="flex items-center">
                         @if($record->seller->getFirstMediaUrl('logos'))
@@ -105,7 +105,7 @@
                     <div class="mb-6">
                         {{-- <div  class="font-bold text-sm text-end my-5 header_invoice">ပြေစာအမှတ်</div> --}}
                         <div class=" header_invoice flex justify-end  " id="" >
-    
+
                             <table class="mb-2 ">
                                 <tr>
                                     <td class="pb-2 px-1 text-start ">ရက်စွဲ</td>
@@ -123,7 +123,7 @@
                         </div>
                     </div>
                 </div>
-    
+
                 <table class="w-full    text-left mb-8 mt-6  ">
                     <thead >
                         <tr>
@@ -136,19 +136,19 @@
                     <tbody class="">
                     @foreach($record->products as $detail)
                         <tr class="">
-                            <td class="pb-3  header_invoice">{{ $detail->product->name }}</td>
+                            <td class="pb-3 text-xs  header_invoice" style="line-height: 1.3rem">{{ $detail->product->name }}</td>
                             <td class="pb-3 text-right ">{{ $detail->quantity }}</td>
                             <td class="pb-3 text-right ">{{ number_format($detail->price,0) }}</td>
-                            <td class="pb-3  text-right "> {{ number_format($detail->total,0) }}</td>
+                            <td class="pb-3  text-right "> {{ number_format($detail->sub_price,0) }}</td>
                         </tr>
                     @endforeach
-    
+
                     <tr class="">
                         <td colspan="2" class="pb-3 text-right px-6 font-bold   "></td>
                         <td colspan="1" class="pb-3 text-left     ">Subtotal:</td>
                         <td  class="pb-3  text-right header_invoice font-bold ">{{ $record->sub_total }} </td>
                     </tr>
-    
+
                     <tr >
                         <td colspan="2" class="pb-3 text-right px-6 font-bold   "></td>
                         <td colspan="1" class="pb-3 text-left    ">Tax Fees <span class="font-light text-xs">({{ $record->tax }} %)</span>:</td>
@@ -166,7 +166,7 @@
                     </tr>
                     </tbody>
                 </table>
-    
+
                 @if($record->user)
                 <div class=" border-gray-300 pb-8 mb-8 mt-2 ">
                     <table class="w-full " >
@@ -185,7 +185,7 @@
                             <td class="px-1 pb-2 ">:</td>
                             <td class="px-1 pb-2 ">{{ $record->user?->phone }}</td>
                         </tr>
-    
+
                     </table>
                 </div>
                 @endif
@@ -198,13 +198,13 @@
                         <p class=" text-xs">{{ $address->address }}</p>
                     </div>
                  @empty
-                     
+
                  @endforelse
                 </div>
                 @endif
-    
+
             </div>
-    
+
         </div>
     </div>
 

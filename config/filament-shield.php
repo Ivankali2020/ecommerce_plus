@@ -10,7 +10,10 @@ return [
         'is_globally_searchable' => false,
         'show_model_path' => true,
         'is_scoped_to_tenant' => true,
+        'cluster' => null,
     ],
+
+    'tenant_model' => null,
 
     'auth_provider_model' => [
         'fqcn' => 'App\Models\Seller',
@@ -58,6 +61,7 @@ return [
     'generator' => [
         'option' => 'policies_and_permissions',
         'policy_directory' => 'Policies',
+        'policy_namespace' => 'Policies',
     ],
 
     'exclude' => [
@@ -75,9 +79,9 @@ return [
     ],
 
     'discovery' => [
-        'discover_all_resources' => false,
-        'discover_all_widgets' => false,
-        'discover_all_pages' => false,
+        'discover_all_resources' => true,
+        'discover_all_widgets' => true,
+        'discover_all_pages' => true,
     ],
 
     'register_role_policy' => [

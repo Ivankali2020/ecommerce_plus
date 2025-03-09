@@ -69,7 +69,7 @@
                         x-transition:leave-start="opacity-100 transform scale-100"
                         x-transition:leave-end="opacity-0 transform scale-95">
                         <img
-                            class="absolute rounded-lg w-full h-full inset-0 object-contain "
+                            class="absolute rounded-lg w-full h-full inset-0 object-contain  "
                             :src="slide.imgSrc"
                             :alt="slide.imgAlt"
                             loading="lazy" />

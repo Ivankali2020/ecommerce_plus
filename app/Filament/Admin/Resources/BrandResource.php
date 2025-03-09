@@ -22,6 +22,16 @@ class BrandResource extends Resource
 
     protected static ?string $navigationGroup = 'Business Section';
 
+    public static function getModelLabel(): string
+    {
+        return __('filament/resources/brand-resource.model.label');
+    }
+
+    public static function getPluralModelLabel(): string
+    {
+        return __('filament/resources/brand-resource.model.plural_label');
+    }
+
     public static function form(Form $form): Form
     {
         return $form
@@ -30,20 +40,24 @@ class BrandResource extends Resource
                     Forms\Components\Section::make()->schema([
                         Forms\Components\Select::make('seller_id')
                             ->searchable()->preload()->hidden(Filament::getAuthGuard() == 'seller')
-                            ->required()->relationship('seller', 'name'),
+                            ->required()->relationship('seller', 'name')
+                            ->label(__('filament/resources/brand-resource.form.seller')),
 
                         Forms\Components\TextInput::make('name')
-                            ->helperText('NIKE , ADIDAS , PUMA,  .. ')
+                            ->helperText(__('filament/resources/brand-resource.form.name_helper'))
                             ->required()
-                            ->maxLength(255),
+                            ->maxLength(255)
+                            ->label(__('filament/resources/brand-resource.form.name')),
 
                         Forms\Components\SpatieMediaLibraryFileUpload::make('logo')
                             ->collection('logos')->imageEditor()
-                            ->image()->rules('required'),
+                            ->image()->rules('required')
+                            ->label(__('filament/resources/brand-resource.form.logo')),
 
                         Forms\Components\Textarea::make('description')
                             ->maxLength(16777215)
-                            ->columnSpanFull(),
+                            ->columnSpanFull()
+                            ->label(__('filament/resources/brand-resource.form.description')),
                     ])
                 ])
             ]);
@@ -56,21 +70,29 @@ class BrandResource extends Resource
                 Tables\Columns\SpatieMediaLibraryImageColumn::make('thumb')->collection('logos'),
                 Tables\Columns\TextColumn::make('seller.name')
                     ->numeric()->hidden(Filament::getAuthGuard() == 'seller')
-                    ->sortable(),
+                    ->sortable()
+                    ->label(__('filament/resources/brand-resource.table.columns.seller')),
                 Tables\Columns\TextColumn::make('name')
-                    ->searchable(),
+                    ->searchable()
+                    ->label(__('filament/resources/brand-resource.table.columns.name')),
+                Tables\Columns\TextColumn::make('description')
+                    ->searchable()
+                    ->label(__('filament/resources/brand-resource.table.columns.description')),
                 Tables\Columns\TextColumn::make('deleted_at')
                     ->dateTime()
                     ->sortable()
-                    ->toggleable(isToggledHiddenByDefault: true),
+                    ->toggleable(isToggledHiddenByDefault: true)
+                    ->label(__('filament/resources/brand-resource.table.columns.deleted_at')),
                 Tables\Columns\TextColumn::make('created_at')
                     ->dateTime()
                     ->sortable()
-                    ->toggleable(isToggledHiddenByDefault: true),
+                    ->toggleable(isToggledHiddenByDefault: true)
+                    ->label(__('filament/resources/brand-resource.table.columns.created_at')),
                 Tables\Columns\TextColumn::make('updated_at')
                     ->dateTime()
                     ->sortable()
-                    ->toggleable(isToggledHiddenByDefault: true),
+                    ->toggleable(isToggledHiddenByDefault: true)
+                    ->label(__('filament/resources/brand-resource.table.columns.updated_at')),
             ])
             ->filters([
                 Tables\Filters\TrashedFilter::make(),

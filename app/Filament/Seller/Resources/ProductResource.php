@@ -23,6 +23,21 @@ class ProductResource extends Resource
 
     protected static ?string $navigationGroup = 'Business Section';
 
+    public static function getNavigationLabel(): string
+    {
+        return __('filament/resources/product-resource.navigation.label');
+    }
+
+    public static function getModelLabel(): string
+    {
+        return __('filament/resources/product-resource.navigation.single');
+    }
+
+    public static function getPluralModelLabel(): string
+    {
+        return __('filament/resources/product-resource.navigation.plural');
+    }
+
     public static function form(Form $form): Form
     {
         return \App\Filament\Admin\Resources\ProductResource::form($form);

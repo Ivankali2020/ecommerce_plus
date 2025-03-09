@@ -23,7 +23,24 @@ class StaffResource extends Resource
 
     protected static ?string $navigationIcon = 'heroicon-o-users';
 
-    protected static ?string $modelLabel = 'Staff';
+    // protected static ?string $modelLabel = 'Staff';
+
+    // protected static ?string $navigationLabel = 'Staff';
+
+    public static function getModelLabel(): string
+    {
+        return __('filament/resources/staff-resource.model_label');
+    }
+
+    public static function getPluralModelLabel(): string
+    {
+        return __('filament/resources/staff-resource.model_label_plural');
+    }
+
+    public static function getNavigationLabel(): string
+    {
+        return __('filament/resources/staff-resource.model_label_plural');
+    }
 
     public static function form(Form $form): Form
     {

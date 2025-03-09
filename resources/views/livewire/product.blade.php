@@ -5,7 +5,7 @@
         </x-locale-text>
 
         <!-- Recommended Products Section -->
-        <div wire:key="recommended-container" class="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-5 lg:gap-6 gap-4">
+        <div wire:key="recommended-container" class="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-5 lg:gap-4 gap-3">
             @forelse ($this->recommendedProducts as $recProduct)
                 <x-product-item wire:ignore :product="$recProduct" type="recommended" />
             @empty
@@ -17,21 +17,40 @@
             <x-locale-text class="text-2xl mb-8  lg:text-4xl font-bold lg:mt-8">
                 {{ __('messages.categories') }}
             </x-locale-text>
-            <div class="flex flex-wrap gap-2">
-                <button wire:key="category-all" wire:loading.class="opacity-50" wire:click="filterByCategory(null)"
-                    class="px-4 py-2 text-sm rounded-full transition-colors duration-150
-                    {{ is_null($selectedCategory) ? 'bg-slate-900 text-white' : 'bg-slate-100 hover:bg-slate-200 text-slate-700' }}">
-                    {{ __('messages.all_categories') }}
-                </button>
-                @foreach($this->categories as $category)
-                    <button wire:key="category-{{ $category->id }}" wire:click="filterByCategory({{ $category->id }})"
-                        class="px-4 py-2 text-sm rounded-full transition-colors duration-150
-                            {{ $selectedCategory == $category->id ? 'bg-slate-900 text-white' : 'bg-slate-100 hover:bg-slate-200 text-slate-700' }}">
-                        {{ $category->name }}
-                        <span class="ml-1 text-xs opacity-75">({{ $category->products_count }})</span>
+
+            <div class="overflow-x-auto pb-4 hide-scrollbar">
+                <div class="flex flex-nowrap gap-2 md:flex-wrap min-w-full">
+                    <!-- All Categories Button -->
+                    <button wire:key="category-all"
+                            wire:loading.class="opacity-50"
+                            wire:click="filterByCategory(null)"
+                            class="flex-none px-4 py-2.5 text-sm font-medium rounded-full transition-all duration-200 shadow-sm {{ app()->currentLocale() === 'my' ? 'font-mm' : '' }}
+                                {{ is_null($selectedCategory)
+                                    ? 'bg-slate-900 text-white ring-2 ring-slate-900/20'
+                                    : 'bg-white hover:bg-slate-50 text-slate-700 border border-slate-200' }}">
+                        {{ __('messages.all_categories') }}
                     </button>
-                @endforeach
+
+                    <!-- Category Buttons -->
+                    @foreach($this->categories as $category)
+                        <button wire:key="category-{{ $category->id }}"
+                                wire:click="filterByCategory({{ $category->id }})"
+                                class="flex-none px-4 py-2.5 text-sm font-medium rounded-full transition-all duration-200 shadow-sm {{ app()->currentLocale() === 'my' ? 'font-mm' : '' }}
+                                    {{ $selectedCategory == $category->id
+                                        ? 'bg-slate-900 text-white ring-2 ring-slate-900/20'
+                                        : 'bg-white hover:bg-slate-50 text-slate-700 border border-slate-200' }}">
+                            <span>{{ $category->name }}</span>
+                            <span class="ml-1.5 text-xs inline-flex items-center justify-center px-2 py-0.5 rounded-full
+                                {{ $selectedCategory == $category->id
+                                    ? 'bg-white/20 text-white'
+                                    : 'bg-slate-100 text-slate-600' }}">
+                                {{ $category->products_count }}
+                            </span>
+                        </button>
+                    @endforeach
+                </div>
             </div>
+            <div class="absolute right-0 top-0 h-full w-8 bg-gradient-to-l from-white to-transparent pointer-events-none md:hidden"></div>
         </div>
 
         <div class="flex justify-between items-center">
@@ -68,7 +87,7 @@
         </div>
 
         <!-- Latest Products Section -->
-        <div wire:key="products-container" class="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-5 lg:gap-6 gap-4">
+        <div wire:key="products-container" class="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-5 lg:gap-4 gap-3">
             @forelse ($this->products as $product)
                 <x-product-item :product="$product" type="latest" />
             @empty

@@ -19,66 +19,74 @@ class DeliveryResource extends Resource
 {
     protected static ?string $model = Delivery::class;
 
-//    protected static ?string $navigationIcon = 'heroicon-o-rectangle-stack';
+    protected static ?string $navigationGroup = 'Order Section';
 
-    protected static ?string $navigationGroup = 'Delivery Section';
+    public static function getNavigationLabel(): string
+    {
+        return __('filament/resources/delivery-resource.navigation.label');
+    }
+
+    public static function getModelLabel(): string
+    {
+        return __('filament/resources/delivery-resource.model.label');
+    }
+
+    public static function getPluralModelLabel(): string
+    {
+        return __('filament/resources/delivery-resource.model.plural_label');
+    }
 
     public static function form(Form $form): Form
     {
         return $form
             ->schema([
-
                 Forms\Components\Group::make()->schema([
-
                     Forms\Components\Section::make()->schema([
                         Forms\Components\Select::make('seller_id')
                             ->required()->searchable()->preload()
                             ->hidden(Filament::getAuthGuard() == 'seller')
-                            ->relationship('seller','name'),
+                            ->relationship('seller','name')
+                            ->label(__('filament/resources/delivery-resource.form.fields.name')),
 
                         Forms\Components\Select::make('region_id')->live()
                             ->required()->searchable()->preload()
                             ->afterStateUpdated(fn(Forms\Set $set)=>  $set('township_id',null))
-                            ->relationship('region','mm_name'),
+                            ->relationship('region','mm_name')
+                            ->label(__('filament/resources/delivery-resource.form.fields.region')),
 
                         Forms\Components\Select::make('township_id')
                             ->hidden(fn(Forms\Get $get)=> blank($get('region_id')))
                             ->required()->searchable()->preload()
-                            ->relationship('township','mm_name',modifyQueryUsing: fn($query,Forms\Get $get)=> $query->where('region_id',$get('region_id'))),
+                            ->relationship('township','mm_name',modifyQueryUsing: fn($query,Forms\Get $get)=> $query->where('region_id',$get('region_id')))
+                            ->label(__('filament/resources/delivery-resource.form.fields.township')),
 
                         Forms\Components\TextInput::make('fees')
                             ->required()
-                            ->numeric()->helperText('for only customer MMK')
-                            ->default(0.00),
-
-
+                            ->numeric()
+                            ->default(0.00)
+                            ->label(__('filament/resources/delivery-resource.form.fields.delivery_fee')),
                     ])
                 ]),
 
                 Forms\Components\Group::make()->schema([
-
-                    Forms\Components\Section::make('Shipping Infomation')->schema([
-                        Forms\Components\Toggle::make('is_cod')->label('Cash On Delivery')
+                    Forms\Components\Section::make(__('filament/resources/delivery-resource.form.fields.shipping_information'))->schema([
+                        Forms\Components\Toggle::make('is_cod')
+                            ->label(__('filament/resources/delivery-resource.form.fields.cash_on_delivery'))
                             ->offIcon('heroicon-m-squares-2x2')
                             ->onIcon('heroicon-m-bolt')
-                            ->helperText('Cash on delivery စနစ်')
                             ->required(),
 
                         Forms\Components\Toggle::make('is_pick_up')
-                            ->label('Self Pick Up')
+                            ->label(__('filament/resources/delivery-resource.form.fields.self_pickup'))
                             ->offIcon('heroicon-m-squares-2x2')
                             ->onIcon('heroicon-m-shield-exclamation')
-                            ->helperText('ကိုယ်တိုင်လာယူစနစ်')
                             ->required(),
 
                         Forms\Components\TextInput::make('remark')
-                            ->placeholder('၃ ကီလိုထက်ကျော်ရင် ထပ်မံ ကောက်ခံပါမည်')
+                            ->label(__('filament/resources/delivery-resource.form.fields.remark'))
                             ->maxLength(255),
                     ])
-
                 ])
-
-
             ]);
     }
 
@@ -87,21 +95,28 @@ class DeliveryResource extends Resource
         return $table
             ->columns([
                 Tables\Columns\TextColumn::make('seller.name')
+                    ->label(__('filament/resources/delivery-resource.table.columns.name'))
                     ->sortable(),
                 Tables\Columns\TextColumn::make('region.mm_name')
+                    ->label(__('filament/resources/delivery-resource.table.columns.region'))
                     ->description(fn(Delivery $delivery)=> $delivery->region->en_name)
                     ->sortable(),
                 Tables\Columns\TextColumn::make('township.mm_name')
+                    ->label(__('filament/resources/delivery-resource.table.columns.township'))
                     ->description(fn(Delivery $delivery)=> $delivery->region->en_name)
                     ->sortable(),
                 Tables\Columns\TextColumn::make('fees')
+                    ->label(__('filament/resources/delivery-resource.table.columns.delivery_fee'))
                     ->numeric()
                     ->sortable(),
-                Tables\Columns\IconColumn::make('is_cod')->label('COD')
+                Tables\Columns\IconColumn::make('is_cod')
+                    ->label(__('filament/resources/delivery-resource.table.columns.cod'))
                     ->boolean(),
-                Tables\Columns\IconColumn::make('is_pick_up')->label('SPU')
+                Tables\Columns\IconColumn::make('is_pick_up')
+                    ->label(__('filament/resources/delivery-resource.table.columns.self_pickup'))
                     ->boolean(),
                 Tables\Columns\TextColumn::make('remark')
+                    ->label(__('filament/resources/delivery-resource.table.columns.remark'))
                     ->searchable(),
                 Tables\Columns\TextColumn::make('deleted_at')
                     ->dateTime()

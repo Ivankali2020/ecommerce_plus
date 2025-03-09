@@ -21,24 +21,27 @@
     </style>
     <!-- Styles -->
     @vite(['resources/css/app.css', 'resources/js/app.js'])
+    <script defer src="https://cdn.jsdelivr.net/npm/alpinejs@3.x.x/dist/cdn.min.js"></script>
+
 </head>
 
-<body class="antialiased font-jost">
+<body class="antialiased text-black/50 dark:bg-black dark:text-white/50 min-h-svh ">
+    <x-theme-switcher />
     <div class="hero-pattern left-[80%] bottom-[-40%]  absolute inset-0 -z-20"></div>
 
-    <div class="bg-gray-50 text-black/50 dark:bg-black dark:text-white/50">
+    <div class=" ">
         <div class="relative flex flex-col items-center justify-center selection:bg-[slate] selection:text-white">
             <div class="relative w-full max-w-2xl px-6 lg:max-w-7xl">
                 <header class="relative py-16 ">
                     <div class="absolute inset-x-0 -top-40 -z-10 transform-gpu overflow-hidden blur-3xl sm:-top-80"
                         aria-hidden="true">
-                        <div class="relative left-[calc(50%-11rem)] aspect-[1155/678] w-[36.125rem] -translate-x-1/2 rotate-[30deg] bg-gradient-to-tr from-[#80ceff] to-[#bdbcc9] opacity-30 sm:left-[calc(50%-30rem)] sm:w-[72.1875rem]"
+                        <div class="relative left-[calc(50%-11rem)] aspect-[1155/678] w-[36.125rem] -translate-x-1/2 rotate-[30deg] bg-gradient-to-tr from-[#80ceff] to-[#bdbcc9] dark:from-slate-400 dark:via-[#c2a03d] dark:to-slate-400 opacity-30 sm:left-[calc(50%-30rem)] sm:w-[72.1875rem]"
                             style="clip-path: polygon(74.1% 44.1%, 100% 61.6%, 97.5% 26.9%, 85.5% 0.1%, 80.7% 2%, 72.5% 32.5%, 60.2% 62.4%, 52.4% 68.1%, 47.5% 58.3%, 45.2% 34.5%, 27.5% 76.7%, 0.1% 64.9%, 17.9% 100%, 27.6% 76.8%, 76.1% 97.7%, 74.1% 44.1%)">
                         </div>
                     </div>
 
-                    <div class="mx-auto max-w-7xl px-6 lg:px-8">
-                        <div class="mx-auto max-w-2xl text-center">
+                    <div class="mx-auto container px-6 lg:px-8 animate-fade-in  ">
+                        <div class="mx-auto text-center">
                             <div class="mb-8 flex justify-center">
                                 <div class="font-jost relative rounded-full px-3 py-1 text-sm leading-6 text-gray-600 ring-1 ring-gray-900/10 hover:ring-gray-900/20 dark:text-gray-300 dark:ring-gray-700 dark:hover:ring-gray-600">
                                     {{ __('messages.tagline') }}
@@ -50,15 +53,17 @@
                             </div>
 
                             <!-- Main Heading -->
-                            <h1 style="letter-spacing: 1rem"
-                                class="text-8xl font-bebas  font-bold tracking-tight text-gray-900 sm:text-6xl bg-gradient-to-r from-slate-500 via-[#c2a03d] to-slate-500 bg-clip-text text-transparent dark:from-slate-400 dark:via-sky-400 dark:to-slate-400">
+                            <h1  class="text-5xl lg:text-8xl font-bebas  tracking-tight text-gray-900 sm:text-6xl bg-gradient-to-r from-slate-500 via-[#c2a03d] to-slate-500 bg-clip-text text-transparent dark:from-slate-400 dark:via-[#c2a03d] dark:to-slate-400">
                                 {{ __('messages.title') }}
                             </h1>
 
                             <!-- Subheading -->
-                            <p class="mt-6 font-jost text-md text-gray-600 dark:text-gray-300">
-                                {{ __('messages.description') }}
-                            </p>
+                            <div class="flex items-center justify-center">
+                                <p class="mt-6  max-w-2xl  font-jost text-md text-gray-600 dark:text-gray-300" style="line-height: 2rem">
+                                    {{ __('messages.description') }}
+                                </p>
+                            </div>
+
 
                             <!-- Call to Action Buttons -->
                             <div class="mt-10 flex items-center justify-center gap-x-6">
@@ -68,6 +73,11 @@
                                     class="text-sm font-semibold leading-6 text-gray-900 dark:text-gray-300">
                                     {{ __('messages.sign_in') }} <span aria-hidden="true">→</span>
                                 </a>
+                                @else
+                                <a href="{{ route('profile') }}"
+                                    class="text-sm font-semibold leading-6 border rounded px-8 py-1.5 text-gray-900 dark:text-gray-300">
+                                    {{ __('messages.profile.text') }} <span aria-hidden="true">→</span>
+                                </a>
                                 @endguest
                             </div>
                         </div>
@@ -76,7 +86,7 @@
                     <!-- Bottom decorative element -->
                     <div class="absolute inset-x-0 top-[calc(100%-13rem)] -z-10 transform-gpu overflow-hidden blur-3xl sm:top-[calc(100%-30rem)]"
                         aria-hidden="true">
-                        <div class="relative left-[calc(50%+3rem)] aspect-[1155/678] w-[36.125rem] -translate-x-1/2 bg-gradient-to-tr  from-[#80ceff] to-[#bdbcc9] opacity-30 sm:left-[calc(50%+36rem)] sm:w-[72.1875rem]"
+                        <div class="relative left-[calc(50%+3rem)] aspect-[1155/678] w-[36.125rem] -translate-x-1/2 bg-gradient-to-tr  from-[#80ceff] to-[#bdbcc9] dark:from-slate-400 dark:via-[#c2a03d] dark:to-slate-400 opacity-30 sm:left-[calc(50%+36rem)] sm:w-[72.1875rem]"
                             style="clip-path: polygon(74.1% 44.1%, 100% 61.6%, 97.5% 26.9%, 85.5% 0.1%, 80.7% 2%, 72.5% 32.5%, 60.2% 62.4%, 52.4% 68.1%, 47.5% 58.3%, 45.2% 34.5%, 27.5% 76.7%, 0.1% 64.9%, 17.9% 100%, 27.6% 76.8%, 76.1% 97.7%, 74.1% 44.1%)">
                         </div>
                     </div>
@@ -86,7 +96,7 @@
                     <div class="grid gap-6 lg:grid-cols-2 lg:gap-8">
                         @foreach ($sellers as $seller)
                             <a href="{{ route('store', $seller->id) }}"
-                                class="flex items-start gap-4 rounded-lg bg-white p-6 shadow-[0px_14px_34px_0px_rgba(0,0,0,0.08)] ring-1 ring-white/[0.05] transition duration-300 hover:text-black/70 hover:ring-black/20 focus:outline-none focus-visible:ring-[#FF2D20] lg:pb-10 dark:bg-zinc-900 dark:ring-zinc-800 dark:hover:text-white/70 dark:hover:ring-zinc-700 dark:focus-visible:ring-[#FF2D20]">
+                                class="flex items-start gap-4 rounded-lg bg-white p-6 animate-fade-in  shadow-[0px_14px_34px_0px_rgba(0,0,0,0.08)] ring-1 ring-white/[0.05] transition duration-300 hover:text-black/70 hover:ring-black/20 focus:outline-none focus-visible:ring-[#FF2D20] lg:pb-10 dark:bg-zinc-900 dark:ring-zinc-800 dark:hover:text-white/70 dark:hover:ring-zinc-700 dark:focus-visible:ring-[#FF2D20]">
                                 <img src="{{ $seller->getFirstMediaUrl('logos') }}" alt="{{ $seller->name }}"
                                     class="w-16 h-16 rounded-full object-cover">
                                 <div>
@@ -111,6 +121,14 @@
             </div>
         </div>
     </div>
+    <script>
+        // Check initial theme
+        if (localStorage.theme === 'dark' || (!('theme' in localStorage) && window.matchMedia('(prefers-color-scheme: dark)').matches)) {
+            document.documentElement.classList.add('dark');
+        } else {
+            document.documentElement.classList.remove('dark');
+        }
+    </script>
 </body>
 
 </html>

@@ -19,7 +19,15 @@ class CategoryResource extends Resource
 {
     protected static ?string $model = Category::class;
 
-//    protected static ?string $navigationIcon = 'heroicon-o-rectangle-stack';
+    public static function getNavigationLabel(): string
+    {
+        return __('filament/resources/category-resource.navigation.label');
+    }
+
+    public static function getModelLabel(): string
+    {
+        return __('filament/resources/category-resource.navigation.label');
+    }
 
     protected static ?string $navigationGroup = 'Business Section';
 

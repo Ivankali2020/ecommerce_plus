@@ -21,28 +21,30 @@ class SellerResource extends Resource
 {
     protected static ?string $model = Seller::class;
 
-//    protected static ?string $navigationIcon = 'heroicon-o-rectangle-stack';
     protected static ?string $navigationGroup = 'User Section';
 
     public static function form(Form $form): Form
     {
         return $form
             ->schema([
-
                 Forms\Components\Group::make()->schema([
                     Forms\Components\TextInput::make('name')
+                        ->label(__('filament/resources/staff-resource.form.name'))
                         ->required()
                         ->maxLength(255),
 
                     Forms\Components\TextInput::make('email')
+                        ->label(__('filament/resources/staff-resource.form.email'))
                         ->email()
                         ->required()
                         ->maxLength(255),
 
                     Forms\Components\TextInput::make('phone')
+                        ->label(__('filament/resources/staff-resource.form.phone'))
                         ->maxLength(255),
 
                     Forms\Components\TextInput::make('password')
+                        ->label(__('filament/resources/staff-resource.form.password'))
                         ->password()
                         ->dehydrateStateUsing(fn($state) => Hash::make($state))
                         ->formatStateUsing(fn($state) => $state)
@@ -57,7 +59,6 @@ class SellerResource extends Resource
                 ])->columns(2),
 
                 Forms\Components\Group::make()->schema([
-
                     Forms\Components\SpatieMediaLibraryFileUpload::make('logo')
                         ->collection('logos')->imageEditor()
                         ->image()->rules('required'),
@@ -67,14 +68,12 @@ class SellerResource extends Resource
                         ->image()->rules('required'),
 
                     Forms\Components\Select::make('roles')
+                        ->label(__('filament/resources/staff-resource.form.role'))
                         ->relationship('roles', 'name',modifyQueryUsing: fn($query) => $query->where('guard_name','seller'))
                         ->multiple()
                         ->preload()
                         ->searchable()
                 ])
-
-
-
             ]);
     }
 
@@ -86,12 +85,17 @@ class SellerResource extends Resource
                 Tables\Columns\SpatieMediaLibraryImageColumn::make('cover_photo')
                     ->hidden(Filament::getAuthGuard() == 'seller')
                     ->collection('cover_photos'),
-                Tables\Columns\TextColumn::make('roles.name')->badge(),
+                Tables\Columns\TextColumn::make('roles.name')
+                    ->label(__('filament/resources/staff-resource.form.role'))
+                    ->badge(),
                 Tables\Columns\TextColumn::make('name')
+                    ->label(__('filament/resources/staff-resource.form.name'))
                     ->searchable(),
                 Tables\Columns\TextColumn::make('email')
+                    ->label(__('filament/resources/staff-resource.form.email'))
                     ->searchable(),
                 Tables\Columns\TextColumn::make('phone')
+                    ->label(__('filament/resources/staff-resource.form.phone'))
                     ->searchable(),
                 Tables\Columns\TextColumn::make('created_at')
                     ->dateTime()

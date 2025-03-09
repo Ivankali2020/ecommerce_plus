@@ -24,7 +24,20 @@ class OrderResource extends Resource
 
     protected static ?string $navigationGroup = 'Order Section';
 
-    protected static ?string $modelLabel = 'Point Of Sales';
+    public static function getNavigationLabel(): string
+    {
+        return __('filament/resources/order-resource.navigation.label');
+    }
+
+    public static function getModelLabel(): string
+    {
+        return __('filament/resources/order-resource.navigation.single');
+    }
+
+    public static function getPluralModelLabel(): string
+    {
+        return __('filament/resources/order-resource.navigation.plural');
+    }
 
 
     public static function getNavigationBadge(): ?string

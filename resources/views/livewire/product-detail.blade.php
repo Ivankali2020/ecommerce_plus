@@ -1,4 +1,4 @@
-<div class="container mx-auto lg:mt-10 ">
+<div class="container mx-auto lg:mt-10 p-6 lg:p-0 ">
     <div x-data="productDetail({{ json_encode($product) }}, {{ json_encode($product->variants) }})" class="space-y-4 grid grid-cols-1 md:grid-cols-2 gap-6">
         <!-- Image Gallery -->
         <div class="space-y-4">

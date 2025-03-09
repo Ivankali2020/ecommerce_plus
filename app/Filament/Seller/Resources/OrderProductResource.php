@@ -21,7 +21,22 @@ class OrderProductResource extends Resource
 {
     protected static ?string $model = OrderProduct::class;
 
-    protected static ?string $navigationGroup = 'Order Section';
+    protected static ?string $navigationGroup = "Order Section";
+
+    public static function getNavigationLabel(): string
+    {
+        return __('filament/resources/order-product-resource.navigation.label');
+    }
+
+    public static function getModelLabel(): string
+    {
+        return __('filament/resources/order-product-resource.navigation.single');
+    }
+
+    public static function getPluralModelLabel(): string
+    {
+        return __('filament/resources/order-product-resource.navigation.plural');
+    }
 
     public static function canCreate(): bool
     {
@@ -51,14 +66,22 @@ class OrderProductResource extends Resource
     public static function table(Table $table): Table
     {
         return $table
-            ->groups(['order.invoice_number','product.name', Tables\Grouping\Group::make('created_at')->date()])
+            ->groups([
+                'order.invoice_number',
+                'product.name',
+                Tables\Grouping\Group::make('created_at')
+                    ->label(__('filament/resources/order-product-resource.columns.created_at'))
+                    ->date()
+            ])
             ->groupingSettingsInDropdownOnDesktop()
             ->columns([
                 Tables\Columns\TextColumn::make('product.name')
+                    ->label(__('filament/resources/order-product-resource.columns.product.name'))
                     ->searchable()
-                    ->description(fn(OrderProduct $orderProduct)=>$orderProduct->product->category->name),
+                    ->description(fn(OrderProduct $orderProduct) => $orderProduct->product->category->name),
 
                 Tables\Columns\TextColumn::make('attributes')
+                    ->label(__('filament/resources/order-product-resource.columns.attributes'))
                     ->getStateUsing(function($record){
                         $data = '';
                         foreach ($record->attributes as $attribute){
@@ -71,40 +94,51 @@ class OrderProductResource extends Resource
                     ->formatStateUsing(fn($state)=> $state),
 
                 Tables\Columns\TextColumn::make('original_buy_price')
+                    ->label(__('filament/resources/order-product-resource.columns.original_buy_price'))
                     ->alignEnd()
-                    ->description(fn(OrderProduct $orderProduct) =>  $orderProduct->original_price),
+                    ->description(fn(OrderProduct $orderProduct) => $orderProduct->original_price),
 
-                Tables\Columns\TextColumn::make('price')->label('Selling Price')->alignEnd(),
+                Tables\Columns\TextColumn::make('price')
+                    ->label(__('filament/resources/order-product-resource.columns.selling_price'))
+                    ->alignEnd(),
 
-                Tables\Columns\TextColumn::make('discount_price')->alignEnd()
-                    ->description(fn(OrderProduct $orderProduct)=>$orderProduct->discount.' %'),
+                Tables\Columns\TextColumn::make('discount_price')
+                    ->label(__('filament/resources/order-product-resource.columns.discount_price'))
+                    ->alignEnd()
+                    ->description(fn(OrderProduct $orderProduct) => $orderProduct->discount.' %'),
 
-                Tables\Columns\TextColumn::make('quantity')->alignCenter(),
+                Tables\Columns\TextColumn::make('quantity')
+                    ->label(__('filament/resources/order-product-resource.columns.quantity'))
+                    ->alignCenter(),
 
                 Tables\Columns\TextColumn::make('profit/Loss')
-                    ->badge()->alignEnd()
+                    ->label(__('filament/resources/order-product-resource.columns.profit_loss'))
+                    ->alignEnd()->size('lg')
                     ->color(fn($state) => $state > 0 ? 'success' : 'danger')
                     ->getStateUsing(fn($record)=> ($record->discount != 0 ? $record->original_discount_price : $record->price ) - $record->original_buy_price)
                     ->formatStateUsing(fn($state) => $state ),
 
-                Tables\Columns\TextColumn::make('sub_price')->prefix(' qty')->alignEnd(),
-
-                   Tables\Columns\TextColumn::make('sub_price')->alignEnd()
-                       ->summarize(Tables\Columns\Summarizers\Sum::make('sub_price')->money('mmk')->label('Total Amount'))
-
+                Tables\Columns\TextColumn::make('sub_price')
+                    ->label(__('filament/resources/order-product-resource.columns.sub_price'))
+                    ->alignEnd()
+                    ->summarize(
+                        Tables\Columns\Summarizers\Sum::make('sub_price')
+                            ->money('mmk')
+                            ->label(__('filament/resources/order-product-resource.columns.total_amount'))
+                    ),
             ])
             ->defaultSort('id','desc')
             ->filters([
 //                Tables\Filters\TrashedFilter::make(),
             ])
             ->actions([
-                Tables\Actions\EditAction::make(),
+                Tables\Actions\EditAction::make()
+                    ->label(__('filament/resources/order-product-resource.actions.edit')),
             ])
             ->bulkActions([
                 Tables\Actions\BulkActionGroup::make([
-                    Tables\Actions\DeleteBulkAction::make(),
-//                    Tables\Actions\ForceDeleteBulkAction::make(),
-//                    Tables\Actions\RestoreBulkAction::make(),
+                    Tables\Actions\DeleteBulkAction::make()
+                        ->label(__('filament/resources/order-product-resource.actions.delete')),
                 ]),
             ]);
     }
@@ -119,13 +153,13 @@ class OrderProductResource extends Resource
     public static function getPages(): array
     {
         return [
-            'index' => Pages\ListOrderProducts::route('/'),
+'index' => Pages\ListOrderProducts::route('/'),
 //            'create' => Pages\CreateOrderProduct::route('/create'),
 //            'edit' => Pages\EditOrderProduct::route('/{record}/edit'),
         ];
     }
 
-    public static function getEloquentQuery(): Builder
+public static function getEloquentQuery(): Builder
     {
         return parent::getEloquentQuery()
             ->whereRelation('order','seller_id',CheckFilamentSellerUser::getSellerId())

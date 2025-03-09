@@ -19,6 +19,21 @@ class UserResource extends Resource
 
     protected static ?string $navigationIcon = 'heroicon-o-user-group';
 
+    public static function getNavigationLabel(): string
+    {
+        return __('filament/resources/user-resource.navigation.label');
+    }
+
+    public static function getModelLabel(): string
+    {
+        return __('filament/resources/user-resource.navigation.singular');
+    }
+
+    public static function getPluralModelLabel(): string
+    {
+        return __('filament/resources/user-resource.navigation.plural');
+    }
+
     public static function form(Form $form): Form
     {
         return \App\Filament\Admin\Resources\UserResource::form($form);

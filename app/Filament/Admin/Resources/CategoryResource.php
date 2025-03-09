@@ -39,9 +39,10 @@ class CategoryResource extends Resource
 
                            Forms\Components\Toggle::make('is_sub_category')->live()
                                 ->hidden(fn(Page $livewire) => $livewire instanceof EditRecord)
-                                ->helperText('If you want to create sub category please open'),
+                                ->helperText(__('filament/resources/category-resource.form.helper_text.sub_category'))
+                                ->label(__('filament/resources/category-resource.form.label.is_sub_category')),
 
-                           Forms\Components\Select::make('parent_id')->label('Parent Category')
+                           Forms\Components\Select::make('parent_id')->label(__('filament/resources/category-resource.form.label.parent_category'))
                                ->options(Category::where('seller_id',CheckFilamentSellerUser::getSellerId())->pluck('name','id'))
                                ->hidden(fn(Page $livewire) => $livewire instanceof EditRecord)
                                ->visible(fn(Forms\Get $get,Page $livewire) => ($get('is_sub_category')))
@@ -49,16 +50,19 @@ class CategoryResource extends Resource
 
                            Forms\Components\Select::make('seller_id')
                                ->searchable()->preload()->hidden(Filament::getAuthGuard() == 'seller')
-                               ->required()->relationship('seller','name'),
+                               ->required()->relationship('seller','name')
+                               ->label(__('filament/resources/category-resource.form.label.seller')),
 
                            Forms\Components\TextInput::make('name')
-                               ->helperText('Man , Women , Unisex ')
+                               ->helperText(__('filament/resources/category-resource.form.helper_text.name'))
                                ->required()
-                               ->maxLength(255),
+                               ->maxLength(255)
+                               ->label(__('filament/resources/category-resource.form.label.name')),
 
                            Forms\Components\Textarea::make('description')
                                ->maxLength(16777215)
-                               ->columnSpanFull(),
+                               ->columnSpanFull()
+                               ->label(__('filament/resources/category-resource.form.label.description')),
                        ])
                    ])->columnSpan(1),
 
@@ -72,27 +76,33 @@ class CategoryResource extends Resource
         return $table
             ->columns([
                 Tables\Columns\TextColumn::make('seller.name')->hidden(Filament::getAuthGuard() == 'seller')
-                    ->sortable(),
+                    ->sortable()
+                    ->label(__('filament/resources/category-resource.table.columns.seller')),
 
                 Tables\Columns\TextColumn::make('name')
                     ->description(fn(Category $category)=> Str::limit($category->description,80))
-                    ->searchable(),
+                    ->searchable()
+                    ->label(__('filament/resources/category-resource.table.columns.name')),
 
                 Tables\Columns\TextColumn::make('subCategories.name')
-                    ->badge(),
+                    ->badge()
+                    ->label(__('filament/resources/category-resource.table.columns.sub_categories')),
 
                 Tables\Columns\TextColumn::make('deleted_at')
                     ->dateTime()
                     ->sortable()
-                    ->toggleable(isToggledHiddenByDefault: true),
+                    ->toggleable(isToggledHiddenByDefault: true)
+                    ->label(__('filament/resources/category-resource.table.columns.deleted_at')),
                 Tables\Columns\TextColumn::make('created_at')
                     ->dateTime()
                     ->sortable()
-                    ->toggleable(isToggledHiddenByDefault: true),
+                    ->toggleable(isToggledHiddenByDefault: true)
+                    ->label(__('filament/resources/category-resource.table.columns.created_at')),
                 Tables\Columns\TextColumn::make('updated_at')
                     ->dateTime()
                     ->sortable()
-                    ->toggleable(isToggledHiddenByDefault: true),
+                    ->toggleable(isToggledHiddenByDefault: true)
+                    ->label(__('filament/resources/category-resource.table.columns.updated_at')),
             ])
             ->filters([
                 Tables\Filters\TrashedFilter::make(),

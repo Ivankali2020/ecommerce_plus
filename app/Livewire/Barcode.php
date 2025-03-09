@@ -46,7 +46,7 @@ class Barcode extends Component implements HasForms
         return $form->statePath('data')
             ->schema([
                 Select::make('product_id')
-                    ->label('Product Name')
+                    ->label(__('filament/resources/barcode-resource.labels.product_name'))
                     ->searchable()
                     ->live()
                     ->afterStateUpdated(function (?string $state) {
@@ -59,6 +59,7 @@ class Barcode extends Component implements HasForms
                     ->options(Product::where('seller_id',CheckFilamentSellerUser::getSellerId())->pluck('name','id')),
 
                Select::make('variant_id')->required()
+                    ->label(__('filament/resources/barcode-resource.labels.variant'))
                     ->hidden(fn(Get $get) => blank($get('product_id')) || !Product::where('id', $get('product_id'))->select('has_variant')->first()->has_variant)
                     ->searchable()->preload()->live()
                     ->afterStateUpdated(function ($state, Get $get,Set $set) {
@@ -72,12 +73,14 @@ class Barcode extends Component implements HasForms
                         return Product::where('id', $get('product_id'))->first()->variants->pluck('name', 'id');
                     }),
 
-                Select::make('type')->label('Type')
+                Select::make('type')
+                    ->label(__('filament/resources/barcode-resource.labels.type'))
                     ->native(false)
                     ->live()
                     ->options($this->barcodeTypes),
 
                 TextInput::make('total')
+                    ->label(__('filament/resources/barcode-resource.labels.total'))
                     ->maxValue(50)
                     ->live()->integer()->required()
                     ->default(1),
