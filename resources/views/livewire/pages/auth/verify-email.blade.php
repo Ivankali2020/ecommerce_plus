@@ -35,24 +35,34 @@ new #[Layout('layouts.guest')] class extends Component
     }
 }; ?>
 
-<div>
-    <div class="mb-4 text-sm text-gray-600 dark:text-gray-400">
-        {{ __('Thanks for signing up! Before getting started, could you verify your email address by clicking on the link we just emailed to you? If you didn\'t receive the email, we will gladly send you another.') }}
-    </div>
-
-    @if (session('status') == 'verification-link-sent')
-        <div class="mb-4 font-medium text-sm text-green-600 dark:text-green-400">
-            {{ __('A new verification link has been sent to the email address you provided during registration.') }}
+<div class="min-h-screen flex items-center animate-fade-in justify-center py-12 px-4 sm:px-6 lg:px-8 bg-gray-50 dark:bg-gray-900">
+    <div class="max-w-md w-full space-y-8">
+        <div class="text-center">
+            <a href="/">
+                <img class="mx-auto h-16 w-auto" src="{{ asset('assets/logo.png') }}" alt="Your Logo">
+            </a>
+            <h2 class="mt-6 text-3xl font-extrabold text-gray-900 dark:text-white {{ app()->currentLocale() === 'my' ? 'font-mm' : '' }}">
+                {{ __('messages.auth.verify_email.title') }}
+            </h2>
+            <p class="mt-2 text-sm text-gray-600 dark:text-gray-400 {{ app()->currentLocale() === 'my' ? 'font-mm' : '' }}">
+                {{ __('messages.auth.verify_email.description') }}
+            </p>
         </div>
-    @endif
 
-    <div class="mt-4 flex items-center justify-between">
-        <x-primary-button wire:click="sendVerification">
-            {{ __('Resend Verification Email') }}
-        </x-primary-button>
+        @if (session('status') == 'verification-link-sent')
+            <div class="mb-4 font-medium text-sm text-green-600 dark:text-green-400 {{ app()->currentLocale() === 'my' ? 'font-mm' : '' }}">
+                {{ __('messages.auth.verify_email.link_sent') }}
+            </div>
+        @endif
 
-        <button wire:click="logout" type="submit" class="underline text-sm text-gray-600 dark:text-gray-400 hover:text-gray-900 dark:hover:text-gray-100 rounded-md focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500 dark:focus:ring-offset-gray-800">
-            {{ __('Log Out') }}
-        </button>
+        <div class="flex items-center justify-between space-x-4">
+            <x-primary-button wire:click="sendVerification" class="w-full justify-center {{ app()->currentLocale() === 'my' ? 'font-mm' : '' }}">
+                {{ __('messages.auth.verify_email.resend_button') }}
+            </x-primary-button>
+
+            <button wire:click="logout" type="submit" class="w-full justify-center inline-flex items-center px-4 py-2 border border-transparent text-sm font-medium rounded-md text-gray-700 dark:text-gray-300 hover:text-gray-900 dark:hover:text-white focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500 dark:focus:ring-offset-gray-800 {{ app()->currentLocale() === 'my' ? 'font-mm' : '' }}">
+                {{ __('messages.auth.verify_email.logout_button') }}
+            </button>
+        </div>
     </div>
 </div>

@@ -160,6 +160,14 @@ return [
             'confirmed' => 'The password confirmation does not match.',
         ],
     ],
+    'reset_password' => [
+        'title' => 'Reset Password',
+        'description' => 'Please enter your new password to complete the password reset process.',
+        'email' => 'Email',
+        'password' => 'Password',
+        'confirm_password' => 'Confirm Password',
+        'button' => 'Reset Password'
+    ],
     'product_detail' => [
         'min_order' => 'Minimum Order',
         'pieces' => 'pcs',
@@ -197,6 +205,11 @@ return [
             'no_account' => "Don't have an account?",
             'register' => 'Register now',
         ],
+        'forgot_password' => [
+            'title' => 'Forgot Password',
+            'subtitle' => 'Forgot your password? No problem. Just let us know your email address and we will email you a password reset link that will allow you to choose a new one.',
+            'reset_link_button' => 'Email Password Reset Link',
+        ],
         'register_page' => [
             'title' => 'Create Account',
             'subtitle' => 'Join us and start shopping',
@@ -206,7 +219,19 @@ return [
             'confirm_password' => 'Confirm Password',
             'register_button' => 'Create Account',
             'have_account' => 'Already have an account?',
-            'login' => 'Sign in here',
+            'login' => 'Sign In',
+        ],
+        'verify_email' => [
+            'title' => 'Verify Email',
+            'description' => 'Thanks for signing up! Before getting started, could you verify your email address by clicking on the link we just emailed to you? If you didn\'t receive the email, we will gladly send you another.',
+            'link_sent' => 'A new verification link has been sent to the email address you provided during registration.',
+            'resend_button' => 'Resend Verification Email',
+            'logout_button' => 'Logout'
+        ],
+        'confirm_password' => [
+            'title' => 'Confirm Password',
+            'message' => 'This is a secure area of the application. Please confirm your password before continuing.',
+            'confirm_button' => 'Confirm'
         ],
     ],
     'navigation' => [
