@@ -4,6 +4,7 @@ namespace App\Traits;
 
 use App\Models\Cart;
 use App\Models\Product as ProductModel;
+use Filament\Forms\Components\Livewire;
 use Filament\Notifications\Notification;
 use Illuminate\Support\Facades\Auth;
 
@@ -38,6 +39,7 @@ trait WithCart
 
             $newQuantity = $existingCart ? $existingCart->quantity + 1 : $quantity;
 
+            $this->dispatch('cartUpdated');
             // Check MOQ
             if ($newQuantity < ($variant?->MOQ ?? $product->MOQ)) {
                 Notification::make()

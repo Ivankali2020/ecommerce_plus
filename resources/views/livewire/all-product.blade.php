@@ -1,6 +1,9 @@
-<div class="container mx-auto px-4 py-8">
+<div class="container mx-auto px-4 py-4  lg:py-8">
+    <h2 class="text-3xl font-bebas mb-6 lg:mb-10 {{ app()->currentLocale() === 'my' ? 'font-mm' : '' }}">
+        {{ __('messages.navigation.products') }}
+    </h2>
     <!-- Search Box -->
-    <div class="mb-4 flex justify-between gap-4 flex-col lg:flex-row ">
+    <div class=" mb-4 lg:mb-6 flex justify-between gap-4 flex-col lg:flex-row ">
         <div class="relative flex-1 ">
             <div class="absolute inset-y-0 start-0 flex items-center ps-3 pointer-events-none">
                 <svg class="w-4 h-4 text-gray-500 dark:text-gray-400" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 20 20">
@@ -55,7 +58,7 @@
     </div>
 
     <!-- Category Filter -->
-    <div class="mb-4 lg:mb-8 mb-8 overflow-x-auto hide-scrollbar" wire:show="filterType === 'category'">
+    <div class="mb-4 lg:mb-8 overflow-x-auto hide-scrollbar" wire:show="filterType === 'category'">
         <div class="flex space-x-1 lg:space-x-4 pb-2">
             <button 
                 wire:click="setCategory(null)" 

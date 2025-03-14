@@ -20,7 +20,7 @@ class UserHelper
     public static function getUserSellerId()
     {
         if (Auth::guard('web')->check()) {
-            return Auth::guard('web')->user()->seller_id;
+            return Auth::guard('web')->user()->seller_id ?? 1;
         }
         return 1;
     }

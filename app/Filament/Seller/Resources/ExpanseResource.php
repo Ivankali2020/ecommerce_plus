@@ -33,6 +33,11 @@ class ExpanseResource extends Resource
         return __('filament/resources/expanse-resource.navigation.label');
     }
 
+    public static function getModelLabel(): string
+    {
+        return __('filament/resources/expanse-resource.navigation.label');
+    }
+
     public static function getNavigationGroup(): string
     {
         return __('filament/resources/payment-resource.navigation.group');

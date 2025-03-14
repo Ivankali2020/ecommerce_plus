@@ -166,7 +166,8 @@ return [
         'email' => 'Email',
         'password' => 'Password',
         'confirm_password' => 'Confirm Password',
-        'button' => 'Reset Password'
+        'button' => 'Reset Password',
+        'resetting' => 'Resetting...',
     ],
     'product_detail' => [
         'min_order' => 'Minimum Order',
@@ -202,6 +203,7 @@ return [
             'remember' => 'Remember me',
             'forgot_password' => 'Forgot your password?',
             'login_button' => 'Sign In',
+           'logging_in' => 'Logging in...',
             'no_account' => "Don't have an account?",
             'register' => 'Register now',
         ],
@@ -209,6 +211,7 @@ return [
             'title' => 'Forgot Password',
             'subtitle' => 'Forgot your password? No problem. Just let us know your email address and we will email you a password reset link that will allow you to choose a new one.',
             'reset_link_button' => 'Email Password Reset Link',
+            'sending' => 'Sending...',
         ],
         'register_page' => [
             'title' => 'Create Account',
@@ -218,6 +221,7 @@ return [
             'password' => 'Password',
             'confirm_password' => 'Confirm Password',
             'register_button' => 'Create Account',
+            'registering' => 'Registering...',
             'have_account' => 'Already have an account?',
             'login' => 'Sign In',
         ],
@@ -226,7 +230,7 @@ return [
             'description' => 'Thanks for signing up! Before getting started, could you verify your email address by clicking on the link we just emailed to you? If you didn\'t receive the email, we will gladly send you another.',
             'link_sent' => 'A new verification link has been sent to the email address you provided during registration.',
             'resend_button' => 'Resend Verification Email',
-            'logout_button' => 'Logout'
+            'logout_button' => 'Logout',
         ],
         'confirm_password' => [
             'title' => 'Confirm Password',

@@ -30,7 +30,6 @@
     display: none;
 }
 
-
 /* English placeholder font */
 .placeholder-font::placeholder {
     font-family: 'jost', sans-serif;
@@ -39,4 +38,22 @@
 /* Myanmar placeholder font */
 .placeholder-font-mm::placeholder {
     font-family: 'mm', 'jost', sans-serif;
+}
+
+
+/* Hide scrollbars while maintaining scroll functionality */
+::-webkit-scrollbar {
+    width: 0;
+    height: 0;
+    display: none;
+}
+
+/* For Firefox */
+* {
+    scrollbar-width: none;
+}
+
+/* For IE and Edge */
+* {
+    -ms-overflow-style: none;
 }

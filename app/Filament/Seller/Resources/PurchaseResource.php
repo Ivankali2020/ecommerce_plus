@@ -34,7 +34,7 @@ class PurchaseResource extends Resource
     protected static ?string $modelLabel = null;
     protected static ?string $pluralModelLabel = null;
     protected static ?string $navigationLabel = null;
-    protected static ?string $navigationIcon = 'heroicon-o-clipboard';
+    protected static ?string $navigationIcon = 'heroicon-o-arrow-path-rounded-square';
 
     public static function getModelLabel(): string
     {

@@ -87,7 +87,7 @@ new #[Layout('layouts.guest')] class extends Component
         <x-auth-session-status class="mb-4" :status="session('status')" />
 
         <form wire:submit="resetPassword" class="mt-8 space-y-6">
-            <div class="rounded-md shadow-sm space-y-4">
+            <div class="rounded-md  space-y-4">
                 <!-- Email Address -->
                 <div>
                     <x-input-label for="email" :value="__('messages.reset_password.email')" 
@@ -120,13 +120,15 @@ new #[Layout('layouts.guest')] class extends Component
             </div>
 
             <div>
-                <x-primary-button class="group relative w-full flex justify-center py-2 px-4 border border-transparent text-sm font-medium rounded-md text-white bg-slate-600 hover:bg-slate-700 focus:outline-none focus:ring-0 ring-none outline-none focus:ring-offset-0 {{ app()->currentLocale() === 'my' ? 'font-mm' : '' }}">
+                <x-primary-button wire:loading.attr="disabled" class="group relative w-full flex justify-center py-2 px-4 border border-transparent text-sm font-medium rounded-md text-white bg-slate-600 hover:bg-slate-700 focus:outline-none focus:ring-0 ring-none outline-none focus:ring-offset-0 {{ app()->currentLocale() === 'my' ? 'font-mm' : '' }}">
                     <span class="absolute left-0 inset-y-0 flex items-center pl-3">
-                        <svg class="h-5 w-5 text-slate-500 group-hover:text-slate-400" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="currentColor" aria-hidden="true">
+                        <svg wire:loading.remove class="h-5 w-5 text-slate-500 group-hover:text-slate-400" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="currentColor" aria-hidden="true">
                             <path fill-rule="evenodd" d="M5 9V7a5 5 0 0110 0v2a2 2 0 012 2v5a2 2 0 01-2 2H5a2 2 0 01-2-2v-5a2 2 0 012-2zm8-2v2H7V7a3 3 0 016 0z" clip-rule="evenodd" />
                         </svg>
+                        <x-filament::loading-indicator wire:loading class="h-5 w-5 text-slate-500" />
                     </span>
-                    {{ __('messages.reset_password.button') }}
+                    <span wire:loading.remove>{{ __('messages.reset_password.button') }}</span>
+                    <span wire:loading>{{ __('messages.reset_password.resetting') }}</span>
                 </x-primary-button>
             </div>
         </form>

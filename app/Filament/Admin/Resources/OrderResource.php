@@ -384,8 +384,6 @@ class OrderResource extends Resource
 
     public static function getCleanOptionString(Model $model): string
     {
-//
-
         return view('filament.components.select-user-result')
             ->with('name', $model?->name)
             ->with('brand', $model?->brand?->name)
@@ -397,7 +395,6 @@ class OrderResource extends Resource
     public static function table(Table $table): Table
     {
         return $table
-            ->groupsOnly()
             ->defaultSort('id','desc')
             ->columns([
                 Tables\Columns\TextColumn::make('user.name')

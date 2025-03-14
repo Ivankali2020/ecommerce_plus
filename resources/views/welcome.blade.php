@@ -25,7 +25,7 @@
 
 </head>
 
-<body class="antialiased text-black/50 dark:bg-black dark:text-white/50 min-h-svh ">
+<body class="antialiased text-black/50 dark:bg-black dark:text-white/50 min-h-svh {{ app()->currentLocale() === 'my' ? 'font-mm' : 'font-jost' }}">
     <x-theme-switcher />
     <div class="hero-pattern left-[80%] bottom-[-40%]  absolute inset-0 -z-20"></div>
 
@@ -53,7 +53,7 @@
                             </div>
 
                             <!-- Main Heading -->
-                            <h1  class="text-5xl lg:text-8xl font-bebas  tracking-tight text-gray-900 sm:text-6xl bg-gradient-to-r from-slate-500 via-[#c2a03d] to-slate-500 bg-clip-text text-transparent dark:from-slate-400 dark:via-[#c2a03d] dark:to-slate-400">
+                            <h1  class="text-5xl lg:text-8xl font-bebas  tracking-wider font-bold  text-gray-900 sm:text-6xl bg-gradient-to-r from-slate-500 via-[#c2a03d] to-slate-500 bg-clip-text text-transparent dark:from-slate-400 dark:via-[#c2a03d] dark:to-slate-400">
                                 {{ __('messages.title') }}
                             </h1>
 
@@ -66,17 +66,27 @@
 
 
                             <!-- Call to Action Buttons -->
-                            <div class="mt-10 flex items-center justify-center gap-x-6">
+                            <div class="mt-10 flex items-center justify-center gap-x-6 {{ app()->currentLocale() === 'my' ? 'font-mm' : '' }}">
 
                                 @guest
                                 <a href="{{ route('login') }}"
-                                    class="text-sm font-semibold leading-6 text-gray-900 dark:text-gray-300">
-                                    {{ __('messages.sign_in') }} <span aria-hidden="true">→</span>
+                                    class="text-sm flex font-semibold leading-6 gap-2 items-center text-gray-900 dark:text-gray-300 group">
+                                    <span> {{ __('messages.sign_in') }} </span>
+                                    <span aria-hidden="true" class="transform transition-transform duration-300 ease-in-out group-hover:translate-x-1">
+                                        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="currentColor" class="size-5">
+                                            <path fill-rule="evenodd" d="M8.22 5.22a.75.75 0 0 1 1.06 0l4.25 4.25a.75.75 0 0 1 0 1.06l-4.25 4.25a.75.75 0 0 1-1.06-1.06L11.94 10 8.22 6.28a.75.75 0 0 1 0-1.06Z" clip-rule="evenodd" />
+                                        </svg>
+                                    </span>
                                 </a>
                                 @else
                                 <a href="{{ route('profile') }}"
-                                    class="text-sm font-semibold leading-6 border rounded px-8 py-1.5 text-gray-900 dark:text-gray-300">
-                                    {{ __('messages.profile.text') }} <span aria-hidden="true">→</span>
+                                    class="text-sm flex font-semibold leading-6 gap-2 items-center text-gray-900 dark:text-gray-300 group">
+                                    <span>{{ __('messages.profile.text') }}</span>
+                                    <span aria-hidden="true" class=" transform transition-transform duration-300 ease-in-out group-hover:translate-x-1">
+                                        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="currentColor" class="size-5">
+                                            <path fill-rule="evenodd" d="M8.22 5.22a.75.75 0 0 1 1.06 0l4.25 4.25a.75.75 0 0 1 0 1.06l-4.25 4.25a.75.75 0 0 1-1.06-1.06L11.94 10 8.22 6.28a.75.75 0 0 1 0-1.06Z" clip-rule="evenodd" />
+                                          </svg>
+                                    </span>
                                 </a>
                                 @endguest
                             </div>

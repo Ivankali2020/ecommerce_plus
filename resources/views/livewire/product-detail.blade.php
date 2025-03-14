@@ -55,13 +55,13 @@
 
         <!-- Product Details -->
         <div class="space-y-4 {{ app()->currentLocale() === 'my' ? 'font-mm' : '' }}">
-            <div class="flex justify-between items-center ">
+            <div class="flex justify-between lg:items-center flex-col lg:flex-row">
                 <div class="">
                     <h2 class="text-2xl lg:text-3xl font-bold text-gray-900">{{ $product->name }}</h2>
 
                     <!-- Category -->
                     <div class=" ">
-                        <div class="text-xs lg:text-xl  my-2 text-gray-500">
+                        <div class="text-xs lg:text-xl  my-3 text-gray-500">
                             {{ $product->brand?->name }}
                         </div>
                         <div class="text-sm lg:text-xl  text-gray-500">

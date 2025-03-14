@@ -12,7 +12,15 @@ use Flowframe\Trend\TrendValue;
 
 class OrderChart extends ChartWidget
 {
-    protected static ?string $heading = 'Monthly Order Chart';
+    public function getHeading(): string 
+    {
+        return __('filament/widgets/order-chart.heading');
+    }
+
+    public function getDescription(): ?string
+    {
+        return __('filament/widgets/order-chart.description');
+    }
 
     protected int | string | array $columnSpan = '2';
 
@@ -22,23 +30,23 @@ class OrderChart extends ChartWidget
     {
         $activeFilter = $this->filter;
         switch ($activeFilter) {
-            case ('today') :
+            case ('all') :
                 $data = Trend::query(Order::where('seller_id',CheckFilamentSellerUser::getSellerId()))
                     ->between(
-                        start: now()->startOfDay(),
-                        end: now()->endOfDay(),
+                        start: now()->subYears(6)->startOfYear(),
+                        end: now()->endOfYear(),
                     )
-                    ->perHour()
+                    ->perYear()
                     ->sum('total_price');
 
                 return [
                     'datasets' => [
                         [
-                            'label' => 'Total Order Amount',
+                            'label' => __('filament/widgets/order-chart.total_order_amount'),
                             'data' => $data->map(fn(TrendValue $value)=> number_format($value->aggregate / 1000,2)) ,
                         ],
                     ],
-                    'labels' => $data->map(fn (TrendValue $value) => Carbon::parse($value->date)->format('H:i A')),
+                    'labels' => $data->map(fn (TrendValue $value) => Carbon::parse($value->date)->format('Y')),
                 ];
 
             case ('week') :
@@ -53,7 +61,7 @@ class OrderChart extends ChartWidget
                 return [
                     'datasets' => [
                         [
-                            'label' => 'Total Order Amount',
+                            'label' => __('filament/widgets/order-chart.total_order_amount'),
                             'data' => $data->map(fn(TrendValue $value)=> number_format($value->aggregate / 1000,2)) ,
                         ],
                     ],
@@ -72,7 +80,7 @@ class OrderChart extends ChartWidget
                 return [
                     'datasets' => [
                         [
-                            'label' => 'Total Order Amount',
+                            'label' => __('filament/widgets/order-chart.total_order_amount'),
                             'data' => $data->map(fn(TrendValue $value)=> number_format($value->aggregate / 1000,2)) ,
                         ],
                     ],
@@ -91,7 +99,7 @@ class OrderChart extends ChartWidget
                 return [
                     'datasets' => [
                         [
-                            'label' => 'Total Order Amount',
+                            'label' => __('filament/widgets/order-chart.total_order_amount'),
                             'data' => $data->map(fn(TrendValue $value)=> $value->aggregate / 1000) ,
                         ],
                     ],
@@ -119,10 +127,10 @@ class OrderChart extends ChartWidget
     protected function getFilters(): ?array
     {
         return [
-            'month' => 'This month',
-            'year' => 'This year',
-            'week' => 'Last week',
-            'today' => 'Today',
+            'month' => __('filament/widgets/order-chart.filters.month'),
+            'year' => __('filament/widgets/order-chart.filters.year'),
+            'week' => __('filament/widgets/order-chart.filters.week'),
+            'all' => __('filament/widgets/order-chart.filters.all'),
         ];
     }
 

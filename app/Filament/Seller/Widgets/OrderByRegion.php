@@ -4,16 +4,22 @@ namespace App\Filament\Seller\Widgets;
 
 use App\Helper\CheckFilamentSellerUser;
 use App\Models\Region;
+use Filament\Support\RawJs;
 use Filament\Widgets\ChartWidget;
 use Flowframe\Trend\Trend;
 
 class OrderByRegion extends ChartWidget
 {
-    protected static ?string $heading = 'Revenue By Region';
+    protected static ?string $heading = null;
 
     protected static ?int $sort = 2;
 
-    protected static ?string $maxHeight = '350px';
+    // protected static ?string $maxHeight = '350px';
+
+    public function getHeading(): string
+    {
+        return __('filament/widgets/order-by-region.heading');
+    }
 
     protected function getData(): array
     {
@@ -23,9 +29,13 @@ class OrderByRegion extends ChartWidget
         return [
                'datasets' => [
                    [
-                       'label' => 'Blog posts created',
+                       'label' => __('filament/widgets/order-by-region.revenue_label'),
                        'data' => $data->map(fn($r) => $r->orders_sum_total_price ?? 0),
-                       'backgroundColor' => ['#edfcf3','#d4f7df','#9eeabb','#77dea5','#40c781','#1dac66','#108b52','#0d6f44','#0d5837','#0b492e','#05291a','#26acb4','#238b97','#22707c','#245c66'],
+                       'backgroundColor' => [
+                           '#4e79a7', '#f28e2c', '#e15759', '#76b7b2', 
+                           '#59a14f', '#edc949', '#af7aa1', '#ff9da7', 
+                           '#9c755f', '#bab0ab', '#5f4690', '#1d91c0'
+                       ],
                        'borderColor' => '#9BD0F5',
                    ],
                ],
@@ -35,14 +45,16 @@ class OrderByRegion extends ChartWidget
 
     protected function getType(): string
     {
-        return 'doughnut';
+        return 'bar';
     }
 
-    protected static ?array $options = [
-        'plugins' => [
-            'legend' => [
-                'display' => true,
-            ],
-        ],
-    ];
+    protected function getOptions(): array|RawJs|null
+    {
+        return RawJs::make(<<<JS
+        {
+            indexAxis: 'y',
+        }
+        JS);
+    }
+
 }

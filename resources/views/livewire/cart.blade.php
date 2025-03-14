@@ -2,11 +2,10 @@
 
     <div class="flex flex-col lg:flex-row gap-4 lg:gap-8">
         <!-- Cart Items -->
-        <div class="w-full lg:w-2/3">
+        <div class="w-full p-4 lg:p-0  lg:w-2/3">
             <h2 class="text-3xl font-bebas mb-6 {{ app()->currentLocale() === 'my' ? 'font-mm' : '' }}">
                 {{ __('messages.cart.shopping_cart') }}
             </h2>
-
 
             @forelse($cartItems as $item)
                 <div wire:key="cart-item-{{ $item->id }}"
@@ -135,7 +134,7 @@
         <!-- Order Summary -->
         @if ($cartItems->isNotEmpty())
             <div class="lg:w-1/3 font-jost " x-cloak x-data="deliveryHandler({{ json_encode($this->deliveries) }}, {{ json_encode($this->payments) }}, {{ $cartItems->sum(fn($item) => $item->total) }})" >
-                <div class="bg-white p-6 rounded-lg shadow-sm animate-fade-in">
+                <div class="bg-white p-4  lg:p-6 rounded-lg shadow-sm animate-fade-in">
                     <h2 class="text-2xl font-bebas mb-4 {{ app()->currentLocale() === 'my' ? 'font-mm' : '' }}">
                         {{ __('messages.cart.order_summary') }}
                     </h2>

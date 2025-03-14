@@ -24,7 +24,7 @@ new class extends Component
     }
 }; ?>
 
-<nav x-data="{ open: false }" class="bg-white dark:bg-slate-800 border-b border-slate-100 dark:border-slate-700">
+<nav x-data="{ open: false }" class="bg-white/10 dark:bg-slate-800/80 backdrop-filter backdrop-blur-md sticky border-b border-slate-100 dark:border-slate-700">
     <!-- Primary Navigation Menu -->
     <div class="container  mx-auto px-4 sm:px-6 lg:px-8">
         <div class="flex justify-between h-16">
@@ -51,7 +51,7 @@ new class extends Component
                 @auth
 
                     <div class="hidden space-x-8 sm:-my-px sm:ms-10 sm:flex h-[100%] ">
-                        <x-nav-link :href="route('store', $this->sellerId())" :active="request()->routeIs('store')" wire:navigate>
+                        <x-nav-link :href="route('store', UserHelper::getUserSellerId() ?? 1)" :active="request()->routeIs('store')" wire:navigate>
                             {{ __('messages.navigation.main_store') }}
                         </x-nav-link>
                     </div>
@@ -70,10 +70,9 @@ new class extends Component
                     </div>
 
 
-                    <div class="hidden space-x-8 sm:-my-px sm:ms-10 sm:flex h-[100%] ">
-                        <x-nav-link :href="route('cart')" :active="request()->routeIs('cart')" >
-                            {{ __('messages.navigation.cart') }}
-                        </x-nav-link>
+                    <!-- Replace the cart navigation with the Livewire component -->
+                    <div class="hidden">
+                        <livewire:cart-nav-item />
                     </div>
 
 
@@ -175,6 +174,13 @@ new class extends Component
                             {{ __('messages.auth.login') }}
                         </x-responsive-nav-link>
                     </div>
+                    @else
+                    <a href="{{ route('dashboard') }}" class="inline-flex flex-col items-center justify-center px-1 hover:bg-gray-50 {{ request()->routeIs('dashboard') ? 'text-[#c2a03d]' : 'text-gray-500' }}">
+                        <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="size-6">
+                            <path stroke-linecap="round" stroke-linejoin="round" d="M10.343 3.94c.09-.542.56-.94 1.11-.94h1.093c.55 0 1.02.398 1.11.94l.149.894c.07.424.384.764.78.93.398.164.855.142 1.205-.108l.737-.527a1.125 1.125 0 0 1 1.45.12l.773.774c.39.389.44 1.002.12 1.45l-.527.737c-.25.35-.272.806-.107 1.204.165.397.505.71.93.78l.893.15c.543.09.94.559.94 1.109v1.094c0 .55-.397 1.02-.94 1.11l-.894.149c-.424.07-.764.383-.929.78-.165.398-.143.854.107 1.204l.527.738c.32.447.269 1.06-.12 1.45l-.774.773a1.125 1.125 0 0 1-1.449.12l-.738-.527c-.35-.25-.806-.272-1.203-.107-.398.165-.71.505-.781.929l-.149.894c-.09.542-.56.94-1.11.94h-1.094c-.55 0-1.019-.398-1.11-.94l-.148-.894c-.071-.424-.384-.764-.781-.93-.398-.164-.854-.142-1.204.108l-.738.527c-.447.32-1.06.269-1.45-.12l-.773-.774a1.125 1.125 0 0 1-.12-1.45l.527-.737c.25-.35.272-.806.108-1.204-.165-.397-.506-.71-.93-.78l-.894-.15c-.542-.09-.94-.56-.94-1.109v-1.094c0-.55.398-1.02.94-1.11l.894-.149c.424-.07.765-.383.93-.78.165-.398.143-.854-.108-1.204l-.526-.738a1.125 1.125 0 0 1 .12-1.45l.773-.773a1.125 1.125 0 0 1 1.45-.12l.737.527c.35.25.807.272 1.204.107.397-.165.71-.505.78-.929l.15-.894Z" />
+                            <path stroke-linecap="round" stroke-linejoin="round" d="M15 12a3 3 0 1 1-6 0 3 3 0 0 1 6 0Z" />
+                          </svg>
+                    </a>
                 @endguest
                 
                 <button @click="open = ! open" class="inline-flex items-center justify-center p-2 rounded-md text-gray-400 dark:text-gray-500 hover:text-gray-500 dark:hover:text-gray-400 hover:bg-gray-100 dark:hover:bg-gray-900 focus:outline-none focus:bg-gray-100 dark:focus:bg-gray-900 focus:text-gray-500 dark:focus:text-gray-400 transition duration-150 ease-in-out">
@@ -205,11 +211,11 @@ new class extends Component
                 <div class="font-medium text-sm text-gray-500 {{ app()->currentLocale() === 'my' ? 'font-mm' : '' }}">{{ auth()->user()->email }}</div>
             </div>
             <div class="mt-3 space-y-1">
-                <x-responsive-nav-link :href="route('profile')" wire:navigate>
+                <x-responsive-nav-link :href="route('profile',Auth::user()->id)" wire:navigate>
                     {{ __('messages.auth.profile.title') }}
                 </x-responsive-nav-link>
 
-                <x-responsive-nav-link :href="route('store',Auth::user()->seller_id)" wire:navigate>
+                <x-responsive-nav-link :href="route('store',Auth::user()->seller_id ?? 1)" wire:navigate>
                     {{ __('messages.navigation.main_store') }}
                 </x-responsive-nav-link>
 
@@ -255,9 +261,9 @@ new class extends Component
 
 <!-- Mobile Bottom Navigation -->
 @auth
-<div class="fixed bottom-0 left-0 z-50 w-full h-16 bg-white border-t border-gray-200 sm:hidden {{ app()->currentLocale() === 'my' ? 'font-mm' : '' }}">
-    <div class="grid h-full grid-cols-5">
-        <a href="{{ route('store', Auth::user()->seller_id) }}"  class="inline-flex flex-col items-center justify-center px-1 hover:bg-gray-50 {{ request()->routeIs('welcome') ? 'text-[#c2a03d]' : 'text-gray-500' }}">
+<div class="fixed bottom-0 left-0 z-50 w-full h-16 bg-white border-t border-t-gray-200 sm:hidden {{ app()->currentLocale() === 'my' ? 'font-mm' : '' }}">
+    <div class=" h-full flex justify-around items-center ">
+        <a href="{{ route('store', UserHelper::getUserSellerId()) }}"  class="inline-flex flex-col items-center justify-center px-1 hover:bg-gray-50 {{ request()->routeIs(['store', 'store.*']) ? 'text-[#c2a03d]' : 'text-gray-500' }}">
             <svg class="w-6 h-6 mb-1" fill="currentColor" viewBox="0 0 20 20" xmlns="http://www.w3.org/2000/svg">
                 <path d="M10.707 2.293a1 1 0 00-1.414 0l-7 7a1 1 0 001.414 1.414L4 10.414V17a1 1 0 001 1h2a1 1 0 001-1v-2a1 1 0 011-1h2a1 1 0 011 1v2a1 1 0 001 1h2a1 1 0 001-1v-6.586l.293.293a1 1 0 001.414-1.414l-7-7z"></path>
             </svg>
@@ -272,12 +278,8 @@ new class extends Component
             <span class="text-xs">{{ __('messages.navigation.products') }}</span>
         </a>
         
-        <a href="{{ route('cart') }}" class="inline-flex flex-col items-center justify-center px-1 hover:bg-gray-50 {{ request()->routeIs('cart') ? 'text-[#c2a03d]' : 'text-gray-500' }}">
-            <svg class="w-6 h-6 mb-1" fill="currentColor" viewBox="0 0 20 20" xmlns="http://www.w3.org/2000/svg">
-                <path fill-rule="evenodd" d="M10 2a4 4 0 00-4 4v1H5a1 1 0 00-.994.89l-1 9A1 1 0 004 18h12a1 1 0 00.994-1.11l-1-9A1 1 0 0015 7h-1V6a4 4 0 00-4-4zm2 5V6a2 2 0 10-4 0v1h4zm-6 3a1 1 0 112 0 1 1 0 01-2 0zm7-1a1 1 0 100 2 1 1 0 000-2z" clip-rule="evenodd"></path>
-            </svg>
-            <span class="text-xs">{{ __('messages.navigation.cart') }}</span>
-        </a>
+        <!-- Replace the mobile cart link with the Livewire component -->
+        <livewire:cart-nav-item />
         
         <a href="{{ route('order') }}" class="inline-flex flex-col items-center justify-center px-1 hover:bg-gray-50 {{ request()->routeIs('order') ? 'text-[#c2a03d]' : 'text-gray-500' }}">
             <svg class="w-6 h-6 mb-1" fill="currentColor" viewBox="0 0 20 20" xmlns="http://www.w3.org/2000/svg">
@@ -295,6 +297,5 @@ new class extends Component
         </a>
     </div>
 </div>
-
 @endauth
 </div>
