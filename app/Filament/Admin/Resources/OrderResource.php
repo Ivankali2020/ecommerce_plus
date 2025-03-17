@@ -97,29 +97,32 @@ class OrderResource extends Resource
 
                                        Forms\Components\Group::make()->schema([
                                            Forms\Components\Select::make('product_id')->required()
-                                                 ->label(__('filament/resources/order-resource.form.products.selection.product'))
+                                                ->label(__('filament/resources/order-resource.form.products.selection.product'))
                                                ->searchable()->preload()->autofocus(fn(Page $livewire) => $livewire instanceof CreateRecord )
                                                ->afterStateUpdated(function(Forms\Get $get,Forms\Set $set){
                                                    self::updateAttributes($get,$set);
                                                })
                                                ->getSearchResultsUsing(function (string $search){
-                                                   $products =  Product::where('name', 'like', "%$search%")
-                                                       ->orWhere('sku', $search)
-                                                       ->orWhere('name', 'like', "%$search%")
-                                                       ->orWhereHas('brand',function ($q) use ($search){
-                                                           $q->where('name', 'like', "%$search%");
-                                                       })
-                                                       ->orWhereHas('variants',function ($q) use ($search){
-                                                           $q->where('sku', 'like', "%$search%")->orWhere('name', 'like', "%$search%");
-                                                       })
-                                                       ->limit(20)->with('brand:name,id')
-                                                       ->get();
-//                                                   $data = [];
-//                                                   foreach($products as $product){
-//                                                       $data[$product->id] = $product->name . ' - ' . $product->brand->name . ' - (' . $product->sku . ' )' ;
-//                                                   }
+                                                   $products = Product::where(function($query) use ($search) {
+                                                       $query->where('name', 'like', "%$search%")
+                                                           ->orWhere('sku', $search)
+                                                           ->orWhereHas('brand', function ($q) use ($search){
+                                                               $q->where('name', 'like', "%$search%");
+                                                           })
+                                                        //    ->orWhereHas('variants', function ($q) use ($search){
+                                                        //        $q->where('sku', 'like', "%$search%")
+                                                        //          ->orWhere('name', 'like', "%$search%");
+                                                        //    })
+                                                           ;
+                                                   })
+                                                   ->when(CheckFilamentSellerUser::getSellerId() != null, function ($q){
+                                                       $q->where('seller_id', CheckFilamentSellerUser::getSellerId());
+                                                   })
+                                                   ->whereNull('deleted_at')
+                                                   ->limit(20)
+                                                   ->with('brand:name,id')
+                                                   ->get();
 
-//                                                   return  $data;
                                                    return $products->mapWithKeys(function ($product) {
                                                        return [$product->getKey() => static::getCleanOptionString($product)];
                                                    })->toArray();

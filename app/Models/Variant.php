@@ -3,6 +3,7 @@
 namespace App\Models;
 
 use App\Helper\MediaRegisterConversion;
+use App\Observers\VariantObserver;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\SoftDeletes;
@@ -12,6 +13,8 @@ use Spatie\MediaLibrary\InteractsWithMedia;
 class Variant extends Model implements HasMedia
 {
     use HasFactory,SoftDeletes,InteractsWithMedia;
+
+    public $preventObserver = false;
 
     public function registerMediaCollections(): void
     {
@@ -66,6 +69,11 @@ class Variant extends Model implements HasMedia
         }
 
         return $formattedAttributes;
+    }
+
+    protected static function booted()
+    {
+        self::observe(VariantObserver::class);
     }
 //
 //    public function attributeValues()

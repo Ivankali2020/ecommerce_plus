@@ -7,8 +7,7 @@
                 <template x-if="selectedVariant?.discount > 0 ">
                     <div class="absolute top-5 right-5 z-10">
                         <div class="bg-red-500 text-white px-3 py-1 rounded-full shadow-md transform transition-transform duration-300 hover:scale-105 flex items-center gap-1">
-                            <span class="font-bold {{ app()->currentLocale() === 'my' ? 'font-mm' : '' }}" x-text="selectedVariant?.discount">
-                                %
+                            <span class="font-bold {{ app()->currentLocale() === 'my' ? 'font-mm' : '' }}" x-text="selectedVariant?.discount + ' %'">
                             </span>
                             <span class="text-xs {{ app()->currentLocale() === 'my' ? 'font-mm' : '' }}">
                                 {{ __('messages.off') }}

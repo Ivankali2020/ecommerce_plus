@@ -41,6 +41,12 @@ class Product extends Model implements HasMedia
             return [];
         }
 
+        // if(!$this->attributes['has_variant']){
+           
+        // }
+
+        // return [];
+
         $formattedAttributes = [];
         $attributeData = json_decode($this->attributes['attributes'], true);
 

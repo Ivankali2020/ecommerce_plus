@@ -71,7 +71,7 @@ new class extends Component
 
 
                     <!-- Replace the cart navigation with the Livewire component -->
-                    <div class="hidden">
+                    <div class="sm:hidden lg:block">
                         <livewire:cart-nav-item />
                     </div>
 

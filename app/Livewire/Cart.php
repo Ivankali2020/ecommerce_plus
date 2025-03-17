@@ -128,13 +128,16 @@ class Cart extends Component
     {
         CartModel::find($cartItemId)->delete();
         $this->cartItems = CartModel::with(['product', 'variant'])
+            ->where('seller_id',UserHelper::getUserSellerId())
             ->where('user_id', auth('web')->id())
             ->get();
     }
 
     public function updateQuantity($cartItemId, $quantity)
     {
-        $cart = CartModel::where('id', $cartItemId)->with(['product', 'variant'])->first();
+        $cart = CartModel::where('id', $cartItemId)
+                ->where('seller_id',UserHelper::getUserSellerId())
+                ->with(['product', 'variant'])->first();
         
         // Check if quantity is valid
         if ($quantity <= 0) {
@@ -196,7 +199,7 @@ class Cart extends Component
 
             $order = Order::create([
                 'invoice_number' => Str::uuid(),
-                'user_id' => auth()->id(),
+                'user_id' => Auth::id(),
                 'seller_id' => $this->seller_id,
                 'user_address_id' => $this->address_id,
                 'delivery_fees' => $delivery->fees,
