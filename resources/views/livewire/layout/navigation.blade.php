@@ -24,7 +24,7 @@ new class extends Component
     }
 }; ?>
 
-<nav x-data="{ open: false }" class="bg-white/10 dark:bg-slate-800/80 backdrop-filter backdrop-blur-md sticky border-b border-slate-100 dark:border-slate-700">
+<nav x-data="{ open: false }" class="bg-white/10 dark:bg-slate-800/80 backdrop-filter backdrop-blur-md sticky z-20  border-b border-slate-100 dark:border-slate-700">
     <!-- Primary Navigation Menu -->
     <div class="container  mx-auto px-4 sm:px-6 lg:px-8">
         <div class="flex justify-between h-16">

@@ -47,6 +47,11 @@ class Kernel extends HttpKernel
             \Illuminate\Routing\Middleware\ThrottleRequests::class . ':api',
             \Illuminate\Routing\Middleware\SubstituteBindings::class,
         ],
+        'seller' => [
+            \App\Http\Middleware\RedirectIfUnauthenticated::class,
+            \App\Http\Middleware\RedirectIfSubscriptionExpired::class,
+            \App\Http\Middleware\SetLocale::class,
+        ],
     ];
 
     /**
@@ -72,5 +77,7 @@ class Kernel extends HttpKernel
         'superAdmin' => SuperAdmin::class,
         'checkUserSeller' => CheckUserBelongsToSeller::class,
         'auth.redirect' => \App\Http\Middleware\RedirectIfUnauthenticated::class,
+        // Add this to the $routeMiddleware array
+        'seller.subscription' => \App\Http\Middleware\CheckSellerSubscription::class,
     ];
 }

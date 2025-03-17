@@ -1,7 +1,7 @@
 <div class="z-0 relative">
 
     @if($sliders->count() > 0)
-    <div class="lg:p-8 container mx-auto relative z-0" >
+    <div class="p-4 lg:p-8 container mx-auto relative z-0" >
         <div x-data="{
             slides: {{ json_encode($sliders->map(function($media) {
                 return [
@@ -56,12 +56,12 @@
                 </div>
             </template>
 
-            <!-- slides -->
-            <div class="relative min-h-[15svh] lg:min-h-[40svh] w-full z-0">
+            <!-- slides min-h-[15svh] lg:min-h-[40svh] -->
+            <div class="relative  w-full min-h-[15svh] sm:min-h-[25svh] md:min-h-[30svh] lg:min-h-[40svh] ">
                 <template x-for="(slide, index) in slides" :key="index">
                     <div
                         x-show="currentSlideIndex == index + 1"
-                        class="absolute inset-0 z-0"
+                        class="absolute inset-0 "
                         x-transition:enter="transition ease-out duration-300"
                         x-transition:enter-start="opacity-0 transform scale-95"
                         x-transition:enter-end="opacity-100 transform scale-100"
@@ -70,7 +70,7 @@
                         x-transition:leave-end="opacity-0 transform scale-95"
                         >
                         <img
-                            class="absolute rounded-lg w-full h-full inset-0 object-contain z-0"
+                            class=" rounded-lg w-full h-full inset-0 object-contain "
                             :src="slide.imgSrc"
                             :alt="slide.imgAlt"
                             loading="lazy" />

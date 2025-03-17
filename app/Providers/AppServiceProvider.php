@@ -5,9 +5,13 @@ namespace App\Providers;
 use App\Models\Seller;
 use Filament\Support\Assets\Css;
 use Filament\Support\Facades\FilamentAsset;
+use Filament\Support\Facades\FilamentView;
+use Filament\View\PanelsRenderHook;
 use Illuminate\Auth\Authenticatable;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Support\Facades\Blade;
 use Illuminate\Support\ServiceProvider;
+use Illuminate\Contracts\View\View;
 use Livewire\Livewire;
 
 class AppServiceProvider extends ServiceProvider
@@ -29,5 +33,16 @@ class AppServiceProvider extends ServiceProvider
         FilamentAsset::register([
             Css::make('example-local-stylesheet', asset('css/seller/theme.css')),
         ]);
+
+        FilamentView::registerRenderHook(
+            PanelsRenderHook::USER_MENU_BEFORE,
+            fn (): View => view('components.language-switcher'),
+        );
+        
+        // Register the subscription info card in the seller panel sidebar
+        FilamentView::registerRenderHook(
+            PanelsRenderHook::SIDEBAR_NAV_END,
+            fn (): string => Blade::render('@if(request()->routeIs(\'filament.seller.*\')) @livewire(\'seller.subscription-info-card\') @endif'),
+        );
     }
 }

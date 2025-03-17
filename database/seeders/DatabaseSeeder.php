@@ -48,7 +48,8 @@ class DatabaseSeeder extends Seeder
             CurrencySeeder::class,
             // ShieldSeeder::class,
             MultiStoreSeeder::class,
-            MedicineStoreSeeder::class
+            MedicineStoreSeeder::class,
+            SubscriptionPlanSeeder::class
         ]);
 
 

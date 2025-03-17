@@ -6,6 +6,7 @@ use App\Livewire\OrderDetail;
 use App\Livewire\ProductDetail;
 use App\Livewire\Store;
 use App\Livewire\AllProduct;
+use App\Livewire\Seller\SubscriptionPlans;
 use App\Models\Seller;
 use Illuminate\Support\Facades\Route;
 
@@ -33,6 +34,7 @@ require __DIR__.'/auth.php';
 
 Route::get('store/{id}', Store::class)->name('store');
 Route::get('product/{product}', ProductDetail::class)->name('product');
+
 Route::get('language/{locale}', function ($locale) {
     if (in_array($locale, ['en', 'my'])) {
         session()->put('locale', $locale);
@@ -45,4 +47,10 @@ Route::middleware(['auth'])->group(function(){
     Route::get('order', Order::class)->name('order');
     Route::get('order/{order}', OrderDetail::class)->name('order.detail');
     Route::get('products', AllProduct::class)->name('products');
+});
+
+
+// Seller subscription routes
+Route::middleware(['auth:seller'])->prefix('seller')->name('seller.')->group(function () {
+    Route::get('/subscription/plans', SubscriptionPlans::class)->name('subscription.plans');
 });

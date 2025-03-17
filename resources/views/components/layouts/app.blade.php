@@ -39,9 +39,5 @@
     {{-- @livewireScripts --}}
     @filamentScripts
     @vite('resources/js/app.js')
-    <script>
-
-
-    </script>
 </body>
 </html>

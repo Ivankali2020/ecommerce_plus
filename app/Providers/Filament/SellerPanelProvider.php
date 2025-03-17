@@ -7,6 +7,7 @@ use App\Filament\Seller\Resources\OrderResource\Widgets\OrderChart;
 use App\Helper\CheckFilamentSellerUser;
 use App\Http\Middleware\AssignGlobeScope;
 use App\Http\Middleware\RedirectIfAuthenticated;
+use App\Http\Middleware\RedirectIfSubscriptionExpired;
 use App\Http\Middleware\RedirectIfUnauthenticated;
 use App\Models\Seller;
 use App\Models\User;
@@ -41,7 +42,8 @@ class SellerPanelProvider extends PanelProvider
             ->colors([
                 'primary' => Color::Emerald,
                 'gray' => Color::Slate,
-                'orange' => Color::Orange
+                'orange' => Color::Orange,
+                'green' => Color::Green
             ])
             ->profile(EditProfile::class)
 //            ->profile()
@@ -68,7 +70,8 @@ class SellerPanelProvider extends PanelProvider
                 DisableBladeIconComponents::class,
                 DispatchServingFilamentEvent::class,
                 AssignGlobeScope::class,
-
+                RedirectIfSubscriptionExpired::class,
+                \App\Http\Middleware\SetLocale::class,
             ])
 //            ->spa(fn()=>  Str::contains(request()->userAgent(),'Chrome'))
             ->sidebarWidth('17rem')
