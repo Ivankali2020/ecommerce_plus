@@ -6,16 +6,41 @@
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <meta name="csrf-token" content="{{ csrf_token() }}">
 
-    <title>{{ config('app.name', 'Laravel') }}</title>
-
+    <title>{{ isset($seo['title']) ? $seo['title'] : config('app.name') }}</title>
+    
+    <!-- SEO Meta Tags -->
+    <meta name="description" content="{{ $seo['description'] ?? config('app.description', 'Your default description') }}">
+    
+    <!-- Open Graph / Facebook -->
+    <meta property="og:type" content="{{ $seo['type'] ?? 'website' }}">
+    <meta property="og:url" content="{{ $seo['url'] ?? url()->current() }}">
+    <meta property="og:title" content="{{ $seo['title'] ?? config('app.name') }}">
+    <meta property="og:description" content="{{ $seo['description'] ?? config('app.description', 'Your default description') }}">
+    <meta property="og:image" content="{{ $seo['image'] ?? asset('assets/logo.png') }}">
+    
+    @if(isset($seo['type']) && $seo['type'] === 'product')
+    <!-- Product specific tags -->
+    <meta property="product:price:amount" content="{{ $seo['price'] ?? '' }}">
+    <meta property="product:price:currency" content="{{ $seo['currency'] ?? 'MMK' }}">
+    @endif
+    
+    <!-- Twitter -->
+    <meta property="twitter:card" content="summary_large_image">
+    <meta property="twitter:url" content="{{ $seo['url'] ?? url()->current() }}">
+    <meta property="twitter:title" content="{{ $seo['title'] ?? config('app.name') }}">
+    <meta property="twitter:description" content="{{ $seo['description'] ?? config('app.description', 'Your default description') }}">
+    <meta property="twitter:image" content="{{ $seo['image'] ?? asset('assets/logo.png') }}">
+    
     <!-- Fonts -->
     <link rel="preconnect" href="https://fonts.bunny.net">
     <link href="https://fonts.bunny.net/css?family=figtree:400,500,600&display=swap" rel="stylesheet" />
 
+    <link icon rel="icon" type="image/png" href="{{ asset('assets/logo.png') }}">
     <!-- Scripts -->
     @vite(['resources/css/app.css', 'resources/js/app.js'])
     {{-- @livewireStyles --}}
     @filamentStyles
+    
 </head>
 
 <body class="font-sans antialiased  hide-scrollbar">

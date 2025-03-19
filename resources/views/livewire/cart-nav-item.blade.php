@@ -1,10 +1,16 @@
 <div>
     <!-- Desktop Cart Link -->
-    <div class="hidden space-x-8 sm:-my-px sm:ms-10 sm:flex h-[100%]">
+    <div class="hidden sm:-my-px sm:flex h-[100%]">
         <x-nav-link :href="route('cart')" :active="request()->routeIs('cart')" class="relative">
-            {{ __('messages.navigation.cart') }}
+            <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="size-6 w-6 h-6 mb-1">
+                <path stroke-linecap="round" stroke-linejoin="round" d="M15.75 10.5V6a3.75 3.75 0 1 0-7.5 0v4.5m11.356-1.993 1.263 12c.07.665-.45 1.243-1.119 1.243H4.25a1.125 1.125 0 0 1-1.12-1.243l1.264-12A1.125 1.125 0 0 1 5.513 7.5h12.974c.576 0 1.059.435 1.119 1.007ZM8.625 10.5a.375.375 0 1 1-.75 0 .375.375 0 0 1 .75 0Zm7.5 0a.375.375 0 1 1-.75 0 .375.375 0 0 1 .75 0Z" />
+              </svg>
             @if($cartCount > 0)
-                <span class="absolute -top-2 -right-2 inline-flex items-center justify-center px-2 py-1 text-xs font-bold leading-none text-white transform translate-x-1/2 -translate-y-1/2 bg-red-600 rounded-full">
+                <span 
+                    x-data="{ animate: false }" 
+                    x-on:cart-updated.window="animate = true; setTimeout(() => animate = false, 1000)"
+                    :class="animate ? 'animate-bounce' : ''"
+                    class="absolute top-0 -right-5 inline-flex items-center justify-center px-2 py-1 text-xs font-bold leading-none text-white  bg-red-600 rounded-full">
                     {{ $cartCount }}
                 </span>
             @endif
@@ -12,13 +18,17 @@
     </div>
 
     <!-- Mobile Cart Link -->
-    <a href="{{ route('cart') }}" class="inline-flex lg:hidden p-2 flex-col items-center justify-center px-1 hover:bg-gray-50 {{ request()->routeIs('cart') ? 'text-[#c2a03d]' : 'text-gray-500' }} relative">
-        <svg class="w-6 h-6 mb-1" fill="currentColor" viewBox="0 0 20 20" xmlns="http://www.w3.org/2000/svg">
-            <path fill-rule="evenodd" d="M10 2a4 4 0 00-4 4v1H5a1 1 0 00-.994.89l-1 9A1 1 0 004 18h12a1 1 0 00.994-1.11l-1-9A1 1 0 0015 7h-1V6a4 4 0 00-4-4zm2 5V6a2 2 0 10-4 0v1h4zm-6 3a1 1 0 112 0 1 1 0 01-2 0zm7-1a1 1 0 100 2 1 1 0 000-2z" clip-rule="evenodd"></path>
-        </svg>
+    <a href="{{ route('cart') }}" class="inline-flex md:hidden lg:hidden p-2 flex-col items-center justify-center px-1 hover:bg-gray-50 {{ request()->routeIs('cart') ? 'text-[#c2a03d]' : 'text-gray-500' }} relative">
+        <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="size-6 w-6 h-6 mb-1">
+            <path stroke-linecap="round" stroke-linejoin="round" d="M15.75 10.5V6a3.75 3.75 0 1 0-7.5 0v4.5m11.356-1.993 1.263 12c.07.665-.45 1.243-1.119 1.243H4.25a1.125 1.125 0 0 1-1.12-1.243l1.264-12A1.125 1.125 0 0 1 5.513 7.5h12.974c.576 0 1.059.435 1.119 1.007ZM8.625 10.5a.375.375 0 1 1-.75 0 .375.375 0 0 1 .75 0Zm7.5 0a.375.375 0 1 1-.75 0 .375.375 0 0 1 .75 0Z" />
+          </svg>
         <span class="text-xs">{{ __('messages.navigation.cart') }}</span>
         @if($cartCount > 0)
-            <span class="absolute top-0 right-0 inline-flex items-center justify-center px-2 py-1 text-xs font-bold leading-none text-white bg-red-600 rounded-full">
+            <span 
+                x-data="{ animate: false }" 
+                x-on:cart-updated.window="animate = true; setTimeout(() => animate = false, 1000)"
+                :class="animate ? 'animate-bounce' : ''"
+                class="absolute top-0 right-0 inline-flex items-center justify-center px-2 py-1 text-xs font-bold leading-none text-white bg-red-600 rounded-full">
                 {{ $cartCount }}
             </span>
         @endif

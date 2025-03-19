@@ -13,12 +13,13 @@
             <img class="mx-auto h-28 w-auto mb-4 " src="{{ asset('assets/logo.png') }}" alt="Your Logo">
         </a>
     
-        <div class="text-center mb-12">
-            <h1 class="text-3xl font-bold text-gray-900 mb-4">Choose Your Subscription Plan</h1>
-            <p class="text-lg text-gray-600">Select a plan that suits your business needs</p>
-        </div>
-
+     
         @if($showPaymentForm && $selectedPlan)
+            <div class="text-center mb-12">
+                <h1 class="text-3xl font-bold text-gray-900 mb-4">Choose Your Payment </h1>
+                <p class="text-lg text-gray-600">Select a payment that suits your  needs</p>
+            </div>
+            
             <div class="bg-white overflow-hidden shadow-xl sm:rounded-lg p-6 mb-8">
                 <div class="flex items-center mb-6">
                     <button wire:click="$set('showPaymentForm', false)" class="mr-4 text-gray-500 hover:text-gray-700">
@@ -26,7 +27,7 @@
                             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 19l-7-7m0 0l7-7m-7 7h18" />
                         </svg>
                     </button>
-                    <h2 class="text-2xl font-semibold text-gray-800">Payment for {{ $selectedPlan->name }} Plan</h2>
+                    <h2 class="text-2xl font-semibold text-gray-800">Payment for {{ $selectedPlan->name }} </h2>
                 </div>
                 
                 <div class="bg-slate-50 p-4 rounded-lg mb-6">
@@ -54,7 +55,12 @@
                     </div>
                 </form>
             </div>
-        @else
+        @elseif(!$showThankYouPage)
+            <div class="text-center mb-12">
+                <h1 class="text-3xl font-bold text-gray-900 mb-4">Choose Your Subscription Plan</h1>
+                <p class="text-lg text-gray-600">Select a plan that suits your business needs</p>
+            </div>
+
             <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
                 @foreach($plans as $plan)
                     <div class="bg-white overflow-hidden shadow-xl sm:rounded-lg hover:shadow-2xl transition-shadow duration-300">
@@ -88,6 +94,35 @@
                         </div>
                     </div>
                 @endforeach
+            </div>
+        @endif
+        <!-- Add this section for the Thank You page -->
+        @if($showThankYouPage)
+            <div class="max-w-3xl mx-auto bg-white dark:bg-gray-800 shadow-md rounded-lg overflow-hidden">
+                <div class="p-8 text-center">
+                    <div class="mb-6">
+                        <svg class="mx-auto h-16 w-16 text-green-500" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"></path>
+                        </svg>
+                    </div>
+                    
+                    <h2 class="text-2xl font-bold text-gray-900 dark:text-white mb-4">Thank You for Your Subscription!</h2>
+                    
+                    <p class="text-gray-600 dark:text-gray-300 mb-6">
+                        Your payment has been submitted and is currently pending approval. 
+                        Our team will review your payment and activate your subscription as soon as possible.
+                    </p>
+                    
+                    <p class="text-gray-600 dark:text-gray-300 mb-8">
+                        You will receive a notification once your subscription is approved.
+                    </p>
+                    
+                    <div class="mt-6">
+                        <a href="{{ route('filament.seller.pages.dashboard') }}" class="inline-flex items-center px-4 py-2 bg-primary-600 border border-transparent rounded-md font-semibold text-white hover:bg-primary-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-primary-500">
+                            Go to Dashboard
+                        </a>
+                    </div>
+                </div>
             </div>
         @endif
         <div class="absolute inset-x-0 top-[calc(100%-13rem)] -z-10 transform-gpu overflow-hidden blur-3xl sm:top-[calc(100%-30rem)]"

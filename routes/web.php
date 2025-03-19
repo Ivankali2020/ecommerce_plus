@@ -1,14 +1,21 @@
 <?php
 
+use App\Models\User;
 use App\Livewire\Cart;
+use App\Models\Seller;
 use App\Livewire\Order;
+use App\Livewire\Store;
+use Illuminate\Support\Str;
+use App\Livewire\AllProduct;
 use App\Livewire\OrderDetail;
 use App\Livewire\ProductDetail;
-use App\Livewire\Store;
-use App\Livewire\AllProduct;
-use App\Livewire\Seller\SubscriptionPlans;
-use App\Models\Seller;
+use App\Livewire\RecentOrders;
+use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\Route;
+use Laravel\Socialite\Facades\Socialite;
+use App\Livewire\Seller\SubscriptionPlans;
+use Filament\Notifications\Notification;
+use Illuminate\Support\Facades\Auth;
 
 Route::get('/', function(){
     $sellers = Seller::query()
@@ -47,10 +54,17 @@ Route::middleware(['auth'])->group(function(){
     Route::get('order', Order::class)->name('order');
     Route::get('order/{order}', OrderDetail::class)->name('order.detail');
     Route::get('products', AllProduct::class)->name('products');
+    // Add this inside your auth middleware group
+    Route::get('recent-orders', RecentOrders::class)->name('recent.orders');
 });
 
 
 // Seller subscription routes
-Route::middleware(['auth:seller'])->prefix('seller')->name('seller.')->group(function () {
+Route::middleware(['auth.redirect'])->prefix('seller')->name('seller.')->group(function () {
     Route::get('/subscription/plans', SubscriptionPlans::class)->name('subscription.plans');
 });
+
+
+// Add these routes for Google authentication
+Route::get('/auth/google', [App\Http\Controllers\SocialAuthController::class, 'redirectToGoogle'])->name('auth.google');
+Route::get('/google/callback', [App\Http\Controllers\SocialAuthController::class, 'handleGoogleCallback'])->name('auth.google.callback');

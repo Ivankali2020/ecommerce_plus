@@ -1,5 +1,5 @@
-<div class="container mx-auto px-4 py-4  lg:py-8">
-    <h2 class="text-3xl font-bebas mb-6 lg:mb-10 {{ app()->currentLocale() === 'my' ? 'font-mm' : '' }}">
+<div class="container mb-20 lg:mb-0 mx-auto px-4 py-4  lg:py-8">
+    <h2 class=" text-xl lg:text-3xl  mb-4 lg:mb-10 {{ app()->currentLocale() === 'my' ? 'font-mm' : '' }}">
         {{ __('messages.navigation.products') }}
     </h2>
     <!-- Search Box -->
@@ -12,8 +12,8 @@
             </div>
             <input 
                 type="search" 
-                wire:model.live.debounce.300ms="search" 
-                class="block w-full p-3 ps-10 text-sm text-gray-900 border border-gray-300 rounded-lg bg-gray-50 focus:ring-slate-500 focus:border-slate-500 {{ app()->currentLocale() === 'my' ? 'placeholder-font-mm' : 'placeholder-font' }}"
+                wire:model.live.debounce.1000ms="search" 
+                class="block w-full p-3 ps-10 text-sm text-gray-900 border border-gray-300 rounded-lg bg-gray-50 focus:ring-slate-500 focus:border-slate-500 {{ app()->currentLocale() === 'my' ? 'placeholder-font-mm font-mm' : 'placeholder-font font-jost' }}"
                 placeholder="{{ __('messages.search_product') }}"
             >
         </div>

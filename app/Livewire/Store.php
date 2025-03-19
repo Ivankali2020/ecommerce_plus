@@ -39,8 +39,20 @@ class Store extends Component
             session()->flash('error', 'Store not exists or invalid in our databases');
         }
     }
+    
     public function render()
     {
-        return view('livewire.store');
+        // Get store name and description for SEO
+        $storeName = $this->seller->name ?? 'Store';
+        $storeDescription = $this->seller->description ?? 'Explore products from this store';
+        
+        return view('livewire.store')->layout('layouts.app', [
+            'seo' => [
+                'title' => $storeName,
+                'description' => $storeDescription,
+                'image' => $this->seller->getFirstMediaUrl('logos'),
+                'url' => route('store', $this->store_id),
+            ]
+        ]);
     }
 }

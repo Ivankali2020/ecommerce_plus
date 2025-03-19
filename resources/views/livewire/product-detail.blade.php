@@ -304,19 +304,11 @@
     @endif
 </div>
 <script>
-
-    document.addEventListener('alpine:init', () => {
-        Alpine.data('productDetail', (product, variants) => ({
+    function productDetail(product, variants) {
+        return {
             currentImage: product.productImg,
             selectedVariant: variants.length > 0 ? variants[0] : null,
             quantity: 1,
-
-            // init() {
-            //     if (typeof this.selectedVariant === 'string') {
-            //         this.selectedVariant = JSON.parse(this.selectedVariant);
-            //         console.log(this.selectedVariant);
-            //     }
-            // },
 
             addToCart() {
                 // Call Livewire method with selectedVariant
@@ -344,8 +336,11 @@
                     maximumFractionDigits: 0
                 }).format(price || 0);
             }
-        }))
+        }
+    }
+
+    // Keep the Alpine.data registration for compatibility
+    document.addEventListener('alpine:init', () => {
+        Alpine.data('productDetail', productDetail)
     })
-
-
 </script>

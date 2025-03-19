@@ -8,6 +8,7 @@ use App\Models\Township;
 use Filament\Notifications\Notification;
 use Livewire\Component;
 use Illuminate\Support\Facades\Auth;
+use Livewire\Attributes\Reactive;
 
 class UserAddressForm extends Component
 {
@@ -44,7 +45,11 @@ class UserAddressForm extends Component
     public function updatedSelectedRegion($value)
     {
         $this->townships = Township::where('region_id', $value)->get();
-        $this->selectedTownship = '';
+        
+        // Only reset the township when not in edit mode
+        if ($this->editId === null) {
+            $this->selectedTownship = '';
+        }
     }
 
     public function edit($addressId)
@@ -52,11 +57,17 @@ class UserAddressForm extends Component
         $address = UserAddress::find($addressId);
         if ($address && $address->user_id === Auth::id()) {
             $this->editId = $addressId;
-            $this->selectedRegion = $address->region_id;
-            $this->updatedSelectedRegion($address->region_id);
-            $this->selectedTownship = $address->township_id;
             $this->address = $address->address;
             $this->phone = $address->phone;
+            
+            // Set region first
+            $this->selectedRegion = (string)$address->region_id;
+            
+            // Load townships for this region
+            $this->townships = Township::where('region_id', $address->region_id)->get();
+            
+            // Set township ID as string to ensure type consistency
+            $this->selectedTownship = (string)$address->township_id;
         }
     }
 

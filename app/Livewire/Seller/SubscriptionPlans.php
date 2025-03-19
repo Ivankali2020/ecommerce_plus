@@ -54,7 +54,7 @@ class SubscriptionPlans extends Component implements HasForms
                     ->maxSize(5120) // 5MB
                     ->directory('subscription-payments'),
                     
-                Textarea::make('notes')
+                Textarea::make('notes')->nullable()
                     ->label('Additional Notes')
                     ->placeholder('Any additional information about your payment'),
             ])->statePath('data');
@@ -66,11 +66,28 @@ class SubscriptionPlans extends Component implements HasForms
         $this->showPaymentForm = true;
     }
     
+    public $showThankYouPage = false;
+    
     public function submitPayment()
     {
         $data = $this->form->getState();
         
         $seller = Auth::guard('seller')->user();
+        
+        // Check if seller already has a pending or processing subscription
+        $existingSubscription = SellerSubscription::where('seller_id', $seller->id)
+            ->whereIn('payment_status', ['pending', 'processing'])
+            ->first();
+            
+        if ($existingSubscription) {
+            Notification::make()
+                ->title('Subscription Already Pending')
+                ->body('You already have a pending subscription payment. Please wait for approval before submitting a new payment.')
+                ->warning()
+                ->send();
+                
+            return;
+        }
         
         // Create a new subscription record
         $subscription = new SellerSubscription();
@@ -90,7 +107,9 @@ class SubscriptionPlans extends Component implements HasForms
             ->success()
             ->send();
             
-        // $this->redirect(route('filament.seller.pages.dashboard'));
+        // Show thank you page instead of redirecting
+        $this->showPaymentForm = false;
+        $this->showThankYouPage = true;
     }
     
     public function render()

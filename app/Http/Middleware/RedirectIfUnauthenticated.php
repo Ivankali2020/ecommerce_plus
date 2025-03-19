@@ -39,8 +39,8 @@ class RedirectIfUnauthenticated  //extends FilamentAuthenticate
                 ], 401);
             }
 
-            return redirect(Filament::getLoginUrl());
-            // return redirect()->route('filament.seller.auth.login');
+            // return redirect(Filament::getLoginUrl());
+            return redirect()->route('filament.seller.auth.login');
         }
 
         $user = Filament::auth()->user();

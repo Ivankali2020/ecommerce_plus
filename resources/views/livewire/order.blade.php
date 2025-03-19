@@ -82,7 +82,7 @@
                                 </div>
 
                                 <!-- View Details Button -->
-                                <a href="{{ route('order.detail', $order) }}"
+                                <a href="{{ route('order.detail', $order) }}" wire:navigate
                                    class="w-full sm:w-auto inline-flex items-center justify-center px-4 py-2 border border-transparent text-sm font-medium rounded-md shadow-sm text-white bg-slate-900 hover:bg-slate-600 transition-all focus:outline-none focus:ring-0 focus:ring-offset-0 focus:ring-slate-500 ">
                                     {{ __('messages.orders.view_details') }}
                                 </a>

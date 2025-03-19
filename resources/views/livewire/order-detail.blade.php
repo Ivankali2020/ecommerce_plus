@@ -1,4 +1,4 @@
-<div class="min-h-screen bg-gray-100 py-4 sm:py-6 {{ app()->currentLocale() === 'my' ? 'font-mm' : 'font-jost' }}" >
+<div class="min-h-screen  bg-gray-100 py-4 pb-16 px-4  sm:py-6 {{ app()->currentLocale() === 'my' ? 'font-mm' : 'font-jost' }}" >
     <div class="max-w-4xl mx-auto bg-white shadow-sm rounded-lg overflow-hidden">
         <!-- Invoice Header -->
         <div class="p-4 sm:p-8 border-b relative ">

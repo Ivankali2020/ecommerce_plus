@@ -1,14 +1,14 @@
 <?php
 
-use IlluminateAuthEventsPasswordReset;
-use IlluminateSupportFacadesHash;
-use IlluminateSupportFacadesPassword;
-use IlluminateSupportFacadesSession;
-use IlluminateSupportStr;
-use IlluminateValidationRules;
-use LivewireAttributesLayout;
-use LivewireAttributesLocked;
-use LivewireVoltComponent;
+use Illuminate\Auth\Events\PasswordReset;
+use Illuminate\Support\Facades\Hash;
+use Illuminate\Support\Facades\Password;
+use Illuminate\Support\Facades\Session;
+use Illuminate\Support\Str;
+use Illuminate\Validation\Rules;
+use Livewire\Attributes\Layout;
+use Livewire\Attributes\Locked;
+use Livewire\Volt\Component;
 
 new #[Layout('layouts.guest')] class extends Component
 {
@@ -73,7 +73,7 @@ new #[Layout('layouts.guest')] class extends Component
     <div class="max-w-md w-full space-y-8">
         <div class="text-center">
             <a href="/">
-                <img class="mx-auto h-16 w-auto" src="{{ asset('assets/logo.png') }}" alt="Your Logo">
+                <img class="mx-auto h-20 w-auto" src="{{ asset('assets/logo.png') }}" alt="">
             </a>
             <h2 class="mt-6 text-3xl font-extrabold text-gray-900 dark:text-white {{ app()->currentLocale() === 'my' ? 'font-mm' : '' }}">
                 {{ __('messages.reset_password.title') }}

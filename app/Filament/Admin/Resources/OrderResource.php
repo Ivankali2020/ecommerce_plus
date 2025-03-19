@@ -220,7 +220,7 @@ class OrderResource extends Resource
 
                                            Forms\Components\TextInput::make('discount_price')
                                                ->numeric()->label(__('filament/resources/order-resource.form.products.selection.discount_price'))->readOnly()
-                                               ->prefix(fn(Forms\Get $get) => blank($get('exchange_id')) ? '' : Exchange::where('id',$get('exchange_id'))->with('currency')->first()->currency->symbol_native)
+                                               ->columnSpan(fn(Forms\Get $get) => blank($get('variant_id')) ? 1 : 2)
                                                ->default(0.0000),
 
                                            Forms\Components\TextInput::make('sub_price')

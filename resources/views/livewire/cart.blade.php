@@ -1,4 +1,4 @@
-<div class="container mx-auto px-2 sm:px-4 py-4 sm:py-8" >
+<div class="container mb-20 lg:mb-0  mx-auto px-0 sm:px-4 py-4 sm:py-8" >
 
     <div class="flex flex-col lg:flex-row gap-4 lg:gap-8">
         <!-- Cart Items -->
@@ -73,10 +73,11 @@
                             <!-- Price -->
                             <div class="text-right min-w-40 ">
                                 <p class="text-xs text-slate-300 ">
+                                    {{ $item->quantity }} x 
                                     @if ($item->variant)
-                                    {{ number_format($item->variant->mmk_price) }} Ks / pcs
+                                    {{ number_format($item->variant->mmk_discount_price) }} Ks / pcs
                                     @else
-                                    {{ number_format($item->product->mmk_price) }} Ks / pcs
+                                    {{ number_format($item->product->mmk_discount_price) }} Ks / pcs
                                     @endif
                                 </p>
                                 <p class="font-bold my-1 ">
@@ -85,11 +86,11 @@
                                 @if ($item->variant && $item->variant->discount > 0)
                                     <p class="text-sm text-gray-400 ">
                                         <span class="line-through">
-                                            {{ number_format($item->variant->mmk_price * $item->quantity) }}
+                                            {{ number_format($item->variant->mmk_price * $item->quantity) }} ks
                                         </span>
-                                        <sub class="text-xs text-red-500">
+                                        <span class="text-xs ms-1 text-red-500">
                                             {{ $item->variant->discount }}% OFF
-                                        </sub>
+                                        </span>
                                     </p>
 
                                 @endif
@@ -122,7 +123,7 @@
                     </p>
                     <div class="mt-6">
                         <a href="{{ route('store', $this->seller_id) }}"
-                            class="inline-flex items-center px-4 py-2 border border-transparent shadow-sm text-sm font-medium rounded-md text-white bg-slate-900 hover:bg-slate-800 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-slate-500 {{ app()->currentLocale() === 'my' ? 'font-mm' : '' }}">
+                            class="inline-flex items-center px-4 py-2 border border-transparent shadow-sm text-sm font-medium rounded-md text-white bg-slate-900 hover:bg-slate-800 focus:outline-none focus:ring-0 focus:ring-offset-0  {{ app()->currentLocale() === 'my' ? 'font-mm' : '' }}">
                             {{ __('messages.cart.continue_shopping') }}
                         </a>
                     </div>

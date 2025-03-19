@@ -46,15 +46,10 @@ class Cart extends Component
     // public $payments;
     public $selectedPayment;
     public $selectedPaymentAccount;
-
     public $paymentSlip;
-
     public $delivery_id;
-
     public $address_id = 0;
-
     public $payment_account_id;
-
     public $seller_id;
     public function mount()
     {
@@ -126,6 +121,7 @@ class Cart extends Component
 
     public function removeItem($cartItemId)
     {
+
         CartModel::find($cartItemId)->delete();
         $this->cartItems = CartModel::with(['product', 'variant'])
             ->where('seller_id',UserHelper::getUserSellerId())
@@ -198,7 +194,7 @@ class Cart extends Component
             $paymentAccount = PaymentAccount::find($this->payment_account_id);
 
             $order = Order::create([
-                'invoice_number' => Str::uuid(),
+                'invoice_number' => uniqid(),
                 'user_id' => Auth::id(),
                 'seller_id' => $this->seller_id,
                 'user_address_id' => $this->address_id,

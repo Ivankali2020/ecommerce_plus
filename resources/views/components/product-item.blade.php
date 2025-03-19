@@ -1,11 +1,11 @@
 <div wire:key="product-item-{{ $type }}-{{ $product->id }}" class="animate-fade-in-up">
     <article  class="group rounded-md sm:justify-between font-jost flex rounded-radius max-w-sm flex-col overflow-hidden shadow-sm relative">
-        <a href="{{ route('product', $product->id ) }}" class="w-auto h-auto p-2 overflow-hidden relative cursor-pointer">
+        <a href="{{ route('product', $product->id ) }}" wire:navigate class="w-auto h-auto p-2 overflow-hidden relative cursor-pointer">
             {{-- Improved Discount Tag --}}
             @if(($product->has_variant && $product->variants()->first() && $product->variants()->first()->discount > 0) || (!$product->has_variant && $product->discount > 0))
                 <div class="absolute top-0 right-0 z-10">
                     <div class="bg-red-500 text-white px-3 py-1 rounded-full shadow-md transform transition-transform duration-300 hover:scale-105 flex items-center gap-1">
-                        <span class="font-bold {{ app()->currentLocale() === 'my' ? 'font-mm' : '' }}">
+                        <span class="font-bold text-sm lg:text-lg  {{ app()->currentLocale() === 'my' ? 'font-mm' : '' }}">
                             {{ $product->has_variant && $product->variants()->first() ? $product->variants()->first()->discount ?? 0 : $product->discount ?? '0' }}%
                         </span>
                         <span class="text-xs {{ app()->currentLocale() === 'my' ? 'font-mm' : '' }}">

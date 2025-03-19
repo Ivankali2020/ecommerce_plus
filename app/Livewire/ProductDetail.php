@@ -40,6 +40,20 @@ class ProductDetail extends Component
 
     public function render()
     {
-        return view('livewire.product-detail');
+        return view('livewire.product-detail', [
+            'product' => $this->product,
+        ])->layout('layouts.app', [
+            'seo' => [
+                'title' => $this->product->name,
+                'description' => strip_tags(substr($this->product->description, 0, 160)),
+                'image' => $this->product->productImg ?? $this->product->getFirstMediaUrl('images'),
+                'url' => route('product', $this->product),
+                'type' => 'product',
+                'price' => $this->product->has_variant 
+                    ? $this->product->variants->first()->mmk_price 
+                    : $this->product->mmk_price,
+                'currency' => 'MMK',
+            ]
+        ]);
     }
 }

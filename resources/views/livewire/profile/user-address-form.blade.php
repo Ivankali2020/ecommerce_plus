@@ -105,7 +105,7 @@
                             class="mt-1 block w-full pl-3 pr-10 py-2 text-base border-gray-300 focus:outline-none focus:ring-slate-500 focus:border-slate-500 sm:text-sm rounded-md {{ app()->currentLocale() === 'my' ? 'font-mm' : '' }}">
                         <option value="">{{ __('messages.address.select_township') }}</option>
                         @foreach($townships as $township)
-                            <option value="{{ $township->id }}">{{ $township->mm_name }}</option>
+                            <option wire:key="{{ $township->id}}" value="{{ (string)$township->id }}">{{ $township->mm_name }}</option>
                         @endforeach
                     </select>
                     @error('selectedTownship')

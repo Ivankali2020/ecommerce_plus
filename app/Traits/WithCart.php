@@ -75,16 +75,18 @@ trait WithCart
                 ]
             );
 
+            $this->dispatch('cart-updated');
+
             if($existingCart){
                 Notification::make()
                 ->title(__('messages.cart.quantity_updated'))
-                ->success()
+                ->success()->duration(500)
                 ->send();
             }else{
                 Notification::make()
                 ->title(__('messages.cart.product_added'))
                 ->success()
-                ->send();
+                ->duration(500)->send();
             }
 
 
@@ -96,7 +98,7 @@ trait WithCart
                 ->title('Failed to add product to cart')
                 ->body($e->getMessage())
                 ->danger()
-                ->send();
+                ->duration(500)->send();
         }
     }
 }

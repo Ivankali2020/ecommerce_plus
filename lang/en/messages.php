@@ -1,7 +1,7 @@
 <?php
 
 return [
-    'title' => 'PADAUNG MARKET',
+    'title' => 'MYANCOMMERCE',
     'tagline' => 'Premium IT Solutions Provider',
     'description' => 'Your one-stop destination for all tech solutions. Explore our trusted sellers and find the perfect products and services for your needs.',
     'sign_in' => 'Sign In',
@@ -145,6 +145,7 @@ return [
         'verification_sent' => 'A new verification link has been sent to your email address.',
         'save' => 'Save',
         'saved' => 'Saved.',
+        'sending' => 'Sending...',
     ],
     'password' => [
         'title' => 'Update Password',
@@ -168,6 +169,12 @@ return [
         'confirm_password' => 'Confirm Password',
         'button' => 'Reset Password',
         'resetting' => 'Resetting...',
+    ],
+    'recent_orders_page' => [
+        'title' => 'Recently Ordered Products',
+        'no_products' => 'No ordered products yet',
+        'no_products_description' => 'You haven\'t ordered any products yet. Start shopping to see your purchased products here.',
+        'browse_products' => 'Browse Products',
     ],
     'product_detail' => [
         'min_order' => 'Minimum Order',
@@ -224,6 +231,8 @@ return [
             'registering' => 'Registering...',
             'have_account' => 'Already have an account?',
             'login' => 'Sign In',
+            'or_continue_with' => 'Or continue with',
+            'sign_in_with_google' => 'Sign in with Google',
         ],
         'verify_email' => [
             'title' => 'Verify Email',
@@ -239,6 +248,7 @@ return [
         ],
     ],
     'navigation' => [
+        'recent_orders' => 'Recent Orders',
         'main_store' => 'Main Store',
         'products' => 'Products',
         'dashboard' => 'Dashboard',
@@ -248,6 +258,5 @@ return [
     ],
     'discount_only' => 'Discount Only',
 ];
-
 
 
