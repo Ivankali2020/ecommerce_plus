@@ -14,6 +14,7 @@ new #[Layout('layouts.guest')] class extends Component
     public string $email = '';
     public string $password = '';
     public string $password_confirmation = '';
+    public string $cfTurnstileResponse = '';
 
     /**
      * Handle an incoming registration request.
@@ -24,15 +25,20 @@ new #[Layout('layouts.guest')] class extends Component
             'name' => ['required', 'string', 'max:255'],
             'email' => ['required', 'string', 'lowercase', 'email', 'max:255', 'unique:'.User::class],
             'password' => ['required', 'string', 'confirmed', Rules\Password::defaults()],
+            'cfTurnstileResponse' => ['required', 'turnstile'],
         ]);
 
+       
         $validated['password'] = Hash::make($validated['password']);
 
+        // Remove cfTurnstileResponse from the validated data
+        unset($validated['cfTurnstileResponse']);
+        
         event(new Registered($user = User::create($validated)));
 
         Auth::login($user);
 
-        $this->redirect(route('profile', absolute: false), navigate: true);
+        $this->redirect(route('verification.notice', absolute: false), navigate: true);
     }
 }; ?>
 
@@ -110,10 +116,21 @@ new #[Layout('layouts.guest')] class extends Component
                 </x-primary-button>
             </div>
 
+            <div> 
+                <div wire:ignore class="text-center">
+                    <x-turnstile wire:model="cfTurnstileResponse" 
+                    data-action="register"
+                    data-cdata="sessionid-123456789"
+                     data-size="flexible" data-theme="light" data-tabindex="1" />
+                </div>
+               
+                <x-input-error :messages="$errors->get('cfTurnstileResponse')" class="mt-2" />
+            </div>
+
             <!-- Login Link -->
             <p class="mt-2 text-end text-sm text-gray-600 dark:text-gray-400 {{ app()->currentLocale() === 'my' ? 'font-mm' : '' }}">
                 {{ __('messages.auth.register_page.have_account') }}
-                <a href="{{ route('login') }}" wire:navigate class="font-medium text-slate-600 hover:text-slate-500">
+                <a href="{{ route('login') }}" class="font-medium text-slate-600 hover:text-slate-500">
                     {{ __('messages.auth.register_page.login') }}
                 </a>
             </p>

@@ -151,7 +151,7 @@
 
                     <tr >
                         <td colspan="2" class="pb-3 text-right px-6 font-bold   "></td>
-                        <td colspan="1" class="pb-3 text-left    ">Tax Fees <span class="font-light text-xs">({{ $record->tax }} %)</span>:</td>
+                        <td colspan="1" class="pb-3 text-left    ">Tax Fees <span class="font-light text-xs">({{ number_format($record->tax ,0)}} %)</span>:</td>
                         <td  class="pb-3  text-right header_invoice font-bold   ">{{ $record->tax_price ?? 0 }} </td>
                     </tr>
                     <tr >
@@ -162,7 +162,7 @@
                     <tr >
                         <td colspan="2" class="pb-3 text-right px-6 font-bold   "></td>
                         <td colspan="1" class="pb-3 text-left    ">Grand Total:</td>
-                        <td  class="pb-3  text-right  font-bold header_invoice"> ကျပ် <span class=" header_invoice">{{ number_format($record->total,0) }} </span> </td>
+                        <td  class="pb-3  text-right  font-bold header_invoice"> ကျပ် <span class=" header_invoice">{{ number_format($record->total_price,0) }} </span> </td>
                     </tr>
                     </tbody>
                 </table>
@@ -190,7 +190,7 @@
                 </div>
                 @endif
 
-                @if($record->seller->addresses)
+                @if($record->seller->addresses->count() > 0)
                 <div class=" border-gray-300 pb-8  mt-2">
                     <h2 class=" font-bold mb-2 header_invoice">Seller Address:</h2>
                     @forelse ($record->seller->addresses as $index=>$address)

@@ -16,6 +16,8 @@ class Admin extends Authenticatable implements FilamentUser
 {
     use HasApiTokens, HasFactory, Notifiable,HasRoles,HasPanelShield;
 
+    protected $guarded = [];
+    
     protected $fillable = [
         'name',
         'email',

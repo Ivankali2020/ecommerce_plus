@@ -41,7 +41,7 @@ class AppServiceProvider extends ServiceProvider
         
         // Register the subscription info card in the seller panel sidebar
         FilamentView::registerRenderHook(
-            PanelsRenderHook::SIDEBAR_NAV_END,
+            PanelsRenderHook::USER_MENU_PROFILE_AFTER,
             fn (): string => Blade::render('@if(request()->routeIs(\'filament.seller.*\')) @livewire(\'seller.subscription-info-card\') @endif'),
         );
     }

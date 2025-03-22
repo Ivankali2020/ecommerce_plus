@@ -33,8 +33,10 @@ class Handler extends ExceptionHandler
     public function register(): void
     {
         $this->renderable(function (Exception $e, Request $request) {
-            return $this->customExceptionHandeller($e, $request);
+            //when you write custom exception handeller then you have to write this code
+            // return $this->customExceptionHandeller($e, $request);
         });
+
     }
 
     public function customExceptionHandeller(Exception $e, Request $request)

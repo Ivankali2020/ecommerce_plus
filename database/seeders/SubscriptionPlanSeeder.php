@@ -9,6 +9,22 @@ class SubscriptionPlanSeeder extends Seeder
 {
     public function run(): void
     {
+
+         // Basic Plan - 1 months
+         SubscriptionPlan::create([
+            'name' => 'Free Plan',
+            'description' => 'Perfect for small businesses just getting started with e-commerce.',
+            'price' => 0,
+            'duration_months' => 1,
+            'features' => [
+                'Up to 100 Products',
+                '2 Staff Accounts',
+                'Basic Analytics',
+                'Standard Support',
+            ],
+            'is_active' => false,
+        ]);
+
         // Basic Plan - 3 months
         SubscriptionPlan::create([
             'name' => 'Basic Plan',

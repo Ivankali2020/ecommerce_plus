@@ -62,6 +62,8 @@ Route::middleware(['auth'])->group(function(){
 // Seller subscription routes
 Route::middleware(['auth.redirect'])->prefix('seller')->name('seller.')->group(function () {
     Route::get('/subscription/plans', SubscriptionPlans::class)->name('subscription.plans');
+    // Add POS route for sellers
+    Route::get('/pos', \App\Livewire\Seller\Pos::class)->name('pos');
 });
 
 

@@ -180,6 +180,9 @@ return [
         ],
     ],
 
+    // Add turnstile validation message
+    'turnstile' => 'The CAPTCHA verification failed. Please try again.',
+
     /*
     |--------------------------------------------------------------------------
     | Custom Validation Attributes

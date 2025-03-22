@@ -9,12 +9,15 @@ new #[Layout('layouts.guest')] class extends Component
 {
     public LoginForm $form;
 
+    public string $cfTurnstileResponse;
     /**
      * Handle an incoming authentication request.
      */
     public function login(): void
     {
-        $this->validate();
+        $this->validate([
+            'cfTurnstileResponse' => ['required', 'turnstile'],
+        ]);
 
         $this->form->authenticate();
 
@@ -102,10 +105,20 @@ new #[Layout('layouts.guest')] class extends Component
                 </div>
             </div>
 
+            <div> 
+                <div wire:ignore class="text-center rounded " x-data >
+                    <x-turnstile wire:model="cfTurnstileResponse"
+                    data-action="login"
+                    data-cdata="sessionid-dsd"
+                    data-size="flexible" data-theme="light" data-tabindex="1" />
+                </div>
+                <x-input-error :messages="$errors->get('cfTurnstileResponse')" class="mt-2" />
+            </div>
+
             <!-- Register Link -->
             <p class="mt-2 text-end text-sm text-gray-600 dark:text-gray-400 {{ app()->currentLocale() === 'my' ? 'font-mm' : '' }}">
                 {{ __('messages.auth.login_page.no_account') }}
-                <a href="{{ route('register') }}" wire:navigate class="font-medium text-slate-600 hover:text-slate-500">
+                <a href="{{ route('register') }}"  class="font-medium text-slate-600 hover:text-slate-500">
                     {{ __('messages.auth.login_page.register') }}
                 </a>
             </p>

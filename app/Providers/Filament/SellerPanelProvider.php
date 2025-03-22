@@ -10,7 +10,6 @@ use App\Http\Middleware\RedirectIfAuthenticated;
 use App\Http\Middleware\RedirectIfSubscriptionExpired;
 use App\Http\Middleware\RedirectIfUnauthenticated;
 use App\Models\Seller;
-use App\Models\User;
 use BezhanSalleh\FilamentShield\FilamentShieldPlugin;
 use Filament\FontProviders\LocalFontProvider;
 use Filament\Http\Middleware\Authenticate;
@@ -38,6 +37,7 @@ class SellerPanelProvider extends PanelProvider
         return $panel
             ->id('seller')
             ->path('seller')
+            ->authGuard('seller')
             ->login()
             ->colors([
                 'primary' => Color::Emerald,
@@ -46,8 +46,9 @@ class SellerPanelProvider extends PanelProvider
                 'green' => Color::Green
             ])
             ->profile(EditProfile::class)
-//            ->profile()
-            ->authGuard('seller')
+            ->registration()
+            ->passwordReset()
+            ->emailVerification()
             ->discoverResources(in: app_path('Filament/Seller/Resources'), for: 'App\\Filament\\Seller\\Resources')
             ->discoverPages(in: app_path('Filament/Seller/Pages'), for: 'App\\Filament\\Seller\\Pages')
             ->pages([
@@ -90,17 +91,23 @@ class SellerPanelProvider extends PanelProvider
                     ->url(fn(): string => route('store', CheckFilamentSellerUser::getSellerId()))
                     ->sort(sort: 10)
                     ->icon('heroicon-o-link'),
-                NavigationItem::make('Create POS')
-                    ->label(fn(): string => 'Create POS')
+                NavigationItem::make('Simple POS')
+                    ->label(fn(): string => 'Simple POS')
+                    ->url(fn(): string => route('seller.pos'))
+                    ->sort(sort: -1)
+                    ->icon('heroicon-o-computer-desktop'),
+                NavigationItem::make('Advance POS PRO')
+                    ->label(fn(): string => 'Advance POS PRO')
                     ->url(fn(): string => route('filament.seller.resources.orders.create'))
                     ->sort(sort: -1)
                     ->icon('heroicon-o-computer-desktop')
             ])
             // ->font('mm',url: asset('css/admin-font.css'), provider: LocalFontProvider::class)
-            ->font('Jost')
+            // ->font('Jost')
+            // ->databaseTransactions()
             ->authMiddleware([
-                RedirectIfUnauthenticated::class,
-                // Authenticate::class,
+                // RedirectIfUnauthenticated::class,
+                Authenticate::class,
             ]);
     }
 }

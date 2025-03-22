@@ -60,7 +60,7 @@ new #[Layout('layouts.guest')] class extends Component
                 {{ __('messages.auth.verify_email.resend_button') }}
             </x-primary-button>
 
-            <button wire:click="logout" type="submit" class="w-full justify-center inline-flex items-center px-4 py-2 border border-transparent text-sm font-medium rounded-md text-gray-700 dark:text-gray-300 hover:text-gray-900 dark:hover:text-white focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500 dark:focus:ring-offset-gray-800 {{ app()->currentLocale() === 'my' ? 'font-mm' : '' }}">
+            <button wire:click="logout" type="submit" class="w-full justify-center inline-flex items-center px-4 py-2 border border-transparent text-sm font-medium rounded-md text-gray-700 dark:text-gray-300 hover:text-gray-900 dark:hover:text-white focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-slate-500 dark:focus:ring-offset-gray-800 {{ app()->currentLocale() === 'my' ? 'font-mm' : '' }}">
                 {{ __('messages.auth.verify_email.logout_button') }}
             </button>
         </div>

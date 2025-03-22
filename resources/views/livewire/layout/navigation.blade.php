@@ -172,7 +172,7 @@ new class extends Component
 
                 @guest
                     <div class=" space-x-8 sm:-my-px sm:ms-10 sm:flex">
-                        <x-responsive-nav-link :href="route('login')" :active="request()->routeIs('login')" wire:navigate>
+                        <x-responsive-nav-link :href="route('login')" :active="request()->routeIs('login')" >
                             {{ __('messages.auth.login') }}
                         </x-responsive-nav-link>
                     </div>
@@ -257,12 +257,12 @@ new class extends Component
             @else
 
             <div class=" space-x-8 sm:-my-px sm:ms-10 sm:flex">
-                <x-responsive-nav-link :href="route('login')" :active="request()->routeIs('login')" wire:navigate>
+                <x-responsive-nav-link :href="route('login')" :active="request()->routeIs('login')" >
                     {{ __('messages.auth.login') }}
                 </x-responsive-nav-link>
             </div>
             <div class=" space-x-8 sm:-my-px sm:ms-10 sm:flex">
-                <x-responsive-nav-link :href="route('register')" :active="request()->routeIs('register')" wire:navigate>
+                <x-responsive-nav-link :href="route('register')" :active="request()->routeIs('register')" >
                     {{ __('messages.auth.register') }}
                 </x-responsive-nav-link>
             </div>
@@ -274,7 +274,6 @@ new class extends Component
         </div>
     </div>
 </nav>
-
 
 
 <!-- Mobile Bottom Navigation -->

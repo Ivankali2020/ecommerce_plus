@@ -8,6 +8,8 @@ use App\Models\Seller;
 use Filament\Facades\Filament;
 use Filament\Forms;
 use Filament\Forms\Form;
+use Filament\Notifications\Auth\VerifyEmail;
+use Filament\Notifications\Notification;
 use Filament\Pages\Page;
 use Filament\Resources\Pages\CreateRecord;
 use Filament\Resources\Resource;
@@ -51,6 +53,8 @@ class SellerResource extends Resource
                         ->revealable()->autocomplete()
                         ->required(fn(Page $livewire) => $livewire instanceof CreateRecord)
                         ->maxLength(255),
+
+                       
 
                     Forms\Components\RichEditor::make('description')
                         ->required()->hidden(Filament::getAuthGuard() == 'seller')
@@ -97,6 +101,11 @@ class SellerResource extends Resource
                 Tables\Columns\TextColumn::make('phone')
                     ->label(__('filament/resources/staff-resource.form.phone'))
                     ->searchable(),
+
+                 Tables\Columns\TextColumn::make('email_verified_at')
+                    ->label('Email Verified')
+                    ->dateTime('d m Y H:i'),
+
                 Tables\Columns\TextColumn::make('created_at')
                     ->dateTime()
                     ->sortable()
@@ -106,12 +115,31 @@ class SellerResource extends Resource
                     ->sortable()
                     ->toggleable(isToggledHiddenByDefault: true),
             ])
-            ->filters([
-                //
-            ])
+           ->filters([
+            Tables\Filters\Filter::make('verified')
+                ->label('Email Verified')
+                ->query(fn (Builder $query) => $query->whereNotNull('email_verified_at')),
+            Tables\Filters\Filter::make('unverified')
+                ->label('Email Not Verified')
+                ->query(fn (Builder $query) => $query->whereNull('email_verified_at')),
+        ])
             ->actions([
                 Tables\Actions\ViewAction::make(),
                 Tables\Actions\EditAction::make(),
+                Tables\Actions\Action::make('resend_verification_email')
+                ->label('Resend Verification Email')
+                ->icon('heroicon-o-envelope')
+                ->authorize(fn(Seller $record) => !$record->hasVerifiedEmail())
+                ->action(function (Seller $record) {
+                    $notification = new VerifyEmail();
+                    $notification->url = filament()->getPanel('seller')->getVerifyEmailUrl($record);
+                    $record->notify($notification);
+
+                    Notification::make()
+                        ->title("Verification email has been resent.")
+                        ->send();
+                })
+                ->requiresConfirmation(),
             ])
             ->bulkActions([
                 Tables\Actions\BulkActionGroup::make([

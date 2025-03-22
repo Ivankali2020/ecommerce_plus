@@ -8,7 +8,7 @@ class ProductObserver
 {
     public function created(Product $product): void
     {
-        if ($product->mmk_buy_price == null) {
+        if ($product->exchange->currency_id == 1) {
             $product->update([
                 'mmk_buy_price' => $product->buy_price,
                 'mmk_price' => $product->price,
@@ -23,7 +23,7 @@ class ProductObserver
             return;
         }
 
-        if ($product->mmk_buy_price == null) {
+        if ($product->exchange->currency_id == 1) {
             $product->preventObserver = true;
             $product->update([
                 'mmk_buy_price' => $product->buy_price,

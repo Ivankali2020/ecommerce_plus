@@ -1,4 +1,13 @@
 {
+	"MMK": {
+		"symbol": "MMK",
+		"name": "Myanmar Kyat",
+		"symbol_native": "ကျပ်",
+		"decimal_digits": 0,
+		"rounding": 0,
+		"code": "MMK",
+		"name_plural": "Myanmar kyats"
+	},
 	"USD": {
 		"symbol": "$",
 		"name": "US Dollar",
@@ -62,15 +71,6 @@
 		"rounding": 0,
 		"code": "KRW",
 		"name_plural": "South Korean won"
-	},
-	"MMK": {
-		"symbol": "MMK",
-		"name": "Myanmar Kyat",
-		"symbol_native": "ကျပ်",
-		"decimal_digits": 0,
-		"rounding": 0,
-		"code": "MMK",
-		"name_plural": "Myanmar kyats"
 	},
 	"PHP": {
 		"symbol": "₱",

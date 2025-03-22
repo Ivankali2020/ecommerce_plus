@@ -29,8 +29,7 @@ class Product extends Component
     public ?Collection $products;
     public $selectedCategory = null;
 
-
-    protected $listeners = ['refreshProducts' => '$refresh'];
+    // protected $listeners = ['refreshProducts' => '$refresh'];
 
     public function __construct()
     {
@@ -125,31 +124,8 @@ class Product extends Component
         }
 
         try {
-            // $query = ProductModel::whereNotIn('id', $this->recommendedProducts->pluck('id'))
-            //     ->where('seller_id', $this->storeID)
-            //     ->where('is_public', true)
-            //     ->when($this->selectedCategory, function ($query) {
-            //         return $query->where('category_id', $this->selectedCategory);
-            //     })
-            //     ->with(['category', 'brand', 'variants'])
-            //     ->latest();
-
-            // // Get next batch of products
-            // $nextProducts = $query->skip($this->perPage)
-            //     ->take(10)
-            //     ->get();
-
-            // if ($nextProducts->isEmpty()) {
-            //     $this->hasMorePages = false;
-            //     return;
-            // }
-
-            // // Merge with existing products
-            // $this->products = $this->products->merge($nextProducts)->unique('id');
+           
             $this->perPage += 10;
-
-            // // Check if there are more pages
-            // $this->hasMorePages = $query->skip($this->perPage)->exists();
             $this->getProductData();
 
         } catch (\Exception $e) {
@@ -167,89 +143,6 @@ class Product extends Component
             ->with(['category', 'brand', 'variants'])->latest()
             ->take(5)->get();
     }
-
-    // #[On('add-to-cart')]
-    // public function addToCart($productId, $variantId = null, $quantity = 1)
-    // {
-    //     try {
-    //         if (!Auth::check()) {
-    //             return redirect()->route('login');
-    //         }
-
-    //         // Check if $productId is an array containing all parameters
-    //         if (is_array($productId) && isset($productId['productId'])) {
-    //             $params = $productId;
-    //             $productId = $params['productId'];
-    //             $variantId = $params['variantId'];
-    //             $quantity = $params['quantity'];
-    //         }
-
-    //         $product = ProductModel::where('id', $productId)
-    //             ->with(['variants'])
-    //             ->first();
-
-    //         // Rest of your existing code...
-    //         $variant = $variantId
-    //             ? $product->variants->find($variantId)
-    //             : ($product->has_variant ? $product->variants->first() : null);
-
-    //         $price = $variant
-    //             ? ($variant->discount > 0 ? $variant->mmk_discount_price : $variant->mmk_price)
-    //             : ($product->discount > 0 ? $product->mmk_discount_price : $product->mmk_price);
-
-    //         // Check existing cart item
-    //         $existingCart = Cart::where([
-    //             'user_id' => Auth::id(),
-    //             'product_id' => $productId,
-    //             'variant_id' => $variant?->id
-    //         ])->first();
-
-    //         $newQuantity = $existingCart ? $existingCart->quantity + 1 : $quantity;
-
-    //         // Check MOQ
-    //         if ($newQuantity < ( $variant?->MOQ ?? $product->MOQ)) {
-    //             Notification::make()
-    //                 ->title('Minimum Order Quantity not met')
-    //                 ->body("Minimum order quantity is {$product->MOQ} pieces")
-    //                 ->warning()
-    //                 ->send();
-    //             return;
-    //         }
-
-
-    //         // Update or create cart item
-    //         Cart::updateOrCreate(
-    //             [
-    //                 'seller_id' => $this->storeID,
-    //                 'user_id' => Auth::id(),
-    //                 'product_id' => $productId,
-    //                 'price' => $price,
-    //                 'variant_id' => $variant?->id
-    //             ],
-    //             [
-    //                 'quantity' => $newQuantity,
-    //                 'price' => $price,
-    //                 'total' => $newQuantity * $price
-    //             ]
-    //         );
-
-    //         Notification::make()
-    //             ->title('Product added to cart successfully!')
-    //             ->success()
-    //             ->send();
-
-    //         // $this->dispatch('cart-updated');
-
-    //     } catch (\Exception $e) {
-    //         logger()->error('Error adding to cart: ' . $e->getMessage());
-
-    //         Notification::make()
-    //             ->title('Failed to add product to cart')
-    //             ->body($e->getMessage())
-    //             ->danger()
-    //             ->send();
-    //     }
-    // }
 
     public function render()
     {

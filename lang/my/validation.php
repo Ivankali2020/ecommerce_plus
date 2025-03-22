@@ -108,6 +108,9 @@ return [
     'uppercase' => ':attribute သည် စာလုံးအကြီးဖြစ်ရမည်။',
     'url' => ':attribute သည် တရားဝင် URL တစ်ခုဖြစ်ရမည်။',
     'uuid' => ':attribute သည် တရားဝင် UUID တစ်ခုဖြစ်ရမည်။',
+    
+    // Add turnstile validation message
+    'turnstile' => 'CAPTCHA အတည်ပြုခြင်း မအောင်မြင်ပါ။ ကျေးဇူးပြု၍ ထပ်မံကြိုးစားပါ။',
 
    'custom' => [
         'attribute-name' => [

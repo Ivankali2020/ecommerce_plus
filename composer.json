@@ -22,7 +22,8 @@
         "livewire/livewire": "^3.6",
         "livewire/volt": "^1.0",
         "milon/barcode": "^12.0",
-        "pusher/pusher-php-server": "^7.2"
+        "pusher/pusher-php-server": "^7.2",
+        "ryangjchandler/laravel-cloudflare-turnstile": "^2.0"
     },
     "require-dev": {
         "fakerphp/faker": "^1.9.1",

@@ -3,6 +3,7 @@
 namespace App\Models;
 
 use App\Helper\MediaRegisterConversion;
+use App\Observers\SellerObserver;
 use BezhanSalleh\FilamentShield\Traits\HasPanelShield;
 use Filament\Models\Contracts\FilamentUser;
 use Filament\Panel;
@@ -19,8 +20,11 @@ use Spatie\MediaLibrary\InteractsWithMedia;
 use Spatie\Permission\Models\Role;
 use Spatie\Permission\Traits\HasRoles;
 use Carbon\Carbon;
+use Illuminate\Contracts\Auth\MustVerifyEmail;
+use Illuminate\Database\Eloquent\Attributes\ObservedBy;
 
-class Seller extends Authenticatable implements HasMedia, FilamentUser
+#[ObservedBy([SellerObserver::class])]
+class Seller extends Authenticatable implements HasMedia, FilamentUser, MustVerifyEmail
 {
     use HasApiTokens, HasFactory, Notifiable, InteractsWithMedia, SoftDeletes, HasRoles, HasPanelShield;
 
@@ -30,7 +34,7 @@ class Seller extends Authenticatable implements HasMedia, FilamentUser
         $this->addMediaCollection('subscription_slips');
     }
 
-    protected $guarded = 'seller';
+    protected $guarded = [];
 
     protected $fillable = [
         'name',
@@ -50,6 +54,7 @@ class Seller extends Authenticatable implements HasMedia, FilamentUser
     ];
 
     protected $casts = [
+        'email_verified_at' => 'datetime',
         'password' => 'hashed',
         'subscription_started_at' => 'datetime',
         'subscription_expired_at' => 'datetime',
@@ -185,4 +190,7 @@ class Seller extends Authenticatable implements HasMedia, FilamentUser
         
         return true;
     }
+
+    
+
 }

@@ -1,7 +1,7 @@
 <div class="fi-sidebar-item">
-    <div class="fi-section rounded-xl bg-white shadow-sm ring-1 ring-gray-950/5 dark:bg-gray-900 dark:ring-white/10">
-        <div class="fi-section-header px-4 py-2 border-b border-gray-200 dark:border-gray-800">
-            <h3 class="text-base font-semibold leading-6" style="--c-600:var(--primary-600); --c-400:var(--primary-400); color: var(--c-600); dark:color: var(--c-400);">
+    <div class="fi-section dark:bg-gray-900 dark:ring-white/10">
+        <div class="fi-section-header px-4 py-2 border-b border-gray-100 dark:border-gray-400">
+            <h3 class="text-sm uppercase text-center " >
                 Subscription Status
             </h3>
         </div>
@@ -10,13 +10,13 @@
             @if($subscriptionData['hasSubscription'])
                 <div class="space-y-3">
                     <div class="flex justify-between items-center">
-                        <span class="text-sm text-gray-500 dark:text-gray-400">Plan</span>
-                        <span class="text-sm font-medium text-gray-800 dark:text-gray-200">{{ $subscriptionData['planName'] }}</span>
+                        <span class="text-xs text-gray-500 dark:text-gray-400">Plan</span>
+                        <span class="text-xs font-medium text-gray-800 dark:text-gray-200">{{ $subscriptionData['planName'] }}</span>
                     </div>
                     
                     <div class="flex justify-between items-center">
-                        <span class="text-sm text-gray-500 dark:text-gray-400">Status</span>
-                        <span class="text-sm font-medium">
+                        <span class="text-xs text-gray-500 dark:text-gray-400">Status</span>
+                        <span class="text-xs font-medium">
                             @if($subscriptionData['isExpired'])
                                 <span style="--c-50:var(--danger-50);--c-400:var(--danger-400);--c-600:var(--danger-600);" class="fi-badge flex items-center justify-center gap-x-1 rounded-md text-xs font-medium ring-1 ring-inset px-2 min-w-[theme(spacing.6)] py-1 fi-color-custom bg-custom-50 text-custom-600 ring-custom-600/10 dark:bg-custom-400/10 dark:text-custom-400 dark:ring-custom-400/30">
                                     <span class="grid">
@@ -34,14 +34,14 @@
                     </div>
                     
                     <div class="flex justify-between items-center">
-                        <span class="text-sm text-gray-500 dark:text-gray-400">Expires</span>
-                        <span class="text-sm font-medium text-gray-800 dark:text-gray-200">{{ $subscriptionData['expiryDate']->format('M d, Y') }}</span>
+                        <span class="text-xs text-gray-500 dark:text-gray-400">Expires</span>
+                        <span class="text-xs font-medium text-gray-800 dark:text-gray-200">{{ $subscriptionData['expiryDate']->format('M d, Y') }}</span>
                     </div>
                     
                     @if(!$subscriptionData['isExpired'])
                         <div class="flex justify-between items-center">
-                            <span class="text-sm text-gray-500 dark:text-gray-400">Days Left</span>
-                            <span class="text-sm font-medium text-gray-800 dark:text-gray-200">{{ number_format($subscriptionData['daysRemaining'],0) }} days</span>
+                            <span class="text-xs text-gray-500 dark:text-gray-400">Days Left</span>
+                            <span class="text-xs font-medium text-gray-800 dark:text-gray-200">{{ number_format($subscriptionData['daysRemaining'],0) }} days</span>
                         </div>
                         
                         <div class="w-full bg-gray-200 dark:bg-gray-700 rounded-full mt-1" style="height:4px">

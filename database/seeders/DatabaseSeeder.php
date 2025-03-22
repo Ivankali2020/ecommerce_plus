@@ -46,10 +46,10 @@ class DatabaseSeeder extends Seeder
         $this->call([
             AdminSeeder::class,
             CurrencySeeder::class,
-            // ShieldSeeder::class,
             MultiStoreSeeder::class,
             MedicineStoreSeeder::class,
-            SubscriptionPlanSeeder::class
+            SubscriptionPlanSeeder::class,
+            ShieldSeeder::class,
         ]);
 
 

@@ -16,6 +16,8 @@ class Variant extends Model implements HasMedia
 
     public $preventObserver = false;
 
+    protected $with = ['product.exchange'];
+
     public function registerMediaCollections(): void
     {
         (new MediaRegisterConversion('images'))->registerMediaConversions();
@@ -51,8 +53,6 @@ class Variant extends Model implements HasMedia
 
         $formattedAttributes = [];
         $attributeData = json_decode($this->attributes['attributes'], true);
-
-        logger($attributeData);
 
         foreach ($attributeData as $item) {
             $attribute = Attribute::find($item['attribute_id']);

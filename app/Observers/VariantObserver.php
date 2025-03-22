@@ -8,7 +8,7 @@ class VariantObserver
 {
     public function created(Variant $variant): void
         {
-            if ($variant->mmk_buy_price == null) {
+            if ($variant->product->exchange->currency_id == 1) {
                 $variant->update([
                     'mmk_buy_price' => $variant->buy_price,
                     'mmk_price' => $variant->price,
@@ -23,7 +23,7 @@ class VariantObserver
                 return;
             }
 
-            if ($variant->mmk_buy_price == null) {
+            if ($variant->product->exchange->currency_id == 1) {
                 $variant->preventObserver = true;
                 $variant->update([
                     'mmk_buy_price' => $variant->buy_price,
