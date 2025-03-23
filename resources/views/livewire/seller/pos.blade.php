@@ -112,7 +112,7 @@
                                 <div>
                                     @if($product->has_variant && $product->variants()->first())
                                         @if($product->variants()->first()->discount > 0)
-                                            <div class="flex flex-col  ">
+                                            <div class="flex flex-col">
                                                 <p class="text-primary-600 dark:text-primary-400 font-semibold">
                                                     {{ number_format($product->variants()->first()->mmk_discount_price, 0) }} Ks
                                                 </p>
@@ -127,12 +127,12 @@
                                         @endif
                                     @else
                                         @if($product->discount > 0)
-                                            <div class="flex flex-col  items-center gap-2">
+                                            <div class="flex flex-col">
                                                 <p class="text-primary-600 dark:text-primary-400 font-semibold">
                                                     {{ number_format($product->mmk_discount_price, 0) }} Ks
                                                 </p>
                                                 <p class="text-gray-400 line-through text-xs">
-                                                    {{ number_format($product->mmk_price, 0) }}
+                                                    {{ number_format($product->mmk_price, 0) }} ks
                                                 </p>
                                             </div>
                                         @else

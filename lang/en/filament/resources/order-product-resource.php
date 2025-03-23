@@ -32,4 +32,10 @@ return [
         'delete' => 'Delete',
         'restore' => 'Restore',
     ],
+    'filters' => [
+        'date_range' => 'Date Range',
+        'created_from' => 'From',
+        'created_until' => 'Until',
+        'product' => 'Product',
+    ],
 ];

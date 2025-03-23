@@ -32,4 +32,10 @@ return [
         'delete' => 'ဖျက်ရန်',
         'restore' => 'ပြန်လည်ရယူရန်',
     ],
+    'filters' => [
+        'date_range' => 'ရက်စွဲအပိုင်းအခြား',
+        'created_from' => 'စတင်ရက်',
+        'created_until' => 'ပြီးဆုံးရက်',
+        'product' => 'ပစ္စည်း',
+    ],
 ];

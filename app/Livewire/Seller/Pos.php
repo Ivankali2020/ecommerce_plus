@@ -6,6 +6,7 @@ use App\Helper\CheckFilamentSellerUser;
 use App\Models\Product;
 use App\Models\Category;
 use App\Models\Variant;
+use BezhanSalleh\FilamentShield\Traits\HasPanelShield;
 use Exception;
 use Filament\Actions\Action;
 use Filament\Actions\Concerns\InteractsWithActions;
@@ -185,7 +186,7 @@ class Pos extends Component implements HasForms, HasActions
 
             // Check if product already exists in cart
             $existingItemKey = $this->findCartItem($productId, $variantId);
-            
+           
             $newQuantity = $existingItemKey !== false ? $this->cart[$existingItemKey]['quantity'] + $quantity : $quantity;
             
             // Check MOQ
@@ -333,9 +334,12 @@ class Pos extends Component implements HasForms, HasActions
                     'variant_id' => $item['variant_id'] ?? null,
                     'attributes' => $variant ? $variant->attributeValues : $product->attributeValues, 
                     'price' => $variant ? $variant->mmk_price : $product->mmk_price,
-                    'discount_price' => $variant ? $variant->mmk_discount_price : $product->mmk_discount_price, // No additional discount in POS
-                    'discount' => $item['discount_percentage'], // No additional discount in POS
+                    'discount_price' => $variant ? $variant->mmk_discount_price : $product->mmk_discount_price,
+                    'discount' => $item['discount_percentage'],
                     'quantity' => $item['quantity'],
+                    // 'profit' => $item['discount_percentage'] > 0 ? 
+                    //     ($item['price'] * $item['quantity']) - (($variant ? $variant->mmk_buy_price : $product->mmk_buy_price) * $item['quantity']) : 
+                    //     ($item['price'] * $item['quantity']) - (($variant ? $variant->mmk_buy_price : $product->mmk_buy_price) * $item['quantity']),
                     'original_buy_price' => $variant ? $variant->buy_price : $product->buy_price,
                     'original_price' => $variant ? $variant->mmk_price : $product->mmk_price,
                     'original_discount_price' => $variant ? $variant->mmk_discount_price : $product->mmk_discount_price,

@@ -28,6 +28,8 @@ use Illuminate\Routing\Middleware\SubstituteBindings;
 use Illuminate\Session\Middleware\AuthenticateSession;
 use Illuminate\Session\Middleware\StartSession;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\Gate;
+use Illuminate\Validation\Rules\Can;
 use Illuminate\View\Middleware\ShareErrorsFromSession;
 
 class SellerPanelProvider extends PanelProvider
@@ -104,7 +106,7 @@ class SellerPanelProvider extends PanelProvider
             ])
             // ->font('mm',url: asset('css/admin-font.css'), provider: LocalFontProvider::class)
             // ->font('Jost')
-            // ->databaseTransactions()
+            ->databaseTransactions()
             ->authMiddleware([
                 // RedirectIfUnauthenticated::class,
                 Authenticate::class,

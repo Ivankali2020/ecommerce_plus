@@ -10,7 +10,9 @@ use App\Models\OrderProduct;
 use Filament\Forms;
 use Filament\Forms\Form;
 use Filament\Resources\Resource;
+use Filament\Support\Enums\MaxWidth;
 use Filament\Tables;
+use Filament\Tables\Enums\FiltersLayout;
 use Filament\Tables\Table;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Model;
@@ -95,8 +97,8 @@ class OrderProductResource extends Resource
 
                 Tables\Columns\TextColumn::make('original_buy_price')
                     ->label(__('filament/resources/order-product-resource.columns.original_buy_price'))
-                    ->alignEnd()
-                    ->description(fn(OrderProduct $orderProduct) => $orderProduct->original_price),
+                    ->alignEnd(),
+                    // ->description(fn(OrderProduct $orderProduct) => $orderProduct->original_price),
 
                 Tables\Columns\TextColumn::make('price')
                     ->label(__('filament/resources/order-product-resource.columns.selling_price'))
@@ -111,12 +113,6 @@ class OrderProductResource extends Resource
                     ->label(__('filament/resources/order-product-resource.columns.quantity'))
                     ->alignCenter(),
 
-                Tables\Columns\TextColumn::make('profit/Loss')
-                    ->label(__('filament/resources/order-product-resource.columns.profit_loss'))
-                    ->alignEnd()->size('lg')
-                    ->color(fn($state) => $state > 0 ? 'success' : 'danger')
-                    ->getStateUsing(fn($record)=> ($record->discount != 0 ? $record->original_discount_price : $record->price ) - $record->original_buy_price)
-                    ->formatStateUsing(fn($state) => $state ),
 
                 Tables\Columns\TextColumn::make('sub_price')
                     ->label(__('filament/resources/order-product-resource.columns.sub_price'))
@@ -126,15 +122,50 @@ class OrderProductResource extends Resource
                             ->money('mmk')
                             ->label(__('filament/resources/order-product-resource.columns.total_amount'))
                     ),
+
+
+                Tables\Columns\TextColumn::make('profit')
+                    ->label(__('filament/resources/order-product-resource.columns.sub_price'))
+                    ->alignEnd()
+                    ->summarize(
+                        Tables\Columns\Summarizers\Sum::make('profit')
+                            ->money('mmk')
+                            ->label(__('filament/resources/order-product-resource.columns.total_amount'))
+                    ),
             ])
             ->defaultSort('id','desc')
             ->filters([
-//                Tables\Filters\TrashedFilter::make(),
-            ])
+                Tables\Filters\Filter::make('created_at')
+                    ->form([
+                        Forms\Components\DatePicker::make('created_from')
+                            ->label(__('filament/resources/order-product-resource.filters.created_from')),
+                        Forms\Components\DatePicker::make('created_until')
+                            ->label(__('filament/resources/order-product-resource.filters.created_until')),
+                    ])
+                    ->query(function (Builder $query, array $data): Builder {
+                        return $query
+                            ->when(
+                                $data['created_from'],
+                                fn (Builder $query, $date): Builder => $query->whereDate('created_at', '>=', $date),
+                            )
+                            ->when(
+                                $data['created_until'],
+                                fn (Builder $query, $date): Builder => $query->whereDate('created_at', '<=', $date),
+                            );
+                    }),
+                
+                Tables\Filters\SelectFilter::make('product_id')
+                    ->label(__('filament/resources/order-product-resource.filters.product'))
+                    ->relationship('product', 'name')
+                    ->searchable()
+                    ->preload()
+                    ->multiple(),
+                ],layout: FiltersLayout::Modal)
             ->actions([
                 Tables\Actions\EditAction::make()
                     ->label(__('filament/resources/order-product-resource.actions.edit')),
             ])
+            // ->filtersFormWidth(MaxWidth::Full)
             ->bulkActions([
                 Tables\Actions\BulkActionGroup::make([
                     Tables\Actions\DeleteBulkAction::make()

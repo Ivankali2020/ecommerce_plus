@@ -138,30 +138,36 @@
                         <tr class="">
                             <td class="pb-3 text-xs  header_invoice" style="line-height: 1.3rem">{{ $detail->product->name }}</td>
                             <td class="pb-3 text-right ">{{ $detail->quantity }}</td>
-                            <td class="pb-3 text-right ">{{ number_format($detail->price,0) }}</td>
+                            <td class="pb-3 text-right ">
+                                @if($detail->discount > 0)
+                                <sup style="font-size:8px">{{ number_format($detail->discount,0) }} %</sup> <span>  {{ number_format($detail->discount_price,0) }}</span> 
+                                @else
+                                    {{ number_format($detail->price,0) }}
+                                @endif
+                            </td>
                             <td class="pb-3  text-right "> {{ number_format($detail->sub_price,0) }}</td>
                         </tr>
                     @endforeach
 
                     <tr class="">
-                        <td colspan="2" class="pb-3 text-right px-6 font-bold   "></td>
-                        <td colspan="1" class="pb-3 text-left     ">Subtotal:</td>
+                        {{-- <td colspan="1" class="pb-3 text-right px-6 font-bold   "></td> --}}
+                        <td colspan="3" class="pb-3 text-right">Sub Total:</td>
                         <td  class="pb-3  text-right header_invoice font-bold ">{{ $record->sub_total }} </td>
                     </tr>
 
                     <tr >
-                        <td colspan="2" class="pb-3 text-right px-6 font-bold   "></td>
-                        <td colspan="1" class="pb-3 text-left    ">Tax Fees <span class="font-light text-xs">({{ number_format($record->tax ,0)}} %)</span>:</td>
+                        {{-- <td colspan="1" class="pb-3 text-right px-6 font-bold   "></td> --}}
+                        <td colspan="3" class="pb-3 text-right  text-nowrap ">Tax Fees ({{ number_format($record->tax ,0)}} %):</td>
                         <td  class="pb-3  text-right header_invoice font-bold   ">{{ $record->tax_price ?? 0 }} </td>
                     </tr>
                     <tr >
-                        <td colspan="2" class="pb-3 text-right px-6 font-bold   "></td>
-                        <td colspan="1" class="pb-3 text-left    "> Delivery Fees:</td>
+                        {{-- <td colspan="1" class="pb-3 text-right px-6 font-bold   "></td> --}}
+                        <td colspan="3" class="pb-3 text-right    "> Delivery Fees:</td>
                         <td  class="pb-3  text-right header_invoice font-bold   ">{{ $record->delivery_fees ?? 0 }} </td>
                     </tr>
                     <tr >
-                        <td colspan="2" class="pb-3 text-right px-6 font-bold   "></td>
-                        <td colspan="1" class="pb-3 text-left    ">Grand Total:</td>
+                        {{-- <td colspan="1" class="pb-3 text-right px-6 font-bold   "></td> --}}
+                        <td colspan="3" class="pb-3 text-right    ">Grand Total:</td>
                         <td  class="pb-3  text-right  font-bold header_invoice"> ကျပ် <span class=" header_invoice">{{ number_format($record->total_price,0) }} </span> </td>
                     </tr>
                     </tbody>

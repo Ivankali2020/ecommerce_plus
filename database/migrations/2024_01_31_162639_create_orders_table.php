@@ -42,10 +42,15 @@ return new class extends Migration
 
             $table->decimal('tax')->default(0);
             $table->decimal('tax_price')->default(0);
+
+            $table->decimal('given_amount')->default(0);
+            $table->decimal('change_amount')->default(0);
+            $table->text('note')->nullable();
+
             $table->softDeletes();
             $table->timestamps();
 
-            $table->index(['user_id', 'seller_id']);
+            $table->index(['user_id', 'seller_id', 'is_cod']);
             $table->index('created_at');
         });
 

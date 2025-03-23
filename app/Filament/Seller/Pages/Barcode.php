@@ -2,12 +2,13 @@
 
 namespace App\Filament\Seller\Pages;
 
+use BezhanSalleh\FilamentShield\Traits\HasPageShield;
 use BezhanSalleh\FilamentShield\Traits\HasPanelShield;
 use Filament\Pages\Page;
 
 class Barcode extends Page
 {
-    // use HasPanelShield;
+    use HasPageShield;
     // protected static ?string $navigationIcon = 'heroicon-o-document-text';
 
     protected static ?string $navigationGroup = 'Business Section';

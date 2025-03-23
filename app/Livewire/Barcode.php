@@ -5,6 +5,7 @@ namespace App\Livewire;
 use App\Helper\CheckFilamentSellerUser;
 use App\Models\Product;
 use App\Models\Variant;
+use BezhanSalleh\FilamentShield\Traits\HasPanelShield;
 use Filament\Forms\Components\Select;
 use Filament\Forms\Components\TextInput;
 use Filament\Forms\Concerns\InteractsWithForms;

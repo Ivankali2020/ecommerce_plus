@@ -44,12 +44,12 @@ class DatabaseSeeder extends Seeder
         }
 
         $this->call([
+            ShieldSeeder::class,
             AdminSeeder::class,
             CurrencySeeder::class,
             MultiStoreSeeder::class,
             MedicineStoreSeeder::class,
             SubscriptionPlanSeeder::class,
-            ShieldSeeder::class,
         ]);
 
 

@@ -22,7 +22,7 @@ return new class extends Migration
             $table->json('attributes');
             $table->string('sku')->unique();
 
-            $table->integer('MOQ')->default(0);
+            $table->integer('MOQ')->default(1);
             $table->string('name');
 
             $table->decimal('buy_price',15,2)->nullable();

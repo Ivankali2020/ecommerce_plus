@@ -28,6 +28,8 @@ return new class extends Migration
             $table->integer('discount')->default(0);
             $table->integer('quantity');
 
+            $table->decimal('profit',15,2);
+
             $table->decimal('original_buy_price',15,2)->default(0);
             $table->decimal('original_price',15,2)->default(0);
             $table->decimal('original_discount_price',15,2)->default(0);

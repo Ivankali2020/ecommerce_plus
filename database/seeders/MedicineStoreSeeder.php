@@ -33,7 +33,8 @@ class MedicineStoreSeeder extends Seeder
                     'email' => 'medicine@gmail.com',
                     'name' => 'AB Pharmacy',
                     'phone' => '09 454949610',
-                    'description' => 'ဆေးဆိုင်'
+                    'description' => 'ဆေးဆိုင်',
+                    'email_verified_at' => now(),
                 ])
                 // ->has(Attribute::factory(3)->has(AttributeValue::factory(3), 'values'))
                 // ->has(Payment::factory(5)->has(PaymentAccount::factory(2), 'accounts'))

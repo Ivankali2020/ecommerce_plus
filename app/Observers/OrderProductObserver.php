@@ -20,7 +20,11 @@ class OrderProductObserver
                 $variant->decrement('quantity',$orderProduct->quantity);
             }else{
                 $product->decrement('quantity',$orderProduct->quantity);
+                logger('logger from order product observer '.$product->quantity);
             }
+            $orderProduct->profit = $orderProduct->discount_price > 0 ?
+                                    ($orderProduct->discount_price * $orderProduct->quantity) - ($orderProduct->original_buy_price * $orderProduct->quantity) :
+                                    ($product->price * $orderProduct->quantity) - ($orderProduct->original_buy_price * $orderProduct->quantity);
         }
 
     }
@@ -49,6 +53,10 @@ class OrderProductObserver
                     $product->decrement('quantity', $decrementQuantity);
                 }
             }
+
+            $orderProduct->profit = $orderProduct->discount_price > 0 ?
+            ($orderProduct->discount_price * $orderProduct->quantity) - ($orderProduct->original_buy_price * $orderProduct->quantity) :
+            ($product->price * $orderProduct->quantity) - ($orderProduct->original_buy_price * $orderProduct->quantity);
         }
     }
 
