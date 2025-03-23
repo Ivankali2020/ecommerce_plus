@@ -22,7 +22,9 @@ class OrderChart extends ChartWidget
         return __('filament/widgets/order-chart.description');
     }
 
-    protected int | string | array $columnSpan = '2';
+    protected static ?int $sort = 3;
+
+    protected int | string | array $columnSpan = 'full';
 
     protected static ?string $maxHeight = '300px';
 

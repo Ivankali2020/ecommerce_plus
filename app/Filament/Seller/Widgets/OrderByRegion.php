@@ -14,6 +14,8 @@ class OrderByRegion extends ChartWidget
 
     protected static ?int $sort = 2;
 
+    protected int | string | array $columnSpan = '1';
+
     // protected static ?string $maxHeight = '350px';
 
     public function getHeading(): string

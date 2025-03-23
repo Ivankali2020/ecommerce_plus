@@ -14,6 +14,9 @@ use Filament\Widgets\StatsOverviewWidget\Stat;
 
 class StatsOverview extends BaseWidget
 {
+    
+    // protected int | string | array $columnSpan = ['md' => 3, 'xl' => 3];
+
     protected function getStats(): array
     {
         $totalOrderRevenues = Order::where('seller_id',CheckFilamentSellerUser::getSellerId())->getOnlyConfirm()->sum('total_price');

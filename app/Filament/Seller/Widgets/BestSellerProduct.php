@@ -13,6 +13,8 @@ class BestSellerProduct extends ChartWidget
 {
     // protected static ?string $heading = 'Top Ten Best Seller';
 
+    protected int | string | array $columnSpan = '1';
+    
     public function getHeading(): string
     {
         return __('filament/widgets/order-by-region.best_seller');

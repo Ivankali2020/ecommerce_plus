@@ -80,7 +80,7 @@ class SellerPanelProvider extends PanelProvider
             ->sidebarWidth('17rem')
             ->brandLogoHeight(fn() => Auth::guard('seller')->check() ? '3rem' : '5rem')
             ->brandLogo(fn() => Auth::guard('seller')->check() ? Seller::where('id',CheckFilamentSellerUser::getSellerId())->first()->getFirstMediaUrl('logos') : null) //->getFirstMediaUrl('logos')
-            ->brandName(fn() => Auth::guard('seller')->check() ?   Seller::find(CheckFilamentSellerUser::getSellerId())->name : 'SELLER DASHBOARD')
+            ->brandName(fn() => Auth::guard('seller')->check() ?   Seller::find(CheckFilamentSellerUser::getSellerId())->name : 'DASHBOARD')
             ->sidebarCollapsibleOnDesktop()
             ->databaseNotifications()
             ->databaseNotificationsPolling(null) // this is testing purpose
