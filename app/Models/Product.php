@@ -37,15 +37,15 @@ class Product extends Model implements HasMedia
 
     public function getAttributeValuesAttribute()
     {
-        if (!$this->attributes) {
+        // Check if the attributes column exists in the model
+        if (!array_key_exists('attributes', $this->attributes)) {
             return [];
         }
 
-        // if(!$this->attributes['has_variant']){
-           
-        // }
-
-        // return [];
+        // If attributes is null or empty, return empty array
+        if (empty($this->attributes['attributes'])) {
+            return [];
+        }
 
         $formattedAttributes = [];
         $attributeData = json_decode($this->attributes['attributes'], true);

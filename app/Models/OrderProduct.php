@@ -2,11 +2,12 @@
 
 namespace App\Models;
 
+use App\Observers\OrderProductObserver;
 use Illuminate\Database\Eloquent\Attributes\ObservedBy;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 
-#[ObservedBy(\App\Observers\OrderProductObserver::class)]
+// #[ObservedBy(\App\Observers\OrderProductObserver::class)]
 class OrderProduct extends Model
 {
     use HasFactory;
@@ -33,5 +34,10 @@ class OrderProduct extends Model
     public function currency()
     {
         return $this->belongsTo(Currency::class)->withTrashed();
+    }
+
+    protected static function booted()
+    {
+        self::observe(OrderProductObserver::class);
     }
 }

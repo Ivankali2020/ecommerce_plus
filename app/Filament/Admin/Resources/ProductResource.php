@@ -18,7 +18,9 @@ use Filament\Actions\Action;
 use Filament\Actions\ExportAction;
 use Filament\Facades\Filament;
 use Filament\Forms;
+use Filament\Forms\Components\Placeholder;
 use Filament\Forms\Components\Repeater;
+use Filament\Forms\Components\Section;
 use Filament\Forms\Form;
 use Filament\Infolists\Components\Grid;
 use Filament\Notifications\Notification;
@@ -126,7 +128,7 @@ class ProductResource extends Resource
                            ->maxLength(255),
 
                        Forms\Components\RichEditor::make('description')
-                           ->required()
+                           ->required()->visible(fn (Forms\Get $get) => !$get('has_variant') || blank($get('exchange_id')))
                            ->maxLength(16777215)
                            ->columnSpanFull(),
 
@@ -277,7 +279,7 @@ class ProductResource extends Resource
                                    ->label(__('filament/resources/product-resource.form.variants.attributes.label'))
                                    ->reorderableWithButtons()
                                    ->schema([
-//
+
                                        Forms\Components\Group::make()->schema([
                                            Forms\Components\Select::make('attribute_id')->live(onBlur: true,debounce: 200)
                                                ->required()->searchable()->preload()
@@ -315,9 +317,17 @@ class ProductResource extends Resource
                    ])->hidden(fn (Forms\Get $get) => $get('has_variant') || blank($get('exchange_id'))),
 
                    Forms\Components\Group::make()->schema([
+                        Forms\Components\RichEditor::make('description')
+                            ->required()
+                            ->maxLength(16777215)
+                            ->columnSpanFull(),
+                   ])->hidden(fn (Forms\Get $get) => !$get('has_variant') || blank($get('exchange_id'))),
+
+                   Forms\Components\Group::make()->schema([
 
                        Forms\Components\Repeater::make('variants')
                            ->relationship('variants')
+                           ->minItems(2)->defaultItems(2)
                            ->collapsible()->reorderable()->cloneable()
                            ->schema([
                                Forms\Components\Grid::make()->schema([
@@ -442,7 +452,7 @@ class ProductResource extends Resource
                                                        ->options(fn(Forms\Get $get) => AttributeValue::where('attribute_id',$get('attribute_id'))->pluck('value','id')),
 
 
-                                               ])->columns(2),
+                                               ])->columns(1),
 
                                            ])->columnSpanFull()->hidden(function(Forms\Get $get){
                                                // ဒါက admin အတွက်စစ်တာပါ ဗျာ
@@ -464,9 +474,9 @@ class ProductResource extends Resource
                                    ->rules('required')->columnSpanFull(),
 
                            ])
-                           ->columns(3)
+                           ->columns(3)->grid(2)
                            ->visible(fn (Forms\Get $get) => $get('has_variant') && !blank($get('exchange_id')))
-                   ])
+                   ])->columnSpanFull(),
 
                ])
 

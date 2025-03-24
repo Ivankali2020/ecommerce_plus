@@ -45,7 +45,7 @@ class OrderChart extends ChartWidget
                     'datasets' => [
                         [
                             'label' => __('filament/widgets/order-chart.total_order_amount'),
-                            'data' => $data->map(fn(TrendValue $value)=> number_format($value->aggregate / 1000,2)) ,
+                            'data' => $data->map(fn(TrendValue $value)=> number_format($value->aggregate / 10000,2)) ,
                         ],
                     ],
                     'labels' => $data->map(fn (TrendValue $value) => Carbon::parse($value->date)->format('Y')),
@@ -64,7 +64,7 @@ class OrderChart extends ChartWidget
                     'datasets' => [
                         [
                             'label' => __('filament/widgets/order-chart.total_order_amount'),
-                            'data' => $data->map(fn(TrendValue $value)=> number_format($value->aggregate / 1000,2)) ,
+                            'data' => $data->map(fn(TrendValue $value)=> number_format($value->aggregate / 10000,2)) ,
                         ],
                     ],
                     'labels' => $data->map(fn (TrendValue $value) => Carbon::parse($value->date)->format('d M ')),
@@ -83,7 +83,7 @@ class OrderChart extends ChartWidget
                     'datasets' => [
                         [
                             'label' => __('filament/widgets/order-chart.total_order_amount'),
-                            'data' => $data->map(fn(TrendValue $value)=> number_format($value->aggregate / 1000,2)) ,
+                            'data' => $data->map(fn(TrendValue $value)=> number_format($value->aggregate / 10000,2)) ,
                         ],
                     ],
                     'labels' => $data->map(fn (TrendValue $value) => Carbon::parse($value->date)->format('M')),
@@ -102,7 +102,7 @@ class OrderChart extends ChartWidget
                     'datasets' => [
                         [
                             'label' => __('filament/widgets/order-chart.total_order_amount'),
-                            'data' => $data->map(fn(TrendValue $value)=> $value->aggregate / 1000) ,
+                            'data' => $data->map(fn(TrendValue $value)=> $value->aggregate / 10000) ,
                         ],
                     ],
                     'labels' => $data->map(fn (TrendValue $value) => Carbon::parse($value->date)->format('d M')),

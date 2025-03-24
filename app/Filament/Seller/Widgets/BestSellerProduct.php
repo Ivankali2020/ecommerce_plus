@@ -36,7 +36,7 @@ class BestSellerProduct extends ChartWidget
                     'label' => __('filament/widgets/order-by-region.best_seller'),
                     'data' => $data->map(fn($r) => $r->orders_sum_quantity ?? 0),
                     'backgroundColor' => ['#edfcf3','#d4f7df','#9eeabb','#77dea5','#40c781','#1dac66','#108b52','#0d6f44','#0d5837','#0b492e'],
-                    'borderColor' => '#9BD0F5',
+                    'borderColor' => ['#edfcf3','#d4f7df','#9eeabb','#77dea5','#40c781','#1dac66','#108b52','#0d6f44','#0d5837','#0b492e'],
                 ],
             ],
             'labels' => $data->map(fn($r) => $r->name),

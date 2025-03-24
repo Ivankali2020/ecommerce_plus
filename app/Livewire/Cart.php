@@ -213,13 +213,13 @@ class Cart extends Component
                     if ($cartItem->quantity > $cartItem->variant->quantity) {
                         throw new Exception($cartItem->product->name . ' stock is not enough');
                     }
-                    $cartItem->variant->decrement('quantity', $cartItem->quantity);
+                    // $cartItem->variant->decrement('quantity', $cartItem->quantity);
 
                 } else {
                     if ($cartItem->quantity > $cartItem->product->quantity) {
                         throw new Exception($cartItem->product->name . ' stock is not enough');
                     }
-                    $cartItem->decrement('quantity', $cartItem->quantity);
+                    // $cartItem->decrement('quantity', $cartItem->quantity);
                 }
                 $order->products()->create([
                     'product_id' => $cartItem->product_id,

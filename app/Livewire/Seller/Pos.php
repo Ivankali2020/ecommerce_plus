@@ -337,6 +337,7 @@ class Pos extends Component implements HasForms, HasActions
                     'discount_price' => $variant ? $variant->mmk_discount_price : $product->mmk_discount_price,
                     'discount' => $item['discount_percentage'],
                     'quantity' => $item['quantity'],
+                    
                     // 'profit' => $item['discount_percentage'] > 0 ? 
                     //     ($item['price'] * $item['quantity']) - (($variant ? $variant->mmk_buy_price : $product->mmk_buy_price) * $item['quantity']) : 
                     //     ($item['price'] * $item['quantity']) - (($variant ? $variant->mmk_buy_price : $product->mmk_buy_price) * $item['quantity']),

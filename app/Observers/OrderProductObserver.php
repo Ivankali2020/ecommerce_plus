@@ -13,20 +13,39 @@ class OrderProductObserver
      */
     public function creating(OrderProduct $orderProduct): void
     {
-        if ($orderProduct->getOriginal('quantity') == null ){
-            $product = Product::where('id',$orderProduct->product_id)->first();
-            if ($product->has_variant){
-                $variant = Variant::where('id',$orderProduct->variant_id)->first();
-                $variant->decrement('quantity',$orderProduct->quantity);
-            }else{
-                $product->decrement('quantity',$orderProduct->quantity);
-                logger('logger from order product observer '.$product->quantity);
-            }
-            $orderProduct->profit = $orderProduct->discount_price > 0 ?
+        $product = $orderProduct->product;
+        // if ($orderProduct->getOriginal('quantity') == null ){
+        //     
+            // if ($product->has_variant){
+            //     $variant = Variant::where('id',$orderProduct->variant_id)->first();
+            //     $variant->decrement('quantity',$orderProduct->quantity);
+            // }else{
+            //     $product->decrement('quantity',$orderProduct->quantity);
+            //     logger('logger from order product observer '.$product->quantity);
+            // }
+        // }
+        // $product->decrement('quantity',$orderProduct->quantity);
+        $orderProduct->profit = $orderProduct->discount_price > 0 ?
                                     ($orderProduct->discount_price * $orderProduct->quantity) - ($orderProduct->original_buy_price * $orderProduct->quantity) :
                                     ($product->price * $orderProduct->quantity) - ($orderProduct->original_buy_price * $orderProduct->quantity);
-        }
 
+    }
+
+    public function created(OrderProduct $orderProduct): void
+    {
+        $product = $orderProduct->product;
+        if ($product->has_variant) {
+            $variant = Variant::where('id', $orderProduct->variant_id)->first();
+            $variant->preventObserver = true;
+            $variant->decrement('quantity', $orderProduct->quantity);
+            $variant->preventObserver = false;
+        } else {
+            // Set the preventObserver flag to true before decrementing
+            $product->preventObserver = true;
+            $product->decrement('quantity', $orderProduct->quantity);
+            // Reset the flag after operation
+            $product->preventObserver = false;
+        }
     }
 
     public function updated(OrderProduct $orderProduct)

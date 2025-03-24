@@ -17,7 +17,7 @@ class ProductObserver
         }
     }
 
-    public function updating(Product $product): void
+    public function updated(Product $product): void
     {
         logger('logger from product observer '.$product->quantity);
         if ($product->preventObserver) {
