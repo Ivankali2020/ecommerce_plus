@@ -5,7 +5,25 @@
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
 
-    <title>{{ config('app.name', 'PADAUNG') }}</title>
+    <title>{{ config('app.name', 'MYANCOMMERCE') }}</title>
+
+    <!-- Primary Meta Tags -->
+    <meta name="title" content="{{ config('app.name', 'MYANCOMMERCE') }}">
+    <meta name="description" content="{{ __('meta.description') }}">
+
+    <!-- Open Graph / Facebook -->
+    <meta property="og:type" content="website">
+    <meta property="og:url" content="{{ url('/') }}">
+    <meta property="og:title" content="{{ config('app.name', 'MYANCOMMERCE') }}">
+    <meta property="og:description" content="{{ __('meta.description') }}">
+    <meta property="og:image" content="{{ asset('assets/logo.png') }}">
+
+    <!-- Twitter -->
+    <meta property="twitter:card" content="summary_large_image">
+    <meta property="twitter:url" content="{{ url('/') }}">
+    <meta property="twitter:title" content="{{ config('app.name', 'MYANCOMMERCE') }}">
+    <meta property="twitter:description" content="{{ __('meta.description') }}">
+    <meta property="twitter:image" content="{{ asset('assets/logo.png') }}">
 
     <link icon rel="icon" type="image/png" href="{{ asset('assets/logo.png') }}">
     <!-- Fonts -->
@@ -54,7 +72,7 @@
                             </div>
 
                             <!-- Main Heading -->
-                            <h1  class="text-5xl lg:text-8xl font-bebas  tracking-wider font-bold  text-gray-900 sm:text-6xl bg-gradient-to-r from-slate-500 via-[#36d698] to-slate-500 bg-clip-text text-transparent dark:from-slate-400 dark:via-[#36d698] dark:to-slate-400">
+                            <h1  class="text-5xl lg:text-8xl font-bebas mt-2 tracking-wider font-bold  text-gray-900 sm:text-6xl bg-gradient-to-r from-slate-500 via-[#36d698] to-slate-500 bg-clip-text text-transparent dark:from-slate-400 dark:via-[#36d698] dark:to-slate-400">
                                 {{ __('messages.title') }}
                             </h1>
 

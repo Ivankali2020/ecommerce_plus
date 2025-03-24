@@ -64,7 +64,7 @@ class SellerResource extends Resource
 
                 Forms\Components\Group::make()->schema([
                     Forms\Components\SpatieMediaLibraryFileUpload::make('logo')
-                        ->collection('logos')->imageEditor()
+                        ->collection('logos')->imageEditor()->label('Photo')
                         ->image()->rules('required'),
 
                     Forms\Components\SpatieMediaLibraryFileUpload::make('cover_photo')
@@ -85,7 +85,7 @@ class SellerResource extends Resource
     {
         return $table
             ->columns([
-                Tables\Columns\SpatieMediaLibraryImageColumn::make('logo')->collection('logos'),
+                Tables\Columns\SpatieMediaLibraryImageColumn::make('logo')->collection('logos')->label('Photo'),
                 Tables\Columns\SpatieMediaLibraryImageColumn::make('cover_photo')
                     ->hidden(Filament::getAuthGuard() == 'seller')
                     ->collection('cover_photos'),

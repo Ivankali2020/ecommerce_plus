@@ -39,10 +39,17 @@ class AppServiceProvider extends ServiceProvider
             fn (): View => view('components.language-switcher'),
         );
         
+          // Register custom footer with contact information
+        FilamentView::registerRenderHook(
+            PanelsRenderHook::PAGE_FOOTER_WIDGETS_AFTER,
+            fn (): View => view('components.contact-footer'),
+        );
         // Register the subscription info card in the seller panel sidebar
         FilamentView::registerRenderHook(
             PanelsRenderHook::USER_MENU_PROFILE_AFTER,
             fn (): string => Blade::render('@if(request()->routeIs(\'filament.seller.*\')) @livewire(\'seller.subscription-info-card\') @endif'),
         );
+        
+      
     }
 }
