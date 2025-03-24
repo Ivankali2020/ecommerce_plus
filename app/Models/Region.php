@@ -17,6 +17,13 @@ class Region extends Model
 
     public function orders()
     {
-        return $this->hasManyThrough(Order::class,UserAddress::class,);
+        return $this->hasManyThrough(
+            Order::class,
+            UserAddress::class,
+            'region_id',    // Foreign key on UserAddress table
+            'user_address_id', // Foreign key on Order table
+            'id',           // Local key on Region table
+            'id'            // Local key on UserAddress table
+        );
     }
 }

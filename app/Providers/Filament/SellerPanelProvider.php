@@ -4,6 +4,7 @@ namespace App\Providers\Filament;
 
 use App\Filament\Seller\Pages\EditProfile;
 use App\Filament\Seller\Resources\OrderResource\Widgets\OrderChart;
+use App\Filament\Seller\Widgets\Filters;
 use App\Helper\CheckFilamentSellerUser;
 use App\Http\Middleware\AssignGlobeScope;
 use App\Http\Middleware\RedirectIfAuthenticated;
@@ -60,7 +61,8 @@ class SellerPanelProvider extends PanelProvider
             ->widgets([
 //                Widgets\AccountWidget::class,
 //                Widgets\FilamentInfoWidget::class,
-                OrderChart::class
+                Filters::class,
+                OrderChart::class,
             ])
             ->middleware([
                 EncryptCookies::class,

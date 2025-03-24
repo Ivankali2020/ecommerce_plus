@@ -14,7 +14,7 @@
                         <input type="search" autofocus
                                                wire:model.live="search" 
                                                placeholder="Search your products here or scan barcode..." 
-                                               class="w-full pl-10 pr-4 py-1.5 rounded-lg border border-gray-300 dark:border-gray-700 focus:outline-none focus:border-none focus:ring-2 focus:outline-0 focus:ring-primary-500 "
+                                               class="w-full pl-10 pr-4 py-1.5 rounded-lg border border-gray-300 dark:border-gray-700 focus:outline-none focus:border-none focus:ring-2 focus:outline-0 focus:ring-success-500 "
                                                x-data="{
                                                    barcodeBuffer: '',
                                                    lastKeyTime: 0,
@@ -44,14 +44,14 @@
             
             <div class="flex overflow-x-auto pb-2 space-x-2">
                 <button wire:click="filterByCategory(null)" 
-                        class="px-4 py-2 rounded-full text-sm font-medium whitespace-nowrap {{ $selectedCategory === null ? 'bg-primary-500 text-white' : 'bg-gray-200 dark:bg-gray-700 text-gray-700 dark:text-gray-200' }}">
+                        class="px-4 py-2 rounded-full text-sm font-medium whitespace-nowrap {{ $selectedCategory === null ? 'bg-success-500 text-white' : 'bg-gray-200 dark:bg-gray-700 text-gray-700 dark:text-gray-200' }}">
                     All Decorations
                 </button>
                 @foreach($this->categories as $category)
                     <button wire:key="cte_{{ $category->id }}" wire:click="filterByCategory({{ $category->id }})" 
-                            class="px-4 py-2 rounded-full text-sm font-medium whitespace-nowrap {{ $selectedCategory === $category->id ? 'bg-primary-500 text-white' : 'bg-gray-200 dark:bg-gray-700 text-gray-700 dark:text-gray-200' }}">
+                            class="px-4 py-2 rounded-full text-sm font-medium whitespace-nowrap {{ $selectedCategory === $category->id ? 'bg-success-500 text-white' : 'bg-gray-200 dark:bg-gray-700 text-gray-700 dark:text-gray-200' }}">
                         {{ $category->name }}
-                        <sup class="text-gray-400 ">{{ $category->products_count }}</sup>
+                        <sup class="text-gray-400  {{ $selectedCategory === $category->id ? 'bg-success-500 text-white' : 'bg-gray-200 dark:bg-gray-700 text-gray-700 dark:text-gray-200' }}">{{ $category->products_count }}</sup>
                     </button>
                 @endforeach
             </div>
@@ -115,7 +115,7 @@
                                     @if($product->has_variant && $product->variants()->first())
                                         @if($product->variants()->first()->discount > 0)
                                             <div class="flex flex-col">
-                                                <p class="text-primary-600 dark:text-primary-400 font-semibold">
+                                                <p class="text-success-600 dark:text-success-400 font-semibold">
                                                     {{ number_format($product->variants()->first()->mmk_discount_price, 0) }} Ks
                                                 </p>
                                                 <p class="text-gray-400 line-through text-xs">
@@ -130,7 +130,7 @@
                                     @else
                                         @if($product->discount > 0)
                                             <div class="flex flex-col">
-                                                <p class="text-primary-600 dark:text-primary-400 font-semibold">
+                                                <p class="text-success-600 dark:text-success-400 font-semibold">
                                                     {{ number_format($product->mmk_discount_price, 0) }} Ks
                                                 </p>
                                                 <p class="text-gray-400 line-through text-xs">
@@ -151,7 +151,7 @@
                                     @else
                                         <x-filament::button
                                             size="sm"
-                                            color="primary"
+                                            color="success"
                                             class="{{ app()->currentLocale() === 'my' ? 'font-mm' : '' }}"
                                             wire:loading.attr="disabled"
                                             wire:click="addToCart({{ $product->id }},null,{{ $product->MOQ }})"
@@ -231,7 +231,7 @@
                         </div>
                         <div class="flex justify-between items-center mt-2">
                             <span class="text-xs text-gray-500 dark:text-gray-400">Item Total:</span>
-                            <span class="text-sm font-semibold text-primary-600 dark:text-primary-400">
+                            <span class="text-sm font-semibold text-success-600 dark:text-success-400">
                                 {{ number_format($item['subtotal']) }} MMK
                             </span>
                         </div>
@@ -266,7 +266,7 @@
                         <h3 class="mt-4 text-lg font-medium text-gray-700 dark:text-gray-200">Your cart is empty</h3>
                         <p class="mt-2 text-sm text-gray-500 dark:text-gray-400">Add items to your cart to complete a sale</p>
                         <div class="mt-4 border-t border-dashed border-gray-200 dark:border-gray-600 pt-4">
-                            <p class="text-xs text-primary-500 dark:text-primary-400">Tip: Use the barcode scanner or search for products</p>
+                            <p class="text-xs text-success-500 dark:text-success-400">Tip: Use the barcode scanner or search for products</p>
                         </div>
                     </div>
                 </div>
@@ -276,10 +276,10 @@
         <!-- Cart summary -->
         <div class="p-4 border-t border-gray-200 dark:border-gray-700">
             <!-- Total amount card with shadow and gradient -->
-            <div class="bg-gradient-to-r from-primary-500 to-primary-700 rounded-lg shadow-lg p-4 mb-4">
+            <div class="bg-gradient-to-r from-success-500 to-success-700 rounded-lg shadow-lg p-4 mb-4">
                 <div class="flex justify-between items-center">
                     <div>
-                        <span class="text-xs text-primary-100 block mb-1">Cart Total</span>
+                        <span class="text-xs text-success-100 block mb-1">Cart Total</span>
                         <span class="text-2xl  text-white font-bebas space-x-1 ">{{ number_format($total ?? 0) }} MMK</span>
                     </div>
                     <div class="bg-white bg-opacity-20 p-2 rounded-full">
@@ -292,7 +292,7 @@
             
             <button 
                 wire:click="placeOrder"
-                class="w-full inline-flex justify-center items-center px-4 py-3 bg-primary-600 border border-transparent rounded-lg font-semibold text-sm text-white tracking-wider hover:bg-primary-500 active:bg-primary-700 focus:outline-none focus:border-primary-700 focus:ring focus:ring-primary-300 disabled:opacity-25 transition  "
+                class="w-full inline-flex justify-center items-center px-4 py-3 bg-success-600 border border-transparent rounded-lg font-semibold text-sm text-white tracking-wider hover:bg-success-500 active:bg-success-700 focus:outline-none focus:border-success-700 focus:ring focus:ring-success-300 disabled:opacity-25 transition  "
                 @if(empty($cart ?? []))
                     disabled
                 @endif
