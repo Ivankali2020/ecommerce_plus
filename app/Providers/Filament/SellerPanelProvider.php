@@ -75,7 +75,7 @@ class SellerPanelProvider extends PanelProvider
                 DisableBladeIconComponents::class,
                 DispatchServingFilamentEvent::class,
                 AssignGlobeScope::class,
-                RedirectIfSubscriptionExpired::class,
+                // RedirectIfSubscriptionExpired::class,
                 \App\Http\Middleware\SetLocale::class,
             ])
 //            ->spa(fn()=>  Str::contains(request()->userAgent(),'Chrome'))

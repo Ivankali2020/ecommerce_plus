@@ -86,7 +86,7 @@ class OrderProductResource extends Resource
                     ->label(__('filament/resources/order-product-resource.columns.attributes'))
                     ->getStateUsing(function($record){
                         $data = '';
-                        foreach ($record->attributes as $attribute){
+                        foreach (json_decode($record->attributes) as $attribute){
                             $array = implode(' - ',collect($attribute['value']??[])->toArray());
                             $data .= "<span class='border text-xs text-orange-500 dark:text-orange-400 border-gray-500 dark:border-gray-700 py-1  px-2 rounded '>".$array." </span>";
                         }
@@ -125,14 +125,14 @@ class OrderProductResource extends Resource
 
 
                 Tables\Columns\TextColumn::make('profit')
-                    ->label(__('filament/resources/order-product-resource.columns.sub_price'))
+                    ->label(__('filament/resources/order-product-resource.columns.profit_loss'))
                     ->alignEnd()
                     ->summarize(
                         Tables\Columns\Summarizers\Sum::make('profit')
                             ->money('mmk')
-                            ->label(__('filament/resources/order-product-resource.columns.total_amount'))
+                            ->label(__('filament/resources/order-product-resource.columns.profit_loss'))
                     ),
-            ])
+                ])
             ->defaultSort('id','desc')
             ->filters([
                 Tables\Filters\Filter::make('created_at')
@@ -152,7 +152,7 @@ class OrderProductResource extends Resource
                                 $data['created_until'],
                                 fn (Builder $query, $date): Builder => $query->whereDate('created_at', '<=', $date),
                             );
-                    }),
+                    })->columnSpan(2),
                 
                 Tables\Filters\SelectFilter::make('product_id')
                     ->label(__('filament/resources/order-product-resource.filters.product'))
@@ -160,7 +160,7 @@ class OrderProductResource extends Resource
                     ->searchable()
                     ->preload()
                     ->multiple(),
-                ],layout: FiltersLayout::Modal)
+                ],layout: FiltersLayout::AboveContent)
             ->actions([
                 Tables\Actions\EditAction::make()
                     ->label(__('filament/resources/order-product-resource.actions.edit')),

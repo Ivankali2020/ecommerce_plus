@@ -8,4 +8,5 @@ return [
     'persons_all_time' => 'persons of all time',
     'total_revenue' => 'Total Revenue',
     'calculate_by_laks' => 'calculate by laks',
+    'profit_loss' => 'Profit/Loss'
 ];

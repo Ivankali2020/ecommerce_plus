@@ -8,4 +8,5 @@ return [
     'persons_all_time' => 'စုစုပေါင်းဖောက်သည်များ',
     'total_revenue' => 'စုစုပေါင်းဝင်ငွေ',
     'calculate_by_laks' => 'သိန်းဖြင့်တွက်ချက်သည်',
+    'profit_loss' => 'စုစုပေါင်းအမြတ်ငွေ',
 ];

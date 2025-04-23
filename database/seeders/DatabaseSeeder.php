@@ -7,6 +7,7 @@ use App\Models\Region;
 use App\Models\Seller;
 use App\Models\Township;
 use Illuminate\Database\Seeder;
+use Database\Seeders\OrderSeeder;
 
 class DatabaseSeeder extends Seeder
 {
@@ -50,6 +51,7 @@ class DatabaseSeeder extends Seeder
             MultiStoreSeeder::class,
             MedicineStoreSeeder::class,
             SubscriptionPlanSeeder::class,
+            OrderSeeder::class
         ]);
 
 
