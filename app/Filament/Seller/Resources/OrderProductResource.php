@@ -86,7 +86,7 @@ class OrderProductResource extends Resource
                     ->label(__('filament/resources/order-product-resource.columns.attributes'))
                     ->getStateUsing(function($record){
                         $data = '';
-                        foreach (json_decode($record->attributes) as $attribute){
+                        foreach ($record->attributes as $attribute){
                             $array = implode(' - ',collect($attribute['value']??[])->toArray());
                             $data .= "<span class='border text-xs text-orange-500 dark:text-orange-400 border-gray-500 dark:border-gray-700 py-1  px-2 rounded '>".$array." </span>";
                         }
@@ -135,6 +135,7 @@ class OrderProductResource extends Resource
                 ])
             ->defaultSort('id','desc')
             ->filters([
+
                 Tables\Filters\Filter::make('created_at')
                     ->form([
                         Forms\Components\DatePicker::make('created_from')
@@ -152,7 +153,7 @@ class OrderProductResource extends Resource
                                 $data['created_until'],
                                 fn (Builder $query, $date): Builder => $query->whereDate('created_at', '<=', $date),
                             );
-                    })->columnSpan(2),
+                    })->columns(2)->columnSpan(2),
                 
                 Tables\Filters\SelectFilter::make('product_id')
                     ->label(__('filament/resources/order-product-resource.filters.product'))
@@ -160,6 +161,12 @@ class OrderProductResource extends Resource
                     ->searchable()
                     ->preload()
                     ->multiple(),
+
+                    Tables\Filters\Filter::make('today')
+                    ->label('Today')
+                    ->query(fn (Builder $query) => $query->whereDate('created_at', today()))
+                    ->toggle(),
+
                 ],layout: FiltersLayout::AboveContent)
             ->actions([
                 Tables\Actions\EditAction::make()

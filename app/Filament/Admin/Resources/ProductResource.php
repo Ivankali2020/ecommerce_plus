@@ -2,41 +2,42 @@
 
 namespace App\Filament\Admin\Resources;
 
-use App\Filament\Admin\Resources\ProductResource\Pages;
-use App\Filament\Admin\Resources\ProductResource\RelationManagers;
-use App\Filament\Exports\ProductExporter;
-use App\Helper\CheckFilamentSellerUser;
-use App\Models\Attribute;
-use App\Models\AttributeValue;
+use Filament\Forms;
+use Filament\Tables;
 use App\Models\Brand;
-use App\Models\Currency;
-use App\Models\Exchange;
 use App\Models\Product;
 use App\Models\Variant;
-use CodeWithDennis\FilamentSelectTree\SelectTree;
-use Filament\Actions\Action;
-use Filament\Actions\ExportAction;
-use Filament\Facades\Filament;
-use Filament\Forms;
-use Filament\Forms\Components\Placeholder;
-use Filament\Forms\Components\Repeater;
-use Filament\Forms\Components\Section;
+use App\Models\Currency;
+use App\Models\Exchange;
 use Filament\Forms\Form;
-use Filament\Infolists\Components\Grid;
-use Filament\Notifications\Notification;
 use Filament\Pages\Page;
+use App\Models\Attribute;
+use Filament\Tables\Table;
+use Illuminate\Support\Str;
+use Filament\Actions\Action;
+use App\Models\AttributeValue;
+use Filament\Facades\Filament;
+use Filament\Resources\Resource;
+use Filament\Actions\ExportAction;
+use Illuminate\Support\Facades\DB;
+use Filament\Forms\Components\Section;
+use App\Helper\CheckFilamentSellerUser;
+use Filament\Forms\Components\Repeater;
+use Filament\Infolists\Components\Grid;
+use Filament\Tables\Columns\TextColumn;
+use Illuminate\Database\Eloquent\Model;
+use Illuminate\Support\Facades\Storage;
+use Filament\Notifications\Notification;
 use Filament\Resources\Pages\EditRecord;
 use Filament\Resources\Pages\ViewRecord;
-use Filament\Resources\Resource;
-use Filament\Tables;
-use Filament\Tables\Table;
+use App\Filament\Exports\ProductExporter;
 use Illuminate\Database\Eloquent\Builder;
-use Illuminate\Database\Eloquent\Model;
-use Illuminate\Database\Eloquent\SoftDeletingScope;
-use Illuminate\Support\Facades\DB;
-use Illuminate\Support\Facades\Storage;
-use Illuminate\Support\Str;
+use Filament\Forms\Components\Placeholder;
 use function Symfony\Component\Translation\t;
+use CodeWithDennis\FilamentSelectTree\SelectTree;
+use Illuminate\Database\Eloquent\SoftDeletingScope;
+use App\Filament\Admin\Resources\ProductResource\Pages;
+use App\Filament\Admin\Resources\ProductResource\RelationManagers;
 
 class ProductResource extends Resource
 {
@@ -573,6 +574,16 @@ class ProductResource extends Resource
                     ->label(__('filament/resources/product-resource.table.columns.currency'))
                     ->description(fn(Product $product)=> $product->exchange->currency->name)
                     ->sortable(),
+                    TextColumn::make('price') ->numeric(),
+                    TextColumn::make('mmk_buy_price') ->numeric(),
+                    TextColumn::make('quantity') ->numeric(),
+                    TextColumn::make('total_price')
+                    ->state(function (Product $record): float {
+                        return $record->quantity * $record->mmk_buy_price;
+                    })
+                    ->numeric()
+                    // ->money('mmk')
+                    ->label('Total Capital'),
 
 //                Tables\Columns\IconColumn::make('has_variant')
 //                    ->boolean(),

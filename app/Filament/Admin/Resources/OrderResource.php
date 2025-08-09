@@ -301,7 +301,7 @@ class OrderResource extends Resource
                             Forms\Components\ToggleButtons::make('payment_id')
                                 ->columnSpanFull()->inline()
                                 ->label(__('filament/resources/order-resource.form.order_info.payment'))
-                                ->disabled(fn(Page $livewire) => $livewire instanceof EditRecord)
+                                // ->disabled(fn(Page $livewire) => $livewire instanceof EditRecord)
                                 ->required()->options(Payment::where('seller_id',CheckFilamentSellerUser::getSellerId())->pluck('name','id')),
 
                             Forms\Components\ToggleButtons::make('status')
@@ -403,21 +403,24 @@ class OrderResource extends Resource
                 Tables\Columns\TextColumn::make('user.name')
                     ->label(__('filament/resources/order-resource.table.columns.user'))
                     ->description(fn(Order $order)=> $order->user?->phone)
-                    ->sortable()->toggleable(),
+                    ->toggleable(isToggledHiddenByDefault: true)
+                    ->sortable(),
 
                 Tables\Columns\TextColumn::make('payment.name')
                     ->label(__('filament/resources/order-resource.table.columns.payment'))
+                    ->toggleable(isToggledHiddenByDefault: true)
                     ->description(fn(Order $order)=> $order->payment->currency->name ?? 'Other Person Just For Testing')
-                    ->sortable()->toggleable(),
+                    ->sortable(),
 
                 Tables\Columns\TextColumn::make('address.region.mm_name')
+                    ->toggleable(isToggledHiddenByDefault: true)
                     ->description(fn(Order $order) => $order->address?->township->mm_name.' , '.$order->address?->address)
-                    ->sortable()->toggleable(),
+                    ->sortable(),
 
                 Tables\Columns\TextColumn::make('status')
                     ->badge()->description(fn(Order $order) => 'Deli ' . $order->delivery_fees .' ks')
                     ->searchable()
-                    ->sortable()->toggleable(),
+                    ->sortable(),
 
                 Tables\Columns\TextColumn::make('tax_price')->alignEnd()
                     ->description(fn(Order $order)=> 'tax : '. $order->tax.' %' ?? ''),

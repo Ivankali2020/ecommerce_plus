@@ -2,17 +2,18 @@
 
 namespace App\Filament\Seller\Widgets;
 
-use App\Filament\Seller\Resources\OrderResource\Widgets\OrderChart;
-use App\Helper\CheckFilamentSellerUser;
-use App\Helper\OrderStatus;
+use App\Models\User;
 use App\Models\Order;
 use App\Models\Product;
-use App\Models\User;
+use App\Helper\UserHelper;
+use App\Helper\OrderStatus;
+use Livewire\Attributes\On;
+use Illuminate\Support\Carbon;
+use App\Helper\CheckFilamentSellerUser;
+use Filament\Widgets\StatsOverviewWidget\Stat;
 use BezhanSalleh\FilamentShield\Traits\HasWidgetShield;
 use Filament\Widgets\StatsOverviewWidget as BaseWidget;
-use Filament\Widgets\StatsOverviewWidget\Stat;
-use Illuminate\Support\Carbon;
-use Livewire\Attributes\On;
+use App\Filament\Seller\Resources\OrderResource\Widgets\OrderChart;
 
 class StatsOverview extends BaseWidget
 {
@@ -96,16 +97,27 @@ class StatsOverview extends BaseWidget
         // Get the IDs of the filtered orders
         $filteredOrderIds = $orderQuery->pluck('id');
 
+
         // Calculate total profit based on the filtered orders
-        $totalProfit = \App\Models\OrderProduct::whereIn('order_id', $filteredOrderIds)->sum('profit');
+        $totalProfit = \App\Models\OrderProduct::whereIn('order_id', $filteredOrderIds)->sum('profit'); //whereIn('order_id', $filteredOrderIds)->
+
+
+        $totalCapitalAmount = \App\Models\OrderProduct::whereIn('order_id', $filteredOrderIds)
+            ->selectRaw('SUM(original_buy_price * quantity) as total_capital')
+            ->value('total_capital');
+
+       
+        $totalCapitalProductAmount = Product::where('seller_id', CheckFilamentSellerUser::getSellerId())
+            ->selectRaw('SUM(mmk_buy_price * quantity) as total_capital')
+            ->value('total_capital');
 
 
         return [
             Stat::make(__('filament/widgets/stats-overview.unique_products'), Product::where('seller_id', $sellerId)->count() . ' ' . __('filament/widgets/stats-overview.pcs'))
                 ->description(__('filament/widgets/stats-overview.total_products')),
 
-            Stat::make(__('filament/widgets/stats-overview.unique_customers'), User::where('seller_id', $sellerId)->count())
-                ->description(__('filament/widgets/stats-overview.persons_all_time')),
+            Stat::make(__('filament/widgets/stats-overview.unique_customers'), $totalCapitalAmount > 0? number_format($totalCapitalAmount + $totalCapitalProductAmount, 2) : 0)
+                ->description(__('filament/widgets/stats-overview.persons_all_time')),  
 
             Stat::make(__('filament/widgets/stats-overview.total_revenue'), $totalOrderRevenues > 0 ? number_format($totalOrderRevenues, 2) : 0) // Format as needed
                 ->description($dateDescription),

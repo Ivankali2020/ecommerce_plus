@@ -84,7 +84,22 @@ class OrderProductObserver
      */
     public function deleted(OrderProduct $orderProduct): void
     {
-        //
+        $product = $orderProduct->product;
+        
+        if ($product->has_variant) {
+            $variant = Variant::where('id', $orderProduct->variant_id)->first();
+            if ($variant) {
+                $variant->preventObserver = true;
+                $variant->increment('quantity', $orderProduct->quantity);
+                $variant->preventObserver = false;
+            }
+        } else {
+            // Set the preventObserver flag to true before incrementing
+            $product->preventObserver = true;
+            $product->increment('quantity', $orderProduct->quantity);
+            // Reset the flag after operation
+            $product->preventObserver = false;
+        }
     }
 
     /**
