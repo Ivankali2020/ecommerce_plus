@@ -39,6 +39,17 @@ class Pos extends Component implements HasActions, HasForms
 
     public $selectedProduct = null;
 
+    // Payment related properties
+    public $givenAmount = 0;
+
+    public $changeAmount = 0;
+
+    public $showPaymentForm = false;
+
+    public $lastOrder = null;
+
+    public $showReceipt = false;
+
     public int $perPage = 24;
 
     public bool $hasMorePages = true;
@@ -64,7 +75,18 @@ class Pos extends Component implements HasActions, HasForms
     public function getProductData()
     {
         try {
-            $query = Product::where('seller_id', Auth::guard('seller')->user()->parent_id ?? Auth::guard('seller')->user()->id);
+            // Check if user is authenticated
+            $user = Auth::guard('seller')->user();
+            if (!$user) {
+                logger()->error('POS: No authenticated seller user found');
+                return;
+            }
+
+            // Get seller ID for seller-specific filtering
+            $sellerId = $user->parent_id ?? $user->id;
+
+            // Start with base query - global tenant scope will handle tenant filtering
+            $query = Product::where('seller_id', $sellerId);
 
             // Apply category filter if selected
             if ($this->selectedCategory) {
@@ -74,8 +96,8 @@ class Pos extends Component implements HasActions, HasForms
             // Apply search filter if provided
             if ($this->search) {
                 $query->where(function ($subQuery) {
-                    $subQuery->where('name', 'like', '%'.$this->search.'%')
-                        ->orWhere('sku', 'like', '%'.$this->search.'%');
+                    $subQuery->where('name', 'like', '%' . $this->search . '%')
+                        ->orWhere('sku', 'like', '%' . $this->search . '%');
                 });
             }
 
@@ -93,12 +115,11 @@ class Pos extends Component implements HasActions, HasForms
             $newProducts = $query->take($this->perPage)->get();
 
             $this->products = $newProducts;
-
         } catch (\Exception $e) {
             $this->products = new Collection;
             $this->hasMorePages = false;
 
-            logger()->error('Error loading products: '.$e->getMessage());
+            logger()->error('Error loading products: ' . $e->getMessage());
         }
     }
 
@@ -127,9 +148,8 @@ class Pos extends Component implements HasActions, HasForms
 
             $this->perPage += 10;
             $this->getProductData();
-
         } catch (\Exception $e) {
-            logger()->error('Error loading more products: '.$e->getMessage());
+            logger()->error('Error loading more products: ' . $e->getMessage());
             $this->hasMorePages = false;
         }
     }
@@ -151,8 +171,17 @@ class Pos extends Component implements HasActions, HasForms
     #[Computed]
     public function categories()
     {
+        // Check if user is authenticated
+        $user = auth('seller')->user();
+        if (!$user) {
+            return collect(); // Return empty collection if not authenticated
+        }
 
-        $categories = Category::where('seller_id', auth('seller')->id())
+        // Get seller ID for seller-specific filtering
+        $sellerId = $user->parent_id ?? $user->id;
+
+        // Global tenant scope will handle tenant filtering, we add seller filtering
+        $categories = Category::where('seller_id', $sellerId)
             ->withCount('products')->get()
             ->where('products_count', '>', 0);
 
@@ -168,7 +197,19 @@ class Pos extends Component implements HasActions, HasForms
     public function addToCart($productId, $variantId = null, $quantity = 1)
     {
         try {
-            $product = Product::where('id', $productId)
+            // Check if user is authenticated
+            $user = Auth::guard('seller')->user();
+            if (!$user) {
+                logger()->error('POS: No authenticated seller user found');
+                return;
+            }
+
+            // Get seller ID for seller-specific filtering
+            $sellerId = $user->parent_id ?? $user->id;
+
+            // Global tenant scope will handle tenant filtering, we add seller filtering
+            $product = Product::where('seller_id', $sellerId)
+                ->where('id', $productId)
                 ->with(['variants'])
                 ->first();
 
@@ -198,7 +239,7 @@ class Pos extends Component implements HasActions, HasForms
             if ($newQuantity < ($variant?->MOQ ?? $product->MOQ)) {
                 Notification::make()
                     ->title('Minimum order quantity not met')
-                    ->body('Minimum order quantity is '.($variant?->MOQ ?? $product->MOQ))
+                    ->body('Minimum order quantity is ' . ($variant?->MOQ ?? $product->MOQ))
                     ->warning()
                     ->send();
 
@@ -209,7 +250,7 @@ class Pos extends Component implements HasActions, HasForms
             if ($newQuantity > ($variant?->quantity ?? $product->quantity)) {
                 Notification::make()
                     ->title('Out of stock')
-                    ->body('Only '.($variant?->quantity ?? $product->quantity).' items available')
+                    ->body('Only ' . ($variant?->quantity ?? $product->quantity) . ' items available')
                     ->warning()
                     ->send();
 
@@ -220,7 +261,6 @@ class Pos extends Component implements HasActions, HasForms
             if ($existingItemKey !== false) {
                 $this->cart[$existingItemKey]['quantity'] = $newQuantity;
                 $this->cart[$existingItemKey]['subtotal'] = $price * $newQuantity;
-
             } else {
                 $this->cart[] = [
                     'id' => $productId,
@@ -236,13 +276,11 @@ class Pos extends Component implements HasActions, HasForms
                         ? ($variant->discount)
                         : ($product->discount),
                 ];
-
             }
 
             $this->calculateTotal();
-
         } catch (\Exception $e) {
-            logger()->error('Error adding to cart: '.$e->getMessage());
+            logger()->error('Error adding to cart: ' . $e->getMessage());
 
             Notification::make()
                 ->title('Failed to add product to cart')
@@ -289,28 +327,103 @@ class Pos extends Component implements HasActions, HasForms
 
         $taxAmount = $subtotal * ($this->tax / 100);
         $this->total = $subtotal - $this->discount + $taxAmount;
+
+        // Recalculate change when total changes
+        $this->calculateChange();
+    }
+
+    public function calculateChange()
+    {
+        $this->changeAmount = $this->givenAmount - $this->total;
+    }
+
+    public function updatedGivenAmount()
+    {
+        $this->calculateChange();
+    }
+
+    public function setExactAmount()
+    {
+        $this->givenAmount = $this->total;
+        $this->calculateChange();
+    }
+
+    public function showPayment()
+    {
+        if (empty($this->cart)) {
+            Notification::make()
+                ->title('Cart is empty')
+                ->warning()
+                ->send();
+            return;
+        }
+
+        $this->showPaymentForm = true;
+        $this->givenAmount = $this->total; // Set default to exact amount
+        $this->calculateChange();
+    }
+
+    public function hidePayment()
+    {
+        $this->showPaymentForm = false;
+        $this->givenAmount = 0;
+        $this->changeAmount = 0;
+    }
+
+    public function setQuickAmount($amount)
+    {
+        $this->givenAmount = $amount;
+        $this->calculateChange();
+    }
+
+    public function closeReceipt()
+    {
+        $this->showReceipt = false;
+        $this->lastOrder = null;
     }
 
     public function placeOrder()
     {
         try {
+            // Check if user is authenticated
+            $user = auth('seller')->user();
+            if (!$user) {
+                Notification::make()
+                    ->title('Authentication required')
+                    ->danger()
+                    ->send();
+                return;
+            }
+
             if (empty($this->cart)) {
                 Notification::make()
                     ->title('Cart is empty')
                     ->warning()
                     ->send();
+                return;
+            }
 
+            // Check if given amount is sufficient (only if payment form is shown)
+            if ($this->showPaymentForm && $this->givenAmount < $this->total) {
+                Notification::make()
+                    ->title('Insufficient Payment')
+                    ->body('Given amount is less than the total amount')
+                    ->warning()
+                    ->send();
                 return;
             }
 
             // Start a database transaction
             DB::beginTransaction();
 
+            $sellerId = $user->parent_id ?? $user->id;
+            $staffId = $user->id;
+
             // Create the order
             $order = \App\Models\Order::create([
-                'invoice_number' => 'INV-'.time().'-'.auth('seller')->id(),
-                'seller_id' => auth('seller')->user()->parent_id ?? auth('seller')->id(),
-                'staff_id' => auth('seller')->id(), // Current logged in seller as staff
+                'invoice_number' => 'INV-' . time() . '-' . $staffId,
+                'seller_id' => $sellerId,
+                'staff_id' => $staffId, // Current logged in seller as staff
                 'walk_in_customer' => true, // Default to walk-in customer for POS
                 'is_cod' => true, // Cash on delivery for POS
                 'status' => \App\Helper\OrderStatus::Delivered, // Assuming POS sales are completed immediately
@@ -319,6 +432,8 @@ class Pos extends Component implements HasActions, HasForms
                 'total_price' => $this->total,
                 'tax' => $this->tax,
                 'tax_price' => collect($this->cart)->sum('subtotal') * ($this->tax / 100),
+                'given_amount' => $this->givenAmount,
+                'change_amount' => $this->changeAmount,
             ]);
 
             // Create order products
@@ -328,11 +443,11 @@ class Pos extends Component implements HasActions, HasForms
 
                 if ($variant) {
                     if ($item['quantity'] > $variant->quantity) {
-                        throw new Exception($product->name.' stock is not enough');
+                        throw new Exception($product->name . ' stock is not enough');
                     }
                 } else {
                     if ($item['quantity'] > $product->quantity) {
-                        throw new Exception($product->name.' stock is not enough');
+                        throw new Exception($product->name . ' stock is not enough');
                     }
                 }
 
@@ -356,28 +471,33 @@ class Pos extends Component implements HasActions, HasForms
                     'exchange_rate' => $variant ? $variant->product->exchange->rate : $product->exchange->rate, // Default exchange rate
                     'sub_price' => $item['subtotal'],
                 ]);
-
             }
 
             // Commit the transaction
             DB::commit();
 
-            // Reset cart after order
+            // Store order for receipt display
+            $this->lastOrder = $order;
+            $this->showReceipt = true;
+
+            // Reset cart and payment fields after order
             $this->cart = [];
             $this->discount = 0;
+            $this->givenAmount = 0;
+            $this->changeAmount = 0;
+            $this->showPaymentForm = false;
             $this->calculateTotal();
 
             Notification::make()
                 ->title('Order placed successfully!')
-                ->body('Invoice #: '.$order->invoice_number)
+                ->body('Invoice #: ' . $order->invoice_number)
                 ->success()
                 ->send();
-
         } catch (\Exception $e) {
             // Rollback the transaction in case of error
             DB::rollBack();
 
-            logger()->error('Error creating order: '.$e->getMessage());
+            logger()->error('Error creating order: ' . $e->getMessage());
 
             Notification::make()
                 ->title('Failed to place order')
@@ -395,7 +515,17 @@ class Pos extends Component implements HasActions, HasForms
             $newQuantity = $this->cart[$index]['quantity'] + 1;
 
             // Check if we have enough stock
-            $product = Product::find($productId);
+            $user = Auth::guard('seller')->user();
+            if (!$user) {
+                return;
+            }
+
+            // Get seller ID for seller-specific filtering
+            $sellerId = $user->parent_id ?? $user->id;
+
+            // Global tenant scope will handle tenant filtering, we add seller filtering
+            $product = Product::where('seller_id', $sellerId)->find($productId);
+
             if (! $product) {
                 Notification::make()
                     ->title('Product not found')
@@ -411,7 +541,7 @@ class Pos extends Component implements HasActions, HasForms
             if ($newQuantity > $availableStock) {
                 Notification::make()
                     ->title('Stock limit reached')
-                    ->body('Only '.$availableStock.' items available')
+                    ->body('Only ' . $availableStock . ' items available')
                     ->warning()
                     ->send();
 
@@ -433,7 +563,17 @@ class Pos extends Component implements HasActions, HasForms
             $variantId = $this->cart[$index]['variant_id'];
             $newQuantity = $this->cart[$index]['quantity'] - 1;
 
-            $product = Product::find($productId);
+            $user = Auth::guard('seller')->user();
+            if (!$user) {
+                return;
+            }
+
+            // Get seller ID for seller-specific filtering
+            $sellerId = $user->parent_id ?? $user->id;
+
+            // Global tenant scope will handle tenant filtering, we add seller filtering
+            $product = Product::where('seller_id', $sellerId)->find($productId);
+
             if (! $product) {
                 return;
             }
@@ -445,7 +585,7 @@ class Pos extends Component implements HasActions, HasForms
             if ($newQuantity < $moq) {
                 Notification::make()
                     ->title('Minimum order quantity')
-                    ->body('Minimum order quantity is '.$moq)
+                    ->body('Minimum order quantity is ' . $moq)
                     ->warning()
                     ->send();
 
@@ -465,7 +605,7 @@ class Pos extends Component implements HasActions, HasForms
             ->size('sm')->outlined()->color('gray')
             ->modalSubmitAction(false)
             ->modalCancelAction(false)
-            ->modalContent(fn (array $arguments) => View(
+            ->modalContent(fn(array $arguments) => View(
                 'livewire.seller.product-detail-modal',
                 ['selectedProduct' => \App\Models\Product::with('variants')->find($arguments['record'])],
             ));
@@ -485,9 +625,18 @@ class Pos extends Component implements HasActions, HasForms
 
     public function searchByBarcodeAndAddToCart()
     {
+        // Check if user is authenticated
+        $user = Auth::guard('seller')->user();
+        if (!$user) {
+            logger()->error('POS: No authenticated seller user found');
+            return;
+        }
 
-        // Search for product by barcode/SKU
-        $product = Product::where('seller_id', Auth::guard('seller')->user()->parent_id ?? Auth::guard('seller')->user()->id)
+        // Get seller ID for seller-specific filtering
+        $sellerId = $user->parent_id ?? $user->id;
+
+        // Search for product by barcode/SKU - global tenant scope will handle tenant filtering
+        $product = Product::where('seller_id', $sellerId)
             ->where(function ($query) {
                 $query->where('sku', $this->search)
                     ->orWhere('sku', $this->search);
@@ -497,23 +646,22 @@ class Pos extends Component implements HasActions, HasForms
         if ($product) {
             // If product found, add to cart
             $this->addToCart($product->id, null, $product->MOQ);
-
         } else {
-
-            $variant = Variant::whereRelation('product', 'seller_id', Auth::guard('seller')->user()->parent_id ?? Auth::guard('seller')->user()->id)
+            $variant = Variant::whereHas('product', function ($query) use ($sellerId) {
+                // Global tenant scope will handle tenant filtering for the product relationship
+                $query->where('seller_id', $sellerId);
+            })
                 ->where('sku', $this->search)
                 ->with('product')
                 ->first();
 
             if ($variant) {
-                // If product found, add to cart
+                // If variant found, add to cart
                 $this->addToCart($variant->product->id, $variant->id, $variant->MOQ);
 
                 $this->search = '';
                 $this->searchProducts();
             }
-
         }
-
     }
 }

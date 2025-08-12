@@ -6,38 +6,23 @@ use Filament\Forms;
 use Filament\Tables;
 use App\Models\Brand;
 use App\Models\Product;
-use App\Models\Variant;
-use App\Models\Currency;
 use App\Models\Exchange;
 use Filament\Forms\Form;
 use Filament\Pages\Page;
 use App\Models\Attribute;
 use Filament\Tables\Table;
 use Illuminate\Support\Str;
-use Filament\Actions\Action;
 use App\Models\AttributeValue;
 use Filament\Facades\Filament;
 use Filament\Resources\Resource;
-use Filament\Actions\ExportAction;
-use Illuminate\Support\Facades\DB;
-use Filament\Forms\Components\Section;
 use App\Helper\CheckFilamentSellerUser;
-use Filament\Forms\Components\Repeater;
-use Filament\Infolists\Components\Grid;
 use Filament\Tables\Columns\TextColumn;
 use Illuminate\Database\Eloquent\Model;
-use Illuminate\Support\Facades\Storage;
-use Filament\Notifications\Notification;
 use Filament\Resources\Pages\EditRecord;
-use Filament\Resources\Pages\ViewRecord;
-use App\Filament\Exports\ProductExporter;
 use Illuminate\Database\Eloquent\Builder;
-use Filament\Forms\Components\Placeholder;
-use function Symfony\Component\Translation\t;
 use CodeWithDennis\FilamentSelectTree\SelectTree;
 use Illuminate\Database\Eloquent\SoftDeletingScope;
 use App\Filament\Admin\Resources\ProductResource\Pages;
-use App\Filament\Admin\Resources\ProductResource\RelationManagers;
 
 class ProductResource extends Resource
 {
@@ -103,11 +88,13 @@ class ProductResource extends Resource
                         Forms\Components\Select::make('brand_id')
                             ->label(__('filament/resources/product-resource.form.brand.label'))
                             ->searchable()->preload()->live(onBlur: true, debounce: 200)
-                            ->required()->options(function (Forms\Get $get) {
+                            ->required()
+                            ->options(function (Forms\Get $get) {
                                 $seller_id = $get('seller_id') ?? CheckFilamentSellerUser::getSellerId();
 
                                 return Brand::where('seller_id', $seller_id)->pluck('name', 'id');
-                            }),
+                            })
+                            ,
 
                         SelectTree::make('category_id')
                             ->label(__('filament/resources/product-resource.form.category.label'))
@@ -627,6 +614,29 @@ class ProductResource extends Resource
                     ->label(__('filament/resources/product-resource.table.filters.supplier'))
                     ->searchable()->preload()->label('Supplier Name')
                     ->relationship('supplier', 'name'),
+                Tables\Filters\Filter::make('stock')
+                    ->form([
+                        Forms\Components\Toggle::make('out_stock')
+                            ->label('Out Stock')
+                            ->helperText('လက်ကျန်ပစွည်း ၁၀ ခုအောက်စစ်ရန်'),
+                    ])
+                    ->query(function (Builder $query, array $data): Builder {
+                        return $query->when($data['out_stock'], function ($q) {
+                            $q->where('stock', '<', 10);
+                        });
+                    }),
+
+                 Tables\Filters\Filter::make('exists_stock')
+                    ->form([
+                        Forms\Components\Toggle::make('exists_stocks')
+                            ->label('Exists Stock')
+                            ->helperText('လက်ကျန်ပစွည်း ကျန်ရှိသော ပစ္စည်းများ'),
+                    ])
+                    ->query(function (Builder $query, array $data): Builder {
+                        return $query->when($data['exists_stocks'], function ($q) {
+                            $q->where('stock', '>', 0);
+                        });
+                    }),
                 Tables\Filters\TrashedFilter::make(),
 
             ], layout: Tables\Enums\FiltersLayout::AboveContent)

@@ -10,10 +10,11 @@ use Spatie\MediaLibrary\HasMedia;
 use Spatie\MediaLibrary\InteractsWithMedia;
 use Spatie\MediaLibrary\MediaCollections\File;
 use Spatie\MediaLibrary\MediaCollections\Models\Media;
+use Stancl\Tenancy\Database\Concerns\BelongsToTenant;
 
 class Product extends Model implements HasMedia
 {
-    use HasFactory, InteractsWithMedia, SoftDeletes;
+    use HasFactory, InteractsWithMedia, SoftDeletes, BelongsToTenant;
 
     public $preventObserver = false;
 
@@ -28,7 +29,7 @@ class Product extends Model implements HasMedia
             return $firstVariant ? $firstVariant->getFirstMediaUrl('images') : $this->getFirstMediaUrl('images');
         }
 
-        // Return product's own image
+        // Return product's own image   
         return $this->getFirstMediaUrl('images');
     }
 
@@ -71,7 +72,6 @@ class Product extends Model implements HasMedia
     public function registerMediaCollections(): void
     {
         $this->addMediaCollection('images')
-            ->singleFile()
             ->useFallbackUrl(asset('assets/img.jpg'))
             ->acceptsFile(function (File $file) {
                 $allowedMimeTypes = [

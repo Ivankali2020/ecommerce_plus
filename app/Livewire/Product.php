@@ -16,7 +16,7 @@ class Product extends Component
 {
     use WithCart, WithPagination;
 
-    public $storeID;
+    // public $storeID;
 
     public $brand_id;
 
@@ -37,17 +37,11 @@ class Product extends Component
         $this->products = new Collection;
     }
 
-    public function mount($storeID)
+    public function mount()
     {
         // Initialize empty collection
         try {
-            $validate = Validator::make(
-                ['storeID' => $storeID],
-                ['storeID' => 'required|exists:sellers,id']
-            )->validate();
 
-            $this->storeID = $storeID;
-            // Load initial products
             $this->getProductData();
             $this->selectedCategory = null;
         } catch (\Illuminate\Validation\ValidationException $e) {
@@ -64,13 +58,14 @@ class Product extends Component
     #[Computed]
     public function categories()
     {
-        return Category::withCount([
-            'products' => function ($query) {
-                $query->where('seller_id', $this->storeID)
-                    ->whereNotIn('id', $this->recommendedProducts->pluck('id'))
-                    ->where('is_public', true);
-            },
-        ])->latest()->get()->where('products_count', '>', 0);
+        return Category::query()
+            ->withCount([
+                'products' => function ($query) {
+                    $query->where('tenant_id', tenant('id'))
+                        ->whereNotIn('id', $this->recommendedProducts->pluck('id'))
+                        ->where('is_public', true);
+                },
+            ])->latest()->get()->where('products_count', '>', 0);
     }
 
     public function filterByCategory($categoryId)
@@ -91,8 +86,8 @@ class Product extends Component
     public function getProductData()
     {
         try {
-            $query = ProductModel::whereNotIn('id', $this->recommendedProducts->pluck('id'))
-                ->where('seller_id', $this->storeID)
+            $query = ProductModel::query()
+                ->whereNotIn('id', $this->recommendedProducts->pluck('id'))
                 ->where('is_public', true)
                 ->when($this->selectedCategory, function ($query) {
                     return $query->where('category_id', $this->selectedCategory);
@@ -110,11 +105,10 @@ class Product extends Component
             $newProducts = $query->skip($this->perPage - 10)->take($this->perPage)->get();
 
             $this->products = $this->products->merge($newProducts)->unique('id');
-
         } catch (\Exception $e) {
             $this->products = new Collection;
             $this->hasMorePages = false;
-            logger()->error('Error loading products: '.$e->getMessage());
+            logger()->error('Error loading products: ' . $e->getMessage());
         }
     }
 
@@ -128,9 +122,8 @@ class Product extends Component
 
             $this->perPage += 10;
             $this->getProductData();
-
         } catch (\Exception $e) {
-            logger()->error('Error loading more products: '.$e->getMessage());
+            logger()->error('Error loading more products: ' . $e->getMessage());
             $this->hasMorePages = false;
         }
     }
@@ -138,7 +131,7 @@ class Product extends Component
     #[Computed]
     public function recommendedProducts()
     {
-        return ProductModel::where('seller_id', $this->storeID)
+        return ProductModel::where('tenant_id', tenant('id'))
             ->where('is_recommended', true)
             ->where('is_public', true)
             ->with(['category', 'brand', 'variants'])->latest()

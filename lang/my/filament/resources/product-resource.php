@@ -24,6 +24,10 @@ return [
             'label' => 'အမျိုးအစား',
             'placeholder' => 'အမျိုးအစားရွေးချယ်ပါ',
         ],
+        'exchange' => [
+            'label' => 'ငွေကြေး',
+            'placeholder' => 'ငွေကြေးရွေးချယ်ပါ',
+        ],
         'name' => [
             'label' => 'အမည်',
             'placeholder' => 'ပစ္စည်းအမည်',

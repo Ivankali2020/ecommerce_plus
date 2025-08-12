@@ -168,10 +168,10 @@
 
                             <!-- Region Selection -->
                             <div class="space-y-2">
-                                <label class="block text-sm font-medium text-gray-700 {{ app()->currentLocale() === 'my' ? 'font-mm' : '' }}">
+                                <label for="region" class="block text-sm font-medium text-gray-700 {{ app()->currentLocale() === 'my' ? 'font-mm' : '' }}">
                                     {{ __('messages.cart.select_region') }}
                                 </label>
-                                <select x-model="selectedRegion"
+                                <select x-model="selectedRegion" id="region"
                                     class="mt-1 block w-full pl-3 pr-10 py-2 text-base border-gray-300 focus:outline-none focus:ring-slate-500 focus:border-slate-500 sm:text-sm rounded-md ">
                                     <option value="">Select a region</option>
                                     <template x-for="region in deliveries" :key="region.region_name">
@@ -328,13 +328,15 @@
                                                                 x-text="account.number"></span></p>
                                                     </label>
                                                 </div> --}}
-                                                <div class="flex items-center gap-2 border rounded-lg  py-4 px-6 bg-white hover:shadow-md transition-all">
+                                                <div class="flex mb-1 items-center gap-2 border rounded-lg  py-4 px-6 bg-white hover:shadow-md transition-all">
                                                     <input :id="'account-' + account.id" type="radio" :value="account.id" x-model="selectedPaymentAccount"
                                                         class="mr-2 text-slate-800 ring-none focus:ring-none focus:outline-none focus:ring-slate-50 cursor-pointer ">
                                                     <label :for="'account-' + account.id" class="flex-grow ">
-                                                        <p class="text-sm font-medium text-gray-900">Name: <span x-text="account.name"></span></p>
+                                                        <p class="text-sm font-medium text-gray-900"
+                                                            <span x-text="account.name"></span>
+                                                        </p>
                                                         <div class="flex items-center justify-between">
-                                                            <p class="text-sm text-gray-600">Number:
+                                                            <p class="text-sm text-gray-600">
                                                                 <span class="font-bold" x-text="account.number"></span>
                                                             </p>
                                                             <button type="button"

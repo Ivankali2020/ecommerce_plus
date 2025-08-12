@@ -27,7 +27,7 @@ class OrderProductObserver
         // $product->decrement('quantity',$orderProduct->quantity);
         $orderProduct->profit = $orderProduct->discount_price > 0 ?
                                     ($orderProduct->discount_price * $orderProduct->quantity) - ($orderProduct->original_buy_price * $orderProduct->quantity) :
-                                    ($product->price * $orderProduct->quantity) - ($orderProduct->original_buy_price * $orderProduct->quantity);
+                                    ($orderProduct->original_price * $orderProduct->quantity) - ($orderProduct->original_buy_price * $orderProduct->quantity);
 
     }
 
@@ -50,7 +50,8 @@ class OrderProductObserver
 
     public function updated(OrderProduct $orderProduct)
     {
-        if ($orderProduct->getOriginal('quantity') != $orderProduct->quantity) { // && $orderProduct->getOriginal('product_id') == $orderProduct->product_id
+
+        if ($orderProduct->isDirty('quantity') && $orderProduct->getOriginal('quantity') != $orderProduct->quantity) { // && $orderProduct->getOriginal('product_id') == $orderProduct->product_id
             $product = Product::where('id', $orderProduct->product_id)->first();
             if ($orderProduct->getOriginal('quantity') > $orderProduct->quantity) {
                 // if reduce quantity we will increment the original quantity
@@ -75,7 +76,7 @@ class OrderProductObserver
 
             $orderProduct->profit = $orderProduct->discount_price > 0 ?
             ($orderProduct->discount_price * $orderProduct->quantity) - ($orderProduct->original_buy_price * $orderProduct->quantity) :
-            ($product->price * $orderProduct->quantity) - ($orderProduct->original_buy_price * $orderProduct->quantity);
+            ($product->original_price * $orderProduct->quantity) - ($orderProduct->original_buy_price * $orderProduct->quantity);
         }
     }
 

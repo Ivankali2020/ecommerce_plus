@@ -1,4 +1,4 @@
-<div class="min-h-screen  bg-gray-100 py-4 pb-16 px-4  sm:py-6 {{ app()->currentLocale() === 'my' ? 'font-mm' : 'font-jost' }}" >
+<div class="min-h-screen  py-4 pb-16 px-4  sm:py-6 {{ app()->currentLocale() === 'my' ? 'font-mm' : 'font-jost' }}" >
     <div class="max-w-4xl mx-auto bg-white shadow-sm rounded-lg overflow-hidden">
         <!-- Invoice Header -->
         <div class="p-4 sm:p-8 border-b relative ">
@@ -20,7 +20,7 @@
                             @case(\App\Helper\OrderStatus::Processing)
                                 bg-blue-100 text-blue-800
                             @break
-                            @case(\App\Helper\OrderStatus::Confirmed)
+                            @case(\App\Helper\OrderStatus::Delivered)
                                 bg-green-100 text-green-800
                             @break
                             @case(\App\Helper\OrderStatus::Cancelled)
@@ -132,6 +132,13 @@
                     @else
                         <p class="text-sm text-gray-600 font-bold">{{ $order->payment?->name }}</p>
                         <p class="text-sm text-gray-500">{{ $order->paymentAccount?->name }}</p>
+                        {{-- show slip if exists --}}
+                        @if($order->payment_slip)
+                           <a href="{{  asset('storage/'.$order->payment_slip)  }}" class="flex justify-end items-end "> 
+                             <img src="{{ asset('storage/'.$order->payment_slip) }}" alt="{{ $order->invoice_number }}"
+                                 class="mt-2 w-10 h-auto rounded shadow-sm ">
+                           </a>
+                        @endif
                     @endif
                 </div>
             </div>

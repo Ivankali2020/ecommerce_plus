@@ -61,7 +61,7 @@
                                             @case(\App\Helper\OrderStatus::Processing)
                                                 bg-blue-100 text-blue-800
                                                 @break
-                                            @case(\App\Helper\OrderStatus::Confirmed)
+                                            @case(\App\Helper\OrderStatus::Delivered)
                                                 bg-green-100 text-green-800
                                                 @break
                                             @case(\App\Helper\OrderStatus::Cancelled)

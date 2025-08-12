@@ -1,7 +1,7 @@
 <div class="z-0 relative">
 
     @if($sliders->count() > 0)
-    <div class="p-4 lg:p-8 container mx-auto relative z-0" >
+    <div class="px-4 lg:p-8 container mx-auto relative z-0" >
         <div x-data="{
             slides: {{ json_encode($sliders->map(function($media) {
                 return [
@@ -36,20 +36,20 @@
                 <div>
                     <!-- previous button -->
                     <button type="button"
-                        class="absolute left-5 text-white top-1/2 z-10 flex rounded-full -translate-y-1/2 items-center justify-center bg-black/20 p-2 hover:bg-black/40 transition-colors duration-200"
+                        class="absolute left-2 md:left-5 text-white top-1/2 z-10 flex rounded-full -translate-y-1/2 items-center justify-center bg-black/20 p-1.5 md:p-2 hover:bg-black/40 transition-colors duration-200"
                         aria-label="previous slide"
                         x-on:click="previous()">
-                        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" stroke="currentColor" fill="none" stroke-width="3" class="size-5 md:size-6 pr-0.5" aria-hidden="true">
+                        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" stroke="currentColor" fill="none" stroke-width="3" class="size-4 md:size-6 pr-0.5" aria-hidden="true">
                             <path stroke-linecap="round" stroke-linejoin="round" d="M15.75 19.5 8.25 12l7.5-7.5" />
                         </svg>
                     </button>
 
                     <!-- next button -->
                     <button type="button"
-                        class="absolute right-5 text-white top-1/2 z-10 flex rounded-full -translate-y-1/2 items-center justify-center bg-black/20 p-2 hover:bg-black/40 transition-colors duration-200"
+                        class="absolute right-2 md:right-5 text-white top-1/2 z-10 flex rounded-full -translate-y-1/2 items-center justify-center bg-black/20 p-1.5 md:p-2 hover:bg-black/40 transition-colors duration-200"
                         aria-label="next slide"
                         x-on:click="next()">
-                        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" stroke="currentColor" fill="none" stroke-width="3" class="size-5 md:size-6 pl-0.5" aria-hidden="true">
+                        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" stroke="currentColor" fill="none" stroke-width="3" class="size-4 md:size-6 pl-0.5" aria-hidden="true">
                             <path stroke-linecap="round" stroke-linejoin="round" d="M8.25 4.5l7.5 7.5-7.5 7.5" />
                         </svg>
                     </button>
@@ -83,7 +83,7 @@
                 <div class="absolute bottom-3 md:bottom-5 left-1/2 z-0 flex -translate-x-1/2 gap-2 px-2 py-1 bg-black/20 backdrop-blur-sm rounded-full">
                     <template x-for="(slide, index) in slides" :key="index">
                         <button
-                            class="size-2 rounded-full transition-colors duration-200"
+                            class="size-1 md:size-2 rounded-full transition-colors duration-200"
                             :class="currentSlideIndex === index + 1 ? 'bg-white' : 'bg-white/50 hover:bg-white/75'"
                             x-on:click="currentSlideIndex = index + 1"
                             x-bind:aria-label="'slide ' + (index + 1)"></button>

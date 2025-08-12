@@ -16,7 +16,7 @@ class ListProducts extends ListRecords
     {
         return [
             // Actions\ImportAction::make()->importer(ProductImporter::class),
-            Actions\ExportAction::make()->exporter(ProductExporter::class),
+            // Actions\ExportAction::make()->exporter(ProductExporter::class),
             Actions\CreateAction::make(),
         ];
     }

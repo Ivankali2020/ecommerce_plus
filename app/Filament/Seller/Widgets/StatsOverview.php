@@ -14,6 +14,7 @@ use Filament\Widgets\StatsOverviewWidget\Stat;
 use BezhanSalleh\FilamentShield\Traits\HasWidgetShield;
 use Filament\Widgets\StatsOverviewWidget as BaseWidget;
 use App\Filament\Seller\Resources\OrderResource\Widgets\OrderChart;
+use App\Models\Variant;
 
 class StatsOverview extends BaseWidget
 {
@@ -110,23 +111,29 @@ class StatsOverview extends BaseWidget
             ->value('total_capital');
 
        
-        $totalCapitalProductAmount = Product::where('seller_id', CheckFilamentSellerUser::getSellerId())
+        $totalCapitalProductAmount = Product::query()
+            // where('seller_id', CheckFilamentSellerUser::getSellerId())
             ->selectRaw('SUM(mmk_buy_price * quantity) as total_capital')
             ->value('total_capital');
 
+        $totalCapitalAmountOfVariantProducts = Variant::query()
+            ->selectRaw('SUM(mmk_buy_price * quantity) as total_capital')
+            ->value('total_capital');
 
         return [
             Stat::make(__('filament/widgets/stats-overview.unique_products'), Product::where('seller_id', $sellerId)->count().' '.__('filament/widgets/stats-overview.pcs'))
                 ->description(__('filament/widgets/stats-overview.total_products')),
 
-            Stat::make(__('filament/widgets/stats-overview.unique_customers'), $totalCapitalAmount > 0? number_format($totalCapitalAmount + $totalCapitalProductAmount, 2) : 0)
-                ->description(__('filament/widgets/stats-overview.persons_all_time')),  
+            Stat::make(__('filament/widgets/stats-overview.total_amount'),  number_format($totalCapitalAmount + $totalCapitalProductAmount + $totalCapitalAmountOfVariantProducts, 0) )
+                // ->description(__('filament/widgets/stats-overview.total_amount')),  
+                ,
 
-            Stat::make(__('filament/widgets/stats-overview.total_revenue'), $totalOrderRevenues > 0 ? number_format($totalOrderRevenues, 2) : 0) // Format as needed
-                ->description($dateDescription),
+            Stat::make(__('filament/widgets/stats-overview.total_revenue'), $totalOrderRevenues > 0 ? number_format($totalOrderRevenues, 0) : 0) // Format as needed
+                ->description($dateDescription)
+                ,
 
             // Add the new Total Profit stat
-            Stat::make(__('filament/widgets/stats-overview.profit_loss'), $totalProfit > 0 ? number_format($totalProfit, 2) : 0) // Format as needed, assuming profit is also large
+            Stat::make(__('filament/widgets/stats-overview.profit_loss'), number_format($totalProfit, 0)) // Format as needed, assuming profit is also large
                 ->description($dateDescription)
         ];
     }

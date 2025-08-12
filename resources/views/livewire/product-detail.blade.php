@@ -17,13 +17,22 @@
 
                 @if($product->discount > 0 )
                     <div class="absolute top-4 right-4  lg:top-10 lg:right-10 z-10">
-                        <div class="bg-red-500 text-white px-3 py-1 rounded-full shadow-md transform transition-transform duration-300 hover:scale-105 flex items-center gap-1">
+                        <div class="bg-red-500 text-white px-3 py-1 rounded-md shadow-md transform transition-transform duration-300 hover:scale-105 flex items-center gap-1">
                             <span class="font-bold {{ app()->currentLocale() === 'my' ? 'font-mm' : '' }}">
                                 {{ $product->has_variant ? $product->variants()->first()->discount : $product->discount }}%
                             </span>
                             <span class="text-xs {{ app()->currentLocale() === 'my' ? 'font-mm' : '' }}">
                                 {{ __('messages.off') }}
                             </span>
+                        </div>
+                    </div>
+                @endif
+
+                <!-- Available Stock Indicator -->
+                @if($product->quantity > 0 && !$product->has_variant)
+                    <div class="absolute z-20 bottom-4 left-4  flex items-center justify-center">
+                        <div class="bg-gray-500 text-white px-3 py-1 rounded-md font-medium transform text-[12px] md:text-sm">
+                        {{  $product->quantity }} <span class="text-[10px] md:text-xs">{{ __('messages.in_stock') }}</span>
                         </div>
                     </div>
                 @endif
@@ -81,12 +90,12 @@
                         </template>
                     @else
                         <p class="text-2xl font-bold text-gray-900" >
-                            {{ $product->discount > 0 ? $product->mmk_discount_price : $product->mmk_price }} Ks
+                            {{ $product->discount > 0 ? number_format($product->mmk_discount_price,0) : number_format($product->mmk_price,0) }} Ks
                         </p>
                     @endif
 
                     @if($product->discount > 0 )
-                         <p class="text-sm  text-gray-500 line-through" > {{ $product->mmk_price }} Ks</p>
+                         <p class="text-sm  text-gray-500 line-through" > {{ number_format($product->mmk_price,0) }} Ks</p>
                     @endif
 
                 </div>
@@ -270,7 +279,7 @@
                 </button>
             </div>
 
-            <div class="mt-10 font-thin font-jost text-justify" style="line-height: 2rem;"> {!! $product->description !!} </div>
+            <div class="mt-10 font-thin font-sans text-justify" style="line-height: 2rem;"> {!! $product->description !!} </div>
 
         </div>
     </div>

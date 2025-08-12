@@ -2,6 +2,7 @@
 
 namespace App\Providers\Filament;
 
+use App\Filament\Seller\Pages\Auth\Register;
 use App\Filament\Seller\Pages\EditProfile;
 use App\Filament\Seller\Resources\OrderResource\Widgets\OrderChart;
 use App\Filament\Seller\Widgets\Filters;
@@ -10,6 +11,7 @@ use App\Http\Middleware\AssignGlobeScope;
 use App\Http\Middleware\RedirectIfSubscriptionExpired;
 use App\Http\Middleware\RedirectIfUnauthenticated;
 use App\Models\Seller;
+use App\Models\Tenant;
 use BezhanSalleh\FilamentShield\FilamentShieldPlugin;
 use Filament\FontProviders\LocalFontProvider;
 use Filament\Http\Middleware\Authenticate;
@@ -29,9 +31,15 @@ use Illuminate\Session\Middleware\AuthenticateSession;
 use Illuminate\Session\Middleware\StartSession;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\View\Middleware\ShareErrorsFromSession;
+use Stancl\Tenancy\Middleware\InitializeTenancyByDomain;
+use Stancl\Tenancy\Middleware\PreventAccessFromCentralDomains;
 
 class SellerPanelProvider extends PanelProvider
 {
+    protected function getSeller()
+    {
+        return Tenant::where('id',tenant('id'))->with('sellers')->first()->sellers->first();
+    }
     public function panel(Panel $panel): Panel
     {
         return $panel
@@ -46,7 +54,7 @@ class SellerPanelProvider extends PanelProvider
                 'green' => Color::Green,
             ])
             ->profile(EditProfile::class)
-            ->registration()
+            // ->registration()
             ->passwordReset()
             ->emailVerification()
             ->discoverResources(in: app_path('Filament/Seller/Resources'), for: 'App\\Filament\\Seller\\Resources')
@@ -72,34 +80,37 @@ class SellerPanelProvider extends PanelProvider
                 DisableBladeIconComponents::class,
                 DispatchServingFilamentEvent::class,
                 AssignGlobeScope::class,
-                // RedirectIfSubscriptionExpired::class,
+                InitializeTenancyByDomain::class,
+                PreventAccessFromCentralDomains::class,
+                RedirectIfSubscriptionExpired::class,
                 \App\Http\Middleware\SetLocale::class,
-            ])
-//            ->spa(fn()=>  Str::contains(request()->userAgent(),'Chrome'))
+            ],true) 
+            //            ->spa(fn()=>  Str::contains(request()->userAgent(),'Chrome'))
             ->sidebarWidth('17rem')
-            ->brandLogoHeight(fn () => Auth::guard('seller')->check() ? '3rem' : '5rem')
-            ->brandLogo(fn () => Auth::guard('seller')->check() ? Seller::where('id', CheckFilamentSellerUser::getSellerId())->first()->getFirstMediaUrl('logos') : null) // ->getFirstMediaUrl('logos')
-            ->brandName(fn () => Auth::guard('seller')->check() ? Seller::find(CheckFilamentSellerUser::getSellerId())->name : 'DASHBOARD')
+            ->brandLogoHeight(fn() => Auth::guard('seller')->check() ? '3rem' : '5rem')
+            ->brandLogo(fn() => self::getSeller()->getFirstMediaUrl('logos')) // ->getFirstMediaUrl('logos')
+            ->brandName(fn() => self::getSeller()->name)
             ->sidebarCollapsibleOnDesktop()
             ->databaseNotifications()
             ->databaseNotificationsPolling(null) // this is testing purpose
+            ->maxContentWidth('full')
             ->plugins([
                 FilamentShieldPlugin::make(),
             ])
             ->navigationItems([
                 NavigationItem::make('dashboard')
-                    ->label(fn (): string => 'Go to Website')
-                    ->url(fn (): string => route('store', CheckFilamentSellerUser::getSellerId()))
+                    ->label(fn(): string => 'Go to Website')
+                    ->url(fn(): string => route('welcome'))
                     ->sort(sort: 10)
                     ->icon('heroicon-o-link'),
                 NavigationItem::make('Simple POS')
-                    ->label(fn (): string => 'Simple POS')
-                    ->url(fn (): string => route('seller.pos'))
+                    ->label(fn(): string => 'Simple POS')
+                    ->url(fn(): string => route('seller.pos'))
                     ->sort(sort: -1)
                     ->icon('heroicon-o-computer-desktop'),
                 NavigationItem::make('Advance POS PRO')
-                    ->label(fn (): string => 'Advance POS PRO')
-                    ->url(fn (): string => route('filament.seller.resources.orders.create'))
+                    ->label(fn(): string => 'Advance POS PRO')
+                    ->url(fn(): string => route('filament.seller.resources.orders.create'))
                     ->sort(sort: -1)
                     ->icon('heroicon-o-computer-desktop'),
             ])
@@ -109,6 +120,7 @@ class SellerPanelProvider extends PanelProvider
             ->authMiddleware([
                 // RedirectIfUnauthenticated::class,
                 Authenticate::class,
+
             ]);
     }
 }

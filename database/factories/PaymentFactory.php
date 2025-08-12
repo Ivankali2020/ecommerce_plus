@@ -22,6 +22,7 @@ class PaymentFactory extends Factory
         return [
             'currency_id' => Currency::get()->random()->id,
             'name' => $data[random_int(0, count($data) - 1)],
+            'tenant_id' => tenant('id'), // Automatically associate with the current tenant
         ];
     }
 }

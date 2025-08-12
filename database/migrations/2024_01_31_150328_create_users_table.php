@@ -1,6 +1,7 @@
 <?php
 
 use App\Models\Seller;
+use App\Models\Tenant;
 use Illuminate\Database\Migrations\Migration;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Support\Facades\Schema;
@@ -16,13 +17,13 @@ return new class extends Migration
             $table->id();
 
             $table->foreignIdFor(Seller::class)->nullable()->constrained()->cascadeOnDelete()->cascadeOnUpdate();
+            $table->foreignIdFor(Tenant::class)->nullable()->constrained()->cascadeOnDelete()->cascadeOnUpdate();
 
             $table->string('firebase_uid')->nullable();
 
             $table->string('name');
             $table->string('email')->unique();
             $table->string('phone')->nullable();
-            // profile_picture
 
             $table->timestamp('email_verified_at')->nullable();
             $table->string('password')->nullable();

@@ -33,10 +33,10 @@ class UserResource extends Resource
                     ->searchable()->preload(),
 
                 Forms\Components\TextInput::make('firebase_uid')
+                    ->hidden(fn (Page $livewire) => $livewire instanceof CreateRecord)
                     ->maxLength(255),
-                Forms\Components\TextInput::make('device_uid')
-                    ->maxLength(255),
-                Forms\Components\TextInput::make('device_name')
+                Forms\Components\TextInput::make('google_id')
+                    ->hidden(fn (Page $livewire) => $livewire instanceof CreateRecord)
                     ->maxLength(255),
                 Forms\Components\TextInput::make('name')
                     ->label(__('filament/resources/user-resource.form.name.label'))

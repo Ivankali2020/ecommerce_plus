@@ -1,13 +1,22 @@
 <div>
-    <?php
+<?php
 
 use App\Livewire\Actions\Logout;
 use Livewire\Volt\Component;
 use App\Helper\UserHelper;
-
+use App\Models\Tenant;
 
 new class extends Component
 {
+    public $seller;
+    public $logo;
+
+
+    public function mount()
+    {
+        $this->seller = Tenant::where('id',tenant('id'))->first()->sellers()->first();
+        $this->logo = $this->seller->getFirstMediaUrl('logos');
+    }
     /**
      * Log the current user out of the application.
      */
@@ -30,27 +39,14 @@ new class extends Component
         <div class="flex justify-between h-16">
             <div class="flex items-center ">
                 <!-- Logo -->
-                @auth
-
-                <div class="shrink-0 flex items-center">
-                    <a href="{{ route('store', UserHelper::getUserSellerId()) }}" >
-                        <img src="{{ auth('web')->user()->seller_id == null ?  asset('assets/logo.png')  :  auth('web')->user()->seller->getFirstMediaUrl('logos') }}" class="block h-9 w-auto fill-current rounded  text-slate-800 dark:text-slate-200" />
-                    </a>
-                </div>
-
-                @else
-                <div class="shrink-0 flex items-center">
-                    <a href="{{ route('welcome') }}" >
-                        <img src="{{ asset('assets/logo.png') }}" class="block rounded h-12 w-auto fill-current text-slate-800 dark:text-slate-200" />
-                    </a>
-                </div>
-                @endauth
-
-
-                @auth
+                    <div class="shrink-0 flex items-center">
+                        <a href="{{ route('welcome') }}" >
+                            <img src="{{ $this->logo != null ? $this->logo : asset('assets/logo.png') }}" alt="{{  $seller->name }}" class="block rounded h-12 w-auto fill-current text-slate-800 dark:text-slate-200" />
+                        </a>
+                    </div>
 
                     <div class="hidden space-x-8 sm:-my-px sm:ms-10 sm:flex h-[100%] ">
-                        <x-nav-link :href="route('store', UserHelper::getUserSellerId())" :active="request()->routeIs('store')" wire:navigate>
+                        <x-nav-link :href="route('welcome')" :active="request()->routeIs('store')" wire:navigate>
                             {{ __('messages.navigation.main_store') }}
                         </x-nav-link>
                     </div>
@@ -60,6 +56,8 @@ new class extends Component
                             {{ __('messages.navigation.products') }}
                         </x-nav-link>
                     </div>
+
+                @auth
 
                     <!-- Navigation Links -->
                     <div class="hidden space-x-8 sm:-my-px sm:ms-10 sm:flex h-[100%] ">
@@ -80,23 +78,7 @@ new class extends Component
                             {{ __('messages.navigation.recent_orders') }}
                         </x-nav-link>
                     </div>
-{{-- 
-                     <!-- Search Component -->
-                     <div class="hidden space-x-8 sm:-my-px sm:ms-10 sm:flex text-end ">
-                        <div class="relative mr-4 ">
-                            <div class="relative">
-                                <div class="absolute z-10  inset-y-0 start-0 flex items-center ps-3 pointer-events-none">
-                                    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="currentColor" class="size-5 text-gray-500 ">
-                                        <path fill-rule="evenodd" d="M9 3.5a5.5 5.5 0 1 0 0 11 5.5 5.5 0 0 0 0-11ZM2 9a7 7 0 1 1 12.452 4.391l3.328 3.329a.75.75 0 1 1-1.06 1.06l-3.329-3.328A7 7 0 0 1 2 9Z" clip-rule="evenodd" />
-                                      </svg>
-                                </div>
-                                <x-text-input  id="keyword"
-                                class="appearance-none rounded-lg relative block ps-10 focus:ps-2  w-full px-3 py-2 border border-gray-300 dark:border-gray-700 placeholder-gray-500 text-gray-900 dark:text-gray-100 focus:outline-none focus:ring-slate-500 focus:border-slate-500  focus:z-20 sm:text-sm"
-                                type="text" name="keyword" placeholder="search" />
-                            </div>
-                        </div>
 
-                    </div> --}}
                     
                 @endauth
 
@@ -280,7 +262,7 @@ new class extends Component
 @auth
 <div class="fixed bottom-0 left-0 z-50 w-full h-16 bg-white border-t border-t-gray-200 sm:hidden {{ app()->currentLocale() === 'my' ? 'font-mm' : '' }}">
     <div class=" h-full flex justify-around items-center ">
-        <a wire:navigate href="{{ route('store', UserHelper::getUserSellerId()) }}"  class="inline-flex flex-col items-center justify-center px-1 hover:bg-gray-50 {{ request()->routeIs(['store', 'store.*']) ? 'text-[#c2a03d]' : 'text-gray-500' }}">
+        <a wire:navigate href="{{ route('welcome') }}"  class="inline-flex flex-col items-center justify-center px-1 hover:bg-gray-50 {{ request()->routeIs(['store', 'store.*']) ? 'text-[#c2a03d]' : 'text-gray-500' }}">
             <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="size-6 w-6 h-6 mb-1">
                 <path stroke-linecap="round" stroke-linejoin="round" d="m2.25 12 8.954-8.955c.44-.439 1.152-.439 1.591 0L21.75 12M4.5 9.75v10.125c0 .621.504 1.125 1.125 1.125H9.75v-4.875c0-.621.504-1.125 1.125-1.125h2.25c.621 0 1.125.504 1.125 1.125V21h4.125c.621 0 1.125-.504 1.125-1.125V9.75M8.25 21h8.25" />
               </svg>

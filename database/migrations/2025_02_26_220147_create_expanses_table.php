@@ -19,6 +19,7 @@ return new class extends Migration
             $table->text('description')->nullable();
             $table->string('payment_method');
             $table->foreignId('seller_id')->constrained('sellers', 'id')->onDelete('cascade');
+            $table->foreignId('tenant_id')->constrained('tenants', 'id')->onDelete('cascade');
             $table->timestamps();
         });
     }

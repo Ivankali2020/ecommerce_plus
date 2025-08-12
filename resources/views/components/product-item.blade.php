@@ -4,11 +4,11 @@
             {{-- Improved Discount Tag --}}
             @if(($product->has_variant && $product->variants()->first() && $product->variants()->first()->discount > 0) || (!$product->has_variant && $product->discount > 0))
                 <div class="absolute top-0 right-0 z-10">
-                    <div class="bg-red-500 text-white px-3 py-1 rounded-full shadow-md transform transition-transform duration-300 hover:scale-105 flex items-center gap-1">
-                        <span class="font-bold text-sm lg:text-lg  {{ app()->currentLocale() === 'my' ? 'font-mm' : '' }}">
+                    <div class="bg-red-500 text-white px-3 py-1 text-[10px] md:text-xs rounded-md shadow-md transform transition-transform duration-300 hover:scale-105 flex items-center gap-1">
+                        <span class="font-bold  {{ app()->currentLocale() === 'my' ? 'font-mm' : '' }}">
                             {{ $product->has_variant && $product->variants()->first() ? $product->variants()->first()->discount ?? 0 : $product->discount ?? '0' }}%
                         </span>
-                        <span class="text-xs {{ app()->currentLocale() === 'my' ? 'font-mm' : '' }}">
+                        <span class="selection:{{ app()->currentLocale() === 'my' ? 'font-mm' : '' }}">
                             {{ __('messages.off') }}
                         </span>
                     </div>
@@ -16,10 +16,19 @@
             @endif
 
             <!-- Out of Stock Indicator -->
-            @if($product->quantity == 0 && !$product->has_variant)
+            @if($product->quantity <= 0 && !$product->has_variant)
                 <div class="absolute z-20  inset-0 bg-black bg-opacity-40 flex items-center justify-center">
-                    <div class="bg-red-500 text-white px-3 py-1 rounded-full font-medium transform -rotate-12 text-sm">
+                    <div class="bg-red-500 text-white px-3 py-1 rounded-md font-medium transform -rotate-12 text-[10px] md:text-xs">
                         {{ __('messages.out_of_stock') }}
+                    </div>
+                </div>
+            @endif
+
+            <!-- Available Stock Indicator -->
+            @if($product->quantity > 0 && !$product->has_variant)
+                <div class="absolute z-20 bottom-2 left-2 flex items-center justify-center">
+                    <div class="bg-gray-500 text-white px-3 py-1 rounded-md font-medium transform text-[12px] md:text-sm">
+                       {{  $product->quantity }} <span class="text-[10px] md:text-xs">{{ __('messages.in_stock') }}</span>
                     </div>
                 </div>
             @endif
@@ -30,7 +39,7 @@
         </a>
 
         <div class="flex flex-col flex-grow justify-between lg:gap-3 gap-2 lg:p-6 p-3">
-            <span class="text-xs">{{ $product->category?->name }}</span>    
+            <span class="hidden md:block text-xs "">{{ $product->category?->name }}</span>    
 
             <h3 class="text-sm lg:text-lg font-bold" aria-describedby="featureDescription">
                 {{ $product->has_variant && $product->variants()->first() ? $product->variants()->first()->name : $product->name }}

@@ -4,12 +4,23 @@ use App\Livewire\Forms\LoginForm;
 use Illuminate\Support\Facades\Session;
 use Livewire\Attributes\Layout;
 use Livewire\Volt\Component;
+use App\Models\Tenant;
 
 new #[Layout('layouts.guest')] class extends Component
 {
     public LoginForm $form;
 
     public string $cfTurnstileResponse;
+
+    public ?string $seller_log = null;
+    public ?string $seller_name = null;
+    
+    public function mount(): void
+    {
+        $seller = Tenant::where('id',tenant('id'))->first()->sellers->first();
+        $this->seller_log = $seller->getFirstMediaUrl('logos');
+        $this->seller_name = $seller->name;
+    }
     /**
      * Handle an incoming authentication request.
      */
@@ -30,8 +41,10 @@ new #[Layout('layouts.guest')] class extends Component
 <div class="min-h-screen flex items-center animate-fade-in  justify-center py-12 px-4 sm:px-6 lg:px-8 bg-gray-50 dark:bg-gray-900">
     <div class="max-w-md w-full space-y-8">
         <div class="text-center">
+
+            {{-- check tenant logo  --}}
             <a href="/">
-                <img class="mx-auto h-20 w-auto" src="{{ asset('assets/logo.png') }}" alt="Your Logo">
+                <img class="mx-auto h-20 w-auto" src="{{ $this->seller_log }}" alt="{{  $this->seller_name }}">
             </a>
             <h2 class="mt-6 text-3xl font-extrabold text-gray-900 dark:text-white {{ app()->currentLocale() === 'my' ? 'font-mm' : '' }}">
                 {{ __('messages.auth.login_page.title') }}

@@ -11,10 +11,11 @@ use Illuminate\Notifications\Notifiable;
 use Laravel\Sanctum\HasApiTokens;
 use Spatie\MediaLibrary\HasMedia;
 use Spatie\MediaLibrary\InteractsWithMedia;
+use Stancl\Tenancy\Database\Concerns\BelongsToTenant;
 
-class User extends Authenticatable implements HasMedia, MustVerifyEmail
+class User extends Authenticatable implements HasMedia //, MustVerifyEmail
 {
-    use HasApiTokens, HasFactory, InteractsWithMedia, Notifiable;
+    use HasApiTokens, HasFactory, InteractsWithMedia, Notifiable, BelongsToTenant;
 
     public function registerMediaCollections(): void
     {
@@ -25,6 +26,14 @@ class User extends Authenticatable implements HasMedia, MustVerifyEmail
         'name',
         'email',
         'password',
+        'phone',
+        'firebase_uid',
+        'google_id',
+        'fmc_token',
+        'tenant_id',
+        'seller_id',
+        'email_verified_at',
+        'remember_token',
     ];
 
     protected $hidden = [

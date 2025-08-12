@@ -208,6 +208,7 @@ class Cart extends Component
                 'invoice_number' => uniqid(),
                 'user_id' => Auth::id(),
                 'seller_id' => $this->seller_id,
+                'tenant_id' => tenant('id'),
                 'user_address_id' => $this->address_id,
                 'delivery_fees' => $delivery->fees,
                 'is_cod' => $this->is_cod,

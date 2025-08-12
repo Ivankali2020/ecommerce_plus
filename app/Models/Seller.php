@@ -8,6 +8,7 @@ use BezhanSalleh\FilamentShield\Traits\HasPanelShield;
 use Carbon\Carbon;
 use Filament\Models\Contracts\FilamentUser;
 use Filament\Panel;
+use Filament\Panel\Concerns\HasTenancy;
 use Illuminate\Contracts\Auth\MustVerifyEmail;
 use Illuminate\Database\Eloquent\Attributes\ObservedBy;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
@@ -19,9 +20,10 @@ use Laravel\Sanctum\HasApiTokens;
 use Spatie\MediaLibrary\HasMedia;
 use Spatie\MediaLibrary\InteractsWithMedia;
 use Spatie\Permission\Traits\HasRoles;
+use Stancl\Tenancy\Database\Concerns\HasDomains;
 
 #[ObservedBy([SellerObserver::class])]
-class Seller extends Authenticatable implements FilamentUser, HasMedia, MustVerifyEmail
+class Seller extends Authenticatable implements FilamentUser, HasMedia //, MustVerifyEmail
 {
     use HasApiTokens, HasFactory, HasPanelShield, HasRoles, InteractsWithMedia, Notifiable, SoftDeletes;
 
@@ -56,6 +58,13 @@ class Seller extends Authenticatable implements FilamentUser, HasMedia, MustVeri
         'subscription_started_at' => 'datetime',
         'subscription_expired_at' => 'datetime',
     ];
+
+    // tenants relationship
+    public function tenants()
+    {
+        return $this->belongsToMany(Tenant::class, 'tenant_seller', 'seller_id', 'tenant_id');
+    }   
+
 
     // Check if subscription is active
     public function hasActiveSubscription(): bool

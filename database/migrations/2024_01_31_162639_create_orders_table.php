@@ -4,6 +4,7 @@ use App\Helper\OrderStatus;
 use App\Models\Payment;
 use App\Models\PaymentAccount;
 use App\Models\Seller;
+use App\Models\Tenant;
 use App\Models\User;
 use App\Models\UserAddress;
 use Illuminate\Database\Migrations\Migration;
@@ -21,6 +22,7 @@ return new class extends Migration
             $table->id();
             $table->string('invoice_number')->unique();
             $table->foreignIdFor(Seller::class)->constrained()->cascadeOnUpdate()->cascadeOnDelete();
+            $table->foreignIdFor(Tenant::class)->constrained()->cascadeOnUpdate()->cascadeOnDelete();
             $table->foreignIdFor(Seller::class, 'staff_id')->nullable()->constrained('sellers', 'id')->cascadeOnUpdate()->cascadeOnDelete();
 
             $table->boolean('walk_in_customer')->default(0);
@@ -43,8 +45,8 @@ return new class extends Migration
             $table->decimal('tax')->default(0);
             $table->decimal('tax_price')->default(0);
 
-            $table->decimal('given_amount')->default(0);
-            $table->decimal('change_amount')->default(0);
+            $table->decimal('given_amount', 15, 2)->default(0);
+            $table->decimal('change_amount', 15, 2)->default(0);
             $table->text('note')->nullable();
 
             $table->softDeletes();

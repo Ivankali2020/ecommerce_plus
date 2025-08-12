@@ -4,9 +4,12 @@ namespace App\Models;
 
 use App\Helper\PaymentMethodExpanse;
 use Illuminate\Database\Eloquent\Model;
+use Stancl\Tenancy\Database\Concerns\BelongsToTenant;
 
 class Expanse extends Model
 {
+    use BelongsToTenant;
+    
     protected $cast = [
         'payment_method' => PaymentMethodExpanse::class,
     ];

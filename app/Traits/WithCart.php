@@ -33,6 +33,7 @@ trait WithCart
                 'user_id' => Auth::id(),
                 'product_id' => $productId,
                 'variant_id' => $variant?->id,
+                'tenant_id' => $product->tenant_id
             ])->first();
 
             $newQuantity = $existingCart ? $existingCart->quantity + 1 : $quantity;
@@ -63,6 +64,7 @@ trait WithCart
             Cart::updateOrCreate(
                 [
                     'seller_id' => $product->seller_id,
+                    'tenant_id' => $product->tenant_id,
                     'user_id' => Auth::id(),
                     'product_id' => $productId,
                     'price' => $price,

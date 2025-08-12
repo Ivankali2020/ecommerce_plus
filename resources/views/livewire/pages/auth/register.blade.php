@@ -7,6 +7,7 @@ use Illuminate\Support\Facades\Hash;
 use Illuminate\Validation\Rules;
 use Livewire\Attributes\Layout;
 use Livewire\Volt\Component;
+use App\Models\Tenant;
 
 new #[Layout('layouts.guest')] class extends Component
 {
@@ -15,6 +16,18 @@ new #[Layout('layouts.guest')] class extends Component
     public string $password = '';
     public string $password_confirmation = '';
     public string $cfTurnstileResponse = '';
+
+    public ?string $seller_log = null;
+    
+    public function mount(): void
+    {   
+        if (session()->has('seller_log')) {
+            $this->seller_log = session('seller_log');
+        } else {
+            $this->seller_log = Tenant::where('id', tenant('id'))->first()->sellers->first()->getFirstMediaUrl('logos');
+            session(['seller_log' => $this->seller_log]);
+        }
+    }
 
     /**
      * Handle an incoming registration request.
@@ -33,6 +46,10 @@ new #[Layout('layouts.guest')] class extends Component
 
         // Remove cfTurnstileResponse from the validated data
         unset($validated['cfTurnstileResponse']);
+
+        // tentant_id add 
+        $validated['tenant_id'] = tenant('id');
+        $validated['seller_id'] = Tenant::where('id', tenant('id'))->first()->sellers->first()->id;
         
         event(new Registered($user = User::create($validated)));
 
@@ -48,7 +65,7 @@ new #[Layout('layouts.guest')] class extends Component
         <!-- Logo and Header -->
         <div class="text-center">
             <a href="/">
-                <img class="mx-auto h-20 w-auto" src="{{ asset('assets/logo.png') }}" alt="Your Logo">
+               <img class="mx-auto h-20 w-auto" src="{{ $this->seller_log }}" alt="Your Logo">
             </a>
             <h2 class="mt-6 text-3xl font-extrabold text-gray-900 dark:text-white {{ app()->currentLocale() === 'my' ? 'font-mm' : '' }}">
                 {{ __('messages.auth.register_page.title') }}
@@ -120,8 +137,8 @@ new #[Layout('layouts.guest')] class extends Component
                 <div wire:ignore class="text-center">
                     <x-turnstile wire:model="cfTurnstileResponse" 
                     data-action="register"
-                    data-cdata="sessionid-123456789"
-                     data-size="flexible" data-theme="light" data-tabindex="1" />
+                    data-cdata="{{ uniqid() }}"
+                    data-size="flexible" data-theme="light" data-tabindex="1" />
                 </div>
                
                 <x-input-error :messages="$errors->get('cfTurnstileResponse')" class="mt-2" />

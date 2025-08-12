@@ -8,7 +8,8 @@
 @layer base {
     @font-face {
       font-family: 'mm';
-      src: url("/fonts/mm.ttf") format('truetype');
+      src: url("/fonts/mm.ttf") format('truetype'); 
+      /* src: url("/fonts/KT_03.ttf") format('truetype');  */
       font-style: normal;
       font-display: swap;
       font-weight: normal;

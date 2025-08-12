@@ -24,6 +24,10 @@ return [
             'label' => 'Category',
             'placeholder' => 'Please select a category',
         ],
+        'exchange' => [
+            'label' => 'Currency',
+            'placeholder' => 'Please select a currency',
+        ],
         'name' => [
             'label' => 'Name',
             'placeholder' => 'Product Name',

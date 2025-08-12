@@ -68,7 +68,7 @@
                                             @case(\App\Helper\OrderStatus::Processing)
                                                 bg-blue-100 text-blue-800
                                             @break
-                                            @case(\App\Helper\OrderStatus::Confirmed)
+                                            @case(\App\Helper\OrderStatus::Delivered)
                                                 bg-green-100 text-green-800
                                             @break
                                             @case(\App\Helper\OrderStatus::Cancelled)
@@ -105,7 +105,7 @@
                 {{ __('messages.orders.start_shopping_message') }}
             </p>
             <div class="mt-6">
-               <a href="{{ route('store', $this->seller_id) }}"
+               <a href="{{ route('welcome') }}"
                    class="inline-flex items-center px-4 py-2 border border-transparent shadow-sm text-sm font-medium rounded-md text-white bg-slate-900 hover:bg-slate-800 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-slate-500 ">
                     {{ __('messages.orders.start_shopping') }}
                 </a>

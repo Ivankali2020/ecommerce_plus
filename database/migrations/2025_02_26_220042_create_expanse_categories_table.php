@@ -16,6 +16,7 @@ return new class extends Migration
             $table->string('name');
             $table->string('icon')->nullable();
             $table->foreignId('seller_id')->constrained('sellers', 'id')->onUpdate('cascade')->onDelete('cascade');
+            $table->foreignId('tenant_id')->constrained('tenants', 'id')->onUpdate('cascade')->onDelete('cascade');
             $table->timestamps();
         });
     }

@@ -4,6 +4,7 @@ namespace App\Http;
 
 use App\Http\Middleware\AssignGlobeScope;
 use App\Http\Middleware\CheckUserBelongsToSeller;
+use App\Http\Middleware\CentralDomainOnly;
 use App\Http\Middleware\SuperAdmin;
 use Illuminate\Foundation\Http\Kernel as HttpKernel;
 
@@ -44,7 +45,7 @@ class Kernel extends HttpKernel
 
         'api' => [
             // \Laravel\Sanctum\Http\Middleware\EnsureFrontendRequestsAreStateful::class,
-            \Illuminate\Routing\Middleware\ThrottleRequests::class.':api',
+            \Illuminate\Routing\Middleware\ThrottleRequests::class . ':api',
             \Illuminate\Routing\Middleware\SubstituteBindings::class,
         ],
         'seller' => [
@@ -77,7 +78,10 @@ class Kernel extends HttpKernel
         'superAdmin' => SuperAdmin::class,
         'checkUserSeller' => CheckUserBelongsToSeller::class,
         'auth.redirect' => \App\Http\Middleware\RedirectIfUnauthenticated::class,
+        'seller.auth' => \App\Http\Middleware\SellerAuth::class,
         // Add this to the $routeMiddleware array
         'seller.subscription' => \App\Http\Middleware\CheckSellerSubscription::class,
+        'conditionalTenancy' => \App\Http\Middleware\ConditionalTenancyMiddleware::class,
+        'central.domain' => \App\Http\Middleware\CentralDomainOnly::class,
     ];
 }

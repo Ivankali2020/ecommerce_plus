@@ -290,21 +290,135 @@
                 </div>
             </div>
             
-            <button 
-                wire:click="placeOrder"
-                class="w-full inline-flex justify-center items-center px-4 py-3 bg-success-600 border border-transparent rounded-lg font-semibold text-sm text-white tracking-wider hover:bg-success-500 active:bg-success-700 focus:outline-none focus:border-success-700 focus:ring focus:ring-success-300 disabled:opacity-25 transition  "
-                @if(empty($cart ?? []))
-                    disabled
-                @endif
-            >
-                <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 mr-2" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7" />
-                </svg>
-                <span wire:loading.remove wire:target="placeOrder">Complete Sale</span>
-                <span wire:loading wire:target="placeOrder">Processing...</span>
-            </button>
+            <!-- Payment Form (shown when showPaymentForm is true) -->
+            @if($showPaymentForm)
+                <div class="bg-gray-50 dark:bg-gray-700 rounded-lg p-4 mb-4 space-y-4">
+                    <h3 class="text-lg font-semibold text-gray-900 dark:text-white flex items-center">
+                        <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 mr-2 text-success-500" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 9V7a2 2 0 00-2-2H5a2 2 0 00-2 2v6a2 2 0 002 2h2m2 4h10a2 2 0 002-2v-6a2 2 0 00-2-2H9a2 2 0 00-2 2v6a2 2 0 002 2zm7-5a2 2 0 11-4 0 2 2 0 014 0z" />
+                        </svg>
+                        Payment
+                    </h3>
+                    
+                    <!-- Total Amount Display -->
+                    <div class="flex justify-between items-center p-3 bg-white dark:bg-gray-800 rounded-lg">
+                        <span class="font-medium text-gray-700 dark:text-gray-300">Total Amount:</span>
+                        <span class="text-lg font-bold text-success-600 dark:text-success-400">{{ number_format($total) }} MMK</span>
+                    </div>
+                    
+                    <!-- Given Amount Input -->
+                    <div class="space-y-2">
+                        <label class="block text-sm font-medium text-gray-700 dark:text-gray-300">Given Amount</label>
+                        <div class="flex space-x-2">
+                            <input type="number" 
+                                   wire:model.live="givenAmount" 
+                                   step="100"
+                                   class="flex-1 px-3 py-2 border border-gray-300 dark:border-gray-600 rounded-lg focus:outline-none focus:ring-2 focus:ring-success-500 dark:bg-gray-800 dark:text-white"
+                                   placeholder="Enter given amount">
+                            <button wire:click="setExactAmount" 
+                                    class="px-4 py-2 bg-gray-200 dark:bg-gray-600 text-gray-700 dark:text-gray-300 rounded-lg hover:bg-gray-300 dark:hover:bg-gray-500 text-sm">
+                                Exact
+                            </button>
+                        </div>
+                        
+                        <!-- Quick Amount Buttons -->
+                        <div class="grid grid-cols-3 gap-2 mt-2">
+                            <button wire:click="$set('givenAmount', {{ ceil(($total ?? 0) / 1000) * 1000 }})" 
+                                    class="px-3 py-2 bg-blue-100 dark:bg-blue-900 text-blue-700 dark:text-blue-300 rounded-lg hover:bg-blue-200 dark:hover:bg-blue-800 text-sm">
+                                {{ number_format(ceil(($total ?? 0) / 1000) * 1000) }}
+                            </button>
+                            <button wire:click="$set('givenAmount', {{ ceil(($total ?? 0) / 5000) * 5000 }})" 
+                                    class="px-3 py-2 bg-blue-100 dark:bg-blue-900 text-blue-700 dark:text-blue-300 rounded-lg hover:bg-blue-200 dark:hover:bg-blue-800 text-sm">
+                                {{ number_format(ceil(($total ?? 0) / 5000) * 5000) }}
+                            </button>
+                            <button wire:click="$set('givenAmount', {{ ceil(($total ?? 0) / 10000) * 10000 }})" 
+                                    class="px-3 py-2 bg-blue-100 dark:bg-blue-900 text-blue-700 dark:text-blue-300 rounded-lg hover:bg-blue-200 dark:hover:bg-blue-800 text-sm">
+                                {{ number_format(ceil(($total ?? 0) / 10000) * 10000) }}
+                            </button>
+                        </div>
+                    </div>
+                    
+                    <!-- Change Amount Display -->
+                    <div class="flex justify-between items-center p-3 rounded-lg {{ $changeAmount >= 0 ? 'bg-green-50 dark:bg-green-900/20' : 'bg-red-50 dark:bg-red-900/20' }}">
+                        <span class="font-medium {{ $changeAmount >= 0 ? 'text-green-700 dark:text-green-300' : 'text-red-700 dark:text-red-300' }}">
+                            {{ $changeAmount >= 0 ? 'Change:' : 'Insufficient:' }}
+                        </span>
+                        <span class="text-lg font-bold {{ $changeAmount >= 0 ? 'text-green-600 dark:text-green-400' : 'text-red-600 dark:text-red-400' }}">
+                            {{ number_format(abs($changeAmount)) }} MMK
+                        </span>
+                    </div>
+                    
+                    <!-- Payment Action Buttons -->
+                    <div class="flex space-x-2">
+                        <button wire:click="hidePayment" 
+                                class="flex-1 px-4 py-2 bg-gray-200 dark:bg-gray-600 text-gray-700 dark:text-gray-300 rounded-lg hover:bg-gray-300 dark:hover:bg-gray-500 text-sm">
+                            Cancel
+                        </button>
+                        <button wire:click="placeOrder" 
+                                {{ $changeAmount < 0 ? 'disabled' : '' }}
+                                class="flex-1 px-4 py-2 bg-success-600 text-white rounded-lg hover:bg-success-500 disabled:opacity-50 disabled:cursor-not-allowed text-sm">
+                            <span wire:loading.remove wire:target="placeOrder">Complete Sale</span>
+                            <span wire:loading wire:target="placeOrder">Processing...</span>
+                        </button>
+                    </div>
+                </div>
+            @else
+                <!-- Show Payment Button when payment form is hidden -->
+                <button wire:click="showPayment"
+                        class="w-full inline-flex justify-center items-center px-4 py-3 bg-success-600 border border-transparent rounded-lg font-semibold text-sm text-white tracking-wider hover:bg-success-500 active:bg-success-700 focus:outline-none focus:border-success-700 focus:ring focus:ring-success-300 disabled:opacity-25 transition"
+                        @if(empty($cart ?? []))
+                            disabled
+                        @endif>
+                    <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 mr-2" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 9V7a2 2 0 00-2-2H5a2 2 0 00-2 2v6a2 2 0 002 2h2m2 4h10a2 2 0 002-2v-6a2 2 0 00-2-2H9a2 2 0 00-2 2v6a2 2 0 002 2zm7-5a2 2 0 11-4 0 2 2 0 014 0z" />
+                    </svg>
+                    Proceed to Payment
+                </button>
+            @endif
         </div>
     </div>
    
+    <!-- Receipt Modal -->
+    @if($showReceipt && $lastOrder)
+        <div class="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50" wire:click="closeReceipt">
+            <div class="bg-white dark:bg-gray-800 rounded-lg p-6 max-w-md w-full mx-4" wire:click.stop>
+                <div class="text-center mb-4">
+                    <h2 class="text-2xl font-bold text-gray-900 dark:text-white">Receipt</h2>
+                    <p class="text-sm text-gray-600 dark:text-gray-400">Invoice #{{ $lastOrder->invoice_number }}</p>
+                    <p class="text-xs text-gray-500 dark:text-gray-500">{{ $lastOrder->created_at->format('M d, Y H:i') }}</p>
+                </div>
+                
+                <div class="border-t border-b border-gray-200 dark:border-gray-700 py-4 mb-4">
+                    <div class="flex justify-between items-center mb-2">
+                        <span class="font-semibold text-gray-900 dark:text-white">Total Amount:</span>
+                        <span class="font-bold text-lg">{{ number_format($lastOrder->total_price) }} MMK</span>
+                    </div>
+                    
+                    @if($lastOrder->given_amount > 0)
+                        <div class="flex justify-between items-center mb-2">
+                            <span class="text-gray-600 dark:text-gray-400">Given:</span>
+                            <span>{{ number_format($lastOrder->given_amount) }} MMK</span>
+                        </div>
+                        
+                        <div class="flex justify-between items-center">
+                            <span class="text-gray-600 dark:text-gray-400">Change:</span>
+                            <span class="font-semibold text-green-600 dark:text-green-400">{{ number_format($lastOrder->change_amount) }} MMK</span>
+                        </div>
+                    @endif
+                </div>
+                
+                <div class="flex space-x-2">
+                    <button wire:click="closeReceipt" 
+                            class="flex-1 px-4 py-2 bg-gray-200 dark:bg-gray-600 text-gray-700 dark:text-gray-300 rounded-lg hover:bg-gray-300 dark:hover:bg-gray-500">
+                        Close
+                    </button>
+                    <button onclick="window.print()" 
+                            class="flex-1 px-4 py-2 bg-success-600 text-white rounded-lg hover:bg-success-500">
+                        Print
+                    </button>
+                </div>
+            </div>
+        </div>
+    @endif
 </div>
 

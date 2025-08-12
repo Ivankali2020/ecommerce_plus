@@ -3,7 +3,7 @@
 <head>
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <link icon rel="icon" type="image/png" href="{{ asset('assets/logo.png') }}">
+    <link icon rel="icon" type="image/png" href="{{ $tenantSellerLogo ?? asset('images/favicon.png') }}">
     <style>
         [x-cloak] {
             display: none !important;
@@ -13,7 +13,7 @@
     @filamentStyles
     @vite('resources/css/app.css')
 
-    <title>{{ $title ?? 'Store' }}</title>
+    <title>{{ $title ?? $tenantSellerName }}</title>
 </head>
 <body class=' hide-scrollbar'>
 

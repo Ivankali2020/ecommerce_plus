@@ -2,6 +2,7 @@
 
 namespace Database\Seeders;
 
+use App\Helper\AttributeType;
 use App\Models\Attribute;
 use App\Models\AttributeValue;
 use App\Models\Brand;
@@ -11,8 +12,11 @@ use App\Models\Exchange;
 use App\Models\Payment;
 use App\Models\PaymentAccount;
 use App\Models\Seller;
+use App\Models\Tenant;
+use Dom\Attr;
 use Illuminate\Database\Seeder;
 use Illuminate\Support\Facades\DB;
+use Stancl\Tenancy\Database\Models\Domain;
 
 class MultiStoreSeeder extends Seeder
 {
@@ -26,7 +30,15 @@ class MultiStoreSeeder extends Seeder
         try {
             $this->call([
                 RegionSeeder::class,
-                CurrencySeeder::class,
+                // CurrencySeeder::class,
+            ]);
+
+
+            //create tenant
+            $tenant = Tenant::create([
+                'data' => [
+                    'domain' => 'store',
+                ],
             ]);
 
             $user = Seller::factory(1)
@@ -37,9 +49,48 @@ class MultiStoreSeeder extends Seeder
                     'description' => 'ကုန်မျိုးဆုံဆိုင်',
                     'email_verified_at' => now(),
                 ])
-                ->has(Attribute::factory(3)->has(AttributeValue::factory(3), 'values'))
-                ->has(Payment::factory(5)->has(PaymentAccount::factory(2), 'accounts'))
+                // ->has(Attribute::factory(3)->has(AttributeValue::factory(3), 'values'))
+                ->has(Payment::factory(5)->state(fn() => ['tenant_id' => isset($tenant) ? $tenant->id : null])->has(PaymentAccount::factory(2), 'accounts'))
                 ->create()->toArray()[0];
+
+
+            //create domains
+            $domain = Domain::create([
+                'domain' => 'store' . '.' . config('tenancy.central_domains')[0],
+                'tenant_id' => $tenant->id,
+            ]);
+
+            // attach tenant to seller
+            DB::table('tenant_seller')->insert([
+                'tenant_id' => $tenant->id,
+                'seller_id' => $user['id'],
+                'created_at' => now(),
+                'updated_at' => now(),
+            ]);
+
+            // add attributes sample for store
+            $attributes = [
+                ['name' => 'အရောင်', 'type' => AttributeType::Color],
+                ['name' => 'အရွယ်အစား', 'type' => AttributeType::Text],
+                ['name' => 'အထည်ပုံစံ', 'type' => AttributeType::Text],
+            ];
+            foreach ($attributes as $attr) {
+                $attribute = new Attribute;
+                $attribute->name = $attr['name'];
+                $attribute->type = $attr['type'];
+                $attribute->seller_id = $user['id'];
+                $attribute->tenant_id = $tenant->id;
+                $attribute->save();
+
+                // Create sample attribute values
+                for ($i = 0; $i < 3; $i++) {
+                    AttributeValue::create([
+                        'attribute_id' => $attribute->id,
+                        'value' => fake()->word(),
+                        'color_code' => fake()->hexColor(),
+                    ]);
+                }
+            }
 
             $categories = [
                 'စည်သွပ်ဗူး',
@@ -62,18 +113,29 @@ class MultiStoreSeeder extends Seeder
             foreach ($categories as $cat) {
                 $category = new Category;
                 $category->seller_id = $user['id'];
+                $category->tenant_id = $tenant->id;
                 $category->name = $cat;
                 $category->save();
             }
 
             $brands = [
-                'Best', 'Ready', 'အိမ်ချက်', 'ထိုင်း', 'လက်ဖက်နှင့်အကြော်စုံ', 'ငါးပိငါးခြောက်', 'Noodle', 'မီးဖိုချောင်သုံးပစ္စည်းနဲ့ဟင်းခက်အမွှေးအကြိုင်', 'အလှကုန်ဆေးများ', 'အခြား',
+                'Best',
+                'Ready',
+                'အိမ်ချက်',
+                'ထိုင်း',
+                'လက်ဖက်နှင့်အကြော်စုံ',
+                'ငါးပိငါးခြောက်',
+                'Noodle',
+                'မီးဖိုချောင်သုံးပစ္စည်းနဲ့ဟင်းခက်အမွှေးအကြိုင်',
+                'အလှကုန်ဆေးများ',
+                'အခြား',
             ];
 
             foreach ($brands as $cat) {
                 $brand = new Brand;
                 $brand->name = $cat;
                 $brand->seller_id = $user['id'];
+                $brand->tenant_id = $tenant->id;
                 $brand->save();
                 //                $brand->addMediaFromUrl(fake()->imageUrl(width: 200,height: 200,randomize: false,word: 'Brand',gray: true))
                 //                ->toMediaCollection('logos');
@@ -302,6 +364,7 @@ class MultiStoreSeeder extends Seeder
             $exchange->currency_id = $currency->id;
             $exchange->rate = '4500';
             $exchange->seller_id = $user['id'];
+            $exchange->tenant_id = $tenant->id;
             $exchange->save();
 
             $datas = [];
@@ -309,6 +372,7 @@ class MultiStoreSeeder extends Seeder
                 $attId = Attribute::where('seller_id', $user['id'])->get()->random()->id;
                 $data = [
                     'seller_id' => $user['id'],
+                    'tenant_id' => $tenant->id,
                     'exchange_id' => $exchange->id,
                     'name' => $product['name'],
                     'buy_price' => $product['price'] - $product['price'] / 100 * 10,
@@ -332,12 +396,10 @@ class MultiStoreSeeder extends Seeder
                 ];
 
                 array_push($datas, $data);
-
             }
             DB::table('products')->insert($datas);
 
             DB::commit();
-
         } catch (\Exception $e) {
             dd($e->getMessage());
         }

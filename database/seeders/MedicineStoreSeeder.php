@@ -12,8 +12,10 @@ use App\Models\Exchange;
 use App\Models\Payment;
 use App\Models\PaymentAccount;
 use App\Models\Seller;
+use App\Models\Tenant;
 use Illuminate\Database\Seeder;
 use Illuminate\Support\Facades\DB;
+use Stancl\Tenancy\Database\Models\Domain;
 
 class MedicineStoreSeeder extends Seeder
 {
@@ -26,6 +28,14 @@ class MedicineStoreSeeder extends Seeder
 
         try {
 
+
+            //create tenant
+            $tenant = Tenant::create([
+                'data' => [
+                    'domain' => 'medicine',
+                ],
+            ]);
+
             // / for medicine store
             $medicine = Seller::factory(1)
                 ->state([
@@ -36,8 +46,14 @@ class MedicineStoreSeeder extends Seeder
                     'email_verified_at' => now(),
                 ])
                 // ->has(Attribute::factory(3)->has(AttributeValue::factory(3), 'values'))
-                // ->has(Payment::factory(5)->has(PaymentAccount::factory(2), 'accounts'))
+                ->has(Payment::factory(5)->state(fn() => ['tenant_id' => isset($tenant) ? $tenant->id : null])->has(PaymentAccount::factory(2), 'accounts'))
                 ->create()->toArray()[0];
+
+            //create domains
+            $domain = Domain::create([
+                'domain' => 'medicine' . '.' . config('tenancy.central_domains')[0],
+                'tenant_id' => $tenant->id,
+            ]);
 
             $attributes = [
                 [
@@ -158,6 +174,7 @@ class MedicineStoreSeeder extends Seeder
                 $attribute->name = $att['name'];
                 $attribute->type = AttributeType::Text;
                 $attribute->seller_id = $medicine['id'];
+                $attribute->tenant_id = $tenant->id;
                 $attribute->save();
                 foreach ($att['values'] as $val) {
                     $attributeValue = new AttributeValue;
@@ -172,12 +189,14 @@ class MedicineStoreSeeder extends Seeder
             foreach ($medicinCategories as $cat) {
                 $category = new Category;
                 $category->seller_id = $medicine['id'];
+                $category->tenant_id = $tenant->id;
                 $category->name = $cat['label'];
                 $category->save();
                 foreach ($cat['children'] as $child) {
                     $sub = new Category;
                     $sub->parent_id = $category->id;
                     $sub->seller_id = $medicine['id'];
+                    $sub->tenant_id = $tenant->id;
                     $sub->name = $child['label'];
                     $sub->save();
                 }
@@ -191,6 +210,7 @@ class MedicineStoreSeeder extends Seeder
                 $brand = new Brand;
                 $brand->name = $cat;
                 $brand->seller_id = $medicine['id'];
+                $brand->tenant_id = $tenant->id;
                 $brand->save();
                 //                $brand->addMediaFromUrl(fake()->imageUrl(width: 200,height: 200,randomize: false,word: 'Brand',gray: true))
                 //                ->toMediaCollection('logos');
@@ -405,6 +425,7 @@ class MedicineStoreSeeder extends Seeder
             $exchange->currency_id = $currency->id;
             $exchange->rate = '4500';
             $exchange->seller_id = $medicine['id'];
+            $exchange->tenant_id = $tenant->id;
             $exchange->save();
 
             $datas = [];
@@ -413,6 +434,7 @@ class MedicineStoreSeeder extends Seeder
                 $price = 1000 * (random_int(0, 5));
                 $data = [
                     'seller_id' => $medicine['id'],
+                    'tenant_id' => $tenant->id,
                     'exchange_id' => $exchange->id,
                     'name' => $index,
                     'buy_price' => $price / 100 * 10,

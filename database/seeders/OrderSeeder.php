@@ -42,6 +42,7 @@ class OrderSeeder extends Seeder
                 $order = Order::create([
                     'invoice_number' => 'INV-' . strtoupper(uniqid()),
                     'seller_id' => $sellerId,
+                    'tenant_id' => Seller::find($sellerId)->tenants()->first()->id, // Assuming tenant_id is linked to seller
                     'staff_id' => null, // Assuming walk-in doesn't have staff ID, adjust if needed
                     'walk_in_customer' => true,
                     'is_cod' => $faker->boolean(70), // 70% chance of being COD for walk-in
@@ -84,7 +85,7 @@ class OrderSeeder extends Seeder
                         'order_id' => $order->id,
                         'product_id' => $productId,
                         'variant_id' => null, // Assuming no variants for simplicity
-                        'attributes' => json_encode([]), // Assuming no attributes
+                        'attributes' => json_encode([['attribute' => 'TEST', 'value' => 'TXT']]), // Properly formatted JSON
                         'price' => $price,
                         'discount_price' => $discountPrice,
                         'discount' => $discount,
@@ -118,7 +119,6 @@ class OrderSeeder extends Seeder
 
             DB::commit();
             $this->command->info('OrderSeeder completed successfully.');
-
         } catch (\Exception $e) {
             DB::rollBack();
             $this->command->error('OrderSeeder failed: ' . $e->getMessage());

@@ -3,6 +3,7 @@
 namespace App\Providers\Filament;
 
 use App\Http\Middleware\SuperAdmin;
+use App\Http\Middleware\CentralDomainOnly;
 use BezhanSalleh\FilamentShield\FilamentShieldPlugin;
 use Filament\Http\Middleware\Authenticate;
 use Filament\Http\Middleware\DisableBladeIconComponents;
@@ -26,7 +27,7 @@ class AdminPanelProvider extends PanelProvider
     {
         return $panel
             ->id('admin')
-            ->path('admin')
+            ->path('oh_my_admin')
             ->colors([
                 'primary' => Color::Orange,
                 'gray' => Color::Slate,
@@ -51,6 +52,7 @@ class AdminPanelProvider extends PanelProvider
             ->sidebarWidth('18rem')
             //            ->maxContentWidth('xxl')
             ->middleware([
+                CentralDomainOnly::class,
                 EncryptCookies::class,
                 AddQueuedCookiesToResponse::class,
                 StartSession::class,

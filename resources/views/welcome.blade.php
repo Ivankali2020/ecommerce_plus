@@ -5,23 +5,23 @@
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
 
-    <title>{{ config('app.name', 'MYANCOMMERCE') }}</title>
+    <title>{{ config('app.name', 'PADUANG') }}</title>
 
     <!-- Primary Meta Tags -->
-    <meta name="title" content="{{ config('app.name', 'MYANCOMMERCE') }}">
+    <meta name="title" content="{{ config('app.name', 'PADUANG') }}">
     <meta name="description" content="{{ __('meta.description') }}">
 
     <!-- Open Graph / Facebook -->
     <meta property="og:type" content="website">
     <meta property="og:url" content="{{ url('/') }}">
-    <meta property="og:title" content="{{ config('app.name', 'MYANCOMMERCE') }}">
+    <meta property="og:title" content="{{ config('app.name', 'PADUANG') }}">
     <meta property="og:description" content="{{ __('meta.description') }}">
     <meta property="og:image" content="{{ asset('assets/logo.png') }}">
 
     <!-- Twitter -->
     <meta property="twitter:card" content="summary_large_image">
     <meta property="twitter:url" content="{{ url('/') }}">
-    <meta property="twitter:title" content="{{ config('app.name', 'MYANCOMMERCE') }}">
+    <meta property="twitter:title" content="{{ config('app.name', 'PADUANG') }}">
     <meta property="twitter:description" content="{{ __('meta.description') }}">
     <meta property="twitter:image" content="{{ asset('assets/logo.png') }}">
 
@@ -68,7 +68,7 @@
                             </div>
 
                             <div class="flex justify-center">
-                                <img class="w-80" src="{{ asset('assets/logo.png')}}" alt="Logo">
+                                <img  class="w-80" src="{{ asset('assets/logo.png')}}" alt="{{ __('meta.description') }}">
                             </div>
 
                             <!-- Main Heading -->
@@ -86,9 +86,13 @@
 
                             <!-- Call to Action Buttons -->
                             <div class="mt-10 flex items-center justify-center gap-x-6 {{ app()->currentLocale() === 'my' ? 'font-mm' : '' }}">
+                                <!-- Seller Registration CTA -->
+                                <x-primary-link-button :href="route('partner.register')" class="py-2.5">
+                                     {{ __('messages.welcome.create_your_store') }}
+                                </x-primary-link-button>
 
                                 @guest
-                                <a href="{{ route('login') }}"
+                                {{-- <a href="{{ route('login') }}"
                                     class="text-sm flex font-semibold leading-6 gap-2 items-center text-gray-900 dark:text-gray-300 group">
                                     <span> {{ __('messages.sign_in') }} </span>
                                     <span aria-hidden="true" class="transform transition-transform duration-300 ease-in-out group-hover:translate-x-1">
@@ -96,7 +100,7 @@
                                             <path fill-rule="evenodd" d="M8.22 5.22a.75.75 0 0 1 1.06 0l4.25 4.25a.75.75 0 0 1 0 1.06l-4.25 4.25a.75.75 0 0 1-1.06-1.06L11.94 10 8.22 6.28a.75.75 0 0 1 0-1.06Z" clip-rule="evenodd" />
                                         </svg>
                                     </span>
-                                </a>
+                                </a> --}}
                                 @else
                                 <a href="{{ route('profile') }}"
                                     class="text-sm flex font-semibold leading-6 gap-2 items-center text-gray-900 dark:text-gray-300 group">
@@ -121,10 +125,75 @@
                     </div>
                 </header>
 
+                <!-- Seller Benefits Section -->
+                <section class="py-16">
+                    <div class="mx-auto max-w-4xl text-center">
+                        <h2 class="text-3xl font-bebas tracking-wider font-bold text-gray-900 dark:text-white mb-8">
+                            {{ __('messages.welcome.why_choose_platform') }}
+                        </h2>
+                        
+                        <div class="grid grid-cols-1 md:grid-cols-3 gap-8">
+                            <div class="bg-white dark:bg-zinc-900 rounded-lg  p-6 shadow-lg ring-1 ring-black/5 dark:ring-zinc-800">
+                                <div class="w-16 h-16 bg-blue-100 dark:bg-blue-900 rounded-full flex items-center justify-center mx-auto mb-4">
+                                    <svg xmlns="http://www.w3.org/2000/svg" class="h-8 w-8 text-blue-600 dark:text-blue-400" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 10V3L4 14h7v7l9-11h-7z" />
+                                    </svg>
+                                </div>
+                                <h3 class="text-xl font-semibold text-gray-900 dark:text-white mb-2">{{ __('messages.welcome.quick_setup') }}</h3>
+                                <p class="text-gray-600 dark:text-gray-300 font-sans  " style="line-height:2rem">{{ __('messages.welcome.quick_setup_description') }}</p>
+                            </div>
+                            
+                            <div class="bg-white dark:bg-zinc-900 rounded-lg  p-6 shadow-lg ring-1 ring-black/5 dark:ring-zinc-800">
+                                <div class="w-16 h-16 bg-green-100 dark:bg-green-900 rounded-full flex items-center justify-center mx-auto mb-4">
+                                    <svg xmlns="http://www.w3.org/2000/svg" class="h-8 w-8 text-green-600 dark:text-green-400" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 12a9 9 0 01-9 9m9-9a9 9 0 00-9-9m9 9H3m9 9v-9m0-9v9" />
+                                    </svg>
+                                </div>
+                                <h3 class="text-xl font-semibold text-gray-900 dark:text-white mb-2">{{ __('messages.welcome.custom_domain') }}</h3>
+                                <p class="text-gray-600 dark:text-gray-300 font-sans  " style="line-height:2rem">{{ __('messages.welcome.custom_domain_description') }}</p>
+                            </div>
+                            
+                            <div class="bg-white dark:bg-zinc-900 rounded-lg p-6 shadow-lg ring-1 ring-black/5 dark:ring-zinc-800">
+                                <div class="w-16 h-16 bg-purple-100 dark:bg-purple-900 rounded-full flex items-center justify-center mx-auto mb-4">
+                                    <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6 text-purple-600 dark:text-purple-400" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m5.618-4.016A11.955 11.955 0 0112 2.944a11.955 11.955 0 01-8.618 3.04A12.02 12.02 0 003 9c0 5.591 3.824 10.29 9 11.622 5.176-1.332 9-6.031 9-11.622 0-1.042-.133-2.052-.382-3.016z" />
+                                    </svg>
+                                </div>
+                                <h3 class="text-xl font-semibold text-gray-900 dark:text-white mb-2">{{ __('messages.welcome.complete_tools') }}</h3>
+                                <p class="text-gray-600 dark:text-gray-300 font-sans "  style="line-height:2rem"">{{ __('messages.welcome.complete_tools_description') }}</p>
+                            </div>
+                        </div>
+                        
+                        <div class="mt-12">
+                            <p class="text-lg text-gray-600 dark:text-gray-300 font-jost mb-6">
+                                {{ __('messages.welcome.join_sellers') }}
+                            </p>
+                            <x-primary-link-button :href="route('partner.register')" class="py-3 inline-flex items-center gap-2">
+                                <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 10V3L4 14h7v7l9-11h-7z" />
+                                </svg>
+                                {{ __('messages.welcome.start_free_store') }}
+                            </x-primary-link-button>
+                        </div>
+                    </div>
+                </section>
+
+                @if($sellers->count() > 0)
                 <main id="sellers" >
+                    <!-- Existing Stores Section -->
+                    <div class="text-center mb-12">
+                        <h2 class="text-3xl font-bebas tracking-wider font-bold text-gray-900 dark:text-white mb-4">
+                            {{ __('messages.welcome.explore_stores') }}
+                        </h2>
+                        <p class="text-lg text-gray-600 dark:text-gray-300 font-jost">
+                            {{ __('messages.welcome.browse_community') }}
+                        </p>
+                    </div>
+                    
                     <div class="grid gap-6 lg:grid-cols-2 lg:gap-8">
                         @foreach ($sellers as $seller)
-                            <a href="{{ route('store', $seller->id) }}"
+                            {{-- their domain --}}
+                            <a href="http://{{ $seller->tenants->first()->domain->domain ?? '#' }}" target="_blank"
                                 class="flex items-start gap-4 rounded-lg bg-white p-6 animate-fade-in  shadow-[0px_14px_34px_0px_rgba(0,0,0,0.08)] ring-1 ring-white/[0.05] transition duration-300 hover:text-black/70 hover:ring-black/20 focus:outline-none focus-visible:ring-[#FF2D20] lg:pb-10 dark:bg-zinc-900 dark:ring-zinc-800 dark:hover:text-white/70 dark:hover:ring-zinc-700 dark:focus-visible:ring-[#FF2D20]">
                                 <img src="{{ $seller->getFirstMediaUrl('logos') }}" alt="{{ $seller->name }}"
                                     class="w-16 h-16 rounded-full object-cover">
@@ -147,6 +216,7 @@
                         @endforeach
                     </div>
                 </main>
+                @endif
             </div>
         </div>
     </div>

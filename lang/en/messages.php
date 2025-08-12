@@ -1,7 +1,7 @@
 <?php
 
 return [
-    'title' => 'MYANCOMMERCE',
+    'title' => 'PADUAUNG',
     'tagline' => 'Premium IT Solutions Provider',
     'description' => 'Your one-stop destination for all tech solutions. Explore our trusted sellers and find the perfect products and services for your needs.',
     'sign_in' => 'Sign In',
@@ -33,6 +33,7 @@ return [
         'min_order_not_met' => 'Minimum Order Quantity not met',
         'min_order_quantity' => 'Minimum order quantity is :quantity pieces',
         'out_of_stock' => 'Out of Stock',
+        'in_stock' => 'In Stock',
         'limited_stock' => 'Only :quantity pieces left in stock',
         'quantity_updated' => 'Product Quantity Updated!',
         'product_added' => 'Product added to cart successfully!',
@@ -74,8 +75,10 @@ return [
     'order_status' => [
         'new' => 'New',
         'processing' => 'Processing',
-        'confirmed' => 'Confirmed',
+        'shipped' => 'Shipped',
+        'delivered' => 'Delivered',
         'cancelled' => 'Cancelled',
+        'refunded' => 'Refunded',
     ],
     'orders' => [
         'history' => 'Order History',
@@ -92,8 +95,10 @@ return [
         'status' => [
             'new' => 'New',
             'processing' => 'Processing',
-            'confirmed' => 'Confirmed',
+            'shipped' => 'Shipped',
+            'delivered' => 'Delivered',
             'cancelled' => 'Cancelled',
+            'refunded' => 'Refunded',
         ],
     ],
     'order_detail' => [
@@ -113,6 +118,9 @@ return [
             'processing' => 'Processing',
             'confirmed' => 'Confirmed',
             'cancelled' => 'Cancelled',
+            'shipped' => 'Shipped',
+            'delivered' => 'Delivered',
+            'refunded' => 'Refunded',
         ],
     ],
     'address' => [
@@ -234,6 +242,34 @@ return [
             'or_continue_with' => 'Or continue with',
             'sign_in_with_google' => 'Sign in with Google',
         ],
+        'seller_register_page' => [
+            'title' => 'Create Your Online Store',
+            'subtitle' => 'Set up your online store in minutes with your own subdomain',
+            'name' => 'Full Name',
+            'email' => 'Email Address',
+            'subdomain' => 'Sub Domain',
+            'subdomain_preview' => 'Your store will be accessible at:',
+            'password' => 'Password',
+            'confirm_password' => 'Confirm Password',
+            'register_button' => 'Create Store',
+            'registering' => 'Creating Store...',
+            'have_store' => 'Already have a store?',
+            'go_to_main' => 'Go to main website',
+            'features' => [
+                'quick_setup' => [
+                    'title' => 'Quick Setup',
+                    'description' => 'Get your store online in under 5 minutes',
+                ],
+                'custom_domain' => [
+                    'title' => 'Custom Domain',
+                    'description' => 'Your own branded subdomain',
+                ],
+                'secure_reliable' => [
+                    'title' => 'Secure & Reliable',
+                    'description' => 'Built-in security and backup features',
+                ],
+            ],
+        ],
         'verify_email' => [
             'title' => 'Verify Email',
             'description' => 'Thanks for signing up! Before getting started, could you verify your email address by clicking on the link we just emailed to you? If you didn\'t receive the email, we will gladly send you another.',
@@ -257,4 +293,20 @@ return [
         'settings' => 'Settings',
     ],
     'discount_only' => 'Discount Only',
+
+    // Welcome page translations
+    'welcome' => [
+        'why_choose_platform' => 'Why Choose Our Platform?',
+        'quick_setup' => 'Quick Setup',
+        'quick_setup_description' => 'Get your online store running in under 5 minutes with our easy setup process.',
+        'custom_domain' => 'Custom Domain',
+        'custom_domain_description' => 'Get your own branded subdomain to establish your unique online presence.',
+        'complete_tools' => 'Complete Tools',
+        'complete_tools_description' => 'Full-featured POS system, inventory management, and analytics built-in.',
+        'join_sellers' => 'Join thousands of successful sellers already using our platform',
+        'create_your_store' => 'Create Your Store',
+        'start_free_store' => 'Start Your Free Store Now',
+        'explore_stores' => 'Explore Existing Stores',
+        'browse_community' => 'Browse and shop from our community of sellers',
+    ],
 ];
