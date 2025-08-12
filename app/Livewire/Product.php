@@ -2,38 +2,39 @@
 
 namespace App\Livewire;
 
-use App\Helper\CheckFilamentSellerUser;
+use App\Models\Category;
+use App\Models\Product as ProductModel;
 use App\Traits\WithCart;
 use Filament\Notifications\Notification;
 use Illuminate\Database\Eloquent\Collection;
 use Illuminate\Support\Facades\Validator;
 use Livewire\Attributes\Computed;
-use Livewire\Attributes\Reactive;
 use Livewire\Component;
-use App\Models\Product as ProductModel;
 use Livewire\WithPagination;
-use App\Models\Category;
-use Livewire\Attributes\On;
-use App\Models\Cart;
-use Illuminate\Support\Facades\Auth;
 
 class Product extends Component
 {
-    use WithPagination, WithCart;
+    use WithCart, WithPagination;
 
     public $storeID;
+
     public $brand_id;
+
     public $category_id;
+
     public int $perPage = 10;
+
     public bool $hasMorePages = true;
+
     public ?Collection $products;
+
     public $selectedCategory = null;
 
     // protected $listeners = ['refreshProducts' => '$refresh'];
 
     public function __construct()
     {
-        $this->products = new Collection();
+        $this->products = new Collection;
     }
 
     public function mount($storeID)
@@ -68,7 +69,7 @@ class Product extends Component
                 $query->where('seller_id', $this->storeID)
                     ->whereNotIn('id', $this->recommendedProducts->pluck('id'))
                     ->where('is_public', true);
-            }
+            },
         ])->latest()->get()->where('products_count', '>', 0);
     }
 
@@ -81,7 +82,7 @@ class Product extends Component
         $this->resetPage(); // Reset pagination state
 
         // Initialize new collection
-        $this->products = new Collection();
+        $this->products = new Collection;
 
         // Get fresh data
         $this->getProductData();
@@ -111,25 +112,25 @@ class Product extends Component
             $this->products = $this->products->merge($newProducts)->unique('id');
 
         } catch (\Exception $e) {
-            $this->products = new Collection();
+            $this->products = new Collection;
             $this->hasMorePages = false;
-            logger()->error('Error loading products: ' . $e->getMessage());
+            logger()->error('Error loading products: '.$e->getMessage());
         }
     }
 
     public function loadMore(): void
     {
-        if (!$this->hasMorePages) {
+        if (! $this->hasMorePages) {
             return;
         }
 
         try {
-           
+
             $this->perPage += 10;
             $this->getProductData();
 
         } catch (\Exception $e) {
-            logger()->error('Error loading more products: ' . $e->getMessage());
+            logger()->error('Error loading more products: '.$e->getMessage());
             $this->hasMorePages = false;
         }
     }

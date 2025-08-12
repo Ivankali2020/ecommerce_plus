@@ -3,7 +3,6 @@
 namespace App\Filament\Seller\Resources;
 
 use App\Filament\Seller\Resources\PurchaseResource\Pages;
-use App\Filament\Seller\Resources\PurchaseResource\RelationManagers;
 use App\Helper\CheckFilamentSellerUser;
 use App\Helper\PurchaseStatus;
 use App\Models\Attribute;
@@ -18,22 +17,22 @@ use Filament\Forms\Components\Group;
 use Filament\Forms\Form;
 use Filament\Notifications\Notification;
 use Filament\Resources\Pages\CreateRecord;
-use Filament\Resources\Pages\EditRecord;
 use Filament\Resources\Pages\Page;
 use Filament\Resources\Resource;
 use Filament\Tables;
 use Filament\Tables\Table;
 use Illuminate\Database\Eloquent\Builder;
-use Illuminate\Database\Eloquent\SoftDeletingScope;
-use Illuminate\Support\Facades\View;
 
 class PurchaseResource extends Resource
 {
     protected static ?string $model = Purchase::class;
 
     protected static ?string $modelLabel = null;
+
     protected static ?string $pluralModelLabel = null;
+
     protected static ?string $navigationLabel = null;
+
     protected static ?string $navigationIcon = 'heroicon-o-arrow-path-rounded-square';
 
     public static function getModelLabel(): string
@@ -70,8 +69,9 @@ class PurchaseResource extends Resource
                             ->itemLabel(function (array $state): ?string {
                                 $purchase = PurchaseProduct::where('product_id', $state['product_id'])->with('product')->first();
                                 if ($purchase) {
-                                    return $purchase->product->name . ' - ' . $purchase->stocks . ' pcs - ' . $purchase->buy_price;
+                                    return $purchase->product->name.' - '.$purchase->stocks.' pcs - '.$purchase->buy_price;
                                 }
+
                                 return '';
                             })
                             ->schema([
@@ -82,11 +82,11 @@ class PurchaseResource extends Resource
 
                                         Forms\Components\Select::make('product_id')
                                             ->label(__('filament/resources/purchase-resource.form.products.item.product'))
-                                            ->autofocus(fn(Page $livewire) => $livewire instanceof CreateRecord)
+                                            ->autofocus(fn (Page $livewire) => $livewire instanceof CreateRecord)
                                             ->relationship(
                                                 'product',
                                                 'name',
-                                                modifyQueryUsing: fn($query) => $query->when(CheckFilamentSellerUser::getSellerId() != null, function ($q) {
+                                                modifyQueryUsing: fn ($query) => $query->when(CheckFilamentSellerUser::getSellerId() != null, function ($q) {
                                                     $q->where('seller_id', CheckFilamentSellerUser::getSellerId());
                                                 })->whereNull('deleted_at')
                                             )
@@ -95,7 +95,7 @@ class PurchaseResource extends Resource
                                                     $product = Product::where('id', $state)->with('exchange')->first();
                                                     $data = [];
 
-                                                    if (!$product->has_variant) {
+                                                    if (! $product->has_variant) {
                                                         $set('buy_price', $product->buy_price);
                                                         $set('sell_price', $product->price);
 
@@ -124,14 +124,13 @@ class PurchaseResource extends Resource
                                         Forms\Components\Select::make('variant_id')
                                             ->label(__('filament/resources/purchase-resource.form.products.item.variant'))
                                             ->required()
-                                            ->hidden(fn(Forms\Get $get) => blank($get('product_id')) || !Product::where('id', $get('product_id'))->select('has_variant')->first()->has_variant)
+                                            ->hidden(fn (Forms\Get $get) => blank($get('product_id')) || ! Product::where('id', $get('product_id'))->select('has_variant')->first()->has_variant)
                                             ->searchable()->preload()->live()
                                             ->afterStateUpdated(function ($state, Forms\Get $get, Forms\Set $set) {
                                                 if ($state) {
                                                     $variant = Product::where('id', $get('product_id'))->first()->variants()->where('id', $state)->first();
                                                     $set('buy_price', $variant->buy_price);
                                                     $set('sell_price', $variant->price);
-
 
                                                     foreach ($variant->attributes as $att) {
 
@@ -164,50 +163,46 @@ class PurchaseResource extends Resource
                                             ->label(__('filament/resources/purchase-resource.form.products.item.sell_price'))
                                             ->live(onBlur: true)
                                             ->placeholder(function (Forms\Get $get, Forms\Set $set) {
-                                                if (!blank($get('stocks')) && !blank($get('buy_price'))) {
+                                                if (! blank($get('stocks')) && ! blank($get('buy_price'))) {
                                                     $set('total', $get('stocks') * $get('buy_price'));
                                                 }
                                             })
                                             ->numeric()->required(),
 
                                         Forms\Components\TextInput::make('total')->live(onBlur: true)->required()
-                                            ->suffix(fn(Forms\Get $get) => blank($get('product_id')) ? '' : Product::where('id', $get('product_id'))->with('exchange.currency')->first()->exchange->currency->symbol_native)
-                                            ,
+                                            ->suffix(fn (Forms\Get $get) => blank($get('product_id')) ? '' : Product::where('id', $get('product_id'))->with('exchange.currency')->first()->exchange->currency->symbol_native),
 
                                     ])->columnSpan(4)->columns(columns: 4),
 
                                     Group::make()->schema([
 
-                                     Forms\Components\Repeater::make('attributes')
-                                        ->collapsible(false)->reorderable(false)
-                                        ->addable(false)->deletable(false)
-                                        ->schema([
+                                        Forms\Components\Repeater::make('attributes')
+                                            ->collapsible(false)->reorderable(false)
+                                            ->addable(false)->deletable(false)
+                                            ->schema([
 
-                                            Forms\Components\Group::make()->schema([
-                                                Forms\Components\Hidden::make('attribute')
-                                                    ->label(__('filament/resources/purchase-resource.form.products.item.attributes.attribute'))
-                                                    ->required()
-                                                    ->label('Attribute'),
+                                                Forms\Components\Group::make()->schema([
+                                                    Forms\Components\Hidden::make('attribute')
+                                                        ->label(__('filament/resources/purchase-resource.form.products.item.attributes.attribute'))
+                                                        ->required()
+                                                        ->label('Attribute'),
 
-                                                Forms\Components\Select::make('value')
-                                                    ->label(__('filament/resources/purchase-resource.form.products.item.attributes.value'))
-                                                    ->placeholder(__('filament/resources/purchase-resource.form.products.item.attributes.select'))
-                                                    ->multiple()
-                                                    ->hidden(fn(Forms\Get $get) => blank($get('attribute')))
-                                                    ->required()->searchable()->preload()->label('Value')->placeholder('Select')
-                                                    //                                                           ->default(fn(Forms\Get $get) => AttributeValue::pluck('value','id'))
-                                                    ->options(fn(Forms\Get $get) => AttributeValue::pluck('value', 'id')),
+                                                    Forms\Components\Select::make('value')
+                                                        ->label(__('filament/resources/purchase-resource.form.products.item.attributes.value'))
+                                                        ->placeholder(__('filament/resources/purchase-resource.form.products.item.attributes.select'))
+                                                        ->multiple()
+                                                        ->hidden(fn (Forms\Get $get) => blank($get('attribute')))
+                                                        ->required()->searchable()->preload()->label('Value')->placeholder('Select')
+                                                        //                                                           ->default(fn(Forms\Get $get) => AttributeValue::pluck('value','id'))
+                                                        ->options(fn (Forms\Get $get) => AttributeValue::pluck('value', 'id')),
 
-                                            ])->columns(columns: 1)
+                                                ])->columns(columns: 1),
 
-                                        ]),
+                                            ]),
 
                                     ])->columnSpan(2),
 
                                 ])->columns(6),
-
-
-
 
                             ])->columns(columns: 6)->columnSpanFull(),
 
@@ -218,7 +213,7 @@ class PurchaseResource extends Resource
 
                             Forms\Components\Select::make('supplier_id')
                                 ->searchable()->preload()
-                                ->relationship('supplier', 'name', modifyQueryUsing: fn($query) => $query->when(CheckFilamentSellerUser::getSellerId() != null, function ($q) {
+                                ->relationship('supplier', 'name', modifyQueryUsing: fn ($query) => $query->when(CheckFilamentSellerUser::getSellerId() != null, function ($q) {
                                     $q->where('seller_id', CheckFilamentSellerUser::getSellerId());
                                 }))
                                 ->label(__('filament/resources/purchase-resource.form.supplier_id'))
@@ -249,10 +244,10 @@ class PurchaseResource extends Resource
                                 ->required()
                                 ->numeric()
                                 ->default(0.00),
-                        ])
-                    ])
+                        ]),
+                    ]),
 
-                ])->columns(4)
+                ])->columns(4),
 
             ]);
     }
@@ -260,9 +255,9 @@ class PurchaseResource extends Resource
     public static function getTotalPrice(Forms\Get $get, Forms\Set $set): void
     {
         $total = 0;
-        if (!blank($get('products'))) {
+        if (! blank($get('products'))) {
             foreach ($get('products') as $product) {
-                if (!blank($product['stocks']) && !blank($product['buy_price']) && $product['stocks'] != 0 && $product['buy_price'] != 0) {
+                if (! blank($product['stocks']) && ! blank($product['buy_price']) && $product['stocks'] != 0 && $product['buy_price'] != 0) {
                     $total += $product['buy_price'] * $product['stocks'];
                 }
             }
@@ -310,7 +305,7 @@ class PurchaseResource extends Resource
             ->actions([
                 Tables\Actions\Action::make('Invoice')
                     ->label(__('filament/resources/purchase-resource.table.actions.invoice'))
-                    ->modalContent(fn(Purchase $record) => view(
+                    ->modalContent(fn (Purchase $record) => view(
                         'livewire.purchase_invoice',
                         ['record' => $record]
                     ))
@@ -394,7 +389,7 @@ class PurchaseResource extends Resource
                             ->success()
                             ->send();
                     })
-                    ->visible(fn(Purchase $record): bool => $record->status !== PurchaseStatus::Complete),
+                    ->visible(fn (Purchase $record): bool => $record->status !== PurchaseStatus::Complete),
 
                 Tables\Actions\EditAction::make()
                     ->label(__('filament/resources/purchase-resource.table.actions.edit')),

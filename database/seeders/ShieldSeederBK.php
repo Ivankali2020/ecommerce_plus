@@ -2,8 +2,8 @@
 
 namespace Database\Seeders;
 
-use Illuminate\Database\Seeder;
 use BezhanSalleh\FilamentShield\Support\Utils;
+use Illuminate\Database\Seeder;
 use Spatie\Permission\PermissionRegistrar;
 
 class ShieldSeederBK extends Seeder
@@ -23,8 +23,6 @@ class ShieldSeederBK extends Seeder
 
         static::makeRolesWithPermissions($rolesWithPermissionsForSeller);
         static::makeDirectPermissions($directPermissionsForSeller);
-
-
 
         $this->command->info('Shield Seeding Completed.');
     }

@@ -4,8 +4,8 @@ namespace App\Policies;
 
 use App\Models\Seller;
 use Filament\Models\Contracts\FilamentUser;
-use Spatie\Permission\Models\Role;
 use Illuminate\Auth\Access\HandlesAuthorization;
+use Spatie\Permission\Models\Role;
 
 class RolePolicy
 {
@@ -17,6 +17,7 @@ class RolePolicy
             return true;
         }
     }
+
     /**
      * Determine whether the seller can view any models.
      */

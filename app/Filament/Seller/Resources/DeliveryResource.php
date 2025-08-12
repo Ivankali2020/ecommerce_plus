@@ -3,13 +3,10 @@
 namespace App\Filament\Seller\Resources;
 
 use App\Filament\Seller\Resources\DeliveryResource\Pages;
-use App\Filament\Seller\Resources\DeliveryResource\RelationManagers;
 use App\Models\Delivery;
 use Filament\Facades\Filament;
-use Filament\Forms;
 use Filament\Forms\Form;
 use Filament\Resources\Resource;
-use Filament\Tables;
 use Filament\Tables\Table;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\SoftDeletingScope;
@@ -24,15 +21,14 @@ class DeliveryResource extends Resource
         return __('filament/resources/payment-resource.navigation.group');
     }
 
-
     public static function getModelLabel(): string
     {
-        return __("filament/resources/delivery-resource.model.label");
+        return __('filament/resources/delivery-resource.model.label');
     }
 
     public static function getPluralModelLabel(): string
     {
-        return __("filament/resources/delivery-resource.model.plural_label");
+        return __('filament/resources/delivery-resource.model.plural_label');
     }
 
     // public static function getNavigationGroup(): ?string

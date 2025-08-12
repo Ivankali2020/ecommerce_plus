@@ -16,16 +16,16 @@ class CheckSellerSubscription
     {
         if (Auth::guard('seller')->check()) {
             $seller = Auth::guard('seller')->user();
-            
+
             // For staff accounts, check parent's subscription
             if ($seller->parent_id) {
                 $parent = $seller->parent;
-                if (!$parent || $parent->isSubscriptionExpired()) {
+                if (! $parent || $parent->isSubscriptionExpired()) {
                     return redirect()->route('seller.subscription.expired');
                 }
-            } 
+            }
             // For main seller accounts, check own subscription
-            else if ($seller->isSubscriptionExpired()) {
+            elseif ($seller->isSubscriptionExpired()) {
                 return redirect()->route('seller.subscription.expired');
             }
         }

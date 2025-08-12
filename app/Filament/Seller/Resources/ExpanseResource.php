@@ -2,14 +2,12 @@
 
 namespace App\Filament\Seller\Resources;
 
-use App\Helper\PaymentMethodExpanse;
 use App\Filament\Seller\Resources\ExpanseResource\Pages;
-use App\Filament\Seller\Resources\ExpanseResource\RelationManagers;
 use App\Helper\CheckFilamentSellerUser;
+use App\Helper\PaymentMethodExpanse;
 use App\Models\Expanse;
 use Filament\Forms;
 use Filament\Forms\Components\Group;
-use Filament\Forms\Components\Select;
 use Filament\Forms\Components\ToggleButtons;
 use Filament\Forms\Form;
 use Filament\Resources\Resource;
@@ -17,11 +15,9 @@ use Filament\Tables;
 use Filament\Tables\Columns\TextColumn;
 use Filament\Tables\Table;
 use Illuminate\Database\Eloquent\Builder;
-use Illuminate\Database\Eloquent\SoftDeletingScope;
 
 class ExpanseResource extends Resource
 {
-    
     protected static ?string $model = Expanse::class;
 
     protected static ?string $navigationIcon = 'heroicon-o-banknotes';
@@ -43,7 +39,6 @@ class ExpanseResource extends Resource
         return __('filament/resources/payment-resource.navigation.group');
     }
 
-
     // public static function getNavigationGroup(): ?string
     // {
     //     return __("filament/resources/expanse-resource.navigation.group");
@@ -51,7 +46,7 @@ class ExpanseResource extends Resource
 
     public static function getEloquentQuery(): Builder
     {
-        return parent::getEloquentQuery()->where('seller_id',CheckFilamentSellerUser::getSellerId());
+        return parent::getEloquentQuery()->where('seller_id', CheckFilamentSellerUser::getSellerId());
     }
 
     public static function form(Form $form): Form
@@ -60,45 +55,45 @@ class ExpanseResource extends Resource
             ->schema([
                 Group::make()->schema([
                     Forms\Components\Select::make('expanse_category_id')
-                    ->required()->searchable()->preload()
-                    ->label(__('filament/resources/expanse-resource.form.expanse_category_id.label'))
-                    ->relationship('category', 'name', modifyQueryUsing: function (Builder $query) {
-                        $query->where('seller_id', CheckFilamentSellerUser::getSellerId());
-                    })
-                    ->createOptionForm([
-                        Forms\Components\TextInput::make('name')
-                            ->required()
-                            ->maxLength(255),
-                        // Forms\Components\TextInput::make('icon')
-                        //     ->maxLength(255),
-                        Forms\Components\Hidden::make('seller_id')
-                            ->required()->default(CheckFilamentSellerUser::getSellerId()),
-                    ])->editOptionForm([
+                        ->required()->searchable()->preload()
+                        ->label(__('filament/resources/expanse-resource.form.expanse_category_id.label'))
+                        ->relationship('category', 'name', modifyQueryUsing: function (Builder $query) {
+                            $query->where('seller_id', CheckFilamentSellerUser::getSellerId());
+                        })
+                        ->createOptionForm([
                             Forms\Components\TextInput::make('name')
                                 ->required()
                                 ->maxLength(255),
-                        ]),
-                Forms\Components\TextInput::make('amount')
-                    ->required()
-                    ->numeric()
-                    ->label(__('filament/resources/expanse-resource.form.amount.label')),
+                            // Forms\Components\TextInput::make('icon')
+                            //     ->maxLength(255),
+                            Forms\Components\Hidden::make('seller_id')
+                                ->required()->default(CheckFilamentSellerUser::getSellerId()),
+                        ])->editOptionForm([
+                        Forms\Components\TextInput::make('name')
+                            ->required()
+                            ->maxLength(255),
+                    ]),
+                    Forms\Components\TextInput::make('amount')
+                        ->required()
+                        ->numeric()
+                        ->label(__('filament/resources/expanse-resource.form.amount.label')),
 
-                ToggleButtons::make('payment_method')
-                    ->label(__('filament/resources/expanse-resource.form.payment_method.label'))->grouped()
-                    ->options(PaymentMethodExpanse::class)
-                    ->required(),
+                    ToggleButtons::make('payment_method')
+                        ->label(__('filament/resources/expanse-resource.form.payment_method.label'))->grouped()
+                        ->options(PaymentMethodExpanse::class)
+                        ->required(),
 
-                // Forms\Components\Select::make('payment_method')
-                //     ->required()->options(PaymentMethodExpanse::class),
+                    // Forms\Components\Select::make('payment_method')
+                    //     ->required()->options(PaymentMethodExpanse::class),
 
-                Forms\Components\Hidden::make('seller_id')
-                    ->required()->default(CheckFilamentSellerUser::getSellerId()),
+                    Forms\Components\Hidden::make('seller_id')
+                        ->required()->default(CheckFilamentSellerUser::getSellerId()),
 
-                Forms\Components\Textarea::make('description')
-                    ->label(__('filament/resources/expanse-resource.form.description.label'))
-                    ->columnSpanFull(),
+                    Forms\Components\Textarea::make('description')
+                        ->label(__('filament/resources/expanse-resource.form.description.label'))
+                        ->columnSpanFull(),
 
-                ])
+                ]),
             ]);
     }
 

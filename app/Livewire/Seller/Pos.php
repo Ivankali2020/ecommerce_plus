@@ -2,56 +2,61 @@
 
 namespace App\Livewire\Seller;
 
-use App\Helper\CheckFilamentSellerUser;
-use App\Models\Product;
 use App\Models\Category;
+use App\Models\Product;
 use App\Models\Variant;
-use BezhanSalleh\FilamentShield\Traits\HasPanelShield;
 use Exception;
 use Filament\Actions\Action;
 use Filament\Actions\Concerns\InteractsWithActions;
 use Filament\Actions\Contracts\HasActions;
-use Filament\Facades\Filament;
 use Filament\Forms\Concerns\InteractsWithForms;
 use Filament\Forms\Contracts\HasForms;
 use Filament\Notifications\Notification;
 use Illuminate\Database\Eloquent\Collection;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
-use Illuminate\Support\Facades\View;
 use Livewire\Attributes\Computed;
 use Livewire\Attributes\Layout;
 use Livewire\Component;
 use Livewire\WithPagination;
 
 #[Layout('layouts.pos')]
-class Pos extends Component implements HasForms, HasActions
+class Pos extends Component implements HasActions, HasForms
 {
-    use WithPagination, InteractsWithActions, InteractsWithForms;
-    
+    use InteractsWithActions, InteractsWithForms, WithPagination;
+
     public $search = '';
+
     public $selectedCategory = null;
+
     public $cart = [];
+
     public $total = 0;
+
     public $discount = 0;
+
     public $tax = 0; // Default tax percentage
+
     public $selectedProduct = null;
+
     public int $perPage = 24;
+
     public bool $hasMorePages = true;
+
     public ?Collection $products;
 
     public function __construct()
     {
-        $this->products = new Collection();
+        $this->products = new Collection;
     }
-    
+
     public function mount()
     {
         $this->getProductData();
         $this->calculateTotal();
     }
-    
-    public function render()    
+
+    public function render()
     {
         return view('livewire.seller.pos');
     }
@@ -60,23 +65,23 @@ class Pos extends Component implements HasForms, HasActions
     {
         try {
             $query = Product::where('seller_id', Auth::guard('seller')->user()->parent_id ?? Auth::guard('seller')->user()->id);
-            
+
             // Apply category filter if selected
             if ($this->selectedCategory) {
                 $query->where('category_id', $this->selectedCategory);
             }
-            
+
             // Apply search filter if provided
             if ($this->search) {
-                $query->where(function($subQuery) {
-                    $subQuery->where('name', 'like', '%' . $this->search . '%')
-                        ->orWhere('sku', 'like', '%' . $this->search . '%');
+                $query->where(function ($subQuery) {
+                    $subQuery->where('name', 'like', '%'.$this->search.'%')
+                        ->orWhere('sku', 'like', '%'.$this->search.'%');
                 });
             }
-            
+
             // Add eager loading and ordering
             $query->with(['category', 'brand', 'variants'])
-                  ->latest();
+                ->latest();
 
             // Get total count for current query
             $total = $query->count();
@@ -90,10 +95,10 @@ class Pos extends Component implements HasForms, HasActions
             $this->products = $newProducts;
 
         } catch (\Exception $e) {
-            $this->products = new Collection();
+            $this->products = new Collection;
             $this->hasMorePages = false;
 
-            logger()->error('Error loading products: ' . $e->getMessage());
+            logger()->error('Error loading products: '.$e->getMessage());
         }
     }
 
@@ -106,7 +111,7 @@ class Pos extends Component implements HasForms, HasActions
         $this->resetPage(); // Reset pagination state
 
         // Initialize new collection
-        $this->products = new Collection();
+        $this->products = new Collection;
 
         // Get fresh data
         $this->getProductData();
@@ -114,31 +119,29 @@ class Pos extends Component implements HasForms, HasActions
 
     public function loadMore(): void
     {
-        if (!$this->hasMorePages) {
+        if (! $this->hasMorePages) {
             return;
         }
 
         try {
-           
+
             $this->perPage += 10;
             $this->getProductData();
 
         } catch (\Exception $e) {
-            logger()->error('Error loading more products: ' . $e->getMessage());
+            logger()->error('Error loading more products: '.$e->getMessage());
             $this->hasMorePages = false;
         }
     }
 
-
     // #[Computed]
     // public function products(){
     //     $productsQuery = Product::where('seller_id', auth('seller')->id())
-            
-            
+
     //     if ($this->categoryFilter) {
     //         $productsQuery->where('category_id', $this->categoryFilter);
     //     }
-        
+
     //     $products = $productsQuery->paginate(8);
 
     //     return $products;
@@ -146,21 +149,22 @@ class Pos extends Component implements HasForms, HasActions
     // }
 
     #[Computed]
-    public function categories(){
-       
+    public function categories()
+    {
+
         $categories = Category::where('seller_id', auth('seller')->id())
-        ->withCount('products')->get()
-        ->where('products_count', '>', 0);
+            ->withCount('products')->get()
+            ->where('products_count', '>', 0);
 
         return collect($categories);
     }
-    
+
     public function showProductDetail($productId)
     {
         $this->selectedProduct = Product::with('variants')->findOrFail($productId);
         $this->dispatch('openProductModal', $this->selectedProduct);
     }
-    
+
     public function addToCart($productId, $variantId = null, $quantity = 1)
     {
         try {
@@ -168,11 +172,12 @@ class Pos extends Component implements HasForms, HasActions
                 ->with(['variants'])
                 ->first();
 
-            if (!$product) {
+            if (! $product) {
                 Notification::make()
                     ->title('Product not found')
                     ->danger()
                     ->send();
+
                 return;
             }
 
@@ -186,26 +191,28 @@ class Pos extends Component implements HasForms, HasActions
 
             // Check if product already exists in cart
             $existingItemKey = $this->findCartItem($productId, $variantId);
-           
+
             $newQuantity = $existingItemKey !== false ? $this->cart[$existingItemKey]['quantity'] + $quantity : $quantity;
-            
+
             // Check MOQ
             if ($newQuantity < ($variant?->MOQ ?? $product->MOQ)) {
                 Notification::make()
                     ->title('Minimum order quantity not met')
-                    ->body('Minimum order quantity is ' . ($variant?->MOQ ?? $product->MOQ))
+                    ->body('Minimum order quantity is '.($variant?->MOQ ?? $product->MOQ))
                     ->warning()
                     ->send();
+
                 return;
             }
-            
+
             // Check stock
             if ($newQuantity > ($variant?->quantity ?? $product->quantity)) {
                 Notification::make()
                     ->title('Out of stock')
-                    ->body('Only ' . ($variant?->quantity ?? $product->quantity) . ' items available')
+                    ->body('Only '.($variant?->quantity ?? $product->quantity).' items available')
                     ->warning()
                     ->send();
+
                 return;
             }
 
@@ -213,7 +220,7 @@ class Pos extends Component implements HasForms, HasActions
             if ($existingItemKey !== false) {
                 $this->cart[$existingItemKey]['quantity'] = $newQuantity;
                 $this->cart[$existingItemKey]['subtotal'] = $price * $newQuantity;
-               
+
             } else {
                 $this->cart[] = [
                     'id' => $productId,
@@ -225,18 +232,18 @@ class Pos extends Component implements HasForms, HasActions
                     'subtotal' => $price * $newQuantity,
                     'discount_percentage' => $variant ? $variant->discount : $product->discount,
                     'original_price' => $variant ? $variant->mmk_price : $product->mmk_price,
-                    'has_discount' => $variant 
-                        ? ($variant->discount) 
-                        : ($product->discount)
+                    'has_discount' => $variant
+                        ? ($variant->discount)
+                        : ($product->discount),
                 ];
-                
+
             }
-            
+
             $this->calculateTotal();
 
         } catch (\Exception $e) {
-            logger()->error('Error adding to cart: ' . $e->getMessage());
-            
+            logger()->error('Error adding to cart: '.$e->getMessage());
+
             Notification::make()
                 ->title('Failed to add product to cart')
                 ->body($e->getMessage())
@@ -245,7 +252,7 @@ class Pos extends Component implements HasForms, HasActions
                 ->send();
         }
     }
-    
+
     public function findCartItem($productId, $variantId = null)
     {
         foreach ($this->cart as $key => $item) {
@@ -253,17 +260,17 @@ class Pos extends Component implements HasForms, HasActions
                 return $key;
             }
         }
-        
+
         return false;
     }
-    
+
     public function removeFromCart($index)
     {
         unset($this->cart[$index]);
         $this->cart = array_values($this->cart);
         $this->calculateTotal();
     }
-    
+
     public function updateQuantity($index, $quantity)
     {
         if ($quantity > 0) {
@@ -272,18 +279,18 @@ class Pos extends Component implements HasForms, HasActions
             $this->calculateTotal();
         }
     }
-    
+
     public function calculateTotal()
     {
         $subtotal = 0;
         foreach ($this->cart as $item) {
             $subtotal += $item['subtotal'];
         }
-        
+
         $taxAmount = $subtotal * ($this->tax / 100);
         $this->total = $subtotal - $this->discount + $taxAmount;
     }
-    
+
     public function placeOrder()
     {
         try {
@@ -292,15 +299,16 @@ class Pos extends Component implements HasForms, HasActions
                     ->title('Cart is empty')
                     ->warning()
                     ->send();
+
                 return;
             }
-            
+
             // Start a database transaction
             DB::beginTransaction();
-            
+
             // Create the order
             $order = \App\Models\Order::create([
-                'invoice_number' => 'INV-' . time() . '-' . auth('seller')->id(),
+                'invoice_number' => 'INV-'.time().'-'.auth('seller')->id(),
                 'seller_id' => auth('seller')->user()->parent_id ?? auth('seller')->id(),
                 'staff_id' => auth('seller')->id(), // Current logged in seller as staff
                 'walk_in_customer' => true, // Default to walk-in customer for POS
@@ -312,7 +320,7 @@ class Pos extends Component implements HasForms, HasActions
                 'tax' => $this->tax,
                 'tax_price' => collect($this->cart)->sum('subtotal') * ($this->tax / 100),
             ]);
-            
+
             // Create order products
             foreach ($this->cart as $item) {
                 $product = Product::find($item['product_id']);
@@ -320,26 +328,26 @@ class Pos extends Component implements HasForms, HasActions
 
                 if ($variant) {
                     if ($item['quantity'] > $variant->quantity) {
-                        throw new Exception($product->name . ' stock is not enough');
+                        throw new Exception($product->name.' stock is not enough');
                     }
                 } else {
                     if ($item['quantity'] > $product->quantity) {
-                        throw new Exception($product->name . ' stock is not enough');
+                        throw new Exception($product->name.' stock is not enough');
                     }
                 }
-                
+
                 // Create order product
                 $order->products()->create([
                     'product_id' => $item['product_id'],
                     'variant_id' => $item['variant_id'] ?? null,
-                    'attributes' => $variant ? $variant->attributeValues : $product->attributeValues, 
+                    'attributes' => $variant ? $variant->attributeValues : $product->attributeValues,
                     'price' => $variant ? $variant->mmk_price : $product->mmk_price,
                     'discount_price' => $variant ? $variant->mmk_discount_price : $product->mmk_discount_price,
                     'discount' => $item['discount_percentage'],
                     'quantity' => $item['quantity'],
-                    
-                    // 'profit' => $item['discount_percentage'] > 0 ? 
-                    //     ($item['price'] * $item['quantity']) - (($variant ? $variant->mmk_buy_price : $product->mmk_buy_price) * $item['quantity']) : 
+
+                    // 'profit' => $item['discount_percentage'] > 0 ?
+                    //     ($item['price'] * $item['quantity']) - (($variant ? $variant->mmk_buy_price : $product->mmk_buy_price) * $item['quantity']) :
                     //     ($item['price'] * $item['quantity']) - (($variant ? $variant->mmk_buy_price : $product->mmk_buy_price) * $item['quantity']),
                     'original_buy_price' => $variant ? $variant->buy_price : $product->buy_price,
                     'original_price' => $variant ? $variant->mmk_price : $product->mmk_price,
@@ -348,29 +356,29 @@ class Pos extends Component implements HasForms, HasActions
                     'exchange_rate' => $variant ? $variant->product->exchange->rate : $product->exchange->rate, // Default exchange rate
                     'sub_price' => $item['subtotal'],
                 ]);
-              
+
             }
-            
+
             // Commit the transaction
             DB::commit();
-            
+
             // Reset cart after order
             $this->cart = [];
             $this->discount = 0;
             $this->calculateTotal();
-            
+
             Notification::make()
                 ->title('Order placed successfully!')
-                ->body('Invoice #: ' . $order->invoice_number)
+                ->body('Invoice #: '.$order->invoice_number)
                 ->success()
                 ->send();
-                
+
         } catch (\Exception $e) {
             // Rollback the transaction in case of error
             DB::rollBack();
-            
-            logger()->error('Error creating order: ' . $e->getMessage());
-            
+
+            logger()->error('Error creating order: '.$e->getMessage());
+
             Notification::make()
                 ->title('Failed to place order')
                 ->body($e->getMessage())
@@ -378,43 +386,45 @@ class Pos extends Component implements HasForms, HasActions
                 ->send();
         }
     }
-    
+
     public function incrementQuantity($index)
     {
         if (isset($this->cart[$index])) {
             $productId = $this->cart[$index]['product_id'];
             $variantId = $this->cart[$index]['variant_id'];
             $newQuantity = $this->cart[$index]['quantity'] + 1;
-            
+
             // Check if we have enough stock
             $product = Product::find($productId);
-            if (!$product) {
+            if (! $product) {
                 Notification::make()
                     ->title('Product not found')
                     ->danger()
                     ->send();
+
                 return;
             }
-            
+
             $variant = $variantId ? Variant::find($variantId) : null;
             $availableStock = $variant ? $variant->quantity : $product->quantity;
-            
+
             if ($newQuantity > $availableStock) {
                 Notification::make()
                     ->title('Stock limit reached')
-                    ->body('Only ' . $availableStock . ' items available')
+                    ->body('Only '.$availableStock.' items available')
                     ->warning()
                     ->send();
+
                 return;
             }
-            
+
             // Update quantity if stock is available
             $this->cart[$index]['quantity'] = $newQuantity;
             $this->cart[$index]['subtotal'] = $this->cart[$index]['price'] * $newQuantity;
             $this->calculateTotal();
         }
     }
-    
+
     public function decrementQuantity($index)
     {
         if (isset($this->cart[$index]) && $this->cart[$index]['quantity'] > 1) {
@@ -422,31 +432,31 @@ class Pos extends Component implements HasForms, HasActions
             $productId = $this->cart[$index]['product_id'];
             $variantId = $this->cart[$index]['variant_id'];
             $newQuantity = $this->cart[$index]['quantity'] - 1;
-            
+
             $product = Product::find($productId);
-            if (!$product) {
+            if (! $product) {
                 return;
             }
-            
+
             $variant = $variantId ? Variant::find($variantId) : null;
             $moq = $variant ? ($variant->MOQ ?? 1) : ($product->MOQ ?? 1);
-            
+
             // Check if new quantity is below MOQ
             if ($newQuantity < $moq) {
                 Notification::make()
                     ->title('Minimum order quantity')
-                    ->body('Minimum order quantity is ' . $moq)
+                    ->body('Minimum order quantity is '.$moq)
                     ->warning()
                     ->send();
+
                 return;
             }
-            
+
             $this->cart[$index]['quantity'] = $newQuantity;
             $this->cart[$index]['subtotal'] = $this->cart[$index]['price'] * $newQuantity;
             $this->calculateTotal();
         }
     }
-
 
     public function variantAction(): Action
     {
@@ -461,54 +471,49 @@ class Pos extends Component implements HasForms, HasActions
             ));
     }
 
-
     public function searchProducts()
     {
         // Reset pagination when searching
         $this->resetPage();
-        
+
         // Reset products collection
-        $this->products = new Collection();
-        
+        $this->products = new Collection;
+
         // Get fresh data with search term
         $this->getProductData();
     }
-    
+
     public function searchByBarcodeAndAddToCart()
     {
-        
+
         // Search for product by barcode/SKU
-        $product = Product::where('seller_id',  Auth::guard('seller')->user()->parent_id ?? Auth::guard('seller')->user()->id )
-            ->where(function($query) {
+        $product = Product::where('seller_id', Auth::guard('seller')->user()->parent_id ?? Auth::guard('seller')->user()->id)
+            ->where(function ($query) {
                 $query->where('sku', $this->search)
                     ->orWhere('sku', $this->search);
             })
             ->first();
-        
+
         if ($product) {
             // If product found, add to cart
             $this->addToCart($product->id, null, $product->MOQ);
-            
+
         } else {
 
-            $variant = Variant::whereRelation('product','seller_id', Auth::guard('seller')->user()->parent_id ?? Auth::guard('seller')->user()->id)
+            $variant = Variant::whereRelation('product', 'seller_id', Auth::guard('seller')->user()->parent_id ?? Auth::guard('seller')->user()->id)
                 ->where('sku', $this->search)
                 ->with('product')
                 ->first();
 
-                if($variant){
-                    // If product found, add to cart
-                    $this->addToCart($variant->product->id, $variant->id, $variant->MOQ);
+            if ($variant) {
+                // If product found, add to cart
+                $this->addToCart($variant->product->id, $variant->id, $variant->MOQ);
 
-                    $this->search = '';
-                    $this->searchProducts();
-                }
+                $this->search = '';
+                $this->searchProducts();
+            }
 
-          
         }
-        
-        return;
+
     }
 }
-
-

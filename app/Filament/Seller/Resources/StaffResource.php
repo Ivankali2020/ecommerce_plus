@@ -4,18 +4,14 @@ namespace App\Filament\Seller\Resources;
 
 use App\Filament\Admin\Resources\SellerResource;
 use App\Filament\Seller\Resources\StaffResource\Pages;
-use App\Filament\Seller\Resources\StaffResource\RelationManagers;
 use App\Helper\CheckFilamentSellerUser;
 use App\Models\Seller;
 use App\Models\Staff;
 use Filament\Facades\Filament;
-use Filament\Forms;
 use Filament\Forms\Form;
 use Filament\Resources\Resource;
-use Filament\Tables;
 use Filament\Tables\Table;
 use Illuminate\Database\Eloquent\Builder;
-use Illuminate\Database\Eloquent\SoftDeletingScope;
 
 class StaffResource extends Resource
 {
@@ -71,7 +67,7 @@ class StaffResource extends Resource
     public static function getEloquentQuery(): Builder
     {
         return parent::getEloquentQuery()
-            ->where('parent_id',CheckFilamentSellerUser::getSellerId())
-            ->whereNot('id',Filament::auth()->id());
+            ->where('parent_id', CheckFilamentSellerUser::getSellerId())
+            ->whereNot('id', Filament::auth()->id());
     }
 }

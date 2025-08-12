@@ -21,7 +21,7 @@ class EditProduct extends EditRecord
     protected function getHeaderActions(): array
     {
         return [
-           $this->getSaveFormAction()
+            $this->getSaveFormAction()
                 ->submit(null)
                 ->action('save'),
             $this->getCancelFormAction(),

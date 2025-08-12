@@ -19,7 +19,7 @@ class PaymentResource extends Resource
 {
     protected static ?string $model = Payment::class;
 
-//    protected static ?string $navigationIcon = 'heroicon-o-rectangle-stack';
+    //    protected static ?string $navigationIcon = 'heroicon-o-rectangle-stack';
 
     protected static ?string $navigationGroup = 'Money Section';
 
@@ -29,36 +29,34 @@ class PaymentResource extends Resource
             ->schema([
 
                 Forms\Components\Grid::make()->schema([
-                   Forms\Components\Group::make()->schema([
-                       Forms\Components\Section::make()->schema([
-                           Forms\Components\Select::make('seller_id')
-                               ->hidden(Filament::getAuthGuard() == 'seller')
-                               ->label(__('filament/resources/payment-resource.form.seller.label'))
-                               ->searchable()->preload()
-                               ->required()->relationship('seller','name'),
+                    Forms\Components\Group::make()->schema([
+                        Forms\Components\Section::make()->schema([
+                            Forms\Components\Select::make('seller_id')
+                                ->hidden(Filament::getAuthGuard() == 'seller')
+                                ->label(__('filament/resources/payment-resource.form.seller.label'))
+                                ->searchable()->preload()
+                                ->required()->relationship('seller', 'name'),
 
-                           Forms\Components\Select::make('currency_id')
-                               ->label(__('filament/resources/payment-resource.form.currency.label'))
-                               ->searchable()->preload()->disabled()
-                               ->default(fn()=> Currency::where('code','MMK')->first()->id)
-                               ->helperText(__('filament/resources/payment-resource.form.currency.helper_text'))
-                               ->required()->relationship('currency','name'),
+                            Forms\Components\Select::make('currency_id')
+                                ->label(__('filament/resources/payment-resource.form.currency.label'))
+                                ->searchable()->preload()->disabled()
+                                ->default(fn () => Currency::where('code', 'MMK')->first()->id)
+                                ->helperText(__('filament/resources/payment-resource.form.currency.helper_text'))
+                                ->required()->relationship('currency', 'name'),
 
-                           Forms\Components\TextInput::make('name')
-                               ->label(__('filament/resources/payment-resource.form.name.label'))
-                               ->helperText(__('filament/resources/payment-resource.form.name.helper_text'))
-                               ->required()
-                               ->maxLength(255),
+                            Forms\Components\TextInput::make('name')
+                                ->label(__('filament/resources/payment-resource.form.name.label'))
+                                ->helperText(__('filament/resources/payment-resource.form.name.helper_text'))
+                                ->required()
+                                ->maxLength(255),
 
-                           Forms\Components\SpatieMediaLibraryFileUpload::make('logo')
-                               ->label(__('filament/resources/payment-resource.form.logo.label'))
-                               ->collection('logos')->imageEditor()
-                               ->image()->rules('required'),
+                            Forms\Components\SpatieMediaLibraryFileUpload::make('logo')
+                                ->label(__('filament/resources/payment-resource.form.logo.label'))
+                                ->collection('logos')->imageEditor()
+                                ->image()->rules('required'),
 
-
-                       ])
-                   ]),
-
+                        ]),
+                    ]),
 
                     Forms\Components\Group::make()->schema([
                         Forms\Components\Section::make()->schema([
@@ -78,10 +76,10 @@ class PaymentResource extends Resource
                                         ->required()
                                         ->placeholder(__('filament/resources/payment-resource.form.accounts.number.placeholder'))
                                         ->maxLength(255),
-                                ])->columns(2)
-                        ])
+                                ])->columns(2),
+                        ]),
                     ]),
-                ])
+                ]),
             ]);
     }
 
@@ -102,7 +100,7 @@ class PaymentResource extends Resource
                 Tables\Columns\TextColumn::make('currency.name')
                     ->label(__('filament/resources/payment-resource.table.columns.currency'))
                     ->numeric()
-                    ->description(fn(Payment $payment) => $payment->currency->symbol)
+                    ->description(fn (Payment $payment) => $payment->currency->symbol)
                     ->sortable(),
 
                 Tables\Columns\TextColumn::make('name')
@@ -143,7 +141,7 @@ class PaymentResource extends Resource
             ->actions([
                 Tables\Actions\EditAction::make(),
             ])
-            ->defaultSort('id','desc')
+            ->defaultSort('id', 'desc')
             ->bulkActions([
                 Tables\Actions\BulkActionGroup::make([
                     Tables\Actions\DeleteBulkAction::make(),
@@ -156,7 +154,7 @@ class PaymentResource extends Resource
     public static function getRelations(): array
     {
         return [
-            RelationManagers\PaymentAccountsRelationManager::class
+            RelationManagers\PaymentAccountsRelationManager::class,
         ];
     }
 

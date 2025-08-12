@@ -1,10 +1,8 @@
 <?php
 
-use App\Models\AttributeValue;
 use App\Models\Brand;
 use App\Models\Category;
 use App\Models\Exchange;
-use App\Models\Review;
 use App\Models\Seller;
 use App\Models\Supplier;
 use Illuminate\Database\Migrations\Migration;
@@ -36,15 +34,15 @@ return new class extends Migration
             $table->integer('MOQ')->default(1);
             $table->string('sku')->nullable()->unique();
 
-            $table->decimal('buy_price',15,2)->nullable();
-            $table->decimal('price',15,2)->nullable();
+            $table->decimal('buy_price', 15, 2)->nullable();
+            $table->decimal('price', 15, 2)->nullable();
             $table->integer('quantity')->nullable();
             $table->integer('discount')->default(0)->nullable();
             $table->decimal('discount_price')->default(0)->nullable();
 
-            $table->decimal('mmk_buy_price',15,2)->nullable();
-            $table->decimal('mmk_price',15,2)->nullable();
-            $table->decimal('mmk_discount_price',15,2)->default(0)->nullable();
+            $table->decimal('mmk_buy_price', 15, 2)->nullable();
+            $table->decimal('mmk_price', 15, 2)->nullable();
+            $table->decimal('mmk_discount_price', 15, 2)->default(0)->nullable();
 
             $table->boolean('has_variant');
             $table->boolean('is_public');

@@ -20,13 +20,13 @@ class OrderDetail extends Component
             'products.variant',
         ]);
 
-        if($order->user_id != Auth::id()){
+        if ($order->user_id != Auth::id()) {
             Notification::make()
                 ->title('Order Detail')
                 ->body('You are not authorized to view this order')
                 ->success()
                 ->send();
-          redirect()->route('order');
+            redirect()->route('order');
         }
 
     }

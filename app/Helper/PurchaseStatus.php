@@ -8,13 +8,11 @@ use Filament\Support\Contracts\HasLabel;
 
 enum PurchaseStatus: string implements HasColor, HasIcon, HasLabel
 {
-
     case Waiting = 'processing';
 
     case Complete = 'delivered';
 
     case Cancelled = 'cancelled';
-
 
     public function getLabel(): string
     {
@@ -25,7 +23,7 @@ enum PurchaseStatus: string implements HasColor, HasIcon, HasLabel
         };
     }
 
-    public function getColor(): string | array | null
+    public function getColor(): string|array|null
     {
         return match ($this) {
             self::Waiting => 'warning',

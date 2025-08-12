@@ -2,12 +2,12 @@
 
 namespace App\Livewire;
 
-use Livewire\Component;
 use App\Models\Seller;
+use Livewire\Component;
 
 class Slider extends Component
 {
-    public  $sliders;
+    public $sliders;
 
     public function mount(Seller $seller)
     {

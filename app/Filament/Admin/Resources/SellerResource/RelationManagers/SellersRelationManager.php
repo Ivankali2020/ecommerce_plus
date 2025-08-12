@@ -2,16 +2,11 @@
 
 namespace App\Filament\Admin\Resources\SellerResource\RelationManagers;
 
-use Filament\Facades\Filament;
 use Filament\Forms;
 use Filament\Forms\Form;
-use Filament\Pages\Page;
-use Filament\Resources\Pages\CreateRecord;
 use Filament\Resources\RelationManagers\RelationManager;
 use Filament\Tables;
 use Filament\Tables\Table;
-use Illuminate\Database\Eloquent\Builder;
-use Illuminate\Database\Eloquent\SoftDeletingScope;
 use Illuminate\Support\Facades\Hash;
 
 class SellersRelationManager extends RelationManager
@@ -22,7 +17,6 @@ class SellersRelationManager extends RelationManager
     {
         return $form
             ->schema([
-
 
                 Forms\Components\TextInput::make('name')
                     ->required()
@@ -38,8 +32,8 @@ class SellersRelationManager extends RelationManager
 
                 Forms\Components\TextInput::make('password')
                     ->password()
-                    ->dehydrateStateUsing(fn($state) => Hash::make($state))
-                    ->dehydrated(fn($state)=>filled($state))
+                    ->dehydrateStateUsing(fn ($state) => Hash::make($state))
+                    ->dehydrated(fn ($state) => filled($state))
                     ->maxLength(255),
 
                 Forms\Components\SpatieMediaLibraryFileUpload::make('logo')
@@ -48,10 +42,10 @@ class SellersRelationManager extends RelationManager
                     ->image()->rules('required'),
 
                 Forms\Components\Select::make('roles')
-                    ->relationship('roles', 'name',modifyQueryUsing: fn($query) => $query->where('guard_name','seller'))
+                    ->relationship('roles', 'name', modifyQueryUsing: fn ($query) => $query->where('guard_name', 'seller'))
                     ->multiple()
                     ->preload()
-                    ->searchable()
+                    ->searchable(),
             ]);
     }
 

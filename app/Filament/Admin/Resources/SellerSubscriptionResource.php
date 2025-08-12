@@ -3,7 +3,6 @@
 namespace App\Filament\Admin\Resources;
 
 use App\Filament\Admin\Resources\SellerSubscriptionResource\Pages;
-use App\Filament\Admin\Resources\SellerSubscriptionResource\RelationManagers;
 use App\Models\SellerSubscription;
 use Filament\Forms;
 use Filament\Forms\Form;
@@ -11,8 +10,6 @@ use Filament\Notifications\Notification;
 use Filament\Resources\Resource;
 use Filament\Tables;
 use Filament\Tables\Table;
-use Illuminate\Database\Eloquent\Builder;
-use Illuminate\Database\Eloquent\SoftDeletingScope;
 
 class SellerSubscriptionResource extends Resource
 {
@@ -55,7 +52,7 @@ class SellerSubscriptionResource extends Resource
                 Tables\Columns\TextColumn::make('seller.name')
                     ->description(fn (SellerSubscription $record) => $record->subscriptionPlan->name)
                     ->sortable(),
-            
+
                 Tables\Columns\TextColumn::make('started_at')
                     ->dateTime()
                     ->sortable(),
@@ -97,12 +94,12 @@ class SellerSubscriptionResource extends Resource
                         $seller->subscription_expired_at = $record->expired_at;
                         $seller->subscription_status = 'active';
                         $seller->save();
-                        
+
                         // Update the subscription status
                         $record->payment_status = 'approved';
                         $record->save();
-                        
-                       Notification::make()
+
+                        Notification::make()
                             ->title('Subscription Confirmed')
                             ->success()
                             ->send();

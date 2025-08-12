@@ -3,8 +3,8 @@
 namespace App\Observers;
 
 use App\Models\Order;
-use Filament\Notifications\Notification;
 use Filament\Notifications\Actions\Action;
+use Filament\Notifications\Notification;
 
 class OrderObserver
 {
@@ -13,7 +13,7 @@ class OrderObserver
      */
     public function created(Order $order): void
     {
-        //send notification to admin
+        // send notification to admin
         // Notification::make()
         //     ->title('New order arrived')
         //     ->actions([

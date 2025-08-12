@@ -20,14 +20,14 @@ class OrderFactory extends Factory
     {
         return [
             'invoice_number' => uniqid(),
-            'tax' => random_int(0,5),
-            'tax_price' => random_int(100,1000),
+            'tax' => random_int(0, 5),
+            'tax_price' => random_int(100, 1000),
             'payment_id' => Payment::get()->random()->id,
             'user_address_id' => UserAddress::get()->random()->id,
-            'sub_total' => random_int(200,100000),
-            'delivery_fees' => random_int(300,2000),
-            'total_price' => random_int(30000,100000),
-            'created_at' => now()->subDays(random_int(0,60))
+            'sub_total' => random_int(200, 100000),
+            'delivery_fees' => random_int(300, 2000),
+            'total_price' => random_int(30000, 100000),
+            'created_at' => now()->subDays(random_int(0, 60)),
         ];
     }
 }

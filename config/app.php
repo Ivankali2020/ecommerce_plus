@@ -71,7 +71,7 @@ return [
     */
 
     'timezone' => 'Asia/Yangon',
-    
+
     /*
     |--------------------------------------------------------------------------
     | Application Locale Configuration
@@ -165,8 +165,8 @@ return [
          */
         App\Providers\AppServiceProvider::class,
         App\Providers\AuthServiceProvider::class,
-         App\Providers\BroadcastServiceProvider::class,
-         Illuminate\Broadcasting\BroadcastServiceProvider::class,
+        App\Providers\BroadcastServiceProvider::class,
+        Illuminate\Broadcasting\BroadcastServiceProvider::class,
         App\Providers\EventServiceProvider::class,
         App\Providers\Filament\AdminPanelProvider::class,
         App\Providers\Filament\SellerPanelProvider::class,

@@ -7,7 +7,6 @@ use App\Filament\Seller\Resources\OrderResource\Widgets\OrderChart;
 use App\Filament\Seller\Widgets\Filters;
 use App\Helper\CheckFilamentSellerUser;
 use App\Http\Middleware\AssignGlobeScope;
-use App\Http\Middleware\RedirectIfAuthenticated;
 use App\Http\Middleware\RedirectIfSubscriptionExpired;
 use App\Http\Middleware\RedirectIfUnauthenticated;
 use App\Models\Seller;
@@ -29,8 +28,6 @@ use Illuminate\Routing\Middleware\SubstituteBindings;
 use Illuminate\Session\Middleware\AuthenticateSession;
 use Illuminate\Session\Middleware\StartSession;
 use Illuminate\Support\Facades\Auth;
-use Illuminate\Support\Facades\Gate;
-use Illuminate\Validation\Rules\Can;
 use Illuminate\View\Middleware\ShareErrorsFromSession;
 
 class SellerPanelProvider extends PanelProvider
@@ -46,7 +43,7 @@ class SellerPanelProvider extends PanelProvider
                 'primary' => Color::Emerald,
                 'gray' => Color::Slate,
                 'orange' => Color::Orange,
-                'green' => Color::Green
+                'green' => Color::Green,
             ])
             ->profile(EditProfile::class)
             ->registration()
@@ -59,8 +56,8 @@ class SellerPanelProvider extends PanelProvider
             ])
             ->discoverWidgets(in: app_path('Filament/Seller/Widgets'), for: 'App\\Filament\\Seller\\Widgets')
             ->widgets([
-//                Widgets\AccountWidget::class,
-//                Widgets\FilamentInfoWidget::class,
+                //                Widgets\AccountWidget::class,
+                //                Widgets\FilamentInfoWidget::class,
                 Filters::class,
                 OrderChart::class,
             ])
@@ -80,31 +77,31 @@ class SellerPanelProvider extends PanelProvider
             ])
 //            ->spa(fn()=>  Str::contains(request()->userAgent(),'Chrome'))
             ->sidebarWidth('17rem')
-            ->brandLogoHeight(fn() => Auth::guard('seller')->check() ? '3rem' : '5rem')
-            ->brandLogo(fn() => Auth::guard('seller')->check() ? Seller::where('id',CheckFilamentSellerUser::getSellerId())->first()->getFirstMediaUrl('logos') : null) //->getFirstMediaUrl('logos')
-            ->brandName(fn() => Auth::guard('seller')->check() ?   Seller::find(CheckFilamentSellerUser::getSellerId())->name : 'DASHBOARD')
+            ->brandLogoHeight(fn () => Auth::guard('seller')->check() ? '3rem' : '5rem')
+            ->brandLogo(fn () => Auth::guard('seller')->check() ? Seller::where('id', CheckFilamentSellerUser::getSellerId())->first()->getFirstMediaUrl('logos') : null) // ->getFirstMediaUrl('logos')
+            ->brandName(fn () => Auth::guard('seller')->check() ? Seller::find(CheckFilamentSellerUser::getSellerId())->name : 'DASHBOARD')
             ->sidebarCollapsibleOnDesktop()
             ->databaseNotifications()
             ->databaseNotificationsPolling(null) // this is testing purpose
-                ->plugins([
-                    FilamentShieldPlugin::make()
+            ->plugins([
+                FilamentShieldPlugin::make(),
             ])
             ->navigationItems([
                 NavigationItem::make('dashboard')
-                    ->label(fn(): string => 'Go to Website')
-                    ->url(fn(): string => route('store', CheckFilamentSellerUser::getSellerId()))
+                    ->label(fn (): string => 'Go to Website')
+                    ->url(fn (): string => route('store', CheckFilamentSellerUser::getSellerId()))
                     ->sort(sort: 10)
                     ->icon('heroicon-o-link'),
                 NavigationItem::make('Simple POS')
-                    ->label(fn(): string => 'Simple POS')
-                    ->url(fn(): string => route('seller.pos'))
+                    ->label(fn (): string => 'Simple POS')
+                    ->url(fn (): string => route('seller.pos'))
                     ->sort(sort: -1)
                     ->icon('heroicon-o-computer-desktop'),
                 NavigationItem::make('Advance POS PRO')
-                    ->label(fn(): string => 'Advance POS PRO')
-                    ->url(fn(): string => route('filament.seller.resources.orders.create'))
+                    ->label(fn (): string => 'Advance POS PRO')
+                    ->url(fn (): string => route('filament.seller.resources.orders.create'))
                     ->sort(sort: -1)
-                    ->icon('heroicon-o-computer-desktop')
+                    ->icon('heroicon-o-computer-desktop'),
             ])
             // ->font('mm',url: asset('css/admin-font.css'), provider: LocalFontProvider::class)
             // ->font('Jost')

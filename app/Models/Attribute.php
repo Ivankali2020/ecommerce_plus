@@ -12,7 +12,7 @@ class Attribute extends Model
     use HasFactory,SoftDeletes;
 
     protected $casts = [
-        'type' => AttributeType::class
+        'type' => AttributeType::class,
     ];
 
     public function values()

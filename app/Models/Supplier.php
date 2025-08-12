@@ -10,12 +10,12 @@ class Supplier extends Model
 {
     use HasFactory;
 
-    public function seller():BelongsTo
+    public function seller(): BelongsTo
     {
         return $this->belongsTo(Seller::class);
     }
 
-    public function township():BelongsTo
+    public function township(): BelongsTo
     {
         return $this->belongsTo(Township::class);
     }

@@ -13,7 +13,7 @@ class OrderProduct extends Model
     use HasFactory;
 
     protected $casts = [
-        'attributes' => 'json'
+        'attributes' => 'json',
     ];
 
     public function order()

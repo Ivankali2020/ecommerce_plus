@@ -20,7 +20,7 @@ class AdminFactory extends Factory
         return [
             'name' => fake()->name(),
             'email' => fake()->safeEmail(),
-            'password' => Hash::make('password')
+            'password' => Hash::make('password'),
         ];
     }
 }

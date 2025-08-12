@@ -3,9 +3,9 @@
 
 ## Decentralization Powerful Application
 
-# Laravel 10.*
+# Laravel 12.*
 
-## php 8.2
+## php 8.4
 
 
 # carefully migrate

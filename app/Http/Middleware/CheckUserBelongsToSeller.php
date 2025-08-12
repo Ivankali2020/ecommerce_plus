@@ -6,11 +6,6 @@ use Closure;
 use Illuminate\Auth\AuthenticationException;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
-use Illuminate\Validation\UnauthorizedException;
-use Symfony\Component\HttpFoundation\Response;
-use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
-use Symfony\Component\HttpKernel\Exception\UnauthorizedHttpException;
-use Symfony\Component\Routing\Exception\ResourceNotFoundException;
 
 class CheckUserBelongsToSeller
 {
@@ -25,7 +20,7 @@ class CheckUserBelongsToSeller
         $user = Auth::guard('user')->user();
 
         if (is_null($user) || $user->seller->id != $sellerId) {
-            throw new AuthenticationException();
+            throw new AuthenticationException;
         }
 
         return $next($request);

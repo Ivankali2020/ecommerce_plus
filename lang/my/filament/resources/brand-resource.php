@@ -3,7 +3,7 @@
 return [
     'model' => [
         'label' => 'အမှတ်တံဆိပ်',
-        'plural_label' => 'အမှတ်တံဆိပ်များ'
+        'plural_label' => 'အမှတ်တံဆိပ်များ',
     ],
     'navigation' => [
         'label' => 'အမှတ်တံဆိပ်',
@@ -24,6 +24,6 @@ return [
         'name' => 'အမည်',
         'name_helper' => 'အမှတ်တံဆိပ်အမည်ထည့်ပါ',
         'logo' => 'လိုဂို',
-        'description' => 'ဖော်ပြချက်'
+        'description' => 'ဖော်ပြချက်',
     ],
 ];

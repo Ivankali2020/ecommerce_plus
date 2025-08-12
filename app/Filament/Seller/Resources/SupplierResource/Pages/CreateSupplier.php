@@ -4,7 +4,6 @@ namespace App\Filament\Seller\Resources\SupplierResource\Pages;
 
 use App\Filament\Seller\Resources\SupplierResource;
 use App\Helper\CheckFilamentSellerUser;
-use Filament\Actions;
 use Filament\Resources\Pages\CreateRecord;
 
 class CreateSupplier extends CreateRecord
@@ -14,6 +13,7 @@ class CreateSupplier extends CreateRecord
     protected function mutateFormDataBeforeCreate(array $data): array
     {
         $data['seller_id'] = CheckFilamentSellerUser::getSellerId();
+
         return $data;
     }
 }

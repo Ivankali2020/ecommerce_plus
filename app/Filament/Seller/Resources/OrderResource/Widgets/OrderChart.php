@@ -15,10 +15,12 @@ class OrderChart extends ChartWidget
 {
     // Add filter properties
     public $admin_id = null;
+
     public $year = null;
+
     public $month = null;
-    
-    public function getHeading(): string 
+
+    public function getHeading(): string
     {
         return __('filament/widgets/order-chart.heading');
     }
@@ -32,29 +34,29 @@ class OrderChart extends ChartWidget
 
     protected static ?int $sort = 3;
 
-    protected int | string | array $columnSpan = 'full';
+    protected int|string|array $columnSpan = 'full';
 
     protected static ?string $maxHeight = '300px';
-    
+
     public function mount(): void
     {
         $this->year = Carbon::now()->format('Y');
         $this->month = Carbon::now()->format('n');
     }
-    
+
     // Add filter event listeners
     #[On('updateAdminId')]
     public function updateAdminId(?string $admin_id): void
     {
         $this->admin_id = $admin_id;
     }
-    
+
     #[On('updateYear')]
     public function updateYear(?string $year): void
     {
         $this->year = $year;
     }
-    
+
     #[On('updateMonth')]
     public function updateMonth(?string $month): void
     {
@@ -65,14 +67,14 @@ class OrderChart extends ChartWidget
     {
         // Get seller ID based on filters
         $sellerId = $this->admin_id ?? CheckFilamentSellerUser::getSellerId();
-        
+
         // Default to current year if not selected
         $selectedYear = $this->year ?? Carbon::now()->format('Y');
         $selectedMonth = $this->month;
-        
+
         $activeFilter = $this->filter;
         switch ($activeFilter) {
-            case ('all') :
+            case 'all' :
                 $data = Trend::query(Order::where('seller_id', $sellerId))
                     ->between(
                         start: now()->subYears(6)->startOfYear(),
@@ -85,21 +87,21 @@ class OrderChart extends ChartWidget
                     'datasets' => [
                         [
                             'label' => __('filament/widgets/order-chart.total_order_amount'),
-                            'data' => $data->map(fn(TrendValue $value)=> number_format($value->aggregate / 10000,2)) ,
+                            'data' => $data->map(fn (TrendValue $value) => number_format($value->aggregate / 10000, 2)),
                         ],
                     ],
                     'labels' => $data->map(fn (TrendValue $value) => Carbon::parse($value->date)->format('Y')),
                 ];
 
-            case ('week') :
+            case 'week' :
                 // For week view, use the selected year and month if available
-                $startDate = $selectedMonth 
+                $startDate = $selectedMonth
                     ? Carbon::createFromDate($selectedYear, $selectedMonth, 1)->startOfMonth()->startOfWeek()
                     : now()->startOfWeek();
-                $endDate = $selectedMonth 
+                $endDate = $selectedMonth
                     ? Carbon::createFromDate($selectedYear, $selectedMonth, 1)->endOfMonth()->endOfWeek()
                     : now()->endOfWeek();
-                
+
                 $data = Trend::query(Order::where('seller_id', $sellerId))
                     ->between(
                         start: $startDate,
@@ -112,13 +114,13 @@ class OrderChart extends ChartWidget
                     'datasets' => [
                         [
                             'label' => __('filament/widgets/order-chart.total_order_amount'),
-                            'data' => $data->map(fn(TrendValue $value)=> number_format($value->aggregate / 10000,2)) ,
+                            'data' => $data->map(fn (TrendValue $value) => number_format($value->aggregate / 10000, 2)),
                         ],
                     ],
                     'labels' => $data->map(fn (TrendValue $value) => Carbon::parse($value->date)->format('d M ')),
                 ];
 
-            case ('year') :
+            case 'year' :
                 // For year view, use the selected year
                 $data = Trend::query(Order::where('seller_id', $sellerId))
                     ->between(
@@ -132,7 +134,7 @@ class OrderChart extends ChartWidget
                     'datasets' => [
                         [
                             'label' => __('filament/widgets/order-chart.total_order_amount'),
-                            'data' => $data->map(fn(TrendValue $value)=> number_format($value->aggregate / 10000,2)) ,
+                            'data' => $data->map(fn (TrendValue $value) => number_format($value->aggregate / 10000, 2)),
                         ],
                     ],
                     'labels' => $data->map(fn (TrendValue $value) => Carbon::parse($value->date)->format('M')),
@@ -140,13 +142,13 @@ class OrderChart extends ChartWidget
 
             default:
                 // For month view (default), use the selected year and month
-                $startDate = $selectedMonth 
+                $startDate = $selectedMonth
                     ? Carbon::createFromDate($selectedYear, $selectedMonth, 1)->startOfMonth()
                     : Carbon::createFromDate($selectedYear, 1, 1)->startOfMonth();
-                $endDate = $selectedMonth 
+                $endDate = $selectedMonth
                     ? Carbon::createFromDate($selectedYear, $selectedMonth, 1)->endOfMonth()
                     : Carbon::createFromDate($selectedYear, 12, 31)->endOfMonth();
-                
+
                 $data = Trend::query(Order::where('seller_id', $sellerId))
                     ->between(
                         start: $startDate,
@@ -159,7 +161,7 @@ class OrderChart extends ChartWidget
                     'datasets' => [
                         [
                             'label' => __('filament/widgets/order-chart.total_order_amount'),
-                            'data' => $data->map(fn(TrendValue $value)=> $value->aggregate / 10000) ,
+                            'data' => $data->map(fn (TrendValue $value) => $value->aggregate / 10000),
                         ],
                     ],
                     'labels' => $data->map(fn (TrendValue $value) => Carbon::parse($value->date)->format('d M')),
@@ -167,9 +169,9 @@ class OrderChart extends ChartWidget
         }
     }
 
-   protected function getOptions(): array|RawJs|null
-   {
-       return RawJs::make(<<<JS
+    protected function getOptions(): array|RawJs|null
+    {
+        return RawJs::make(<<<'JS'
         {
             scales: {
                 y: {
@@ -180,7 +182,7 @@ class OrderChart extends ChartWidget
             },
         }
     JS);
-   }
+    }
 
     protected function getFilters(): ?array
     {

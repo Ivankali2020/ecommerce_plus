@@ -10,17 +10,18 @@ class UserAccountService
 {
     /**
      * Get Account
+     *
      * @return User $user
      */
     public function getMyAccount(): User
     {
         $user = Auth::guard('user')->user();
+
         return $user;
     }
 
     /**
      * Account Delete
-     * @return bool
      */
     public function deleteAccount(): bool
     {
@@ -28,6 +29,7 @@ class UserAccountService
             /** @var \App\Models\User $user */
             $user = Auth::guard('user')->user();
             $user->delete();
+
             return true;
         } catch (\Throwable $th) {
             throw new DeleteDataFailException($th->getMessage());

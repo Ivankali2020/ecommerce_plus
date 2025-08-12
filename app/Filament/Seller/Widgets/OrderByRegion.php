@@ -6,7 +6,6 @@ use App\Helper\CheckFilamentSellerUser;
 use App\Models\Region;
 use Filament\Support\RawJs;
 use Filament\Widgets\ChartWidget;
-use Flowframe\Trend\Trend;
 use Illuminate\Support\Carbon;
 use Livewire\Attributes\On;
 
@@ -16,39 +15,41 @@ class OrderByRegion extends ChartWidget
 
     protected static ?int $sort = 2;
 
-    protected int | string | array $columnSpan = '1';
+    protected int|string|array $columnSpan = '1';
 
     // Add filter properties
     public $admin_id = null;
+
     public $year = null;
+
     public $month = null;
 
     protected static ?string $pollingInterval = null;
-    
+
     public function getHeading(): string
     {
         return __('filament/widgets/order-by-region.heading');
     }
-    
+
     public function mount(): void
     {
         $this->year = Carbon::now()->format('Y');
         $this->month = Carbon::now()->format('n');
     }
-    
+
     // Add filter event listeners
     #[On('updateAdminId')]
     public function updateAdminId(?string $admin_id): void
     {
         $this->admin_id = $admin_id;
     }
-    
+
     #[On('updateYear')]
     public function updateYear(?string $year): void
     {
         $this->year = $year;
     }
-    
+
     #[On('updateMonth')]
     public function updateMonth(?string $month): void
     {
@@ -59,14 +60,14 @@ class OrderByRegion extends ChartWidget
     {
         // Get seller ID based on filters
         $sellerId = $this->admin_id ?? CheckFilamentSellerUser::getSellerId();
-        
+
         // Default to current year if not selected
         $year = $this->year ?? Carbon::now()->format('Y');
-        
+
         // Build query with filters
-        $query = Region::withSum(['orders' => function($q) use ($sellerId, $year) {
+        $query = Region::withSum(['orders' => function ($q) use ($sellerId, $year) {
             $q = $q->where('orders.seller_id', $sellerId)->getOnlyConfirm();
-            
+
             // Apply date filters based on what's available
             if ($this->month !== null) {
                 // If month is selected, filter by both year and month
@@ -79,26 +80,26 @@ class OrderByRegion extends ChartWidget
                 $endDate = Carbon::createFromDate($year, 12, 31)->endOfYear();
                 $q->whereBetween('orders.created_at', [$startDate, $endDate]);
             }
-            
+
             return $q;
         }], 'total_price');
-        
+
         $data = $query->get();
-        
+
         return [
             'datasets' => [
                 [
                     'label' => __('filament/widgets/order-by-region.revenue_label'),
-                    'data' => $data->map(fn($r) => $r->orders_sum_total_price ?? 0),
+                    'data' => $data->map(fn ($r) => $r->orders_sum_total_price ?? 0),
                     'backgroundColor' => [
-                        '#4e79a7', '#f28e2c', '#e15759', '#76b7b2', 
-                        '#59a14f', '#edc949', '#af7aa1', '#ff9da7', 
-                        '#9c755f', '#bab0ab', '#5f4690', '#1d91c0'
+                        '#4e79a7', '#f28e2c', '#e15759', '#76b7b2',
+                        '#59a14f', '#edc949', '#af7aa1', '#ff9da7',
+                        '#9c755f', '#bab0ab', '#5f4690', '#1d91c0',
                     ],
                     'borderColor' => '#9BD0F5',
                 ],
             ],
-            'labels' => $data->map(fn($r) => $r->mm_name),
+            'labels' => $data->map(fn ($r) => $r->mm_name),
         ];
     }
 
@@ -109,7 +110,7 @@ class OrderByRegion extends ChartWidget
 
     protected function getOptions(): array|RawJs|null
     {
-        return RawJs::make(<<<JS
+        return RawJs::make(<<<'JS'
         {
             indexAxis: 'y',
         }

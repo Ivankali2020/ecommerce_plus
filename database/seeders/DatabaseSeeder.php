@@ -4,7 +4,6 @@ namespace Database\Seeders;
 
 // use Illuminate\Database\Console\Seeds\WithoutModelEvents;
 use App\Models\Region;
-use App\Models\Seller;
 use App\Models\Township;
 use Illuminate\Database\Seeder;
 use Database\Seeders\OrderSeeder;
@@ -24,17 +23,16 @@ class DatabaseSeeder extends Seeder
 
         $regions = json_decode(file_get_contents(public_path('assets/db.json')));
 
+        foreach ($regions->data as $region) {
 
-        foreach ($regions->data as $region){
-
-            $reg = new Region();
+            $reg = new Region;
             $reg->mm_name = $region->mm;
             $reg->en_name = $region->eng;
             $reg->save();
-            foreach ($region->districts as $district){
+            foreach ($region->districts as $district) {
 
-                foreach ($district->townships as $township){
-                    $tw = new Township();
+                foreach ($district->townships as $township) {
+                    $tw = new Township;
                     $tw->mm_name = $township->mm;
                     $tw->en_name = $township->eng;
                     $tw->region_id = $reg->id;
@@ -54,9 +52,7 @@ class DatabaseSeeder extends Seeder
             OrderSeeder::class
         ]);
 
-
-//         \App\Models\User::factory(10)->create();
-
+        //         \App\Models\User::factory(10)->create();
 
     }
 }

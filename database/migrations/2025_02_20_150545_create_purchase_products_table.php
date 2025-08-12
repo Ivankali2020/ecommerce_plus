@@ -21,9 +21,9 @@ return new class extends Migration
             $table->foreignIdFor(Variant::class)->nullable()->constrained()->cascadeOnUpdate()->cascadeOnDelete();
             $table->json('attributes');
             $table->bigInteger('stocks');
-            $table->decimal('buy_price',18,2);
-            $table->decimal('sell_price',18,2)->nullable();
-            $table->decimal('total',18,2);
+            $table->decimal('buy_price', 18, 2);
+            $table->decimal('sell_price', 18, 2)->nullable();
+            $table->decimal('total', 18, 2);
             $table->timestamps();
         });
     }

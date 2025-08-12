@@ -17,10 +17,11 @@ class AttributeFactory extends Factory
      */
     public function definition(): array
     {
-        $data = ['Color','Size','Unit','Weight','Taste'];
+        $data = ['Color', 'Size', 'Unit', 'Weight', 'Taste'];
+
         return [
-            'name' => $data[random_int(0,count($data)-1)],
-            'type' => AttributeType::Text
+            'name' => $data[random_int(0, count($data) - 1)],
+            'type' => AttributeType::Text,
         ];
     }
 }

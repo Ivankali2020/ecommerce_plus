@@ -6,26 +6,23 @@ use App\Filament\Admin\Resources\CategoryResource\Pages;
 use App\Filament\Admin\Resources\CategoryResource\RelationManagers;
 use App\Helper\CheckFilamentSellerUser;
 use App\Models\Category;
-use CodeWithDennis\FilamentSelectTree\SelectTree;
 use Filament\Facades\Filament;
 use Filament\Forms;
 use Filament\Forms\Form;
 use Filament\Pages\Page;
-use Filament\Resources\Pages\CreateRecord;
 use Filament\Resources\Pages\EditRecord;
 use Filament\Resources\Resource;
 use Filament\Tables;
 use Filament\Tables\Table;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\SoftDeletingScope;
-use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Str;
 
 class CategoryResource extends Resource
 {
     protected static ?string $model = Category::class;
 
-//    protected static ?string $navigationIcon = 'heroicon-o-rectangle-stack';
+    //    protected static ?string $navigationIcon = 'heroicon-o-rectangle-stack';
 
     protected static ?string $navigationGroup = 'Business Section';
 
@@ -33,41 +30,40 @@ class CategoryResource extends Resource
     {
         return $form
             ->schema([
-               Forms\Components\Grid::make()->schema([
-                   Forms\Components\Group::make()->schema([
-                       Forms\Components\Section::make()->schema([
+                Forms\Components\Grid::make()->schema([
+                    Forms\Components\Group::make()->schema([
+                        Forms\Components\Section::make()->schema([
 
-                           Forms\Components\Toggle::make('is_sub_category')->live()
-                                ->hidden(fn(Page $livewire) => $livewire instanceof EditRecord)
+                            Forms\Components\Toggle::make('is_sub_category')->live()
+                                ->hidden(fn (Page $livewire) => $livewire instanceof EditRecord)
                                 ->helperText(__('filament/resources/category-resource.form.helper_text.sub_category'))
                                 ->label(__('filament/resources/category-resource.form.label.is_sub_category')),
 
-                           Forms\Components\Select::make('parent_id')->label(__('filament/resources/category-resource.form.label.parent_category'))
-                               ->options(Category::where('seller_id',CheckFilamentSellerUser::getSellerId())->pluck('name','id'))
-                               ->hidden(fn(Page $livewire) => $livewire instanceof EditRecord)
-                               ->visible(fn(Forms\Get $get,Page $livewire) => ($get('is_sub_category')))
-                               ->preload()->searchable(),
+                            Forms\Components\Select::make('parent_id')->label(__('filament/resources/category-resource.form.label.parent_category'))
+                                ->options(Category::where('seller_id', CheckFilamentSellerUser::getSellerId())->pluck('name', 'id'))
+                                ->hidden(fn (Page $livewire) => $livewire instanceof EditRecord)
+                                ->visible(fn (Forms\Get $get, Page $livewire) => ($get('is_sub_category')))
+                                ->preload()->searchable(),
 
-                           Forms\Components\Select::make('seller_id')
-                               ->searchable()->preload()->hidden(Filament::getAuthGuard() == 'seller')
-                               ->required()->relationship('seller','name')
-                               ->label(__('filament/resources/category-resource.form.label.seller')),
+                            Forms\Components\Select::make('seller_id')
+                                ->searchable()->preload()->hidden(Filament::getAuthGuard() == 'seller')
+                                ->required()->relationship('seller', 'name')
+                                ->label(__('filament/resources/category-resource.form.label.seller')),
 
-                           Forms\Components\TextInput::make('name')
-                               ->helperText(__('filament/resources/category-resource.form.helper_text.name'))
-                               ->required()
-                               ->maxLength(255)
-                               ->label(__('filament/resources/category-resource.form.label.name')),
+                            Forms\Components\TextInput::make('name')
+                                ->helperText(__('filament/resources/category-resource.form.helper_text.name'))
+                                ->required()
+                                ->maxLength(255)
+                                ->label(__('filament/resources/category-resource.form.label.name')),
 
-                           Forms\Components\Textarea::make('description')
-                               ->maxLength(16777215)
-                               ->columnSpanFull()
-                               ->label(__('filament/resources/category-resource.form.label.description')),
-                       ])
-                   ])->columnSpan(1),
+                            Forms\Components\Textarea::make('description')
+                                ->maxLength(16777215)
+                                ->columnSpanFull()
+                                ->label(__('filament/resources/category-resource.form.label.description')),
+                        ]),
+                    ])->columnSpan(1),
 
-
-               ])->columns(2)
+                ])->columns(2),
             ]);
     }
 
@@ -80,7 +76,7 @@ class CategoryResource extends Resource
                     ->label(__('filament/resources/category-resource.table.columns.seller')),
 
                 Tables\Columns\TextColumn::make('name')
-                    ->description(fn(Category $category)=> Str::limit($category->description,80))
+                    ->description(fn (Category $category) => Str::limit($category->description, 80))
                     ->searchable()
                     ->label(__('filament/resources/category-resource.table.columns.name')),
 
@@ -122,7 +118,7 @@ class CategoryResource extends Resource
     public static function getRelations(): array
     {
         return [
-            RelationManagers\CategoriesRelationManager::class
+            RelationManagers\CategoriesRelationManager::class,
         ];
     }
 

@@ -37,7 +37,6 @@ return [
         'redirect' => env('GOOGLE_CALLBACK_URL'),
     ],
 
-
     'turnstile' => [
         'key' => env('TURNSTILE_SITE_KEY'),
         'secret' => env('TURNSTILE_SECRET_KEY'),

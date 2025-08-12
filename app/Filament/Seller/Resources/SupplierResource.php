@@ -3,7 +3,6 @@
 namespace App\Filament\Seller\Resources;
 
 use App\Filament\Seller\Resources\SupplierResource\Pages;
-use App\Filament\Seller\Resources\SupplierResource\RelationManagers;
 use App\Helper\CheckFilamentSellerUser;
 use App\Models\Supplier;
 use Filament\Forms;
@@ -36,32 +35,32 @@ class SupplierResource extends Resource
     {
         return $form
             ->schema([
-               Forms\Components\Section::make()->schema([
+                Forms\Components\Section::make()->schema([
 
-                   Forms\Components\TextInput::make('name')
-                       ->label(__('filament/resources/supplier-resource.form.name'))
-                       ->required()
-                       ->maxLength(255),
-                   Forms\Components\TextInput::make('email')
-                       ->label(__('filament/resources/supplier-resource.form.email'))
-                       ->email()
-                       ->maxLength(255),
-                   Forms\Components\TextInput::make('phone')
-                       ->label(__('filament/resources/supplier-resource.form.phone'))
-                       ->tel()
-                       ->required()
-                       ->maxLength(255),
-                   Forms\Components\Textarea::make('about')
-                       ->label(__('filament/resources/supplier-resource.form.about'))
-                       ->required()
-                       ->columnSpanFull(),
-                   Forms\Components\Select::make('township_id')
-                       ->label(__('filament/resources/supplier-resource.form.township_id'))
-                       ->searchable()->preload()
-                       ->relationship('township', 'mm_name')
-                       ->required(),
+                    Forms\Components\TextInput::make('name')
+                        ->label(__('filament/resources/supplier-resource.form.name'))
+                        ->required()
+                        ->maxLength(255),
+                    Forms\Components\TextInput::make('email')
+                        ->label(__('filament/resources/supplier-resource.form.email'))
+                        ->email()
+                        ->maxLength(255),
+                    Forms\Components\TextInput::make('phone')
+                        ->label(__('filament/resources/supplier-resource.form.phone'))
+                        ->tel()
+                        ->required()
+                        ->maxLength(255),
+                    Forms\Components\Textarea::make('about')
+                        ->label(__('filament/resources/supplier-resource.form.about'))
+                        ->required()
+                        ->columnSpanFull(),
+                    Forms\Components\Select::make('township_id')
+                        ->label(__('filament/resources/supplier-resource.form.township_id'))
+                        ->searchable()->preload()
+                        ->relationship('township', 'mm_name')
+                        ->required(),
 
-               ])->columns(3)
+                ])->columns(3),
             ]);
     }
 
@@ -129,7 +128,7 @@ class SupplierResource extends Resource
     public static function getEloquentQuery(): Builder
     {
         return parent::getEloquentQuery()
-            ->where('seller_id',CheckFilamentSellerUser::getSellerId())
+            ->where('seller_id', CheckFilamentSellerUser::getSellerId())
             ->withoutGlobalScopes([
                 SoftDeletingScope::class,
             ]);

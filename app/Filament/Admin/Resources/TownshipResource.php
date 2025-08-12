@@ -3,7 +3,6 @@
 namespace App\Filament\Admin\Resources;
 
 use App\Filament\Admin\Resources\TownshipResource\Pages;
-use App\Filament\Admin\Resources\TownshipResource\RelationManagers;
 use App\Models\Township;
 use Filament\Forms;
 use Filament\Forms\Form;
@@ -17,7 +16,7 @@ class TownshipResource extends Resource
 {
     protected static ?string $model = Township::class;
 
-//    protected static ?string $navigationIcon = 'heroicon-o-rectangle-stack';
+    //    protected static ?string $navigationIcon = 'heroicon-o-rectangle-stack';
 
     protected static ?string $navigationGroup = 'Delivery Section';
 
@@ -26,7 +25,7 @@ class TownshipResource extends Resource
         return $form
             ->schema([
                 Forms\Components\Select::make('region_id')
-                    ->required()->relationship('region','mm_name'),
+                    ->required()->relationship('region', 'mm_name'),
 
                 Forms\Components\TextInput::make('mm_name')
                     ->required()

@@ -112,8 +112,8 @@ return [
             'new' => 'New',
             'processing' => 'Processing',
             'confirmed' => 'Confirmed',
-            'cancelled' => 'Cancelled'
-        ]
+            'cancelled' => 'Cancelled',
+        ],
     ],
     'address' => [
         'my_addresses' => 'My Addresses',
@@ -210,7 +210,7 @@ return [
             'remember' => 'Remember me',
             'forgot_password' => 'Forgot your password?',
             'login_button' => 'Sign In',
-           'logging_in' => 'Logging in...',
+            'logging_in' => 'Logging in...',
             'no_account' => "Don't have an account?",
             'register' => 'Register now',
         ],
@@ -244,7 +244,7 @@ return [
         'confirm_password' => [
             'title' => 'Confirm Password',
             'message' => 'This is a secure area of the application. Please confirm your password before continuing.',
-            'confirm_button' => 'Confirm'
+            'confirm_button' => 'Confirm',
         ],
     ],
     'navigation' => [
@@ -258,5 +258,3 @@ return [
     ],
     'discount_only' => 'Discount Only',
 ];
-
-

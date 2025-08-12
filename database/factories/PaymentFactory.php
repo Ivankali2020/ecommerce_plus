@@ -17,10 +17,11 @@ class PaymentFactory extends Factory
      */
     public function definition(): array
     {
-        $data = ['K Pay','Wave Pay','CB Pay','AYA Pay','KBZ Banking','CB Banking','AYA Bank',];
+        $data = ['K Pay', 'Wave Pay', 'CB Pay', 'AYA Pay', 'KBZ Banking', 'CB Banking', 'AYA Bank'];
+
         return [
             'currency_id' => Currency::get()->random()->id,
-            'name' => $data[random_int(0,count($data)-1)],
+            'name' => $data[random_int(0, count($data) - 1)],
         ];
     }
 }

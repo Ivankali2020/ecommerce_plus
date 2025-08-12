@@ -3,7 +3,6 @@
 namespace App\Filament\Seller\Resources;
 
 use App\Filament\Seller\Resources\SellerAddressResource\Pages;
-use App\Filament\Seller\Resources\SellerAddressResource\RelationManagers;
 use App\Helper\CheckFilamentSellerUser;
 use App\Models\SellerAddress;
 use Filament\Forms;
@@ -13,15 +12,17 @@ use Filament\Tables;
 use Filament\Tables\Actions\DeleteAction;
 use Filament\Tables\Table;
 use Illuminate\Database\Eloquent\Builder;
-use Illuminate\Database\Eloquent\SoftDeletingScope;
 
 class SellerAddressResource extends Resource
 {
     protected static ?string $model = SellerAddress::class;
 
     protected static ?string $modelLabel = null;
+
     protected static ?string $pluralModelLabel = null;
+
     protected static ?string $navigationLabel = null;
+
     protected static ?string $navigationIcon = 'heroicon-o-map-pin';
 
     public static function getModelLabel(): string
@@ -45,21 +46,21 @@ class SellerAddressResource extends Resource
             ->schema([
                 Forms\Components\Select::make('region_id')->live()
                     ->required()->searchable()->preload()
-                    ->afterStateUpdated(fn(Forms\Set $set)=>  $set('township_id',null))
-                    ->relationship('region','mm_name')
+                    ->afterStateUpdated(fn (Forms\Set $set) => $set('township_id', null))
+                    ->relationship('region', 'mm_name')
                     ->label(__('filament/resources.seller-address.form.region_id')),
 
                 Forms\Components\Select::make('township_id')
-                    ->hidden(fn(Forms\Get $get)=> blank($get('region_id')))
+                    ->hidden(fn (Forms\Get $get) => blank($get('region_id')))
                     ->required()->searchable()->preload()
-                    ->relationship('township','mm_name',modifyQueryUsing: fn($query,Forms\Get $get)=> $query->where('region_id',$get('region_id')))
+                    ->relationship('township', 'mm_name', modifyQueryUsing: fn ($query, Forms\Get $get) => $query->where('region_id', $get('region_id')))
                     ->label(__('filament/resources.seller-address.form.township_id')),
 
                 Forms\Components\Textarea::make('address')
                     ->required()
                     ->placeholder(__('filament/resources.seller-address.form.address_placeholder'))
                     ->label(__('filament/resources.seller-address.form.address'))
-                    ->maxLength(255),   
+                    ->maxLength(255),
             ]);
     }
 
@@ -124,6 +125,6 @@ class SellerAddressResource extends Resource
     public static function getEloquentQuery(): Builder
     {
         return parent::getEloquentQuery()
-            ->where('seller_id',CheckFilamentSellerUser::getSellerId());
+            ->where('seller_id', CheckFilamentSellerUser::getSellerId());
     }
 }

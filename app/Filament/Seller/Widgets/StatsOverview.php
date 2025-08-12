@@ -19,37 +19,39 @@ class StatsOverview extends BaseWidget
 {
     // protected int | string | array $columnSpan = ['md' => 3, 'xl' => 3];
     protected static ?string $pollingInterval = null;
-    
+
     // Add filter properties
     public $admin_id = null;
+
     public $year = null;
+
     public $month = null;
-    
+
     public function mount(): void
     {
         // $this->year = Carbon::now()->format('Y');
         // $this->month = Carbon::now()->format('n');
     }
-    
+
     // Update filter methods with Livewire 3 attribute-based listeners
     #[On('updateAdminId')]
     public function updateAdminId(?string $admin_id): void
     {
         $this->admin_id = $admin_id;
     }
-    
+
     #[On('updateYear')]
     public function updateYear(?string $year): void
     {
         $this->year = $year;
     }
-    
+
     #[On('updateMonth')]
     public function updateMonth(?string $month): void
     {
         $this->month = $month;
     }
-    
+
     protected function getStats(): array
     {
         // Get seller ID based on filters
@@ -63,6 +65,7 @@ class StatsOverview extends BaseWidget
 
         // Default to current year if not selected
         $year = $this->year ?? Carbon::now()->format('Y');
+
 
         // Apply date filters based on what's available
         if ($this->month !== null) {
@@ -113,7 +116,7 @@ class StatsOverview extends BaseWidget
 
 
         return [
-            Stat::make(__('filament/widgets/stats-overview.unique_products'), Product::where('seller_id', $sellerId)->count() . ' ' . __('filament/widgets/stats-overview.pcs'))
+            Stat::make(__('filament/widgets/stats-overview.unique_products'), Product::where('seller_id', $sellerId)->count().' '.__('filament/widgets/stats-overview.pcs'))
                 ->description(__('filament/widgets/stats-overview.total_products')),
 
             Stat::make(__('filament/widgets/stats-overview.unique_customers'), $totalCapitalAmount > 0? number_format($totalCapitalAmount + $totalCapitalProductAmount, 2) : 0)

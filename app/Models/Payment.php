@@ -11,8 +11,7 @@ use Spatie\MediaLibrary\InteractsWithMedia;
 
 class Payment extends Model implements HasMedia
 {
-    use HasFactory,SoftDeletes,InteractsWithMedia;
-
+    use HasFactory,InteractsWithMedia,SoftDeletes;
 
     public function registerMediaCollections(): void
     {

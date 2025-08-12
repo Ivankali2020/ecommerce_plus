@@ -2,24 +2,28 @@
 
 namespace App\Livewire;
 
-use App\Models\Brand;
-use App\Models\Product;
-use Livewire\Component;
-use App\Models\Category;
-use App\Traits\WithCart;
 use App\Helper\UserHelper;
+use App\Models\Brand;
+use App\Models\Category;
+use App\Models\Product;
+use App\Traits\WithCart;
+use Livewire\Component;
 use Livewire\WithPagination;
 
 class AllProduct extends Component
 {
-    use WithPagination,WithCart;
+    use WithCart,WithPagination;
 
     public $search = '';
+
     public $selectedCategory = null;
+
     public $perPage = 15;
+
     public $seller_id;
+
     public $discountOnly = false;
-    
+
     protected $queryString = [
         'search' => ['except' => ''],
         'selectedCategory' => ['except' => null],
@@ -43,29 +47,31 @@ class AllProduct extends Component
 
     public function toggleDiscountFilter()
     {
-        $this->discountOnly = !$this->discountOnly;
+        $this->discountOnly = ! $this->discountOnly;
         $this->resetPage();
     }
 
-    public function mount(){
+    public function mount()
+    {
         $this->seller_id = UserHelper::getUserSellerId();
     }
 
     public $filterType = 'category';
+
     public $selectedBrand = null;
-        
+
     public function setFilterType($type)
     {
-            $this->filterType = $type;
-            $this->selectedCategory = null;
-            $this->selectedBrand = null;
-            $this->resetPage();
+        $this->filterType = $type;
+        $this->selectedCategory = null;
+        $this->selectedBrand = null;
+        $this->resetPage();
     }
-        
+
     public function setBrand($brandId)
     {
-            $this->selectedBrand = $brandId;
-            $this->resetPage();
+        $this->selectedBrand = $brandId;
+        $this->resetPage();
     }
 
     public function render()
@@ -77,7 +83,7 @@ class AllProduct extends Component
             ->where('seller_id', $this->seller_id)
             ->where('is_public', true)
             ->when($this->search, function ($query) {
-                return $query->where('name', 'like', '%' . $this->search . '%');
+                return $query->where('name', 'like', '%'.$this->search.'%');
             })
             ->when($this->selectedCategory, function ($query) {
                 return $query->where('category_id', $this->selectedCategory);
@@ -86,12 +92,12 @@ class AllProduct extends Component
                 return $query->where('brand_id', $this->selectedBrand);
             })
             ->when($this->discountOnly, function ($query) {
-                return $query->where('discount', '>', 0) ->orWhereHas('variants', function($variantQuery) {
-                          $variantQuery->where('discount', '>', 0);
-                      });
+                return $query->where('discount', '>', 0)->orWhereHas('variants', function ($variantQuery) {
+                    $variantQuery->where('discount', '>', 0);
+                });
             })
             ->orderBy('created_at', 'desc');
-        
+
         $products = $productsQuery->take($this->perPage)->get();
         $hasMorePages = $productsQuery->count() > $this->perPage;
 
@@ -99,7 +105,7 @@ class AllProduct extends Component
             'products' => $products,
             'categories' => $categories,
             'brands' => $brands,
-            'hasMorePages' => $hasMorePages
+            'hasMorePages' => $hasMorePages,
         ]);
     }
 }

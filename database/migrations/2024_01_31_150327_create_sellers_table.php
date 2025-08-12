@@ -14,7 +14,7 @@ return new class extends Migration
     {
         Schema::create('sellers', function (Blueprint $table) {
             $table->id();
-            $table->foreignIdFor(Seller::class,'parent_id')->nullable()->constrained('sellers','id')->cascadeOnDelete()->cascadeOnUpdate();
+            $table->foreignIdFor(Seller::class, 'parent_id')->nullable()->constrained('sellers', 'id')->cascadeOnDelete()->cascadeOnUpdate();
             $table->string('name');
             $table->string('email')->unique();
             $table->string('phone')->nullable();

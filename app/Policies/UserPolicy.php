@@ -17,6 +17,7 @@ class UserPolicy
             return true;
         }
     }
+
     /**
      * Determine whether the seller can view any models.
      */

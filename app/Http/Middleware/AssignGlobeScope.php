@@ -24,49 +24,49 @@ class AssignGlobeScope
     public function handle(Request $request, Closure $next): Response
     {
 
-//        Brand::addGlobalScope(function ($q){
-//            //to add for parent_id
-////            if(Filament::auth()->user()->parent_id){
-////
-////            }
-//            return $q->where('seller_id',Filament::auth()->id());
-//        });
-//
-        Attribute::addGlobalScope(function ($q){
-            return $q->where('seller_id',CheckFilamentSellerUser::getSellerId());
+        //        Brand::addGlobalScope(function ($q){
+        //            //to add for parent_id
+        // //            if(Filament::auth()->user()->parent_id){
+        // //
+        // //            }
+        //            return $q->where('seller_id',Filament::auth()->id());
+        //        });
+        //
+        Attribute::addGlobalScope(function ($q) {
+            return $q->where('seller_id', CheckFilamentSellerUser::getSellerId());
         });
-//
-//        Category::addGlobalScope(function ($q){
-//            //to add for parent_id
-////            if(Filament::auth()->user()->parent_id){
-////
-////            }
-//            return $q->where('seller_id',Filament::auth()->id());
-//        });
-//
-//        Product::addGlobalScope(function ($q){
-//            //to add for parent_id
-////            if(Filament::auth()->user()->parent_id){
-////
-////            }
-//            return $q->where('seller_id',Filament::auth()->id());
-//        });
-//
-//        Exchange::addGlobalScope(function ($q){
-//            //to add for parent_id
-////            if(Filament::auth()->user()->parent_id){
-////
-////            }
-//            return $q->where('seller_id',Filament::auth()->id());
-//        });
-//
-//        Payment::addGlobalScope(function ($q){
-//            //to add for parent_id
-////            if(Filament::auth()->user()->parent_id){
-////
-////            }
-//            return $q->where('seller_id',Filament::auth()->id());
-//        });
+        //
+        //        Category::addGlobalScope(function ($q){
+        //            //to add for parent_id
+        // //            if(Filament::auth()->user()->parent_id){
+        // //
+        // //            }
+        //            return $q->where('seller_id',Filament::auth()->id());
+        //        });
+        //
+        //        Product::addGlobalScope(function ($q){
+        //            //to add for parent_id
+        // //            if(Filament::auth()->user()->parent_id){
+        // //
+        // //            }
+        //            return $q->where('seller_id',Filament::auth()->id());
+        //        });
+        //
+        //        Exchange::addGlobalScope(function ($q){
+        //            //to add for parent_id
+        // //            if(Filament::auth()->user()->parent_id){
+        // //
+        // //            }
+        //            return $q->where('seller_id',Filament::auth()->id());
+        //        });
+        //
+        //        Payment::addGlobalScope(function ($q){
+        //            //to add for parent_id
+        // //            if(Filament::auth()->user()->parent_id){
+        // //
+        // //            }
+        //            return $q->where('seller_id',Filament::auth()->id());
+        //        });
 
         return $next($request);
     }

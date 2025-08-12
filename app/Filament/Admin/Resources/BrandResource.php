@@ -3,7 +3,6 @@
 namespace App\Filament\Admin\Resources;
 
 use App\Filament\Admin\Resources\BrandResource\Pages;
-use App\Filament\Admin\Resources\BrandResource\RelationManagers;
 use App\Models\Brand;
 use Filament\Facades\Filament;
 use Filament\Forms;
@@ -58,8 +57,8 @@ class BrandResource extends Resource
                             ->maxLength(16777215)
                             ->columnSpanFull()
                             ->label(__('filament/resources/brand-resource.form.description')),
-                    ])
-                ])
+                    ]),
+                ]),
             ]);
     }
 

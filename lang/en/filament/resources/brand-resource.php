@@ -3,7 +3,7 @@
 return [
     'model' => [
         'label' => 'Brand',
-        'plural_label' => 'Brands'
+        'plural_label' => 'Brands',
     ],
     'navigation' => [
         'label' => 'Brand',
@@ -24,6 +24,6 @@ return [
         'name' => 'Name',
         'name_helper' => 'Enter the brand name',
         'logo' => 'Logo',
-        'description' => 'Description'
+        'description' => 'Description',
     ],
 ];

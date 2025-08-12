@@ -17,9 +17,9 @@ class RedirectIfSubscriptionExpired
         if (Auth::guard('seller')->check() && session('subscription_expired')) {
             // Clear the session flag
             session()->forget('subscription_expired');
-            
+
             // Only redirect if not already on the subscription page
-            if (!$request->routeIs('seller.subscription.*')) {
+            if (! $request->routeIs('seller.subscription.*')) {
                 return redirect()->route('seller.subscription.plans');
             }
         }

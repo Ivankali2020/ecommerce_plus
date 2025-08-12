@@ -17,6 +17,7 @@ class SupplierPolicy
             return true;
         }
     }
+
     /**
      * Determine whether the seller can view any models.
      */

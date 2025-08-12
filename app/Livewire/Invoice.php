@@ -19,5 +19,4 @@ class Invoice extends Component
     {
         return view('livewire.invoice');
     }
-
 }

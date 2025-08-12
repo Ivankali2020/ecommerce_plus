@@ -9,11 +9,9 @@ class ExchangeObserver
 {
     public function updated(Exchange $exchange)
     {
-        $history = new ExchangeHistory();
+        $history = new ExchangeHistory;
         $history->exchange_id = $exchange->id;
         $history->rate = $exchange->rate;
         $history->save();
     }
-
-
 }

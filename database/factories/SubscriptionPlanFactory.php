@@ -12,7 +12,7 @@ class SubscriptionPlanFactory extends Factory
     public function definition(): array
     {
         return [
-            'name' => $this->faker->word() . ' Plan',
+            'name' => $this->faker->word().' Plan',
             'description' => $this->faker->paragraph(),
             'price' => $this->faker->numberBetween(50000, 500000),
             'duration_months' => $this->faker->randomElement([3, 6, 12]),
@@ -26,7 +26,7 @@ class SubscriptionPlanFactory extends Factory
                 'Advanced Reporting',
                 'Bulk Import/Export',
                 'Custom Branding',
-                'Email Marketing Integration'
+                'Email Marketing Integration',
             ], $this->faker->numberBetween(3, 8)),
             'is_active' => true,
             'created_at' => now(),

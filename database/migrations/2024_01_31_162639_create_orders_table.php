@@ -21,7 +21,7 @@ return new class extends Migration
             $table->id();
             $table->string('invoice_number')->unique();
             $table->foreignIdFor(Seller::class)->constrained()->cascadeOnUpdate()->cascadeOnDelete();
-            $table->foreignIdFor(Seller::class,'staff_id')->nullable()->constrained('sellers','id')->cascadeOnUpdate()->cascadeOnDelete();
+            $table->foreignIdFor(Seller::class, 'staff_id')->nullable()->constrained('sellers', 'id')->cascadeOnUpdate()->cascadeOnDelete();
 
             $table->boolean('walk_in_customer')->default(0);
             $table->boolean('is_cod')->default(0);
@@ -34,9 +34,9 @@ return new class extends Migration
 
             $table->string('status')->default(OrderStatus::New);
 
-            $table->decimal('sub_total',15,2);
+            $table->decimal('sub_total', 15, 2);
             $table->decimal('delivery_fees');
-            $table->decimal('total_price',15,2);
+            $table->decimal('total_price', 15, 2);
 
             $table->string('payment_slip')->nullable();
 

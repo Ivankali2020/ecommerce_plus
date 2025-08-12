@@ -2,8 +2,8 @@
 
 namespace App\Policies;
 
-use App\Models\Seller;
 use App\Models\Brand;
+use App\Models\Seller;
 use Filament\Models\Contracts\FilamentUser;
 use Illuminate\Auth\Access\HandlesAuthorization;
 
@@ -17,6 +17,7 @@ class BrandPolicy
             return true;
         }
     }
+
     /**
      * Determine whether the seller can view any models.
      */

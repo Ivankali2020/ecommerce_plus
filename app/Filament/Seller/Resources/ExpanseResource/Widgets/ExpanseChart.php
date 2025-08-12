@@ -11,18 +11,18 @@ use Illuminate\Support\Carbon;
 class ExpanseChart extends ChartWidget
 {
     protected static ?string $heading = null;
-    
-    public null | string $filter = 'year';
+
+    public ?string $filter = 'year';
 
     protected static ?string $maxHeight = '300px';
 
     protected int|string|array $columnSpan = 'full';
-    
+
     public function getHeading(): string
     {
         return __('filament/widgets/expanse-chart.heading');
     }
-    
+
     protected function getFilters(): ?array
     {
         return [
@@ -35,7 +35,7 @@ class ExpanseChart extends ChartWidget
     protected function getData(): array
     {
         $data = $this->generateChartData();
-        
+
         return [
             'datasets' => [
                 [
@@ -46,7 +46,7 @@ class ExpanseChart extends ChartWidget
             'labels' => $data['labels'],
         ];
     }
-    
+
     protected function generateChartData(): array
     {
         if ($this->filter === 'month') {
@@ -58,12 +58,12 @@ class ExpanseChart extends ChartWidget
                 )
                 ->perDay()
                 ->sum('amount');
-                
+
             return [
                 'labels' => $data->map(fn (TrendValue $value) => Carbon::parse($value->date)->format('d')),
                 'values' => $data->map(fn (TrendValue $value) => $value->aggregate),
             ];
-            
+
         } elseif ($this->filter === 'year') {
             // Current year data (monthly)
             $data = Trend::model(Expanse::class)
@@ -73,12 +73,12 @@ class ExpanseChart extends ChartWidget
                 )
                 ->perMonth()
                 ->sum('amount');
-                
+
             return [
                 'labels' => $data->map(fn (TrendValue $value) => Carbon::parse($value->date)->format('M')),
                 'values' => $data->map(fn (TrendValue $value) => $value->aggregate),
             ];
-            
+
         } else {
             // All time data (yearly)
             $data = Trend::model(Expanse::class)
@@ -88,7 +88,7 @@ class ExpanseChart extends ChartWidget
                 )
                 ->perYear()
                 ->sum('amount');
-                
+
             return [
                 'labels' => $data->map(fn (TrendValue $value) => Carbon::parse($value->date)->format('Y')),
                 'values' => $data->map(fn (TrendValue $value) => $value->aggregate),

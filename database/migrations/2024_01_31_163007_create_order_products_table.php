@@ -1,7 +1,6 @@
 <?php
 
 use App\Models\Currency;
-use App\Models\Exchange;
 use App\Models\Order;
 use App\Models\Product;
 use App\Models\Variant;
@@ -23,20 +22,20 @@ return new class extends Migration
             $table->foreignIdFor(Variant::class)->nullable()->constrained()->cascadeOnUpdate()->cascadeOnDelete();
             $table->string('attributes');
 
-            $table->decimal('price',15,2);
-            $table->decimal('discount_price',15,2)->default(0);
+            $table->decimal('price', 15, 2);
+            $table->decimal('discount_price', 15, 2)->default(0);
             $table->integer('discount')->default(0);
             $table->integer('quantity');
 
-            $table->decimal('profit',15,2);
+            $table->decimal('profit', 15, 2);
 
-            $table->decimal('original_buy_price',15,2)->default(0);
-            $table->decimal('original_price',15,2)->default(0);
-            $table->decimal('original_discount_price',15,2)->default(0);
+            $table->decimal('original_buy_price', 15, 2)->default(0);
+            $table->decimal('original_price', 15, 2)->default(0);
+            $table->decimal('original_discount_price', 15, 2)->default(0);
             $table->foreignIdFor(Currency::class)->nullable()->constrained()->cascadeOnUpdate()->cascadeOnDelete();
             $table->decimal('exchange_rate')->nullable();
 
-            $table->decimal('sub_price',15,2);
+            $table->decimal('sub_price', 15, 2);
             $table->timestamps();
         });
     }

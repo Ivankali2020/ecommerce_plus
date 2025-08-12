@@ -12,7 +12,7 @@ use Spatie\MediaLibrary\InteractsWithMedia;
 
 class Variant extends Model implements HasMedia
 {
-    use HasFactory,SoftDeletes,InteractsWithMedia;
+    use HasFactory,InteractsWithMedia,SoftDeletes;
 
     public $preventObserver = false;
 
@@ -24,17 +24,17 @@ class Variant extends Model implements HasMedia
     }
 
     protected $casts = [
-        'attributes' => 'json'
+        'attributes' => 'json',
     ];
 
-    protected $appends = ['attribute_values','product_img'];
+    protected $appends = ['attribute_values', 'product_img'];
 
     public function getProductImgAttribute()
     {
         // Return product's own image
         return $this->getFirstMediaUrl('images');
     }
-    
+
     public function exchange()
     {
         return $this->belongsTo(Exchange::class);
@@ -47,7 +47,7 @@ class Variant extends Model implements HasMedia
 
     public function getAttributeValuesAttribute()
     {
-        if (!$this->attributes) {
+        if (! $this->attributes) {
             return [];
         }
 
@@ -63,7 +63,7 @@ class Variant extends Model implements HasMedia
 
                 $formattedAttributes[] = [
                     'attribute' => $attribute->name,
-                    'value' => $values
+                    'value' => $values,
                 ];
             }
         }
@@ -75,9 +75,9 @@ class Variant extends Model implements HasMedia
     {
         self::observe(VariantObserver::class);
     }
-//
-//    public function attributeValues()
-//    {
-//        return $this->belongsTo(AttributeValue::class)->withTrashed();
-//    }
+    //
+    //    public function attributeValues()
+    //    {
+    //        return $this->belongsTo(AttributeValue::class)->withTrashed();
+    //    }
 }

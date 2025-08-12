@@ -3,7 +3,6 @@
 namespace App\Filament\Admin\Resources;
 
 use App\Filament\Admin\Resources\DeliveryResource\Pages;
-use App\Filament\Admin\Resources\DeliveryResource\RelationManagers;
 use App\Models\Delivery;
 use Filament\Facades\Filament;
 use Filament\Forms;
@@ -11,7 +10,6 @@ use Filament\Forms\Form;
 use Filament\Resources\Resource;
 use Filament\Tables;
 use Filament\Tables\Table;
-use Hamcrest\Core\Set;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\SoftDeletingScope;
 
@@ -45,19 +43,19 @@ class DeliveryResource extends Resource
                         Forms\Components\Select::make('seller_id')
                             ->required()->searchable()->preload()
                             ->hidden(Filament::getAuthGuard() == 'seller')
-                            ->relationship('seller','name')
+                            ->relationship('seller', 'name')
                             ->label(__('filament/resources/delivery-resource.form.fields.name')),
 
                         Forms\Components\Select::make('region_id')->live()
                             ->required()->searchable()->preload()
-                            ->afterStateUpdated(fn(Forms\Set $set)=>  $set('township_id',null))
-                            ->relationship('region','mm_name')
+                            ->afterStateUpdated(fn (Forms\Set $set) => $set('township_id', null))
+                            ->relationship('region', 'mm_name')
                             ->label(__('filament/resources/delivery-resource.form.fields.region')),
 
                         Forms\Components\Select::make('township_id')
-                            ->hidden(fn(Forms\Get $get)=> blank($get('region_id')))
+                            ->hidden(fn (Forms\Get $get) => blank($get('region_id')))
                             ->required()->searchable()->preload()
-                            ->relationship('township','mm_name',modifyQueryUsing: fn($query,Forms\Get $get)=> $query->where('region_id',$get('region_id')))
+                            ->relationship('township', 'mm_name', modifyQueryUsing: fn ($query, Forms\Get $get) => $query->where('region_id', $get('region_id')))
                             ->label(__('filament/resources/delivery-resource.form.fields.township')),
 
                         Forms\Components\TextInput::make('fees')
@@ -65,7 +63,7 @@ class DeliveryResource extends Resource
                             ->numeric()
                             ->default(0.00)
                             ->label(__('filament/resources/delivery-resource.form.fields.delivery_fee')),
-                    ])
+                    ]),
                 ]),
 
                 Forms\Components\Group::make()->schema([
@@ -85,8 +83,8 @@ class DeliveryResource extends Resource
                         Forms\Components\TextInput::make('remark')
                             ->label(__('filament/resources/delivery-resource.form.fields.remark'))
                             ->maxLength(255),
-                    ])
-                ])
+                    ]),
+                ]),
             ]);
     }
 
@@ -99,11 +97,11 @@ class DeliveryResource extends Resource
                     ->sortable(),
                 Tables\Columns\TextColumn::make('region.mm_name')
                     ->label(__('filament/resources/delivery-resource.table.columns.region'))
-                    ->description(fn(Delivery $delivery)=> $delivery->region->en_name)
+                    ->description(fn (Delivery $delivery) => $delivery->region->en_name)
                     ->sortable(),
                 Tables\Columns\TextColumn::make('township.mm_name')
                     ->label(__('filament/resources/delivery-resource.table.columns.township'))
-                    ->description(fn(Delivery $delivery)=> $delivery->region->en_name)
+                    ->description(fn (Delivery $delivery) => $delivery->region->en_name)
                     ->sortable(),
                 Tables\Columns\TextColumn::make('fees')
                     ->label(__('filament/resources/delivery-resource.table.columns.delivery_fee'))

@@ -7,6 +7,7 @@ use Illuminate\View\Component;
 class ProductItem extends Component
 {
     public $product;
+
     public $type;
 
     public function __construct($product, $type = 'default')

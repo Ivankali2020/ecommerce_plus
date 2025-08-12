@@ -15,14 +15,14 @@ class OrderProductObserver
     {
         $product = $orderProduct->product;
         // if ($orderProduct->getOriginal('quantity') == null ){
-        //     
-            // if ($product->has_variant){
-            //     $variant = Variant::where('id',$orderProduct->variant_id)->first();
-            //     $variant->decrement('quantity',$orderProduct->quantity);
-            // }else{
-            //     $product->decrement('quantity',$orderProduct->quantity);
-            //     logger('logger from order product observer '.$product->quantity);
-            // }
+        //
+        // if ($product->has_variant){
+        //     $variant = Variant::where('id',$orderProduct->variant_id)->first();
+        //     $variant->decrement('quantity',$orderProduct->quantity);
+        // }else{
+        //     $product->decrement('quantity',$orderProduct->quantity);
+        //     logger('logger from order product observer '.$product->quantity);
+        // }
         // }
         // $product->decrement('quantity',$orderProduct->quantity);
         $orderProduct->profit = $orderProduct->discount_price > 0 ?
@@ -50,10 +50,10 @@ class OrderProductObserver
 
     public function updated(OrderProduct $orderProduct)
     {
-        if ($orderProduct->getOriginal('quantity') != $orderProduct->quantity ) { //&& $orderProduct->getOriginal('product_id') == $orderProduct->product_id
+        if ($orderProduct->getOriginal('quantity') != $orderProduct->quantity) { // && $orderProduct->getOriginal('product_id') == $orderProduct->product_id
             $product = Product::where('id', $orderProduct->product_id)->first();
             if ($orderProduct->getOriginal('quantity') > $orderProduct->quantity) {
-                //if reduce quantity we will increment the original quantity
+                // if reduce quantity we will increment the original quantity
                 $incrementQuantity = $orderProduct->getOriginal('quantity') - $orderProduct->quantity;
                 if ($product->has_variant) {
                     $variant = Variant::where('id', $orderProduct->variant_id)->first();
@@ -61,9 +61,9 @@ class OrderProductObserver
                 } else {
                     $product->increment('quantity', $incrementQuantity);
                 }
-            } else if ($orderProduct->getOriginal('quantity') < $orderProduct->quantity) {
+            } elseif ($orderProduct->getOriginal('quantity') < $orderProduct->quantity) {
 
-                //if increase quantity we will decrement the original quantity
+                // if increase quantity we will decrement the original quantity
                 $decrementQuantity = $orderProduct->quantity - $orderProduct->getOriginal('quantity');
                 if ($product->has_variant) {
                     $variant = Variant::where('id', $orderProduct->variant_id)->first();

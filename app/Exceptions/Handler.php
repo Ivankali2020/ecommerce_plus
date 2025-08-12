@@ -3,19 +3,19 @@
 namespace App\Exceptions;
 
 use App\Traits\ResponseTraits;
-use Illuminate\Validation\ValidationException;
 use Exception;
 use Illuminate\Auth\AuthenticationException;
 use Illuminate\Foundation\Exceptions\Handler as ExceptionHandler;
 use Illuminate\Http\Request;
 use Illuminate\Http\Response;
+use Illuminate\Validation\ValidationException;
 use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
 use Symfony\Component\Routing\Exception\ResourceNotFoundException;
-use Throwable;
 
 class Handler extends ExceptionHandler
 {
     use ResponseTraits;
+
     /**
      * The list of the inputs that are never flashed to the session on validation exceptions.
      *
@@ -33,7 +33,7 @@ class Handler extends ExceptionHandler
     public function register(): void
     {
         $this->renderable(function (Exception $e, Request $request) {
-            //when you write custom exception handeller then you have to write this code
+            // when you write custom exception handeller then you have to write this code
             // return $this->customExceptionHandeller($e, $request);
         });
 
@@ -53,17 +53,13 @@ class Handler extends ExceptionHandler
             return $this->error('Route not found', Response::HTTP_NOT_FOUND);
         }
 
-
-
         if ($e instanceof AuthenticationException) {
             return $this->error($e->getMessage(), Response::HTTP_UNAUTHORIZED);
         }
 
-
         /**
          * Custom Exceptions
          */
-
         if ($e instanceof RegistrationFailException) {
             return $this->error($e->getMessage(), $e->getCode());
         }
@@ -97,7 +93,7 @@ class Handler extends ExceptionHandler
     {
         return array_map(function ($message, $key) {
             return [
-                'label'   => $key,
+                'label' => $key,
                 'detail' => $message[0],
             ];
         }, $arr, array_keys($arr));

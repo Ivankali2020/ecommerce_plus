@@ -3,13 +3,10 @@
 namespace App\Filament\Seller\Resources;
 
 use App\Filament\Seller\Resources\BrandResource\Pages;
-use App\Filament\Seller\Resources\BrandResource\RelationManagers;
 use App\Models\Brand;
 use Filament\Facades\Filament;
-use Filament\Forms;
 use Filament\Forms\Form;
 use Filament\Resources\Resource;
-use Filament\Tables;
 use Filament\Tables\Table;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\SoftDeletingScope;
@@ -18,7 +15,7 @@ class BrandResource extends Resource
 {
     protected static ?string $model = Brand::class;
 
-//    protected static ?string $navigationIcon = 'heroicon-o-rectangle-stack';
+    //    protected static ?string $navigationIcon = 'heroicon-o-rectangle-stack';
 
     protected static ?string $navigationGroup = 'Business Section';
 
@@ -61,7 +58,7 @@ class BrandResource extends Resource
     public static function getEloquentQuery(): Builder
     {
         return parent::getEloquentQuery()
-            ->where('seller_id',Filament::auth()->id())
+            ->where('seller_id', Filament::auth()->id())
             ->withoutGlobalScopes([
                 SoftDeletingScope::class,
             ]);

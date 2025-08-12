@@ -21,7 +21,7 @@ class ListExpanses extends ListRecords
     protected function getFooterWidgets(): array
     {
         return [
-            (ExpanseChart::class)
+            (ExpanseChart::class),
         ];
     }
 }

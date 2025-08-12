@@ -10,8 +10,8 @@ class SubscriptionPlanSeeder extends Seeder
     public function run(): void
     {
 
-         // Basic Plan - 1 months
-         SubscriptionPlan::create([
+        // Basic Plan - 1 months
+        SubscriptionPlan::create([
             'name' => 'Free Plan',
             'description' => 'Perfect for small businesses just getting started with e-commerce.',
             'price' => 0,
@@ -36,7 +36,7 @@ class SubscriptionPlanSeeder extends Seeder
                 '2 Staff Accounts',
                 'Basic Analytics',
                 'Standard Support',
-                'Mobile App Access'
+                'Mobile App Access',
             ],
             'is_active' => true,
         ]);
@@ -54,7 +54,7 @@ class SubscriptionPlanSeeder extends Seeder
                 'Priority Support',
                 'Mobile App Access',
                 'Bulk Import/Export',
-                'API Access'
+                'API Access',
             ],
             'is_active' => true,
         ]);
@@ -75,7 +75,7 @@ class SubscriptionPlanSeeder extends Seeder
                 'Full API Access',
                 'Custom Branding',
                 'Email Marketing Integration',
-                'Advanced Reporting'
+                'Advanced Reporting',
             ],
             'is_active' => true,
         ]);

@@ -3,7 +3,6 @@
 namespace App\Filament\Seller\Pages;
 
 use BezhanSalleh\FilamentShield\Traits\HasPageShield;
-use BezhanSalleh\FilamentShield\Traits\HasPanelShield;
 use Filament\Pages\Page;
 
 class Barcode extends Page

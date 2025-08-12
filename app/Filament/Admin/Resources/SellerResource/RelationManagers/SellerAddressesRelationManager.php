@@ -20,13 +20,13 @@ class SellerAddressesRelationManager extends RelationManager
             ->schema([
                 Forms\Components\Select::make('region_id')->live()
                     ->required()->searchable()->preload()
-                    ->afterStateUpdated(fn(Forms\Set $set)=>  $set('township_id',null))
-                    ->relationship('region','mm_name'),
+                    ->afterStateUpdated(fn (Forms\Set $set) => $set('township_id', null))
+                    ->relationship('region', 'mm_name'),
 
                 Forms\Components\Select::make('township_id')
-                    ->hidden(fn(Forms\Get $get)=> blank($get('region_id')))
+                    ->hidden(fn (Forms\Get $get) => blank($get('region_id')))
                     ->required()->searchable()->preload()
-                    ->relationship('township','mm_name',modifyQueryUsing: fn($query,Forms\Get $get)=> $query->where('region_id',$get('region_id'))),
+                    ->relationship('township', 'mm_name', modifyQueryUsing: fn ($query, Forms\Get $get) => $query->where('region_id', $get('region_id'))),
 
                 Forms\Components\TextInput::make('address')
                     ->required()
@@ -44,7 +44,7 @@ class SellerAddressesRelationManager extends RelationManager
                 Tables\Columns\TextColumn::make('address'),
             ])
             ->filters([
-                Tables\Filters\TrashedFilter::make()
+                Tables\Filters\TrashedFilter::make(),
             ])
             ->headerActions([
                 Tables\Actions\CreateAction::make(),

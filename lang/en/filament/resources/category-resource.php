@@ -31,11 +31,11 @@ return [
             'description' => 'Description',
             'parent_category' => 'Parent Category',
             'is_sub_category' => 'Is Sub Category',
-            'seller' => 'Seller'
+            'seller' => 'Seller',
         ],
         'helper_text' => [
             'name' => 'Enter the category name',
-            'sub_category' => 'Check if this is a sub-category'
-        ]
-    ]
+            'sub_category' => 'Check if this is a sub-category',
+        ],
+    ],
 ];

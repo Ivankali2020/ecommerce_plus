@@ -5,7 +5,6 @@ namespace App\Helper;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
 
-
 class UserHelper
 {
     public static function updateSellerId($id)
@@ -22,6 +21,7 @@ class UserHelper
         if (Auth::guard('web')->check()) {
             return Auth::guard('web')->user()->seller_id ?? 1;
         }
+
         return 1;
     }
 }

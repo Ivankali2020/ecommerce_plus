@@ -3,25 +3,21 @@
 namespace App\Livewire;
 
 use App\Helper\UserHelper;
+use App\Models\Cart as CartModel;
+use App\Models\Delivery;
+use App\Models\Order;
+use App\Models\Payment;
 use App\Models\PaymentAccount;
+use App\Models\Seller;
 use App\Models\UserAddress;
 use Exception;
 use Filament\Notifications\Notification;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
-use Illuminate\Support\Str;
 use Livewire\Attributes\Computed;
 use Livewire\Attributes\Locked;
 use Livewire\Component;
 use Livewire\WithFileUploads;
-use App\Models\Cart as CartModel;
-use App\Models\Region;
-use App\Models\Delivery;
-use App\Models\Township;
-use App\Models\Address;
-use App\Models\Seller;
-use App\Models\Order;
-use App\Models\Payment;
 
 class Cart extends Component
 {
@@ -29,6 +25,7 @@ class Cart extends Component
 
     #[Locked]
     public $cartItems;
+
     public $regions;
     // public $deliveries;
 
@@ -37,30 +34,44 @@ class Cart extends Component
     public $paymentDetails;
 
     public $townships = [];
+
     public $addresses;
+
     public $selectedRegion;
+
     public $selectedTownship;
+
     public $selectedAddress;
+
     public $deliveryFee = 0;
+
     public $is_cod = false;
+
     // public $payments;
     public $selectedPayment;
+
     public $selectedPaymentAccount;
+
     public $paymentSlip;
+
     public $delivery_id;
+
     public $address_id = 0;
+
     public $payment_account_id;
+
     public $seller_id;
+
     public function mount()
     {
-        if (!Auth::check('web')) {
+        if (! Auth::check('web')) {
             return redirect()->route('login');
         }
-      
+
         $this->seller_id = UserHelper::getUserSellerId();
         $this->cartItems = CartModel::with(['product', 'variant'])
             ->where('user_id', auth('web')->id())
-            ->where('seller_id',$this->seller_id)
+            ->where('seller_id', $this->seller_id)
             ->get();
 
         // $this->deliveries = self::getDeliveriresData();
@@ -74,48 +85,49 @@ class Cart extends Component
     #[Computed]
     public function payments()
     {
-        return Payment::where('seller_id', $this->seller_id)->with('accounts')->get();;
+        return Payment::where('seller_id', $this->seller_id)->with('accounts')->get();
     }
 
     #[Computed]
     public function deliveries()
     {
-       return Delivery::where('seller_id',$this->seller_id)
-        ->with(['region','township'])->get()->groupBy(function($item){
-            return $item->region->mm_name ;
-        })->map(function($items, $name){
-            return [
-                'region_name' => $name,
-                'townships' => $items->map(function ($item) {
-                    return [
-                        'name' => $item->township->mm_name,
-                        'township_id' => $item->township_id,
-                        'region_id' => $item->region_id,
-                        'delivery_id' => $item->id,
-                        'fees' => $item->fees,
-                        'is_cod' => $item->is_cod,
-                        'is_pick_up' => $item->is_pick_up,
-                        'remark' => $item->remark ?? '',
-                    ];
-                })
-            ];
-        })->values();
+        return Delivery::where('seller_id', $this->seller_id)
+            ->with(['region', 'township'])->get()->groupBy(function ($item) {
+                return $item->region->mm_name;
+            })->map(function ($items, $name) {
+                return [
+                    'region_name' => $name,
+                    'townships' => $items->map(function ($item) {
+                        return [
+                            'name' => $item->township->mm_name,
+                            'township_id' => $item->township_id,
+                            'region_id' => $item->region_id,
+                            'delivery_id' => $item->id,
+                            'fees' => $item->fees,
+                            'is_cod' => $item->is_cod,
+                            'is_pick_up' => $item->is_pick_up,
+                            'remark' => $item->remark ?? '',
+                        ];
+                    }),
+                ];
+            })->values();
     }
 
     public function updatedSelectedRegion()
     {
-        if($this->selectedRegion == null){
+        if ($this->selectedRegion == null) {
             $this->townships = [];
+
             return;
         }
-        $this->townships = Delivery::where('seller_id',$this->seller_id)->where('region_id', $this->selectedRegion)->get();
+        $this->townships = Delivery::where('seller_id', $this->seller_id)->where('region_id', $this->selectedRegion)->get();
         $this->selectedTownship = null;
         $this->deliveryFee = 0;
     }
 
     public function updatedSelectedTownship($townshipId)
     {
-        $township = Delivery::where('seller_id',$this->seller_id)->where('township_id', $townshipId)->first();
+        $township = Delivery::where('seller_id', $this->seller_id)->where('township_id', $townshipId)->first();
         $this->deliveryFee = $township ? $township->fees : 0;
     }
 
@@ -124,7 +136,7 @@ class Cart extends Component
 
         CartModel::find($cartItemId)->delete();
         $this->cartItems = CartModel::with(['product', 'variant'])
-            ->where('seller_id',UserHelper::getUserSellerId())
+            ->where('seller_id', UserHelper::getUserSellerId())
             ->where('user_id', auth('web')->id())
             ->get();
     }
@@ -132,34 +144,34 @@ class Cart extends Component
     public function updateQuantity($cartItemId, $quantity)
     {
         $cart = CartModel::where('id', $cartItemId)
-                ->where('seller_id',UserHelper::getUserSellerId())
-                ->with(['product', 'variant'])->first();
-        
+            ->where('seller_id', UserHelper::getUserSellerId())
+            ->with(['product', 'variant'])->first();
+
         // Check if quantity is valid
         if ($quantity <= 0) {
             return;
         }
-        
+
         // Check available stock
         $availableStock = $cart->variant ? $cart->variant->quantity : $cart->product->quantity;
-        
+
         if ($quantity > $availableStock) {
             Notification::make()
                 ->title(__('messages.cart.out_of_stock'))
                 ->body(__('messages.cart.limited_stock', ['quantity' => $availableStock]))
                 ->warning()
                 ->send();
-                
+
             // Set quantity to maximum available
             $quantity = $availableStock;
         }
-        
+
         // Update cart item
         CartModel::find($cartItemId)->update([
-            'quantity' => $quantity, 
-            'total' => $cart->price * $quantity
+            'quantity' => $quantity,
+            'total' => $cart->price * $quantity,
         ]);
-        
+
         $this->cartItems = CartModel::with(['product', 'variant'])
             ->where('user_id', auth('web')->id())
             ->where('seller_id', $this->seller_id)
@@ -172,22 +184,21 @@ class Cart extends Component
         $rules = [
             'delivery_id' => 'required|exists:deliveries,id',
             'address_id' => 'required|exists:user_addresses,id',
-            'is_cod' => 'required|boolean'
+            'is_cod' => 'required|boolean',
         ];
 
-        if (!$this->is_cod) {
+        if (! $this->is_cod) {
             $rules['payment_account_id'] = 'required|exists:payment_accounts,id';
             $rules['paymentSlip'] = 'required|image|max:1024'; // 1MB Max
         }
 
         $this->validate($rules);
 
-
         DB::beginTransaction();
 
-        try{
+        try {
 
-            $delivery = Delivery::where('id',$this->delivery_id)->first();
+            $delivery = Delivery::where('id', $this->delivery_id)->first();
 
             $total = $this->cartItems->sum(fn ($item) => $item->total);
 
@@ -211,13 +222,13 @@ class Cart extends Component
             foreach ($this->cartItems as $cartItem) {
                 if ($cartItem->variant) {
                     if ($cartItem->quantity > $cartItem->variant->quantity) {
-                        throw new Exception($cartItem->product->name . ' stock is not enough');
+                        throw new Exception($cartItem->product->name.' stock is not enough');
                     }
                     // $cartItem->variant->decrement('quantity', $cartItem->quantity);
 
                 } else {
                     if ($cartItem->quantity > $cartItem->product->quantity) {
-                        throw new Exception($cartItem->product->name . ' stock is not enough');
+                        throw new Exception($cartItem->product->name.' stock is not enough');
                     }
                     // $cartItem->decrement('quantity', $cartItem->quantity);
                 }
@@ -229,12 +240,12 @@ class Cart extends Component
                     'sub_price' => $cartItem->total,
                     'attributes' => $cartItem->variant ? $cartItem->variant->attributeValues : $cartItem->product->attributeValues,
                     'discount_price' => $cartItem->variant ? $cartItem->variant->mmk_discount_price : $cartItem->product->mmk_discount_price,
-                    'discount' => $cartItem->variant ? $cartItem->variant->discount :  $cartItem->product->discount,
-                    'original_buy_price' =>  $cartItem->variant ? $cartItem->variant->buy_price : $cartItem->product->buy_price,
+                    'discount' => $cartItem->variant ? $cartItem->variant->discount : $cartItem->product->discount,
+                    'original_buy_price' => $cartItem->variant ? $cartItem->variant->buy_price : $cartItem->product->buy_price,
                     'original_price' => $cartItem->variant ? $cartItem->variant->price : $cartItem->product->price,
-                    'original_discount_price' =>  $cartItem->variant ? $cartItem->variant->mmk_discount_price : $cartItem->product->mmk_discount_price,
+                    'original_discount_price' => $cartItem->variant ? $cartItem->variant->mmk_discount_price : $cartItem->product->mmk_discount_price,
                     'currency_id' => $cartItem->product->exchange->currency_id,
-                    'exchange_rate' => $cartItem->product->exchange->rate
+                    'exchange_rate' => $cartItem->product->exchange->rate,
                 ]);
             }
 
@@ -245,7 +256,7 @@ class Cart extends Component
 
             return redirect()->route('order.detail', $order->id);
 
-        }catch(Exception $exception){
+        } catch (Exception $exception) {
 
             DB::rollback();
             // dd($exception->getMessage());

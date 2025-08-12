@@ -2,35 +2,32 @@
 
 namespace App\Models;
 
-use App\Helper\MediaRegisterConversion;
 use App\Observers\ProductObserver;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\SoftDeletes;
 use Spatie\MediaLibrary\HasMedia;
 use Spatie\MediaLibrary\InteractsWithMedia;
-use Spatie\MediaLibrary\MediaCollections\FileAdder;
-use Symfony\Component\HttpFoundation\File\UploadedFile;
-use Spatie\MediaLibrary\MediaCollections\Models\Media;
 use Spatie\MediaLibrary\MediaCollections\File;
-
+use Spatie\MediaLibrary\MediaCollections\Models\Media;
 
 class Product extends Model implements HasMedia
 {
-    use HasFactory, SoftDeletes, InteractsWithMedia;
+    use HasFactory, InteractsWithMedia, SoftDeletes;
 
     public $preventObserver = false;
 
-    protected $appends = ['productImg','attributeValues'];
+    protected $appends = ['productImg', 'attributeValues'];
 
     public function getProductImgAttribute()
     {
         if ($this->has_variant) {
             // Get first variant's image
             $firstVariant = $this->variants()->first();
+
             return $firstVariant ? $firstVariant->getFirstMediaUrl('images') : $this->getFirstMediaUrl('images');
         }
-        
+
         // Return product's own image
         return $this->getFirstMediaUrl('images');
     }
@@ -38,7 +35,7 @@ class Product extends Model implements HasMedia
     public function getAttributeValuesAttribute()
     {
         // Check if the attributes column exists in the model
-        if (!array_key_exists('attributes', $this->attributes)) {
+        if (! array_key_exists('attributes', $this->attributes)) {
             return [];
         }
 
@@ -50,7 +47,7 @@ class Product extends Model implements HasMedia
         $formattedAttributes = [];
         $attributeData = json_decode($this->attributes['attributes'], true);
 
-        if(!$attributeData) {
+        if (! $attributeData) {
             return [];
         }
 
@@ -63,19 +60,19 @@ class Product extends Model implements HasMedia
 
                 $formattedAttributes[] = [
                     'attribute' => $attribute->name,
-                    'value' => $values
+                    'value' => $values,
                 ];
             }
         }
 
         return $formattedAttributes;
     }
-    
+
     public function registerMediaCollections(): void
     {
         $this->addMediaCollection('images')
             ->singleFile()
-            ->useFallbackUrl(asset('assets/img.jpg')) 
+            ->useFallbackUrl(asset('assets/img.jpg'))
             ->acceptsFile(function (File $file) {
                 $allowedMimeTypes = [
                     'image/jpeg',
@@ -84,6 +81,7 @@ class Product extends Model implements HasMedia
                     'image/svg+xml',
                     'image/webp',
                 ];
+
                 return in_array($file->mimeType, $allowedMimeTypes);
             })
             ->registerMediaConversions(function (Media $media) {
@@ -95,7 +93,7 @@ class Product extends Model implements HasMedia
     }
 
     protected $casts = [
-        'attributes' => 'json'
+        'attributes' => 'json',
     ];
 
     public function exchange()
@@ -110,7 +108,7 @@ class Product extends Model implements HasMedia
 
     public function category()
     {
-        return $this->belongsTo(Category::class)->withTrashed(); //->whereNull('parent_id')
+        return $this->belongsTo(Category::class)->withTrashed(); // ->whereNull('parent_id')
     }
 
     public function subCategory()
@@ -152,5 +150,4 @@ class Product extends Model implements HasMedia
     {
         self::observe(ProductObserver::class);
     }
-
 }

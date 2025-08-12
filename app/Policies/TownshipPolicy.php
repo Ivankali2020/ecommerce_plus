@@ -17,6 +17,7 @@ class TownshipPolicy
             return true;
         }
     }
+
     /**
      * Determine whether the seller can view any models.
      */

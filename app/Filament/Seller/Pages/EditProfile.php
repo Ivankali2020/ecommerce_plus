@@ -2,7 +2,6 @@
 
 namespace App\Filament\Seller\Pages;
 
-
 use Filament\Actions\Action;
 use Filament\Actions\Concerns\InteractsWithActions;
 use Filament\Forms\Components\SpatieMediaLibraryFileUpload;
@@ -43,14 +42,14 @@ class EditProfile extends \Filament\Pages\Auth\EditProfile implements HasForms
                 $this->getEmailFormComponent(),
                 $this->getPasswordFormComponent(),
                 $this->getPasswordConfirmationFormComponent(),
-               SpatieMediaLibraryFileUpload::make('logo')
+                SpatieMediaLibraryFileUpload::make('logo')
                     ->collection('logos')->imageEditor()
                     ->image()->rules('required|mimes:jpeg,png,jpg,svg|dimensions:ratio=1/1'),
 
                 SpatieMediaLibraryFileUpload::make('cover_photo')
                     ->multiple()->maxFiles(5)->label('Cover Photos')
                     ->collection('cover_photos')->imageEditor()
-                    ->image()->rules('required|mimes:jpeg,png,jpg,webp'), //|dimensions:ratio=16/9
+                    ->image()->rules('required|mimes:jpeg,png,jpg,webp'), // |dimensions:ratio=16/9
             ])
             ->statePath('data')
             ->model(auth('seller')->user());
@@ -60,6 +59,7 @@ class EditProfile extends \Filament\Pages\Auth\EditProfile implements HasForms
     {
         $this->save();
         $this->getSavedNotification();
+
         return redirect()->route('filament.seller.pages.dashboard');
     }
 
@@ -69,13 +69,11 @@ class EditProfile extends \Filament\Pages\Auth\EditProfile implements HasForms
 
             Action::make('back')
                 ->label(__('filament-panels::pages/auth/edit-profile.actions.cancel.label'))
-                ->alpineClickHandler('document.referrer ? window.history.back() : (window.location.href = ' . Js::from(filament()->getUrl()) . ')')
+                ->alpineClickHandler('document.referrer ? window.history.back() : (window.location.href = '.Js::from(filament()->getUrl()).')')
                 ->color('gray'),
             Action::make('Update')
                 ->color('primary')
                 ->submit('Update'),
         ];
     }
-
-
 }

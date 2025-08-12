@@ -8,11 +8,9 @@ use Filament\Http\Middleware\Authenticate as FilamentAuthenticate;
 use Filament\Models\Contracts\FilamentUser;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
-use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
 
-class RedirectIfUnauthenticated  //extends FilamentAuthenticate
+class RedirectIfUnauthenticated  // extends FilamentAuthenticate
 {
-
     // protected function unauthenticated($request, array $guards)
     // {
     //     // dd($request);
@@ -30,12 +28,12 @@ class RedirectIfUnauthenticated  //extends FilamentAuthenticate
 
     public function handle(Request $request, Closure $next, $guard = 'seller')
     {
-        if (!Auth::guard($guard)->check()) {
+        if (! Auth::guard($guard)->check()) {
             if ($request->expectsJson()) {
                 return response()->json([
                     'status' => 'error',
                     'message' => 'Unauthenticated.',
-                    'errors' => []
+                    'errors' => [],
                 ], 401);
             }
 
@@ -54,6 +52,6 @@ class RedirectIfUnauthenticated  //extends FilamentAuthenticate
         );
 
         return $next($request);
-       
+
     }
 }

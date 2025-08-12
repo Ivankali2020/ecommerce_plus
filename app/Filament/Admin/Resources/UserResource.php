@@ -13,15 +13,13 @@ use Filament\Resources\Pages\CreateRecord;
 use Filament\Resources\Resource;
 use Filament\Tables;
 use Filament\Tables\Table;
-use Illuminate\Database\Eloquent\Builder;
-use Illuminate\Database\Eloquent\SoftDeletingScope;
 use Illuminate\Support\Facades\Hash;
 
 class UserResource extends Resource
 {
     protected static ?string $model = User::class;
 
-//    protected static ?string $navigationIcon = 'heroicon-o-rectangle-stack';
+    //    protected static ?string $navigationIcon = 'heroicon-o-rectangle-stack';
     protected static ?string $navigationGroup = 'User Section';
 
     public static function form(Form $form): Form
@@ -30,7 +28,7 @@ class UserResource extends Resource
             ->schema([
 
                 Forms\Components\Select::make('seller_id')
-                    ->relationship('seller','name')
+                    ->relationship('seller', 'name')
                     ->required()->hidden(Filament::getAuthGuard() == 'seller')
                     ->searchable()->preload(),
 
@@ -64,9 +62,9 @@ class UserResource extends Resource
                     ->label(__('filament/resources/user-resource.form.password.label'))
                     ->placeholder(__('filament/resources/user-resource.form.password.placeholder'))
                     ->password()
-                    ->dehydrateStateUsing(fn($state) => Hash::make($state))
-                    ->dehydrated(fn($state)=>filled($state))
-                    ->required(fn(Page $livewire) => $livewire instanceof CreateRecord)
+                    ->dehydrateStateUsing(fn ($state) => Hash::make($state))
+                    ->dehydrated(fn ($state) => filled($state))
+                    ->required(fn (Page $livewire) => $livewire instanceof CreateRecord)
                     ->maxLength(255),
             ]);
     }
@@ -75,7 +73,7 @@ class UserResource extends Resource
     {
         return $table
             ->columns([
-               Tables\Columns\SpatieMediaLibraryImageColumn::make('thumb')->collection('profile_photos'),
+                Tables\Columns\SpatieMediaLibraryImageColumn::make('thumb')->collection('profile_photos'),
                 Tables\Columns\TextColumn::make('name')
                     ->label(__('filament/resources/user-resource.table.columns.name'))
                     ->searchable(),
@@ -115,7 +113,7 @@ class UserResource extends Resource
     public static function getRelations(): array
     {
         return [
-            RelationManagers\UserAddressesRelationManager::class
+            RelationManagers\UserAddressesRelationManager::class,
         ];
     }
 

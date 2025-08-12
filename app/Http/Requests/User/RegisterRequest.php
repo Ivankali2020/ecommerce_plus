@@ -25,7 +25,7 @@ class RegisterRequest extends FormRequest
             'name' => 'required|string|max:50',
             'email' => 'required|email|unique:users',
             'password' => 'required|string|min:8|confirmed',
-            'fmc_token' => 'required|string'
+            'fmc_token' => 'required|string',
         ];
     }
 }

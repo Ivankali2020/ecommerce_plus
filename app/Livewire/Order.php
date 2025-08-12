@@ -5,7 +5,6 @@ namespace App\Livewire;
 use App\Models\Order as OrderModel;
 use Livewire\Component;
 use Livewire\WithPagination;
-use Illuminate\Support\Facades\DB;
 
 class Order extends Component
 {
@@ -25,7 +24,7 @@ class Order extends Component
         $orders = OrderModel::query()
             ->select([
                 'orders.*',
-                'sellers.name as seller_name'
+                'sellers.name as seller_name',
             ])
             ->join('sellers', 'orders.seller_id', '=', 'sellers.id')
             ->where('orders.user_id', auth()->id())
@@ -39,8 +38,7 @@ class Order extends Component
 
         return view('livewire.order', [
             'groupedOrders' => $groupedOrders,
-            'orders' => $orders
+            'orders' => $orders,
         ]);
     }
 }
-

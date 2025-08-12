@@ -23,7 +23,7 @@ enum PaymentMethodExpanse: string implements HasColor, HasIcon, HasLabel
         };
     }
 
-    public function getColor(): string | array | null
+    public function getColor(): string|array|null
     {
         return match ($this) {
             self::Cash => 'success', // Green
@@ -42,6 +42,7 @@ enum PaymentMethodExpanse: string implements HasColor, HasIcon, HasLabel
             self::Other => 'heroicon-m-question-mark-circle', // ❓
         };
     }
+
     public static function options(): array
     {
         return [

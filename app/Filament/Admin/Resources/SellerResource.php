@@ -16,7 +16,6 @@ use Filament\Resources\Resource;
 use Filament\Tables;
 use Filament\Tables\Table;
 use Illuminate\Database\Eloquent\Builder;
-use Illuminate\Database\Eloquent\SoftDeletingScope;
 use Illuminate\Support\Facades\Hash;
 
 class SellerResource extends Resource
@@ -48,13 +47,11 @@ class SellerResource extends Resource
                     Forms\Components\TextInput::make('password')
                         ->label(__('filament/resources/staff-resource.form.password'))
                         ->password()
-                        ->dehydrateStateUsing(fn($state) => Hash::make($state))
-                        ->formatStateUsing(fn($state) => $state)
+                        ->dehydrateStateUsing(fn ($state) => Hash::make($state))
+                        ->formatStateUsing(fn ($state) => $state)
                         ->revealable()->autocomplete()
-                        ->required(fn(Page $livewire) => $livewire instanceof CreateRecord)
+                        ->required(fn (Page $livewire) => $livewire instanceof CreateRecord)
                         ->maxLength(255),
-
-                       
 
                     Forms\Components\RichEditor::make('description')
                         ->required()->hidden(Filament::getAuthGuard() == 'seller')
@@ -73,11 +70,11 @@ class SellerResource extends Resource
 
                     Forms\Components\Select::make('roles')
                         ->label(__('filament/resources/staff-resource.form.role'))
-                        ->relationship('roles', 'name',modifyQueryUsing: fn($query) => $query->where('guard_name','seller'))
+                        ->relationship('roles', 'name', modifyQueryUsing: fn ($query) => $query->where('guard_name', 'seller'))
                         ->multiple()
                         ->preload()
-                        ->searchable()
-                ])
+                        ->searchable(),
+                ]),
             ]);
     }
 
@@ -102,7 +99,7 @@ class SellerResource extends Resource
                     ->label(__('filament/resources/staff-resource.form.phone'))
                     ->searchable(),
 
-                 Tables\Columns\TextColumn::make('email_verified_at')
+                Tables\Columns\TextColumn::make('email_verified_at')
                     ->label('Email Verified')
                     ->dateTime('d m Y H:i'),
 
@@ -115,31 +112,31 @@ class SellerResource extends Resource
                     ->sortable()
                     ->toggleable(isToggledHiddenByDefault: true),
             ])
-           ->filters([
-            Tables\Filters\Filter::make('verified')
-                ->label('Email Verified')
-                ->query(fn (Builder $query) => $query->whereNotNull('email_verified_at')),
-            Tables\Filters\Filter::make('unverified')
-                ->label('Email Not Verified')
-                ->query(fn (Builder $query) => $query->whereNull('email_verified_at')),
-        ])
+            ->filters([
+                Tables\Filters\Filter::make('verified')
+                    ->label('Email Verified')
+                    ->query(fn (Builder $query) => $query->whereNotNull('email_verified_at')),
+                Tables\Filters\Filter::make('unverified')
+                    ->label('Email Not Verified')
+                    ->query(fn (Builder $query) => $query->whereNull('email_verified_at')),
+            ])
             ->actions([
                 Tables\Actions\ViewAction::make(),
                 Tables\Actions\EditAction::make(),
                 Tables\Actions\Action::make('resend_verification_email')
-                ->label('Resend Verification Email')
-                ->icon('heroicon-o-envelope')
-                ->authorize(fn(Seller $record) => !$record->hasVerifiedEmail())
-                ->action(function (Seller $record) {
-                    $notification = new VerifyEmail();
-                    $notification->url = filament()->getPanel('seller')->getVerifyEmailUrl($record);
-                    $record->notify($notification);
+                    ->label('Resend Verification Email')
+                    ->icon('heroicon-o-envelope')
+                    ->authorize(fn (Seller $record) => ! $record->hasVerifiedEmail())
+                    ->action(function (Seller $record) {
+                        $notification = new VerifyEmail;
+                        $notification->url = filament()->getPanel('seller')->getVerifyEmailUrl($record);
+                        $record->notify($notification);
 
-                    Notification::make()
-                        ->title("Verification email has been resent.")
-                        ->send();
-                })
-                ->requiresConfirmation(),
+                        Notification::make()
+                            ->title('Verification email has been resent.')
+                            ->send();
+                    })
+                    ->requiresConfirmation(),
             ])
             ->bulkActions([
                 Tables\Actions\BulkActionGroup::make([
@@ -152,7 +149,7 @@ class SellerResource extends Resource
     {
         return [
             RelationManagers\SellerAddressesRelationManager::class,
-            RelationManagers\SellersRelationManager::class
+            RelationManagers\SellersRelationManager::class,
         ];
     }
 

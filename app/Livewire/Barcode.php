@@ -5,7 +5,6 @@ namespace App\Livewire;
 use App\Helper\CheckFilamentSellerUser;
 use App\Models\Product;
 use App\Models\Variant;
-use BezhanSalleh\FilamentShield\Traits\HasPanelShield;
 use Filament\Forms\Components\Select;
 use Filament\Forms\Components\TextInput;
 use Filament\Forms\Concerns\InteractsWithForms;
@@ -26,11 +25,11 @@ class Barcode extends Component implements HasForms
         $this->form->fill();
     }
 
-    public Product|null $product = null;
+    public ?Product $product = null;
 
-    public Variant|null $variant = null;
+    public ?Variant $variant = null;
 
-    public  $barcodeTypes = [
+    public $barcodeTypes = [
         'C39' => 'C39',
         'C39+' => 'C39+',
         'C39E' => 'C39E',
@@ -51,22 +50,22 @@ class Barcode extends Component implements HasForms
                     ->searchable()
                     ->live()
                     ->afterStateUpdated(function (?string $state) {
-                        if($state){
-                            $this->product = Product::where('id',$state)->first();
-                        }else{
+                        if ($state) {
+                            $this->product = Product::where('id', $state)->first();
+                        } else {
                             $this->reset('product');
                         }
                     })
-                    ->options(Product::where('seller_id',CheckFilamentSellerUser::getSellerId())->pluck('name','id')),
+                    ->options(Product::where('seller_id', CheckFilamentSellerUser::getSellerId())->pluck('name', 'id')),
 
-               Select::make('variant_id')->required()
+                Select::make('variant_id')->required()
                     ->label(__('filament/resources/barcode-resource.labels.variant'))
-                    ->hidden(fn(Get $get) => blank($get('product_id')) || !Product::where('id', $get('product_id'))->select('has_variant')->first()->has_variant)
+                    ->hidden(fn (Get $get) => blank($get('product_id')) || ! Product::where('id', $get('product_id'))->select('has_variant')->first()->has_variant)
                     ->searchable()->preload()->live()
-                    ->afterStateUpdated(function ($state, Get $get,Set $set) {
+                    ->afterStateUpdated(function ($state, Get $get, Set $set) {
                         if ($state) {
                             $this->variant = Variant::where('id', $state)->first();
-                        }else{
+                        } else {
                             $this->reset('variant');
                         }
                     })

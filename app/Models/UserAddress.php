@@ -24,6 +24,6 @@ class UserAddress extends Model
 
     public function getModAddressAttribute()
     {
-        return $this->region->mm_name .','. $this->township->mm_name .','.$this->address;
+        return $this->region->mm_name.','.$this->township->mm_name.','.$this->address;
     }
 }

@@ -39,7 +39,7 @@ return [
             'cash_on_delivery' => 'Cash on Delivery',
             'self_pickup' => 'Self Pickup',
             'shipping_information' => 'Shipping Information',
-            'remark' => 'Remark'
+            'remark' => 'Remark',
         ],
     ],
 ];

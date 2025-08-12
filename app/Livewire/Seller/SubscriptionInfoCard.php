@@ -2,16 +2,16 @@
 
 namespace App\Livewire\Seller;
 
+use Carbon\Carbon;
 use Illuminate\Support\Facades\Auth;
 use Livewire\Component;
-use Carbon\Carbon;
 
 class SubscriptionInfoCard extends Component
 {
     public function render()
     {
         $seller = Auth::guard('seller')->user();
-        
+
         $subscriptionData = [
             'hasSubscription' => false,
             'planName' => null,
@@ -20,13 +20,13 @@ class SubscriptionInfoCard extends Component
             'isExpired' => true,
             'status' => 'inactive',
         ];
-        
+
         if ($seller) {
             // For staff, check parent's subscription
             if ($seller->parent_id) {
                 $seller = $seller->parent;
             }
-            
+
             if ($seller && $seller->subscription_expired_at) {
                 $subscriptionData['hasSubscription'] = true;
                 $subscriptionData['planName'] = $seller->subscriptionPlan?->name ?? 'Unknown Plan';
@@ -36,7 +36,7 @@ class SubscriptionInfoCard extends Component
                 $subscriptionData['status'] = $seller->subscription_status;
             }
         }
-        
+
         return view('livewire.seller.subscription-info-card', [
             'subscriptionData' => $subscriptionData,
         ]);

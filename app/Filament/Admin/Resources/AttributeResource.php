@@ -3,7 +3,6 @@
 namespace App\Filament\Admin\Resources;
 
 use App\Filament\Admin\Resources\AttributeResource\Pages;
-use App\Filament\Admin\Resources\AttributeResource\RelationManagers;
 use App\Helper\AttributeType;
 use App\Models\Attribute;
 use Filament\Facades\Filament;
@@ -50,7 +49,7 @@ class AttributeResource extends Resource
                             Forms\Components\Select::make('seller_id')
                                 ->hidden(Filament::getAuthGuard() == 'seller')
                                 ->searchable()->preload()
-                                ->required()->relationship('seller','name')
+                                ->required()->relationship('seller', 'name')
                                 ->label(__('filament/resources/attribute-resource.form.seller_id')),
 
                             Forms\Components\TextInput::make('name')
@@ -66,7 +65,7 @@ class AttributeResource extends Resource
                                 ->required()
                                 ->label(__('filament/resources/attribute-resource.form.type')),
 
-                        ])
+                        ]),
                     ])->columnSpan(1),
                     Forms\Components\Group::make()->schema([
                         Forms\Components\Repeater::make('values')
@@ -76,28 +75,28 @@ class AttributeResource extends Resource
 
                                 Forms\Components\ColorPicker::make('color_code')
                                     ->live()->label(__('filament/resources/attribute-resource.form.color_code'))
-                                    ->afterStateUpdated(function ($state,Forms\Set $set){
+                                    ->afterStateUpdated(function ($state, Forms\Set $set) {
                                         //  $response = Http::get('https://api.color.pizza/v1/?values='.Str::remove('#',$state)); will be update in v2
                                     })
-                                    ->visible(fn(Forms\Get $get) => $get('../../type') == 'color')
+                                    ->visible(fn (Forms\Get $get) => $get('../../type') == 'color')
                                     ->required(),
 
                                 Forms\Components\TextInput::make('value')
                                     ->live()->label(__('filament/resources/attribute-resource.form.value'))
-                                    ->placeholder(fn()=> $loading ? 'Searching Color Name' : '')
-                                    ->visible(fn(Forms\Get $get) => $get('../../type') == 'color')
+                                    ->placeholder(fn () => $loading ? 'Searching Color Name' : '')
+                                    ->visible(fn (Forms\Get $get) => $get('../../type') == 'color')
                                     ->required(),
 
                                 Forms\Components\TextInput::make('value')
-                                    ->visible(fn(Forms\Get $get) => $get('../../type') == 'text')
+                                    ->visible(fn (Forms\Get $get) => $get('../../type') == 'text')
                                     ->helperText('ဉပမာ - Sizes ဆိုရင် (xl,l,md), Colors ဆိုရင် (red,green,...), ...')
                                     ->required()
                                     ->maxLength(255)
                                     ->label(__('filament/resources/attribute-resource.form.value')),
 
-                            ])->columns(2)->hidden(fn(Forms\Get $get) => blank($get('type')))
-                    ])
-                ])->columns(2)
+                            ])->columns(2)->hidden(fn (Forms\Get $get) => blank($get('type'))),
+                    ]),
+                ])->columns(2),
             ]);
     }
 

@@ -3,7 +3,6 @@
 use App\Models\Region;
 use App\Models\Seller;
 use App\Models\Township;
-use App\Models\User;
 use Illuminate\Database\Migrations\Migration;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Support\Facades\Schema;
