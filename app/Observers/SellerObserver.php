@@ -29,6 +29,16 @@ class SellerObserver
             'subscription_status' => 'active',
         ]);
 
+        // ADD default settings for the seller
+        $seller->settings()->create([
+            'tenant_id' => $seller->tenant_id,
+            'data' => [
+                'point_percentage' => 5, // 5% point reward
+                'tax_percentage' => 10, // 10% tax
+                'referral_points' => 100, // 100 points for referral
+            ],
+        ]);
+
         $seller->assignRole(['panel_user', 'super_admin']);
 
     }

@@ -47,9 +47,10 @@ class DatabaseSeeder extends Seeder
             AdminSeeder::class,
             CurrencySeeder::class,
             MultiStoreSeeder::class,
-            // MedicineStoreSeeder::class,
+            MedicineStoreSeeder::class,
             SubscriptionPlanSeeder::class,
-            OrderSeeder::class
+            OrderSeeder::class,
+            GiftSeeder::class,
         ]);
 
         //         \App\Models\User::factory(10)->create();

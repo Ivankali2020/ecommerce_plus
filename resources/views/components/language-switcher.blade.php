@@ -2,16 +2,14 @@
     <button @click="open = !open"
             class="flex items-center gap-2 px-3 py-2 text-sm font-medium text-gray-700 dark:text-gray-300 hover:text-gray-900 dark:hover:text-white rounded-md hover:bg-gray-50 dark:hover:bg-gray-700 transition-colors duration-200">
         @if(app()->getLocale() === 'en')
-            <img src="https://flagcdn.com/w40/us.png"
-                 srcset="https://flagcdn.com/w80/us.png 2x"
+            <img src="{{  asset('assets/us.png') }}"
                  width="20"
                  height="20"
                  class="rounded-sm object-contain"
                  alt="English">
             <span class="font-jost">English</span>
         @else
-            <img src="https://flagcdn.com/w40/mm.png"
-                 srcset="https://flagcdn.com/w80/mm.png 2x"
+            <img src="{{  asset('assets/mm.png') }}"
                  width="20"
                  height="20"
                  class="rounded-sm object-contain"
@@ -39,8 +37,7 @@
         <div class="py-1 font-jost ">
             <a href="{{ route('language.switch', 'en') }}"
                class="flex items-center gap-3 px-4 py-2 text-sm text-gray-700 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-gray-700 transition-colors duration-200">
-                <img src="https://flagcdn.com/w40/us.png"
-                     srcset="https://flagcdn.com/w80/us.png 2x"
+                <img src="{{  asset('assets/us.png') }}"
                      width="20"
                      height="20"
                      class="rounded-sm object-contain"
@@ -54,8 +51,7 @@
             </a>
             <a href="{{ route('language.switch', 'my') }}"
                class="flex items-center gap-3 px-4 py-2 text-sm text-gray-700 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-gray-700 transition-colors duration-200">
-                <img src="https://flagcdn.com/w40/mm.png"
-                     srcset="https://flagcdn.com/w80/mm.png 2x"
+                <img  src="{{  asset('assets/mm.png') }}"
                      width="20"
                      height="20"
                      class="rounded-sm object-contain"

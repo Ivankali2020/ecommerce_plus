@@ -90,12 +90,36 @@ trait WithCart
                     ->success()
                     ->duration(500)->send();
             }
-
         } catch (\Exception $e) {
-            logger()->error('Error adding to cart: '.$e->getMessage());
+            logger()->error('Error adding to cart: ' . $e->getMessage());
 
             Notification::make()
                 ->title('Failed to add product to cart')
+                ->body($e->getMessage())
+                ->danger()
+                ->duration(500)->send();
+        }
+    }
+
+    public function addVariantToCart($variantId, $quantity = 1)
+    {
+        try {
+            $variant = \App\Models\Variant::with('product')->find($variantId);
+
+            if (!$variant) {
+                Notification::make()
+                    ->title('Variant not found')
+                    ->danger()
+                    ->send();
+                return;
+            }
+
+            return $this->addToCart($variant->product_id, $variantId, $quantity);
+        } catch (\Exception $e) {
+            logger()->error('Error adding variant to cart: ' . $e->getMessage());
+
+            Notification::make()
+                ->title('Failed to add variant to cart')
                 ->body($e->getMessage())
                 ->danger()
                 ->duration(500)->send();

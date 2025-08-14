@@ -7,6 +7,7 @@ use App\Observers\SellerObserver;
 use BezhanSalleh\FilamentShield\Traits\HasPanelShield;
 use Carbon\Carbon;
 use Filament\Models\Contracts\FilamentUser;
+use Filament\Notifications\Notification;
 use Filament\Panel;
 use Filament\Panel\Concerns\HasTenancy;
 use Illuminate\Contracts\Auth\MustVerifyEmail;
@@ -63,8 +64,14 @@ class Seller extends Authenticatable implements FilamentUser, HasMedia //, MustV
     public function tenants()
     {
         return $this->belongsToMany(Tenant::class, 'tenant_seller', 'seller_id', 'tenant_id');
-    }   
+    }
 
+
+    // Setting one-to-one relationship
+    public function setting()
+    {
+        return $this->hasOne(Setting::class);
+    }
 
     // Check if subscription is active
     public function hasActiveSubscription(): bool
@@ -169,6 +176,16 @@ class Seller extends Authenticatable implements FilamentUser, HasMedia //, MustV
         return $this->hasMany(Exchange::class);
     }
 
+    public function gifts()
+    {
+        return $this->hasMany(Gift::class);
+    }
+
+    public function giftExchanges()
+    {
+        return $this->hasMany(GiftExchange::class);
+    }
+
     public function addresses()
     {
         return $this->hasMany(SellerAddress::class);
@@ -176,6 +193,21 @@ class Seller extends Authenticatable implements FilamentUser, HasMedia //, MustV
 
     public function canAccessPanel(Panel $panel): bool
     {
+        // First, check tenant access - if we're in a tenant context
+        if (tenant()) {
+            $currentTenantId = tenant('id');
+
+            // Check if seller belongs to current tenant using the many-to-many relationship
+            if (!$this->tenants()->where('tenant_id', $currentTenantId)->exists()) {
+                Notification::make()
+                    ->title('Access Denied')
+                    ->body('You do not have access to this tenant domain.')
+                    ->danger()
+                    ->send();
+                return false; // Deny access if seller doesn't belong to current tenant
+            }
+        }
+
         // For staff accounts, check parent's subscription
         if ($this->parent_id) {
             $parent = $this->parent;

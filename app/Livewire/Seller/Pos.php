@@ -2,7 +2,9 @@
 
 namespace App\Livewire\Seller;
 
+use App\Livewire\Order;
 use App\Models\Category;
+use App\Models\Order as ModelsOrder;
 use App\Models\Product;
 use App\Models\Variant;
 use Exception;
@@ -52,6 +54,8 @@ class Pos extends Component implements HasActions, HasForms
 
     public int $perPage = 24;
 
+    public int $offset = 0;
+
     public bool $hasMorePages = true;
 
     public ?Collection $products;
@@ -63,6 +67,7 @@ class Pos extends Component implements HasActions, HasForms
 
     public function mount()
     {
+        $this->offset = 0;
         $this->getProductData();
         $this->calculateTotal();
     }
@@ -72,7 +77,21 @@ class Pos extends Component implements HasActions, HasForms
         return view('livewire.seller.pos');
     }
 
-    public function getProductData()
+    public function reset(...$properties)
+    {
+        // Call parent reset method
+        parent::reset(...$properties);
+
+        // Reset offset and other pagination related properties
+        $this->offset = 0;
+        $this->hasMorePages = true;
+        $this->products = new Collection;
+
+        // Reload data
+        $this->getProductData();
+    }
+
+    public function getProductData($loadMore = false)
     {
         try {
             // Check if user is authenticated
@@ -102,19 +121,25 @@ class Pos extends Component implements HasActions, HasForms
             }
 
             // Add eager loading and ordering
-            $query->with(['category', 'brand', 'variants'])
-                ->latest();
+            $query->with(['category', 'brand', 'variants']);
 
             // Get total count for current query
             $total = $query->count();
 
             // Calculate if we have more pages
-            $this->hasMorePages = $total >= $this->perPage;
+            $this->hasMorePages = $total > ($this->offset + $this->perPage);
 
-            // Get paginated results
-            $newProducts = $query->take($this->perPage)->get();
+            // Get paginated results with offset
+            $newProducts = $query->skip($this->offset)->take($this->perPage)
+                ->orderBy('id', 'desc')->get();
 
-            $this->products = $newProducts;
+            if ($loadMore) {
+                // Append new products to existing collection
+                $this->products = $this->products->concat($newProducts);
+            } else {
+                // Replace products collection (for fresh load)
+                $this->products = $newProducts;
+            }
         } catch (\Exception $e) {
             $this->products = new Collection;
             $this->hasMorePages = false;
@@ -127,7 +152,7 @@ class Pos extends Component implements HasActions, HasForms
     {
         // Reset the state
         $this->selectedCategory = $categoryId;
-        $this->perPage = 18;
+        $this->offset = 0;
         $this->hasMorePages = true;
         $this->resetPage(); // Reset pagination state
 
@@ -145,9 +170,11 @@ class Pos extends Component implements HasActions, HasForms
         }
 
         try {
+            // Increment offset by perPage to get next batch
+            $this->offset += $this->perPage;
 
-            $this->perPage += 10;
-            $this->getProductData();
+            // Load more products and append to existing collection
+            $this->getProductData(true);
         } catch (\Exception $e) {
             logger()->error('Error loading more products: ' . $e->getMessage());
             $this->hasMorePages = false;
@@ -477,7 +504,9 @@ class Pos extends Component implements HasActions, HasForms
             DB::commit();
 
             // Store order for receipt display
-            $this->lastOrder = $order;
+            $this->lastOrder = ModelsOrder::with(['products', 'products.variant', 'products.product'])
+                ->where('id', $order->id)
+                ->first();
             $this->showReceipt = true;
 
             // Reset cart and payment fields after order
@@ -615,6 +644,8 @@ class Pos extends Component implements HasActions, HasForms
     {
         // Reset pagination when searching
         $this->resetPage();
+        $this->offset = 0;
+        $this->hasMorePages = true;
 
         // Reset products collection
         $this->products = new Collection;

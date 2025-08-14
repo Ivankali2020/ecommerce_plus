@@ -34,7 +34,7 @@ return new class extends Migration
             $table->json('attributes')->nullable();
 
             $table->integer('MOQ')->default(1);
-            $table->string('sku')->nullable()->unique();
+            $table->string('sku')->nullable();
 
             $table->decimal('buy_price', 15, 2)->nullable();
             $table->decimal('price', 15, 2)->nullable();
@@ -57,6 +57,9 @@ return new class extends Migration
 
             $table->softDeletes();
             $table->timestamps();
+
+            // Make SKU unique per tenant
+            $table->unique(['sku', 'tenant_id']);
         });
     }
 

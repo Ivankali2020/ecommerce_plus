@@ -1,4 +1,4 @@
-@php use Milon\Barcode\DNS1D; @endphp
+@php use Milon\Barcode\DNS1D; use Milon\Barcode\DNS2D; @endphp
 <div>
     <form wire:submit="create">
 
@@ -27,26 +27,49 @@
         @php
             $sku = $this->variant?->sku ?? $this->product?->sku;
             $barcode = null;
+            // Convert mm to pixels (approximately 3.78 pixels per mm at 96 DPI)
+            // Handle empty/null values and ensure numeric types
+            $widthMm = isset($this->data['width_mm']) && !empty($this->data['width_mm']) && is_numeric($this->data['width_mm']) ? (float)$this->data['width_mm'] : 50;
+            $heightMm = isset($this->data['height_mm']) && !empty($this->data['height_mm']) && is_numeric($this->data['height_mm']) ? (float)$this->data['height_mm'] : 30;
+            
+            $widthPixels = round($widthMm * 3.78);
+            $heightPixels = round($heightMm * 3.78);
+            
             if ($sku) {
                 try {
-                    $barcode = (new DNS1D())->getBarcodeHTML($sku, $this->data['type'], 2, 43);
+                    // Get barcode specific dimensions
+                    $barcodeWidth = isset($this->data['barcode_width']) && !empty($this->data['barcode_width']) && is_numeric($this->data['barcode_width']) ? (int)$this->data['barcode_width'] : 2;
+                    $barcodeHeight = isset($this->data['barcode_height']) && !empty($this->data['barcode_height']) && is_numeric($this->data['barcode_height']) ? (int)$this->data['barcode_height'] : 43;
+                    
+                    //check if QRCODE is selected
+                    if ($this->data['type'] === 'QRCODE') {
+                        // For QR codes, use barcode width as size multiplier
+                        $barcode = (new DNS2D())->getBarcodeHTML($sku, 'QRCODE', $barcodeWidth, $barcodeWidth);
+                    } else {
+                        // Use custom barcode width and height for regular barcodes
+                        $barcode = (new DNS1D())->getBarcodeHTML($sku, $this->data['type'], $barcodeWidth, $barcodeHeight);
+                    }
                 } catch (\Exception $e) {
                     // Handle the error silently or log it
                 }
             }
         @endphp
        
-            <div class="text-center py-4 px-2 " style="min-width: 300px"  id="{{ $this->data['total'] == 1 ? 'barcode' : '' }}">
-                <div class="text-xs my-2">{{ $this->variant?->sku ?? $this->product->sku }}</div>
-                <div class=" flex  justify-center">
+            <div class="text-center border px-2 flex flex-col items-center justify-center" 
+                 style="min-width: {{ $widthPixels }}px; width: {{ $widthPixels }}px; height: {{ $heightPixels }}px;" 
+                 id="{{ $this->data['total'] == 1 ? 'barcode' : '' }}">
+                <div class="text-xs" style="margin-bottom:4px;">{{ $this->variant?->sku ?? $this->product->sku }}</div>
+                <div class="flex justify-center barcode-container" >
                     @if($barcode)
-                        {!! $barcode !!}
+                        <div>
+                            {!! $barcode !!}
+                        </div>
                     @else
-                        <span class="text-danger-600 text-xs ">{{ $this->data['type'] }} type not available on {{ $sku }}</span>
+                        <span class="text-danger-600 text-xs">{{ $this->data['type'] }} type not available on {{ $sku }}</span>
                     @endif
                 </div>
-                <div class="text-xs my-2">  {{ $this->variant?->name ?? $this->product->name }}</div>
-                <div class="font-bold text-md ">{{ $this->variant?->mmk_price ?? $this->product->mmk_price }} ks</div>
+                <div class="text-xs " style="margin:4px 0;">{{ $this->variant?->name ?? $this->product->name }}</div>
+                <div class="font-bold text-xs">{{ $this->variant?->mmk_price ?? $this->product->mmk_price }} ks</div>
             </div>
             @empty
         @endforelse
@@ -57,6 +80,19 @@
 </div>
 @assets
 <script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
+<style>
+    /* Custom barcode styling */
+    .barcode-container svg {
+        max-width: 100%;
+        height: auto;
+    }
+    .barcode-container {
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        overflow: hidden;
+    }
+</style>
 @endassets
 
 @script

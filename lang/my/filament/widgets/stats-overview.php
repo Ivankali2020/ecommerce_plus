@@ -10,4 +10,6 @@ return [
     'calculate_by_laks' => 'ကျပ် ',
     'profit_loss' => 'စုစုပေါင်းအမြတ်ငွေ',
     'total_amount' => 'စုစုပေါင်းငွေအရင်းပမာဏ',
+    'total_expenses' => 'စုစုပေါင်းအသုံးစရိတ်',
+    'final_profit' => 'နောက်ဆုံးအမြတ်ငွေ',
 ];

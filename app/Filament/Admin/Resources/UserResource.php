@@ -58,6 +58,8 @@ class UserResource extends Resource
 
                 Forms\Components\DateTimePicker::make('email_verified_at'),
 
+                Forms\Components\TextInput::make('points'),
+
                 Forms\Components\TextInput::make('password')
                     ->label(__('filament/resources/user-resource.form.password.label'))
                     ->placeholder(__('filament/resources/user-resource.form.password.placeholder'))

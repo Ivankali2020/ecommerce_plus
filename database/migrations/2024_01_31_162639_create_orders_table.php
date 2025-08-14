@@ -36,17 +36,17 @@ return new class extends Migration
 
             $table->string('status')->default(OrderStatus::New);
 
-            $table->decimal('sub_total', 15, 2);
+            $table->decimal('sub_total', 20, 2);
             $table->decimal('delivery_fees');
-            $table->decimal('total_price', 15, 2);
+            $table->decimal('total_price', 20, 2);
 
             $table->string('payment_slip')->nullable();
 
             $table->decimal('tax')->default(0);
             $table->decimal('tax_price')->default(0);
 
-            $table->decimal('given_amount', 15, 2)->default(0);
-            $table->decimal('change_amount', 15, 2)->default(0);
+            $table->decimal('given_amount', 20, 2)->default(0);
+            $table->decimal('change_amount', 20, 2)->default(0);
             $table->text('note')->nullable();
 
             $table->softDeletes();

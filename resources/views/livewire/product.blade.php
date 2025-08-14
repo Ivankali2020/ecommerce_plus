@@ -12,6 +12,32 @@
         @endforelse
     </div>
 
+    <!-- Wholesale Products Section -->
+    @if($this->wholesaleProducts->count() > 0)
+    <div class="mt-8 lg:mt-12">
+        <div class="flex justify-between items-center mb-4 lg:mb-8">
+            <x-locale-text class="text-xl lg:text-4xl font-bold">
+                {{ __('messages.wholesale_products') }}
+            </x-locale-text>
+            <a 
+                href="{{ route('wholesale') }}" 
+                wire:navigate
+                class="text-sm text-slate-600 hover:text-slate-900 flex items-center gap-1 {{ app()->currentLocale() === 'my' ? 'font-mm' : '' }}"
+            >
+                {{ __('messages.view_all') }}
+                <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7"></path>
+                </svg>
+            </a>
+        </div>
+        <div wire:key="wholesale-container" class="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-5 lg:gap-4 gap-3">
+            @foreach ($this->wholesaleProducts as $wholesaleProduct)
+                <x-product-item wire:ignore :product="$wholesaleProduct" type="wholesale" />
+            @endforeach
+        </div>
+    </div>
+    @endif
+
     <div class="lg:mb-4  mt-2 lg:mt-0 ">
         <x-locale-text class="text-xl mb-4  lg:mb-8  lg:text-4xl font-bold lg:mt-8">
             {{ __('messages.categories') }}

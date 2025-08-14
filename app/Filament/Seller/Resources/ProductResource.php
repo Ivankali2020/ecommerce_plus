@@ -363,6 +363,13 @@ class ProductResource extends Resource
                                             ->default(1)
                                             ->numeric(),
 
+                                        Forms\Components\Toggle::make('is_whole_sale')
+                                            ->onIcon('heroicon-m-hand-thumb-up')
+                                            ->offIcon('heroicon-m-hand-thumb-down')
+                                            ->helperText('For your product`s wholesale')
+                                            ->label('WholeSales')
+                                            ->required(),
+
                                     ]),
 
                                     Forms\Components\Group::make()->schema([
@@ -528,6 +535,7 @@ class ProductResource extends Resource
     public static function table(Table $table): Table
     {
         return $table
+            ->modifyQueryUsing(fn (Builder $query) => $query->with(['brand', 'category', 'supplier', 'exchange.currency']))
             ->columns([
                 Tables\Columns\TextColumn::make('category.name')->size('sm')
                     ->label(__('filament/resources/product-resource.table.columns.category'))
@@ -621,6 +629,20 @@ class ProductResource extends Resource
                         return $query->when($data['exists_stocks'], function ($q) {
                             $q->where('quantity', '>', 0)->orWhereHas('variants', function ($q) {
                                 $q->where('quantity', '>', 0);
+                            });
+                        });
+                    }),
+
+                 Tables\Filters\Filter::make('is_whole_sale')
+                    ->form([
+                        Forms\Components\Toggle::make('is_whole_sale')
+                            ->label('Whole Sale')
+                            ->helperText('Whole Sale ပစွည်းများကို စစ်ရန်'),
+                    ])
+                    ->query(function (Builder $query, array $data): Builder {
+                        return $query->when($data['is_whole_sale'], function ($q) {
+                            $q->where('is_whole_sale', true)->orWhereHas('variants', function ($q) {
+                                $q->where('is_whole_sale', true);
                             });
                         });
                     }),

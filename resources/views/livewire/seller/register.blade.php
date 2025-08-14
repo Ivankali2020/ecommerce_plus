@@ -59,7 +59,7 @@
                             class="appearance-none rounded-l-lg relative block w-full px-3 py-2 border border-gray-300 dark:border-gray-700 placeholder-gray-500 text-gray-900 dark:text-gray-100 focus:outline-none focus:ring-slate-500 focus:border-slate-500 focus:z-10 sm:text-sm dark:bg-gray-800"
                             required />
                         <span class="inline-flex items-center px-3 rounded-r-lg border border-l-0 border-gray-300 dark:border-gray-700 bg-gray-50 dark:bg-gray-700 text-gray-500 dark:text-gray-400 text-sm">
-                            .padaung.test
+                            .{{ config("tenancy.central_domains")[0] }}
                         </span>
                     </div>
                     <p class="mt-1 text-sm text-gray-500 dark:text-gray-400 {{ app()->currentLocale() === 'my' ? 'font-mm' : '' }}">

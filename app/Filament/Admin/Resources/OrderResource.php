@@ -444,7 +444,7 @@ class OrderResource extends Resource
 
                     ->icon('heroicon-o-viewfinder-circle'),
 
-                ActionsActionGroup::make([
+                // ActionsActionGroup::make([
 
                     Tables\Actions\Action::make('Processing')
                         ->action(function (Order $record) {
@@ -472,9 +472,9 @@ class OrderResource extends Resource
                             DB::rollBack();
                         };
                     })->icon('heroicon-o-x-circle')->outlined()->color('danger')
-                        ->visible(fn(Order $order) => $order->status != OrderStatus::Cancelled),
+                        ->visible(fn(Order $order) => $order->status != OrderStatus::Cancelled && $order->status != OrderStatus::Delivered),
 
-                ])
+                // ])
 
             ])
             ->defaultSort('id', 'desc')

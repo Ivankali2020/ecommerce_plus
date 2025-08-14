@@ -65,6 +65,7 @@ class SellerResource extends Resource
                         ->image()->rules('required'),
 
                     Forms\Components\SpatieMediaLibraryFileUpload::make('cover_photo')
+                        ->multiple()
                         ->collection('cover_photos')->imageEditor()->hidden(Filament::getAuthGuard() == 'seller')
                         ->image()->rules('required'),
 

@@ -15,11 +15,14 @@ use BezhanSalleh\FilamentShield\Traits\HasWidgetShield;
 use Filament\Widgets\StatsOverviewWidget as BaseWidget;
 use App\Filament\Seller\Resources\OrderResource\Widgets\OrderChart;
 use App\Models\Variant;
+use App\Models\Expanse;
 
 class StatsOverview extends BaseWidget
 {
-    // protected int | string | array $columnSpan = ['md' => 3, 'xl' => 3];
+    // protected int | string | array $columnSpan = 3;
+
     protected static ?string $pollingInterval = null;
+
 
     // Add filter properties
     public $admin_id = null;
@@ -55,86 +58,120 @@ class StatsOverview extends BaseWidget
 
     protected function getStats(): array
     {
-        // Get seller ID based on filters
         $sellerId = $this->admin_id ?? CheckFilamentSellerUser::getSellerId();
-
-        // Create base query for orders
-        $orderQueryBase = Order::where('seller_id', $sellerId)->getOnlyConfirm();
-
-        // Clone the base query for date filtering
-        $orderQuery = clone $orderQueryBase;
-
-        // Default to current year if not selected
         $year = $this->year ?? Carbon::now()->format('Y');
 
+        [$startDate, $endDate, $dateDescription] = $this->getDateFilters($year);
 
-        // Apply date filters based on what's available
+        // Calculate revenue and profit from orders
+        $orderQuery = Order::where('seller_id', $sellerId)
+            ->where('status', OrderStatus::Delivered->value);
+        if ($startDate && $endDate) {
+            $orderQuery->whereBetween('created_at', [$startDate, $endDate]);
+        }
+
+        $totalRevenue = $orderQuery->sum('total_price');
+        $filteredOrderIds = $orderQuery->pluck('id');
+
+        // Calculate profits and capital
+        $totalProfit = \App\Models\OrderProduct::whereIn('order_id', $filteredOrderIds)->sum('profit');
+        $soldProductsCapital = \App\Models\OrderProduct::whereIn('order_id', $filteredOrderIds)
+            ->selectRaw('SUM(original_buy_price * quantity) as total')
+            ->value('total');
+
+        $inventoryCapital = $this->calculateInventoryCapital($sellerId);
+
+        // Calculate expenses
+        $totalExpenses = $this->calculateExpenses($sellerId, $startDate, $endDate);
+        $finalProfit = $totalProfit - $totalExpenses;
+
+        return [
+            Stat::make(__('filament/widgets/stats-overview.unique_products'), Product::where('seller_id', $sellerId)->count() . ' ' . __('filament/widgets/stats-overview.pcs'))
+                ->description(__('filament/widgets/stats-overview.total_products'))
+                ->icon('heroicon-o-cube'),
+
+            Stat::make(__('filament/widgets/stats-overview.total_amount'), number_format($soldProductsCapital + $inventoryCapital, 0))
+                ->description(__('filament/widgets/stats-overview.total_amount'))
+                ->icon('heroicon-o-banknotes'),
+
+            Stat::make(__('filament/widgets/stats-overview.total_revenue'), $totalRevenue > 0 ? number_format($totalRevenue, 0) : 0)
+                ->description($dateDescription)
+                ->icon('heroicon-o-chart-bar'),
+
+            Stat::make(__('filament/widgets/stats-overview.profit_loss'), number_format($totalProfit, 0))
+                ->description($dateDescription)
+                ->icon('heroicon-o-arrow-trending-up')
+                ->color($totalProfit >= 0 ? 'success' : 'danger'),
+
+            Stat::make(__('filament/widgets/stats-overview.total_expenses'), number_format($totalExpenses, 0))
+                ->description($dateDescription)
+                ->icon('heroicon-o-minus-circle')
+                ->color('warning'),
+
+            Stat::make(__('filament/widgets/stats-overview.final_profit'), number_format($finalProfit, 0))
+                ->description($dateDescription)
+                ->icon($finalProfit >= 0 ? 'heroicon-o-check-circle' : 'heroicon-o-x-circle')
+                ->color($finalProfit >= 0 ? 'success' : 'danger')
+        ];
+    }
+
+    /**
+     * Get date filters and description based on selected year/month
+     */
+    private function getDateFilters($year): array
+    {
         if ($this->month !== null) {
-            // If month is selected, filter by both year and month
             $startDate = Carbon::createFromDate($year, $this->month, 1)->startOfMonth();
             $endDate = Carbon::createFromDate($year, $this->month, 1)->endOfMonth();
-            $orderQuery->whereBetween('created_at', [$startDate, $endDate]);
-
-            $dateDescription = sprintf('%s (%s %s)',
+            $dateDescription = sprintf(
+                '%s (%s %s)',
                 __('filament/widgets/stats-overview.calculate_by_laks'),
                 Carbon::createFromDate($year, $this->month, 1)->format('F'),
                 $year
             );
         } elseif ($this->year !== null) {
-            // If only year is selected, filter by entire year
             $startDate = Carbon::createFromDate($year, 1, 1)->startOfYear();
             $endDate = Carbon::createFromDate($year, 12, 31)->endOfYear();
-            $orderQuery->whereBetween('created_at', [$startDate, $endDate]);
-
-            $dateDescription = sprintf('%s (%s)',
+            $dateDescription = sprintf(
+                '%s (%s)',
                 __('filament/widgets/stats-overview.calculate_by_laks'),
                 $year
             );
         } else {
-            // No filters, use default description
+            $startDate = null;
+            $endDate = null;
             $dateDescription = __('filament/widgets/stats-overview.calculate_by_laks');
         }
 
-        // Get total revenue from the filtered query
-        $totalOrderRevenues = $orderQuery->sum('total_price');
+        return [$startDate, $endDate, $dateDescription];
+    }
 
-        // Get the IDs of the filtered orders
-        $filteredOrderIds = $orderQuery->pluck('id');
+    /**
+     * Calculate total inventory capital from products and variants
+     */
+    private function calculateInventoryCapital($sellerId): float
+    {
+        $productCapital = Product::where('seller_id', $sellerId)
+            ->selectRaw('SUM(mmk_buy_price * quantity) as total')
+            ->value('total') ?? 0;
 
+        $variantCapital = Variant::selectRaw('SUM(mmk_buy_price * quantity) as total')
+            ->value('total') ?? 0;
 
-        // Calculate total profit based on the filtered orders
-        $totalProfit = \App\Models\OrderProduct::whereIn('order_id', $filteredOrderIds)->sum('profit'); //whereIn('order_id', $filteredOrderIds)->
+        return $productCapital + $variantCapital;
+    }
 
+    /**
+     * Calculate total expenses for the filtered period
+     */
+    private function calculateExpenses($sellerId, $startDate, $endDate): float
+    {
+        $query = Expanse::where('seller_id', $sellerId);
 
-        $totalCapitalAmount = \App\Models\OrderProduct::whereIn('order_id', $filteredOrderIds)
-            ->selectRaw('SUM(original_buy_price * quantity) as total_capital')
-            ->value('total_capital');
+        if ($startDate && $endDate) {
+            $query->whereBetween('created_at', [$startDate, $endDate]);
+        }
 
-       
-        $totalCapitalProductAmount = Product::query()
-            // where('seller_id', CheckFilamentSellerUser::getSellerId())
-            ->selectRaw('SUM(mmk_buy_price * quantity) as total_capital')
-            ->value('total_capital');
-
-        $totalCapitalAmountOfVariantProducts = Variant::query()
-            ->selectRaw('SUM(mmk_buy_price * quantity) as total_capital')
-            ->value('total_capital');
-
-        return [
-            Stat::make(__('filament/widgets/stats-overview.unique_products'), Product::where('seller_id', $sellerId)->count().' '.__('filament/widgets/stats-overview.pcs'))
-                ->description(__('filament/widgets/stats-overview.total_products')),
-
-            Stat::make(__('filament/widgets/stats-overview.total_amount'),  number_format($totalCapitalAmount + $totalCapitalProductAmount + $totalCapitalAmountOfVariantProducts, 0) )
-                // ->description(__('filament/widgets/stats-overview.total_amount')),  
-                ,
-
-            Stat::make(__('filament/widgets/stats-overview.total_revenue'), $totalOrderRevenues > 0 ? number_format($totalOrderRevenues, 0) : 0) // Format as needed
-                ->description($dateDescription)
-                ,
-
-            // Add the new Total Profit stat
-            Stat::make(__('filament/widgets/stats-overview.profit_loss'), number_format($totalProfit, 0)) // Format as needed, assuming profit is also large
-                ->description($dateDescription)
-        ];
+        return $query->sum('amount') ?? 0;
     }
 }

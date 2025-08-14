@@ -56,6 +56,12 @@ class Order extends Model implements HasMedia
         return $this->hasMany(OrderProduct::class);
     }
 
+    public function pointTransactions()
+    {
+        return $this->hasMany(PointTransaction::class, 'reference_id')
+            ->where('reference_type', 'order');
+    }
+
     public function scopeGetOnlyConfirm($q)
     {
         return $q->whereIn('status', [OrderStatus::Processing, OrderStatus::Delivered, OrderStatus::Shipped]);

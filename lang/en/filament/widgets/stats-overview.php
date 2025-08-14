@@ -10,4 +10,6 @@ return [
     'calculate_by_laks' => 'calculate by laks',
     'profit_loss' => 'Profit/Loss',
     'total_amount' => 'Total Amount',
+    'total_expenses' => 'Total Expenses',
+    'final_profit' => 'Final Profit',
 ];

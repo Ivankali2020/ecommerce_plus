@@ -17,7 +17,7 @@ return new class extends Migration
             $table->foreignIdFor(Product::class)->constrained()->cascadeOnUpdate()->cascadeOnDelete();
 
             $table->json('attributes');
-            $table->string('sku')->unique();
+            $table->string('sku');
 
             $table->integer('MOQ')->default(1);
             $table->string('name');
@@ -36,6 +36,9 @@ return new class extends Migration
 
             $table->softDeletes();
             $table->timestamps();
+
+            // Make SKU unique per product (since variants belong to products which belong to tenants)
+            $table->unique(['sku', 'product_id']);
         });
     }
 

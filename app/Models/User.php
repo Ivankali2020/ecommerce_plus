@@ -65,4 +65,38 @@ class User extends Authenticatable implements HasMedia //, MustVerifyEmail
     {
         return $this->hasMany(Order::class);
     }
+
+    public function pointTransactions()
+    {
+        return $this->hasMany(PointTransaction::class);
+    }
+
+    public function giftExchanges()
+    {
+        return $this->hasMany(GiftExchange::class);
+    }
+
+    /**
+     * Check if user has enough points
+     */
+    public function hasPoints(int $requiredPoints): bool
+    {
+        return $this->points >= $requiredPoints;
+    }
+
+    /**
+     * Get points earned from orders
+     */
+    public function getEarnedPoints()
+    {
+        return $this->pointTransactions()->where('type', 'earned')->sum('points');
+    }
+
+    /**
+     * Get points spent on gifts
+     */
+    public function getSpentPoints()
+    {
+        return abs($this->pointTransactions()->where('type', 'spent')->sum('points'));
+    }
 }

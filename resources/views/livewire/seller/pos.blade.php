@@ -1,3 +1,4 @@
+@php use Milon\Barcode\DNS1D; use Milon\Barcode\DNS2D; @endphp
 <div class="flex h-screen bg-gray-100 dark:bg-gray-900">
     <!-- Left sidebar - Categories and Products -->
     <div class="w-3/4 flex flex-col h-full overflow-hidden">
@@ -162,7 +163,7 @@
                                                 </svg>
                                             </span>
                                             <span wire:loading wire:target="addToCart({{ $product->id }},null,{{ $product->MOQ }})">
-                                                <x-filament::loading-indicator class="h-4 w-4" />
+                                               
                                             </span>
                                         </x-filament::button>
                                     @endif
@@ -378,47 +379,7 @@
         </div>
     </div>
    
-    <!-- Receipt Modal -->
-    @if($showReceipt && $lastOrder)
-        <div class="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50" wire:click="closeReceipt">
-            <div class="bg-white dark:bg-gray-800 rounded-lg p-6 max-w-md w-full mx-4" wire:click.stop>
-                <div class="text-center mb-4">
-                    <h2 class="text-2xl font-bold text-gray-900 dark:text-white">Receipt</h2>
-                    <p class="text-sm text-gray-600 dark:text-gray-400">Invoice #{{ $lastOrder->invoice_number }}</p>
-                    <p class="text-xs text-gray-500 dark:text-gray-500">{{ $lastOrder->created_at->format('M d, Y H:i') }}</p>
-                </div>
-                
-                <div class="border-t border-b border-gray-200 dark:border-gray-700 py-4 mb-4">
-                    <div class="flex justify-between items-center mb-2">
-                        <span class="font-semibold text-gray-900 dark:text-white">Total Amount:</span>
-                        <span class="font-bold text-lg">{{ number_format($lastOrder->total_price) }} MMK</span>
-                    </div>
-                    
-                    @if($lastOrder->given_amount > 0)
-                        <div class="flex justify-between items-center mb-2">
-                            <span class="text-gray-600 dark:text-gray-400">Given:</span>
-                            <span>{{ number_format($lastOrder->given_amount) }} MMK</span>
-                        </div>
-                        
-                        <div class="flex justify-between items-center">
-                            <span class="text-gray-600 dark:text-gray-400">Change:</span>
-                            <span class="font-semibold text-green-600 dark:text-green-400">{{ number_format($lastOrder->change_amount) }} MMK</span>
-                        </div>
-                    @endif
-                </div>
-                
-                <div class="flex space-x-2">
-                    <button wire:click="closeReceipt" 
-                            class="flex-1 px-4 py-2 bg-gray-200 dark:bg-gray-600 text-gray-700 dark:text-gray-300 rounded-lg hover:bg-gray-300 dark:hover:bg-gray-500">
-                        Close
-                    </button>
-                    <button onclick="window.print()" 
-                            class="flex-1 px-4 py-2 bg-success-600 text-white rounded-lg hover:bg-success-500">
-                        Print
-                    </button>
-                </div>
-            </div>
-        </div>
-    @endif
-</div>
+   <x-pos-invoice :showReceipt="$showReceipt" :lastOrder="$lastOrder" />
 
+
+</div>

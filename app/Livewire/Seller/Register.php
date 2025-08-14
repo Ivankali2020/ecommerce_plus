@@ -63,10 +63,6 @@ class Register extends Component
         // Remove cfTurnstileResponse from the validated data
         unset($validated['cfTurnstileResponse']);
 
-        // Create seller
-        $seller = Seller::create($validated);
-
-        event(new Registered($seller));
 
         // Create tenant
         $tenant = Tenant::create([
@@ -74,6 +70,14 @@ class Register extends Component
                 'domain' => $domain,
             ],
         ]);
+
+        // Set tenant ID for the seller
+        $validated['tenant_id'] = $tenant->id;
+        
+        // Create seller
+        $seller = Seller::create($validated);
+
+        event(new Registered($seller));
 
         // Create domain record
         Domain::create([

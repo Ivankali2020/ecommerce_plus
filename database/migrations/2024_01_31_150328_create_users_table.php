@@ -31,6 +31,8 @@ return new class extends Migration
             $table->string('google_id')->nullable();
 
             $table->text('fmc_token')->nullable();
+            $table->string('referral_code')->nullable();
+            $table->bigInteger('points')->default();
             $table->rememberToken();
             $table->timestamps();
         });

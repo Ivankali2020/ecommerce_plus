@@ -23,6 +23,7 @@ export default {
                 bebas: ['"Bebas Neue"', "mm", "Jost" , "cursive"],
                 jost: ["Jost", "mm" , "sans-serif"],
                 mm: ["mm","Jost", "sans-serif"],
+                mm_lat: ["Jost", "sans-serif"],
             },
             animation: {
                 "fade-in": "fadeIn 0.5s ease-in-out",

@@ -51,6 +51,7 @@ if (!$isCentralDomain) {
             Route::get('order', \App\Livewire\Order::class)->name('order');
             Route::get('order/{order}', \App\Livewire\OrderDetail::class)->name('order.detail');
             Route::get('recent-orders', \App\Livewire\RecentOrders::class)->name('recent.orders');
+            Route::get('gifts', \App\Livewire\GiftPage::class)->name('gifts');
         });
 
         Route::view('dashboard', 'dashboard')
@@ -61,9 +62,10 @@ if (!$isCentralDomain) {
             ->middleware(['auth'])
             ->name('profile');
 
+
         Route::get('products', \App\Livewire\AllProduct::class)->name('products');
         Route::get('product/{product}', ProductDetail::class)->name('product');
-
+        Route::get('wholesale', \App\Livewire\WholeSale::class)->name('wholesale');
 
         // Add these routes for Google authentication 
         Route::get('/auth/google', [App\Http\Controllers\SocialAuthController::class, 'redirectToGoogle'])->name('auth.google');
@@ -71,6 +73,8 @@ if (!$isCentralDomain) {
     });
 
     Route::get('store/{id}', Store::class)->name('store');
+
+
 
     Route::middleware([
         'web',
@@ -112,6 +116,9 @@ if (!$isCentralDomain) {
             Route::get('/subscription/plans', SubscriptionPlans::class)->name('subscription.plans');
             // Add POS route for sellers
             Route::get('/pos', \App\Livewire\Seller\Pos::class)->name('pos');
+
+            Route::get('seller/invoice/{record}', \App\Livewire\Invoice::class)->name('invoice');
+
         });
     });
 

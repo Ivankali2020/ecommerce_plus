@@ -22,31 +22,32 @@
 
                         @if ($item->variant)
                             <p class="text-sm mb-1 text-gray-600">Variant: {{ $item->variant->name }}</p>
-                            <dl class="space-y-2  text-xs ">
-                                @foreach ($item->variant->attributeValues as $attributeValue)
-                                    <div class="flex gap-4">
-                                        @foreach ($attributeValue['value'] as $value)
-                                            <dd
-                                                class="text-sm inline  border rounded px-2 bg-slate-50  text-gray-900 col-span-2">
-                                                {{ $value }}
-                                            </dd>
-                                        @endforeach
-                                    </div>
-                                @endforeach
-                            </dl>
+                             @if($item->variant->attributeValues)
+                                <div class="text-xs text-gray-600 mb-3 flex flex-wrap gap-1">
+                                    @foreach($item->variant->attributeValues as $key => $value)
+                                        <span class="inline-block bg-gray-100 rounded px-2 py-1 mr-1 mb-1 font-medium uppercase text-xs ">
+                                            <span class="">{{ $value['attribute'] }}:</span>
+                                             @foreach ($value['value'] as $val)
+                                                <span class="text-gray-700">{{ $val }}</span>
+                                             @endforeach
+                                        </span>
+                                    @endforeach
+                                </div>
+                            @endif
                         @else
-                            <dl class="space-y-2  text-xs">
+                            <div class="space-y-2 flex justify-start gap-4 items-center text-xs">
                                 @foreach ($item->product->attributeValues as $attributeValue)
-                                    <div class="flex gap-4">
+                                    <div class="flex  justify-start gap-4 items-center">
+                                        <span class="text-gray-500">{{ $attributeValue['attribute'] }}:</span>
                                         @foreach ($attributeValue['value'] as $value)
-                                            <dd
+                                            <span
                                                 class="text-sm inline  border rounded px-2 bg-slate-50  text-gray-900 col-span-2">
                                                 {{ $value }}
-                                            </dd>
+                                            </span>
                                         @endforeach
                                     </div>
                                 @endforeach
-                            </dl>
+                            </div>
                         @endif
 
                     </div>
@@ -75,9 +76,9 @@
                                 <p class="text-xs text-slate-300 ">
                                     {{ $item->quantity }} x 
                                     @if ($item->variant)
-                                    {{ number_format($item->variant->mmk_discount_price) }} Ks / pcs
+                                        {{ number_format($item->variant->mmk_discount_price) }} Ks / pcs
                                     @else
-                                    {{ number_format($item->product->mmk_discount_price) }} Ks / pcs
+                                        {{ number_format($item->product->mmk_discount_price) }} Ks / pcs
                                     @endif
                                 </p>
                                 <p class="font-bold my-1 ">
@@ -160,6 +161,53 @@
                             <span x-text="formatPrice(total + parseInt(deliveryDetails?.fees ?? 0)) + ' ks'">  </span>
                         </div>
 
+                        {{-- show user can earn points --}}
+                        @if($this->pointsToEarn > 0)
+                        <div class="bg-gradient-to-r from-slate-50 to-emerald-50 border border-slate-200 rounded-lg p-4 animate-fade-in">
+                            <div class="flex items-center space-x-3">
+                                <div class="flex-1 min-w-0">
+                                    <div class="flex items-center justify-between">
+                                        <div>
+                                            <p class="text-sm mb-2 font-medium text-slate-800 {{ app()->currentLocale() === 'my' ? 'font-mm' : '' }}">
+                                                🎉 {{ __('messages.cart.earn_points_title', ['points' => number_format($this->pointsToEarn)]) }}
+                                            </p>
+                                            <p class="text-xs  text-slate-600 {{ app()->currentLocale() === 'my' ? 'font-mm' : '' }}">
+                                                {{ __('messages.cart.earn_points_subtitle') }}
+                                            </p>
+                                        </div>
+                                        <div class="flex items-center space-x-1 bg-slate-100 px-3 py-1 rounded-full">
+                                            <span class="text-lg font-bold text-slate-700">+{{ number_format($this->pointsToEarn) }}</span>
+                                            <span class="text-xs text-slate-600 {{ app()->currentLocale() === 'my' ? 'font-mm' : '' }}">{{ __('messages.cart.points') }}</span>
+                                        </div>
+                                    </div>
+                                    
+                                    @auth
+                                        <div class="mt-2 flex items-center space-x-4 text-xs text-slate-600">
+                                            <div class="flex items-center space-x-1">
+                                                <svg class="w-4 h-4" fill="currentColor" viewBox="0 0 20 20">
+                                                    <path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clip-rule="evenodd"></path>
+                                                </svg>
+                                                <span class="{{ app()->currentLocale() === 'my' ? 'font-mm' : '' }}">{{ __('messages.cart.current_balance') }}: {{ number_format(auth()->user()->points ?? 0) }}</span>
+                                            </div>
+                                            <div class="flex items-center space-x-1">
+                                                <svg class="w-4 h-4" fill="currentColor" viewBox="0 0 20 20">
+                                                    <path fill-rule="evenodd" d="M10 2a4 4 0 00-4 4v1H5a1 1 0 00-.994.89l-1 9A1 1 0 004 18h12a1 1 0 00.994-1.11l-1-9A1 1 0 0015 7h-1V6a4 4 0 00-4-4zM8 6a2 2 0 114 0v1H8V6z" clip-rule="evenodd"></path>
+                                                </svg>
+                                                <span class="{{ app()->currentLocale() === 'my' ? 'font-mm' : '' }}">{{ __('messages.cart.after_order') }}: {{ number_format((auth()->user()->points ?? 0) + $this->pointsToEarn) }}</span>
+                                            </div>
+                                        </div>
+                                    @else
+                                        <div class="mt-2">
+                                            <a href="{{ route('login') }}" class="text-xs text-slate-700 hover:text-slate-800 underline {{ app()->currentLocale() === 'my' ? 'font-mm' : '' }}">
+                                                {{ __('messages.cart.login_to_earn_points') }}
+                                            </a>
+                                        </div>
+                                    @endauth
+                                </div>
+                            </div>
+                        </div>
+                        @endif
+
                         <h2 class="text-2xl pt-4 font-bebas mb-4 {{ app()->currentLocale() === 'my' ? 'font-mm' : '' }}">
                             {{ __('messages.cart.checkout_process') }}
                         </h2>
@@ -214,7 +262,7 @@
                                                         <span class="text-sm text-gray-600" {{ app()->currentLocale() === 'my' ? 'font-mm' : '' }}> {{ __('messages.cart.delivery_fee') }}</span>
                                                     </div>
                                                     <div class="flex items-center gap-1">
-                                                        <span class="text-sm font-medium text-gray-900" x-text="deliveryDetails ? formatPrice(deliveryDetails.fees) : '0'"></span>
+                                                        <span class="text-sm font-medium text-gray-900" x-text="deliveryDetails ? formatPrice(deliveryDetails.fees,0) : '0'"></span>
                                                         <span class="text-xs text-gray-500">MMK</span>
                                                     </div>
                                                 </div>
@@ -353,7 +401,7 @@
                                                                     </svg>
                                                                 </span>
                                                                 <span x-show="copied">
-                                                                    <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="w-4 h-4 text-green-500">
+                                                                    <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="w-4 h-4 text-slate-500">
                                                                         <path stroke-linecap="round" stroke-linejoin="round" d="M4.5 12.75l6 6 9-13.5" />
                                                                     </svg>
                                                                 </span>
@@ -394,7 +442,17 @@
 
                             </div>
 
-
+                            {{-- note --}}
+                            <div class="space-y-2">
+                                <label for="note" class="block text-sm font-medium text-gray-700 {{ app()->currentLocale() === 'my' ? 'font-mm' : '' }}">
+                                    {{ __('messages.cart.note') }}
+                                </label>
+                                <textarea id="note" wire:model="note" rows="3"
+                                    class="mt-1 block w-full border-gray-300 rounded-md focus:ring-slate-500 focus:border-slate-500"></textarea>
+                                @error('note')
+                                    <p class="mt-1 text-sm text-red-600">{{ $message }}</p>
+                                @enderror
+                            </div>
                         </div>
                         <button @click="handleCheckout"
                             class="w-full bg-slate-900 text-white py-3 rounded-lg hover:bg-slate-800 transition-colors {{ app()->currentLocale() === 'my' ? 'font-mm' : '' }}">
@@ -486,13 +544,13 @@
                 handleCheckout() {
                     // Validate required fields
                     if (!this.selectedRegion || !this.selectedTownship) {
-                        // alert('Please select region and township');
+                        alert('Please select region and township');
                         // return;
                     }
 
                     if(!this.is_cod){
                         if (!this.selectedPayment || !this.selectedPaymentAccount) {
-                            // alert('Please select payment method and account');
+                            alert('Please select payment method and account');
                             // return;
                         }
                     }

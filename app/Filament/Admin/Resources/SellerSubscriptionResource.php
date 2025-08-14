@@ -5,6 +5,7 @@ namespace App\Filament\Admin\Resources;
 use App\Filament\Admin\Resources\SellerSubscriptionResource\Pages;
 use App\Models\SellerSubscription;
 use Filament\Forms;
+use Filament\Forms\Components\SpatieMediaLibraryFileUpload;
 use Filament\Forms\Form;
 use Filament\Notifications\Notification;
 use Filament\Resources\Resource;
@@ -34,12 +35,25 @@ class SellerSubscriptionResource extends Resource
                 Forms\Components\TextInput::make('price_paid')
                     ->required()
                     ->numeric(),
-                Forms\Components\TextInput::make('payment_status')
+
+                Forms\Components\ToggleButtons::make('payment_status')
                     ->required()
-                    ->maxLength(255)
-                    ->default('pending'),
+                    ->options([
+                        'pending' => 'Pending',
+                        'approved' => 'Approved',
+                        'rejected' => 'Rejected',
+                    ]),
+
                 Forms\Components\TextInput::make('payment_method')
                     ->maxLength(255),
+
+                SpatieMediaLibraryFileUpload::make('payment_slips')
+                    ->label('Payment Slip')
+                    ->image()
+                    ->required()
+                    ->maxSize(5120) // 5MB
+                    ->directory('subscription-payments'),
+
                 Forms\Components\Textarea::make('notes')
                     ->columnSpanFull(),
             ]);
@@ -50,7 +64,7 @@ class SellerSubscriptionResource extends Resource
         return $table
             ->columns([
                 Tables\Columns\TextColumn::make('seller.name')
-                    ->description(fn (SellerSubscription $record) => $record->subscriptionPlan->name)
+                    ->description(fn(SellerSubscription $record) => $record->subscriptionPlan->name)
                     ->sortable(),
 
                 Tables\Columns\TextColumn::make('started_at')
@@ -63,7 +77,24 @@ class SellerSubscriptionResource extends Resource
                     ->numeric()
                     ->sortable(),
                 Tables\Columns\TextColumn::make('payment_status')
+                    ->badge()
+                    ->color(fn(string $state): string => match ($state) {
+                        'pending' => 'warning',
+                        'approved' => 'success',
+                        'rejected' => 'danger',
+                        default => 'gray',
+                    })
                     ->searchable(),
+                Tables\Columns\IconColumn::make('has_payment_slip')
+                    ->label(__('subscription.payment_slip'))
+                    ->boolean()
+                    ->getStateUsing(fn(SellerSubscription $record): bool => $record->getMedia('payment_slips')->isNotEmpty())
+                    ->tooltip(
+                        fn(SellerSubscription $record): string =>
+                        $record->getMedia('payment_slips')->isNotEmpty()
+                            ? __('subscription.payment_slip_uploaded')
+                            : __('subscription.no_payment_slip')
+                    ),
                 Tables\Columns\TextColumn::make('payment_method')
                     ->searchable(),
                 Tables\Columns\TextColumn::make('created_at')
@@ -79,6 +110,26 @@ class SellerSubscriptionResource extends Resource
                 //
             ])
             ->actions([
+                Tables\Actions\Action::make('view_payment_slip')
+                    ->label(__('subscription.view_payment_slip'))
+                    ->icon('heroicon-o-photo')
+                    ->color('info')
+                    ->modalHeading(__('subscription.payment_slip'))
+                    ->modalContent(function (SellerSubscription $record) {
+                        $mediaItems = $record->getMedia('payment_slips');
+
+                        if ($mediaItems->isEmpty()) {
+                            return view('filament.components.no-payment-slip');
+                        }
+
+                        return view('filament.components.payment-slip-viewer', [
+                            'mediaItems' => $mediaItems
+                        ]);
+                    })
+                    ->modalWidth('4xl')
+                // ->visible(fn (SellerSubscription $record) => $record->getMedia('payment_slips')->isNotEmpty())
+                ,
+
                 Tables\Actions\Action::make('confirm')->button()
                     ->label('Confirm')
                     ->icon('heroicon-o-check-circle')
@@ -104,7 +155,7 @@ class SellerSubscriptionResource extends Resource
                             ->success()
                             ->send();
                     })
-                    ->visible(fn (SellerSubscription $record) => $record->payment_status === 'pending'),
+                    ->visible(fn(SellerSubscription $record) => $record->payment_status === 'pending'),
             ])
             ->bulkActions([
                 Tables\Actions\BulkActionGroup::make([

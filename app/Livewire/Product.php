@@ -58,12 +58,18 @@ class Product extends Component
     #[Computed]
     public function categories()
     {
+        // Get IDs to exclude (recommended and wholesale products)
+        $excludeIds = $this->recommendedProducts->pluck('id')
+            ->merge($this->wholesaleProducts->pluck('id'))
+            ->unique();
+
         return Category::query()
             ->withCount([
-                'products' => function ($query) {
+                'products' => function ($query) use ($excludeIds) {
                     $query->where('tenant_id', tenant('id'))
-                        ->whereNotIn('id', $this->recommendedProducts->pluck('id'))
-                        ->where('is_public', true);
+                        ->whereNotIn('id', $excludeIds)
+                        ->where('is_public', true)
+                        ->where('is_whole_sale', false);
                 },
             ])->latest()->get()->where('products_count', '>', 0);
     }
@@ -86,9 +92,15 @@ class Product extends Component
     public function getProductData()
     {
         try {
+            // Get IDs to exclude (recommended and wholesale products)
+            $excludeIds = $this->recommendedProducts->pluck('id')
+                ->merge($this->wholesaleProducts->pluck('id'))
+                ->unique();
+
             $query = ProductModel::query()
-                ->whereNotIn('id', $this->recommendedProducts->pluck('id'))
+                ->whereNotIn('id', $excludeIds)
                 ->where('is_public', true)
+                ->where('is_whole_sale', false)
                 ->when($this->selectedCategory, function ($query) {
                     return $query->where('category_id', $this->selectedCategory);
                 })
@@ -133,6 +145,17 @@ class Product extends Component
     {
         return ProductModel::where('tenant_id', tenant('id'))
             ->where('is_recommended', true)
+            ->where('is_whole_sale', 0)
+            ->where('is_public', true)
+            ->with(['category', 'brand', 'variants'])->latest()
+            ->take(5)->get();
+    }
+
+    #[Computed]
+    public function wholesaleProducts()
+    {
+        return ProductModel::where('tenant_id', tenant('id'))
+            ->where('is_whole_sale', true)
             ->where('is_public', true)
             ->with(['category', 'brand', 'variants'])->latest()
             ->take(5)->get();

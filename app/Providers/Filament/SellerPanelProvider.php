@@ -2,18 +2,14 @@
 
 namespace App\Providers\Filament;
 
-use App\Filament\Seller\Pages\Auth\Register;
 use App\Filament\Seller\Pages\EditProfile;
 use App\Filament\Seller\Resources\OrderResource\Widgets\OrderChart;
 use App\Filament\Seller\Widgets\Filters;
-use App\Helper\CheckFilamentSellerUser;
 use App\Http\Middleware\AssignGlobeScope;
+use App\Http\Middleware\EnsureSellerBelongsToTenant;
 use App\Http\Middleware\RedirectIfSubscriptionExpired;
-use App\Http\Middleware\RedirectIfUnauthenticated;
-use App\Models\Seller;
 use App\Models\Tenant;
 use BezhanSalleh\FilamentShield\FilamentShieldPlugin;
-use Filament\FontProviders\LocalFontProvider;
 use Filament\Http\Middleware\Authenticate;
 use Filament\Http\Middleware\DisableBladeIconComponents;
 use Filament\Http\Middleware\DispatchServingFilamentEvent;
@@ -22,7 +18,6 @@ use Filament\Pages;
 use Filament\Panel;
 use Filament\PanelProvider;
 use Filament\Support\Colors\Color;
-use Filament\Widgets;
 use Illuminate\Cookie\Middleware\AddQueuedCookiesToResponse;
 use Illuminate\Cookie\Middleware\EncryptCookies;
 use Illuminate\Foundation\Http\Middleware\VerifyCsrfToken;
@@ -38,8 +33,15 @@ class SellerPanelProvider extends PanelProvider
 {
     protected function getSeller()
     {
-        return Tenant::where('id',tenant('id'))->with('sellers')->first()->sellers->first();
+        $seller = Tenant::where('id', tenant('id'))->with('sellers')->first()->sellers->first();
+        if (!$seller) {
+            // Handle case where no seller is found, e.g., throw an exception or return a default value
+            Auth::logout();
+            abort(404, 'Seller not found for the current tenant.');
+        }
+        return Tenant::where('id', tenant('id'))->with('sellers')->first()->sellers->first();
     }
+
     public function panel(Panel $panel): Panel
     {
         return $panel
@@ -82,14 +84,15 @@ class SellerPanelProvider extends PanelProvider
                 AssignGlobeScope::class,
                 InitializeTenancyByDomain::class,
                 PreventAccessFromCentralDomains::class,
+                EnsureSellerBelongsToTenant::class,
                 RedirectIfSubscriptionExpired::class,
                 \App\Http\Middleware\SetLocale::class,
-            ],true) 
+            ], true)
             //            ->spa(fn()=>  Str::contains(request()->userAgent(),'Chrome'))
             ->sidebarWidth('17rem')
             ->brandLogoHeight(fn() => Auth::guard('seller')->check() ? '3rem' : '5rem')
             ->brandLogo(fn() => self::getSeller()->getFirstMediaUrl('logos')) // ->getFirstMediaUrl('logos')
-            ->brandName(fn() => self::getSeller()->name)
+            ->brandName(fn() => self::getSeller()->name ?? 'EMPTY')
             ->sidebarCollapsibleOnDesktop()
             ->databaseNotifications()
             ->databaseNotificationsPolling(null) // this is testing purpose

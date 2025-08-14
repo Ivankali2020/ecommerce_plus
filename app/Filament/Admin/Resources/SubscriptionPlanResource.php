@@ -23,16 +23,22 @@ class SubscriptionPlanResource extends Resource
                 Forms\Components\TextInput::make('name')
                     ->required()
                     ->maxLength(255),
+
                 Forms\Components\Textarea::make('description')
                     ->columnSpanFull(),
+
                 Forms\Components\TextInput::make('price')
                     ->required()
                     ->numeric()
                     ->prefix('$'),
+
                 Forms\Components\TextInput::make('duration_months')
                     ->required()
                     ->numeric(),
-                Forms\Components\Textarea::make('features')->rows(5),
+
+                Forms\Components\TagsInput::make('features')
+                    ->separator(','),
+
                 Forms\Components\Toggle::make('is_active')
                     ->required(),
             ]);

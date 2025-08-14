@@ -1,4 +1,4 @@
-<div>
+<div class="sticky top-0 z-20">
 <?php
 
 use App\Livewire\Actions\Logout;
@@ -33,7 +33,7 @@ new class extends Component
     }
 }; ?>
 
-<nav x-data="{ open: false }" class="bg-white/10 dark:bg-slate-800/80 backdrop-filter backdrop-blur-md sticky z-20  border-b border-slate-100 dark:border-slate-700">
+<nav x-data="{ open: false }" class="bg-white/10 dark:bg-slate-800/80 backdrop-filter backdrop-blur-md border-b border-slate-100 dark:border-slate-700">
     <!-- Primary Navigation Menu -->
     <div class="container  mx-auto px-4 sm:px-6 lg:px-8">
         <div class="flex justify-between h-16">
@@ -57,6 +57,12 @@ new class extends Component
                         </x-nav-link>
                     </div>
 
+                    <div class="hidden space-x-8 sm:-my-px sm:ms-10 sm:flex h-[100%] ">
+                        <x-nav-link :href="route('wholesale')" :active="request()->routeIs('wholesale')" wire:navigate>
+                            {{ __('messages.navigation.wholesale') }}
+                        </x-nav-link>
+                    </div>
+
                 @auth
 
                     <!-- Navigation Links -->
@@ -76,6 +82,12 @@ new class extends Component
                     <div class="hidden space-x-8 sm:-my-px sm:ms-10 sm:flex h-[100%] ">
                         <x-nav-link :href="route('recent.orders')" :active="request()->routeIs('recent.orders')" wire:navigate>
                             {{ __('messages.navigation.recent_orders') }}
+                        </x-nav-link>
+                    </div>
+
+                    <div class="hidden space-x-8 sm:-my-px sm:ms-10 sm:flex h-[100%] ">
+                        <x-nav-link :href="route('gifts')" :active="request()->routeIs('gifts')" wire:navigate>
+                            {{ __('gifts.gifts') }}
                         </x-nav-link>
                     </div>
 
@@ -228,6 +240,10 @@ new class extends Component
                     {{ __('messages.navigation.recent_orders') }}
                 </x-responsive-nav-link>
 
+                <x-responsive-nav-link :href="route('gifts')" wire:navigate>
+                   {{ __('gifts.gifts') }}
+                </x-responsive-nav-link>
+
 
                 <!-- Authentication -->
                 <button wire:click="logout" class="w-full text-start">
@@ -257,7 +273,6 @@ new class extends Component
     </div>
 </nav>
 
-
 <!-- Mobile Bottom Navigation -->
 @auth
 <div class="fixed bottom-0 left-0 z-50 w-full h-16 bg-white border-t border-t-gray-200 sm:hidden {{ app()->currentLocale() === 'my' ? 'font-mm' : '' }}">
@@ -276,6 +291,13 @@ new class extends Component
               </svg>
               
             <span class="text-xs">{{ __('messages.navigation.products') }}</span>
+        </a>
+        
+        <a wire:navigate href="{{ route('wholesale') }}" class="inline-flex flex-col items-center justify-center px-1 hover:bg-gray-50 {{ request()->routeIs('wholesale') ? 'text-[#c2a03d]' : 'text-gray-500' }}">
+            <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="size-5 w-5 h-5 mb-1">
+                <path stroke-linecap="round" stroke-linejoin="round" d="M13.5 21v-7.5a.75.75 0 0 1 .75-.75h3a.75.75 0 0 1 .75.75V21m-4.5 0H2.36m11.14 0H18m0 0h3.64m-1.39 0V9.349M3.75 21V9.349m0 0a3.001 3.001 0 0 0 3.75-.615A2.993 2.993 0 0 0 9.75 9.75c.896 0 1.7-.393 2.25-1.016a2.993 2.993 0 0 0 2.25 1.016c.896 0 1.7-.393 2.25-1.016A3.001 3.001 0 0 0 20.25 8.734V21M3.75 9.349v-2.136A3.001 3.001 0 0 0 6.75 4.5h10.5A3.001 3.001 0 0 0 20.25 7.213v2.136" />
+            </svg>
+            <span class="text-xs">{{ __('messages.navigation.wholesale') }}</span>
         </a>
         
         <!-- Replace the mobile cart link with the Livewire component -->

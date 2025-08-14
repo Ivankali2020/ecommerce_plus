@@ -2,6 +2,9 @@
 
     <div class="pt-10 pb-20  lg:py-12">
         <div class="max-w-7xl mx-auto px-4 lg:px-8 space-y-6">
+            
+            <livewire:points-widget>
+
             <div class="p-4 sm:p-8 bg-white dark:bg-gray-800 shadow rounded-lg  lg:rounded-lg">
                 <div class="max-w-xl">
                     <livewire:profile.update-profile-information-form />

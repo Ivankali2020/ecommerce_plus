@@ -1,5 +1,6 @@
 <?php
 
+use App\Http\Controllers\ProductImportExportController;
 use App\Models\Seller;
 use Illuminate\Support\Facades\Route;
 
@@ -26,6 +27,7 @@ Route::get('language/{locale}', function ($locale) {
 })->name('language.switch');
 
 
+
 // Central domain routes - Will only work on padaung.test, etc.
 if ($isCentralDomain) {
     Route::middleware(['web'])->group(function () {
@@ -45,5 +47,13 @@ if ($isCentralDomain) {
 
         // Central domain seller registration
         Route::get('/partner/register', \App\Livewire\Seller\Register::class)->name('partner.register');
+
+        // Product Import/Export routes
+        Route::middleware(['auth'])->group(function () {
+            Route::get('/products/export', [ProductImportExportController::class, 'exportProducts'])->name('products.export');
+            Route::get('/variants/export', [ProductImportExportController::class, 'exportVariants'])->name('variants.export');
+            Route::post('/products/import', [ProductImportExportController::class, 'importProducts'])->name('products.import');
+            Route::post('/variants/import', [ProductImportExportController::class, 'importVariants'])->name('variants.import');
+        });
     });
 }

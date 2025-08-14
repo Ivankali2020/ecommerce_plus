@@ -25,6 +25,8 @@ class SubscriptionPlans extends Component implements HasForms
 
     public ?array $data = [];
 
+    public ?SellerSubscription $subscription = null;
+
     public function mount(): void
     {
         $this->form->fill();
@@ -35,33 +37,40 @@ class SubscriptionPlans extends Component implements HasForms
         return $form
             ->schema([
                 Radio::make('payment_method')
-                    ->label('Payment Method')
+                    ->label(__('subscription.payment_method'))
                     ->options([
                         'kpay' => 'KPay',
-                        'aya_pay' => 'Aya Pay',
                     ])
                     ->descriptions([
-                        'kpay' => '09453283072',
-                        'aya_pay' => '09777126169',
+                        'kpay' => '09 453183072 ( AUNG PYAE PHYO )',
                     ])
                     ->required(),
 
-                SpatieMediaLibraryFileUpload::make('payment_slip')
-                    ->label('Payment Slip')
+                SpatieMediaLibraryFileUpload::make('payment_slips')
+                    ->label(__('subscription.payment_slip'))
                     ->image()
                     ->required()
                     ->maxSize(5120) // 5MB
-                    ->directory('subscription-payments'),
+                    ->directory('subscription-payments')
+                    ->collection('payment_slips')
+                    ->multiple(),
 
                 Textarea::make('notes')->nullable()
-                    ->label('Additional Notes')
-                    ->placeholder('Any additional information about your payment'),
+                    ->label(__('subscription.additional_notes'))
+                    ->placeholder(__('subscription.additional_notes_placeholder')),
             ])->statePath('data');
     }
 
     public function selectPlan($planId)
     {
-        $this->selectedPlan = SubscriptionPlan::findOrFail($planId);
+        $this->selectedPlan = SubscriptionPlan::where('id',$planId)->where('is_active', true)->firstOrFail();
+
+        // Create a new subscription instance for the form
+        $this->subscription = new SellerSubscription();
+
+        // Set the form model to the subscription instance
+        $this->form->model($this->subscription);
+
         $this->showPaymentForm = true;
     }
 
@@ -88,17 +97,22 @@ class SubscriptionPlans extends Component implements HasForms
             return;
         }
 
-        // Create a new subscription record
-        $subscription = new SellerSubscription;
-        $subscription->seller_id = $seller->id;
-        $subscription->subscription_plan_id = $this->selectedPlan->id;
-        $subscription->started_at = Carbon::now();
-        $subscription->expired_at = Carbon::now()->addMonths($this->selectedPlan->duration_months);
-        $subscription->price_paid = $this->selectedPlan->price;
-        $subscription->payment_status = 'pending';
-        $subscription->payment_method = $data['payment_method'];
-        $subscription->notes = $data['notes'] ?? null;
-        $subscription->save();
+        // Fill the subscription with data
+        $this->subscription->fill([
+            'seller_id' => $seller->id,
+            'subscription_plan_id' => $this->selectedPlan->id,
+            'started_at' => Carbon::now(),
+            'expired_at' => Carbon::now()->addMonths($this->selectedPlan->duration_months),
+            'price_paid' => $this->selectedPlan->price,
+            'payment_status' => 'pending',
+            'payment_method' => $data['payment_method'],
+            'notes' => $data['notes'] ?? null,
+        ]);
+
+        $this->subscription->save();
+
+        // Save the relationships (including media)
+        $this->form->model($this->subscription)->saveRelationships();
 
         Notification::make()
             ->title('Subscription Payment Submitted')

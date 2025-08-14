@@ -43,4 +43,9 @@ class Brand extends Model implements HasMedia
     {
         return $this->belongsTo(Seller::class);
     }
+
+    public function products()
+    {
+        return $this->hasMany(Product::class);
+    }
 }
