@@ -1,31 +1,235 @@
 <!DOCTYPE html>
 <html lang="{{ str_replace('_', '-', app()->getLocale()) }}">
-    <head>
-        <meta charset="utf-8">
-        <meta name="viewport" content="width=device-width, initial-scale=1">
 
-        <title>Laravel</title>
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
 
-        <!-- Fonts -->
-        <link rel="preconnect" href="https://fonts.bunny.net">
-        <link href="https://fonts.bunny.net/css?family=figtree:400,600&display=swap" rel="stylesheet" />
-        <link href="https://cdnjs.cloudflare.com/ajax/libs/flowbite/2.2.1/flowbite.min.css"  rel="stylesheet" />
-        <!-- Styles -->
-        <script src="https://cdnjs.cloudflare.com/ajax/libs/flowbite/2.2.1/flowbite.min.js"></script>
-        <style>
-            /* ! tailwindcss v3.2.4 | MIT License | https://tailwindcss.com */*,::after,::before{box-sizing:border-box;border-width:0;border-style:solid;border-color:#e5e7eb}::after,::before{--tw-content:''}html{line-height:1.5;-webkit-text-size-adjust:100%;-moz-tab-size:4;tab-size:4;font-family:Figtree, sans-serif;font-feature-settings:normal}body{margin:0;line-height:inherit}hr{height:0;color:inherit;border-top-width:1px}abbr:where([title]){-webkit-text-decoration:underline dotted;text-decoration:underline dotted}h1,h2,h3,h4,h5,h6{font-size:inherit;font-weight:inherit}a{color:inherit;text-decoration:inherit}b,strong{font-weight:bolder}code,kbd,pre,samp{font-family:ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, "Liberation Mono", "Courier New", monospace;font-size:1em}small{font-size:80%}sub,sup{font-size:75%;line-height:0;position:relative;vertical-align:baseline}sub{bottom:-.25em}sup{top:-.5em}table{text-indent:0;border-color:inherit;border-collapse:collapse}button,input,optgroup,select,textarea{font-family:inherit;font-size:100%;font-weight:inherit;line-height:inherit;color:inherit;margin:0;padding:0}button,select{text-transform:none}[type=button],[type=reset],[type=submit],button{-webkit-appearance:button;background-color:transparent;background-image:none}:-moz-focusring{outline:auto}:-moz-ui-invalid{box-shadow:none}progress{vertical-align:baseline}::-webkit-inner-spin-button,::-webkit-outer-spin-button{height:auto}[type=search]{-webkit-appearance:textfield;outline-offset:-2px}::-webkit-search-decoration{-webkit-appearance:none}::-webkit-file-upload-button{-webkit-appearance:button;font:inherit}summary{display:list-item}blockquote,dd,dl,figure,h1,h2,h3,h4,h5,h6,hr,p,pre{margin:0}fieldset{margin:0;padding:0}legend{padding:0}menu,ol,ul{list-style:none;margin:0;padding:0}textarea{resize:vertical}input::placeholder,textarea::placeholder{opacity:1;color:#9ca3af}[role=button],button{cursor:pointer}:disabled{cursor:default}audio,canvas,embed,iframe,img,object,svg,video{display:block;vertical-align:middle}img,video{max-width:100%;height:auto}[hidden]{display:none}*, ::before, ::after{--tw-border-spacing-x:0;--tw-border-spacing-y:0;--tw-translate-x:0;--tw-translate-y:0;--tw-rotate:0;--tw-skew-x:0;--tw-skew-y:0;--tw-scale-x:1;--tw-scale-y:1;--tw-pan-x: ;--tw-pan-y: ;--tw-pinch-zoom: ;--tw-scroll-snap-strictness:proximity;--tw-ordinal: ;--tw-slashed-zero: ;--tw-numeric-figure: ;--tw-numeric-spacing: ;--tw-numeric-fraction: ;--tw-ring-inset: ;--tw-ring-offset-width:0px;--tw-ring-offset-color:#fff;--tw-ring-color:rgb(59 130 246 / 0.5);--tw-ring-offset-shadow:0 0 #0000;--tw-ring-shadow:0 0 #0000;--tw-shadow:0 0 #0000;--tw-shadow-colored:0 0 #0000;--tw-blur: ;--tw-brightness: ;--tw-contrast: ;--tw-grayscale: ;--tw-hue-rotate: ;--tw-invert: ;--tw-saturate: ;--tw-sepia: ;--tw-drop-shadow: ;--tw-backdrop-blur: ;--tw-backdrop-brightness: ;--tw-backdrop-contrast: ;--tw-backdrop-grayscale: ;--tw-backdrop-hue-rotate: ;--tw-backdrop-invert: ;--tw-backdrop-opacity: ;--tw-backdrop-saturate: ;--tw-backdrop-sepia: }::-webkit-backdrop{--tw-border-spacing-x:0;--tw-border-spacing-y:0;--tw-translate-x:0;--tw-translate-y:0;--tw-rotate:0;--tw-skew-x:0;--tw-skew-y:0;--tw-scale-x:1;--tw-scale-y:1;--tw-pan-x: ;--tw-pan-y: ;--tw-pinch-zoom: ;--tw-scroll-snap-strictness:proximity;--tw-ordinal: ;--tw-slashed-zero: ;--tw-numeric-figure: ;--tw-numeric-spacing: ;--tw-numeric-fraction: ;--tw-ring-inset: ;--tw-ring-offset-width:0px;--tw-ring-offset-color:#fff;--tw-ring-color:rgb(59 130 246 / 0.5);--tw-ring-offset-shadow:0 0 #0000;--tw-ring-shadow:0 0 #0000;--tw-shadow:0 0 #0000;--tw-shadow-colored:0 0 #0000;--tw-blur: ;--tw-brightness: ;--tw-contrast: ;--tw-grayscale: ;--tw-hue-rotate: ;--tw-invert: ;--tw-saturate: ;--tw-sepia: ;--tw-drop-shadow: ;--tw-backdrop-blur: ;--tw-backdrop-brightness: ;--tw-backdrop-contrast: ;--tw-backdrop-grayscale: ;--tw-backdrop-hue-rotate: ;--tw-backdrop-invert: ;--tw-backdrop-opacity: ;--tw-backdrop-saturate: ;--tw-backdrop-sepia: }::backdrop{--tw-border-spacing-x:0;--tw-border-spacing-y:0;--tw-translate-x:0;--tw-translate-y:0;--tw-rotate:0;--tw-skew-x:0;--tw-skew-y:0;--tw-scale-x:1;--tw-scale-y:1;--tw-pan-x: ;--tw-pan-y: ;--tw-pinch-zoom: ;--tw-scroll-snap-strictness:proximity;--tw-ordinal: ;--tw-slashed-zero: ;--tw-numeric-figure: ;--tw-numeric-spacing: ;--tw-numeric-fraction: ;--tw-ring-inset: ;--tw-ring-offset-width:0px;--tw-ring-offset-color:#fff;--tw-ring-color:rgb(59 130 246 / 0.5);--tw-ring-offset-shadow:0 0 #0000;--tw-ring-shadow:0 0 #0000;--tw-shadow:0 0 #0000;--tw-shadow-colored:0 0 #0000;--tw-blur: ;--tw-brightness: ;--tw-contrast: ;--tw-grayscale: ;--tw-hue-rotate: ;--tw-invert: ;--tw-saturate: ;--tw-sepia: ;--tw-drop-shadow: ;--tw-backdrop-blur: ;--tw-backdrop-brightness: ;--tw-backdrop-contrast: ;--tw-backdrop-grayscale: ;--tw-backdrop-hue-rotate: ;--tw-backdrop-invert: ;--tw-backdrop-opacity: ;--tw-backdrop-saturate: ;--tw-backdrop-sepia: }.relative{position:relative}.mx-auto{margin-left:auto;margin-right:auto}.mx-6{margin-left:1.5rem;margin-right:1.5rem}.ml-4{margin-left:1rem}.mt-16{margin-top:4rem}.mt-6{margin-top:1.5rem}.mt-4{margin-top:1rem}.-mt-px{margin-top:-1px}.mr-1{margin-right:0.25rem}.flex{display:flex}.inline-flex{display:inline-flex}.grid{display:grid}.h-16{height:4rem}.h-7{height:1.75rem}.h-6{height:1.5rem}.h-5{height:1.25rem}.min-h-screen{min-height:100vh}.w-auto{width:auto}.w-16{width:4rem}.w-7{width:1.75rem}.w-6{width:1.5rem}.w-5{width:1.25rem}.max-w-7xl{max-width:80rem}.shrink-0{flex-shrink:0}.scale-100{--tw-scale-x:1;--tw-scale-y:1;transform:translate(var(--tw-translate-x), var(--tw-translate-y)) rotate(var(--tw-rotate)) skewX(var(--tw-skew-x)) skewY(var(--tw-skew-y)) scaleX(var(--tw-scale-x)) scaleY(var(--tw-scale-y))}.grid-cols-1{grid-template-columns:repeat(1, minmax(0, 1fr))}.items-center{align-items:center}.justify-center{justify-content:center}.gap-6{gap:1.5rem}.gap-4{gap:1rem}.self-center{align-self:center}.rounded-lg{border-radius:0.5rem}.rounded-full{border-radius:9999px}.bg-gray-100{--tw-bg-opacity:1;background-color:rgb(243 244 246 / var(--tw-bg-opacity))}.bg-white{--tw-bg-opacity:1;background-color:rgb(255 255 255 / var(--tw-bg-opacity))}.bg-red-50{--tw-bg-opacity:1;background-color:rgb(254 242 242 / var(--tw-bg-opacity))}.bg-dots-darker{background-image:url("data:image/svg+xml,%3Csvg width='30' height='30' viewBox='0 0 30 30' fill='none' xmlns='http://www.w3.org/2000/svg'%3E%3Cpath d='M1.22676 0C1.91374 0 2.45351 0.539773 2.45351 1.22676C2.45351 1.91374 1.91374 2.45351 1.22676 2.45351C0.539773 2.45351 0 1.91374 0 1.22676C0 0.539773 0.539773 0 1.22676 0Z' fill='rgba(0,0,0,0.07)'/%3E%3C/svg%3E")}.from-gray-700\/50{--tw-gradient-from:rgb(55 65 81 / 0.5);--tw-gradient-to:rgb(55 65 81 / 0);--tw-gradient-stops:var(--tw-gradient-from), var(--tw-gradient-to)}.via-transparent{--tw-gradient-to:rgb(0 0 0 / 0);--tw-gradient-stops:var(--tw-gradient-from), transparent, var(--tw-gradient-to)}.bg-center{background-position:center}.stroke-red-500{stroke:#ef4444}.stroke-gray-400{stroke:#9ca3af}.p-6{padding:1.5rem}.px-6{padding-left:1.5rem;padding-right:1.5rem}.text-center{text-align:center}.text-right{text-align:right}.text-xl{font-size:1.25rem;line-height:1.75rem}.text-sm{font-size:0.875rem;line-height:1.25rem}.font-semibold{font-weight:600}.leading-relaxed{line-height:1.625}.text-gray-600{--tw-text-opacity:1;color:rgb(75 85 99 / var(--tw-text-opacity))}.text-gray-900{--tw-text-opacity:1;color:rgb(17 24 39 / var(--tw-text-opacity))}.text-gray-500{--tw-text-opacity:1;color:rgb(107 114 128 / var(--tw-text-opacity))}.underline{-webkit-text-decoration-line:underline;text-decoration-line:underline}.antialiased{-webkit-font-smoothing:antialiased;-moz-osx-font-smoothing:grayscale}.shadow-2xl{--tw-shadow:0 25px 50px -12px rgb(0 0 0 / 0.25);--tw-shadow-colored:0 25px 50px -12px var(--tw-shadow-color);box-shadow:var(--tw-ring-offset-shadow, 0 0 #0000), var(--tw-ring-shadow, 0 0 #0000), var(--tw-shadow)}.shadow-gray-500\/20{--tw-shadow-color:rgb(107 114 128 / 0.2);--tw-shadow:var(--tw-shadow-colored)}.transition-all{transition-property:all;transition-timing-function:cubic-bezier(0.4, 0, 0.2, 1);transition-duration:150ms}.selection\:bg-red-500 *::selection{--tw-bg-opacity:1;background-color:rgb(239 68 68 / var(--tw-bg-opacity))}.selection\:text-white *::selection{--tw-text-opacity:1;color:rgb(255 255 255 / var(--tw-text-opacity))}.selection\:bg-red-500::selection{--tw-bg-opacity:1;background-color:rgb(239 68 68 / var(--tw-bg-opacity))}.selection\:text-white::selection{--tw-text-opacity:1;color:rgb(255 255 255 / var(--tw-text-opacity))}.hover\:text-gray-900:hover{--tw-text-opacity:1;color:rgb(17 24 39 / var(--tw-text-opacity))}.hover\:text-gray-700:hover{--tw-text-opacity:1;color:rgb(55 65 81 / var(--tw-text-opacity))}.focus\:rounded-sm:focus{border-radius:0.125rem}.focus\:outline:focus{outline-style:solid}.focus\:outline-2:focus{outline-width:2px}.focus\:outline-red-500:focus{outline-color:#ef4444}.group:hover .group-hover\:stroke-gray-600{stroke:#4b5563}.z-10{z-index: 10}@media (prefers-reduced-motion: no-preference){.motion-safe\:hover\:scale-\[1\.01\]:hover{--tw-scale-x:1.01;--tw-scale-y:1.01;transform:translate(var(--tw-translate-x), var(--tw-translate-y)) rotate(var(--tw-rotate)) skewX(var(--tw-skew-x)) skewY(var(--tw-skew-y)) scaleX(var(--tw-scale-x)) scaleY(var(--tw-scale-y))}}@media (prefers-color-scheme: dark){.dark\:bg-gray-900{--tw-bg-opacity:1;background-color:rgb(17 24 39 / var(--tw-bg-opacity))}.dark\:bg-gray-800\/50{background-color:rgb(31 41 55 / 0.5)}.dark\:bg-red-800\/20{background-color:rgb(153 27 27 / 0.2)}.dark\:bg-dots-lighter{background-image:url("data:image/svg+xml,%3Csvg width='30' height='30' viewBox='0 0 30 30' fill='none' xmlns='http://www.w3.org/2000/svg'%3E%3Cpath d='M1.22676 0C1.91374 0 2.45351 0.539773 2.45351 1.22676C2.45351 1.91374 1.91374 2.45351 1.22676 2.45351C0.539773 2.45351 0 1.91374 0 1.22676C0 0.539773 0.539773 0 1.22676 0Z' fill='rgba(255,255,255,0.07)'/%3E%3C/svg%3E")}.dark\:bg-gradient-to-bl{background-image:linear-gradient(to bottom left, var(--tw-gradient-stops))}.dark\:stroke-gray-600{stroke:#4b5563}.dark\:text-gray-400{--tw-text-opacity:1;color:rgb(156 163 175 / var(--tw-text-opacity))}.dark\:text-white{--tw-text-opacity:1;color:rgb(255 255 255 / var(--tw-text-opacity))}.dark\:shadow-none{--tw-shadow:0 0 #0000;--tw-shadow-colored:0 0 #0000;box-shadow:var(--tw-ring-offset-shadow, 0 0 #0000), var(--tw-ring-shadow, 0 0 #0000), var(--tw-shadow)}.dark\:ring-1{--tw-ring-offset-shadow:var(--tw-ring-inset) 0 0 0 var(--tw-ring-offset-width) var(--tw-ring-offset-color);--tw-ring-shadow:var(--tw-ring-inset) 0 0 0 calc(1px + var(--tw-ring-offset-width)) var(--tw-ring-color);box-shadow:var(--tw-ring-offset-shadow), var(--tw-ring-shadow), var(--tw-shadow, 0 0 #0000)}.dark\:ring-inset{--tw-ring-inset:inset}.dark\:ring-white\/5{--tw-ring-color:rgb(255 255 255 / 0.05)}.dark\:hover\:text-white:hover{--tw-text-opacity:1;color:rgb(255 255 255 / var(--tw-text-opacity))}.group:hover .dark\:group-hover\:stroke-gray-400{stroke:#9ca3af}}@media (min-width: 640px){.sm\:fixed{position:fixed}.sm\:top-0{top:0px}.sm\:right-0{right:0px}.sm\:ml-0{margin-left:0px}.sm\:flex{display:flex}.sm\:items-center{align-items:center}.sm\:justify-center{justify-content:center}.sm\:justify-between{justify-content:space-between}.sm\:text-left{text-align:left}.sm\:text-right{text-align:right}}@media (min-width: 768px){.md\:grid-cols-2{grid-template-columns:repeat(2, minmax(0, 1fr))}}@media (min-width: 1024px){.lg\:gap-8{gap:2rem}.lg\:p-8{padding:2rem}}
-        </style>
-    </head>
-    <body class="antialiased">
-        <div class="relative sm:flex sm:justify-center sm:items-center min-h-screen bg-dots-darker bg-center bg-gray-100 dark:bg-dots-lighter dark:bg-gray-900 selection:bg-red-500 selection:text-white">
+    <title>{{ config('app.name', 'PADUANG') }}</title>
 
-            <div class="max-w-7xl mx-auto p-6 lg:p-8">
+    <!-- Primary Meta Tags -->
+    <meta name="title" content="{{ config('app.name', 'PADUANG') }}">
+    <meta name="description" content="{{ __('meta.description') }}">
 
-                <a href="{{ url('admin/login') }}">
-                    <img width="150" class="cursor-pointer" src="https://camo.githubusercontent.com/044c0d1693b12131f1de3d29d8e93ba5df8b4cf94bc1da39c3454ac711d1602c/68747470733a2f2f6d656469612e67697068792e636f6d2f6d656469612f456b73443167776545456447772f67697068792e676966" alt="">
-                </a>
+    <!-- Open Graph / Facebook -->
+    <meta property="og:type" content="website">
+    <meta property="og:url" content="{{ url('/') }}">
+    <meta property="og:title" content="{{ config('app.name', 'PADUANG') }}">
+    <meta property="og:description" content="{{ __('meta.description') }}">
+    <meta property="og:image" content="{{ asset('assets/logo.png') }}">
 
+    <!-- Twitter -->
+    <meta property="twitter:card" content="summary_large_image">
+    <meta property="twitter:url" content="{{ url('/') }}">
+    <meta property="twitter:title" content="{{ config('app.name', 'PADUANG') }}">
+    <meta property="twitter:description" content="{{ __('meta.description') }}">
+    <meta property="twitter:image" content="{{ asset('assets/logo.png') }}">
+
+    <link icon rel="icon" type="image/png" href="{{ asset('assets/logo.png') }}">
+    <!-- Fonts -->
+    <link rel="preconnect" href="https://fonts.bunny.net">
+    <link href="https://fonts.bunny.net/css?family=figtree:400,600&display=swap" rel="stylesheet" />
+    <style>
+        .hero-pattern {
+            background-image: url('{{ asset('assets/logo.png') }}');
+            background-repeat: no-repeat;
+            background-position: center;
+            background-size: contain;
+            opacity: 0.03;
+        }
+    </style>
+    <!-- Styles -->
+    @vite(['resources/css/app.css', 'resources/js/app.js'])
+    <script defer src="https://cdn.jsdelivr.net/npm/alpinejs@3.x.x/dist/cdn.min.js"></script>
+
+</head>
+
+<body class="antialiased text-black/50 dark:bg-black dark:text-white/50 min-h-svh {{ app()->currentLocale() === 'my' ? 'font-mm' : 'font-jost' }}">
+    <x-theme-switcher />
+    <div class="hero-pattern left-[80%] bottom-[-40%]  absolute inset-0 -z-20"></div>
+
+    <div class=" ">
+        <div class="relative flex flex-col items-center justify-center selection:bg-[slate] selection:text-white">
+            <div class="relative w-full max-w-2xl px-6 lg:max-w-7xl">
+                <header class="relative py-16 ">
+                    <div class="absolute inset-x-0 -top-40 -z-10 transform-gpu overflow-hidden blur-3xl sm:-top-80"
+                        aria-hidden="true">
+                        <div class="relative left-[calc(50%-11rem)] aspect-[1155/678] w-[36.125rem] -translate-x-1/2 rotate-[30deg] bg-gradient-to-tr from-[#80ceff] to-[#bdbcc9] dark:from-slate-400 dark:via-[#c29f37] dark:to-slate-400 opacity-30 sm:left-[calc(50%-30rem)] sm:w-[72.1875rem]"
+                            style="clip-path: polygon(74.1% 44.1%, 100% 61.6%, 97.5% 26.9%, 85.5% 0.1%, 80.7% 2%, 72.5% 32.5%, 60.2% 62.4%, 52.4% 68.1%, 47.5% 58.3%, 45.2% 34.5%, 27.5% 76.7%, 0.1% 64.9%, 17.9% 100%, 27.6% 76.8%, 76.1% 97.7%, 74.1% 44.1%)">
+                        </div>
+                    </div>
+
+                    <div class="mx-auto container px-6 lg:px-8 animate-fade-in  ">
+                        <div class="mx-auto text-center">
+                            <div class="mb-8 flex justify-center">
+                                <div class="font-jost relative rounded-full px-3 py-1 text-sm leading-6 text-gray-600 ring-1 ring-gray-900/10 hover:ring-gray-900/20 dark:text-gray-300 dark:ring-gray-700 dark:hover:ring-gray-600">
+                                    {{ __('messages.tagline') }}
+                                </div>
+                            </div>
+
+                            <div class="flex justify-center">
+                                <img  class="w-80" src="{{ asset('assets/logo.png')}}" alt="{{ __('meta.description') }}">
+                            </div>
+
+                            <!-- Main Heading -->
+                            <h1  class="text-5xl lg:text-8xl font-bebas mt-2 tracking-wider font-bold  text-gray-900 sm:text-6xl bg-gradient-to-r from-slate-500 via-[#c29f37] to-slate-500 bg-clip-text text-transparent dark:from-slate-400 dark:via-[#c29f37] dark:to-slate-400">
+                                {{ __('messages.title') }}
+                            </h1>
+
+                            <!-- Subheading -->
+                            <div class="flex items-center justify-center">
+                                <p class="mt-6  max-w-2xl  font-jost text-md text-gray-600 dark:text-gray-300" style="line-height: 2rem">
+                                    {{ __('messages.description') }}
+                                </p>
+                            </div>
+
+
+                            <!-- Call to Action Buttons -->
+                            <div class="mt-10 flex items-center justify-center gap-x-6 {{ app()->currentLocale() === 'my' ? 'font-mm' : '' }}">
+                                <!-- Seller Registration CTA -->
+                                <x-primary-link-button :href="route('partner.register')" class="py-2.5">
+                                     {{ __('messages.welcome.create_your_store') }}
+                                </x-primary-link-button>
+
+                                @guest
+                                {{-- <a href="{{ route('login') }}"
+                                    class="text-sm flex font-semibold leading-6 gap-2 items-center text-gray-900 dark:text-gray-300 group">
+                                    <span> {{ __('messages.sign_in') }} </span>
+                                    <span aria-hidden="true" class="transform transition-transform duration-300 ease-in-out group-hover:translate-x-1">
+                                        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="currentColor" class="size-5">
+                                            <path fill-rule="evenodd" d="M8.22 5.22a.75.75 0 0 1 1.06 0l4.25 4.25a.75.75 0 0 1 0 1.06l-4.25 4.25a.75.75 0 0 1-1.06-1.06L11.94 10 8.22 6.28a.75.75 0 0 1 0-1.06Z" clip-rule="evenodd" />
+                                        </svg>
+                                    </span>
+                                </a> --}}
+                                @else
+                                <a href="{{ route('profile') }}"
+                                    class="text-sm flex font-semibold leading-6 gap-2 items-center text-gray-900 dark:text-gray-300 group">
+                                    <span>{{ __('messages.profile.text') }}</span>
+                                    <span aria-hidden="true" class=" transform transition-transform duration-300 ease-in-out group-hover:translate-x-1">
+                                        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="currentColor" class="size-5">
+                                            <path fill-rule="evenodd" d="M8.22 5.22a.75.75 0 0 1 1.06 0l4.25 4.25a.75.75 0 0 1 0 1.06l-4.25 4.25a.75.75 0 0 1-1.06-1.06L11.94 10 8.22 6.28a.75.75 0 0 1 0-1.06Z" clip-rule="evenodd" />
+                                          </svg>
+                                    </span>
+                                </a>
+                                @endguest
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Bottom decorative element -->
+                    <div class="absolute inset-x-0 top-[calc(100%-13rem)] -z-10 transform-gpu overflow-hidden blur-3xl sm:top-[calc(100%-30rem)]"
+                        aria-hidden="true">
+                        <div class="relative left-[calc(50%+3rem)] aspect-[1155/678] w-[36.125rem] -translate-x-1/2 bg-gradient-to-tr  from-[#80ceff] to-[#bdbcc9] dark:from-slate-400 dark:via-[#c29f37] dark:to-slate-400 opacity-30 sm:left-[calc(50%+36rem)] sm:w-[72.1875rem]"
+                            style="clip-path: polygon(74.1% 44.1%, 100% 61.6%, 97.5% 26.9%, 85.5% 0.1%, 80.7% 2%, 72.5% 32.5%, 60.2% 62.4%, 52.4% 68.1%, 47.5% 58.3%, 45.2% 34.5%, 27.5% 76.7%, 0.1% 64.9%, 17.9% 100%, 27.6% 76.8%, 76.1% 97.7%, 74.1% 44.1%)">
+                        </div>
+                    </div>
+                </header>
+
+                <!-- Seller Benefits Section -->
+                <section class="py-16">
+                    <div class="mx-auto max-w-4xl text-center">
+                        <h2 class="text-3xl font-bebas tracking-wider font-bold text-gray-900 dark:text-white mb-8">
+                            {{ __('messages.welcome.why_choose_platform') }}
+                        </h2>
+                        
+                        <div class="grid grid-cols-1 md:grid-cols-3 gap-8">
+                            <div class="bg-white dark:bg-zinc-900 rounded-lg  p-6 shadow-lg ring-1 ring-black/5 dark:ring-zinc-800">
+                                <div class="w-16 h-16 bg-blue-100 dark:bg-blue-900 rounded-full flex items-center justify-center mx-auto mb-4">
+                                    <svg xmlns="http://www.w3.org/2000/svg" class="h-8 w-8 text-blue-600 dark:text-blue-400" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 10V3L4 14h7v7l9-11h-7z" />
+                                    </svg>
+                                </div>
+                                <h3 class="text-xl font-semibold text-gray-900 dark:text-white mb-2">{{ __('messages.welcome.quick_setup') }}</h3>
+                                <p class="text-gray-600 dark:text-gray-300 font-sans  " style="line-height:2rem">{{ __('messages.welcome.quick_setup_description') }}</p>
+                            </div>
+                            
+                            <div class="bg-white dark:bg-zinc-900 rounded-lg  p-6 shadow-lg ring-1 ring-black/5 dark:ring-zinc-800">
+                                <div class="w-16 h-16 bg-green-100 dark:bg-green-900 rounded-full flex items-center justify-center mx-auto mb-4">
+                                    {{-- <svg xmlns="http://www.w3.org/2000/svg" class="h-8 w-8 text-green-600 dark:text-green-400" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 12a9 9 0 01-9 9m9-9a9 9 0 00-9-9m9 9H3m9 9v-9m0-9v9" />
+                                    </svg> --}}
+                                    <svg fill="#000000" class="h-8 w-8 text-green-600" version="1.1" id="Layer_1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" viewBox="0 0 472.615 472.615" xml:space="preserve"><g id="SVGRepo_bgCarrier" stroke-width="0"></g><g id="SVGRepo_tracerCarrier" stroke-linecap="round" stroke-linejoin="round"></g><g id="SVGRepo_iconCarrier"> <g> <g> <polygon points="147.25,194.145 133.221,241.875 125.577,217.596 106.788,217.606 99.154,241.875 85.115,194.145 66.231,199.702 89.384,278.471 108.221,278.644 116.183,253.337 124.154,278.654 142.991,278.471 166.134,199.702 "></polygon> </g> </g> <g> <g> <polygon points="267.375,194.145 253.346,241.875 245.702,217.596 226.913,217.596 219.269,241.875 205.24,194.145 186.356,199.702 209.499,278.471 228.336,278.654 236.308,253.337 244.279,278.654 263.116,278.471 286.259,199.702 "></polygon> </g> </g> <g> <g> <polygon points="387.5,194.145 373.461,241.875 365.827,217.606 347.038,217.596 339.394,241.875 325.365,194.145 306.481,199.702 329.624,278.471 348.461,278.654 356.433,253.337 364.394,278.644 383.231,278.471 406.384,199.702 "></polygon> </g> </g> <g> <g> <path d="M441.692,167.385c-9.361-27.847-24.473-53.592-44.195-75.521c-14.009,13.152-29.357,24.377-45.723,33.598 c3.864,13.214,7.028,27.238,9.471,41.923h-19.951c-1.998-11.459-4.451-22.437-7.33-32.884 c-27.338,12.442-57.012,19.574-87.81,20.825v12.06h-19.692v-12.06c-30.798-1.25-60.472-8.383-87.81-20.825 c-2.879,10.447-5.333,21.425-7.33,32.884H111.37c2.443-14.685,5.607-28.709,9.471-41.923c-16.365-9.221-31.713-20.448-45.723-33.6 c-19.735,21.941-34.839,47.687-44.195,75.523H0v137.846h472.615V167.385H441.692z M452.923,285.538H19.692v-98.462h433.231 V285.538z"></path> </g> </g> <g> <g> <path d="M345.502,366.491c-11.776,32.32-27.769,58.784-46.437,77.199c31.25-9.421,59.896-26.088,84.31-48.853 C371.67,383.921,359.005,374.433,345.502,366.491z"></path> </g> </g> <g> <g> <path d="M246.154,305.241v12.051c30.795,1.25,60.47,8.387,87.809,20.832c2.878-10.446,5.333-21.424,7.33-32.883H246.154z"></path> </g> </g> <g> <g> <path d="M361.243,305.241c-2.443,14.686-5.607,28.709-9.472,41.923c16.365,9.221,31.714,20.448,45.725,33.599 c19.733-21.95,34.83-47.693,44.196-75.522H361.243z"></path> </g> </g> <g> <g> <path d="M111.371,305.241H30.923c9.369,27.836,24.473,53.587,44.199,75.519c14.01-13.151,29.356-24.375,45.72-33.595 C116.978,333.95,113.814,319.927,111.371,305.241z"></path> </g> </g> <g> <g> <path d="M127.113,366.491c-13.502,7.942-26.166,17.428-37.867,28.341c24.416,22.768,53.059,39.434,84.3,48.854 C154.879,425.273,138.885,398.809,127.113,366.491z"></path> </g> </g> <g> <g> <path d="M131.321,305.241c1.999,11.459,4.451,22.437,7.33,32.883c27.34-12.445,57.015-19.582,87.81-20.832v-12.051H131.321z"></path> </g> </g> <g> <g> <path d="M144.542,357.315c18.513,53.226,48.514,88.794,81.92,94.692V337.226C197.665,338.509,169.987,345.357,144.542,357.315z"></path> </g> </g> <g> <g> <path d="M246.154,337.226v114.782c33.41-5.897,63.409-41.463,81.92-94.692C302.628,345.357,274.95,338.509,246.154,337.226z"></path> </g> </g> <g> <g> <path d="M89.24,77.789c11.704,10.913,24.369,20.396,37.872,28.34c11.774-32.321,27.769-58.784,46.436-77.2 C142.299,38.351,113.653,55.019,89.24,77.789z"></path> </g> </g> <g> <g> <path d="M299.067,28.929c18.666,18.413,34.661,44.879,46.435,77.2c13.503-7.944,26.168-17.427,37.872-28.34 C358.962,55.019,330.316,38.351,299.067,28.929z"></path> </g> </g> <g> <g> <path d="M246.154,20.608V135.39c28.798-1.282,56.475-8.131,81.919-20.086C309.561,62.073,279.56,26.508,246.154,20.608z"></path> </g> </g> <g> <g> <path d="M144.542,115.303c25.443,11.955,53.121,18.804,81.919,20.086V20.608C193.055,26.508,163.054,62.073,144.542,115.303z"></path> </g> </g> </g></svg>
+                                </div>
+
+                                <h3 class="text-xl font-semibold text-gray-900 dark:text-white mb-2">{{ __('messages.welcome.custom_domain') }}</h3>
+                                <p class="text-gray-600 dark:text-gray-300 font-sans  " style="line-height:2rem">{{ __('messages.welcome.custom_domain_description') }}</p>
+                            </div>
+                            
+                            <div class="bg-white dark:bg-zinc-900 rounded-lg p-6 shadow-lg ring-1 ring-black/5 dark:ring-zinc-800">
+                                <div class="w-16 h-16 bg-purple-100 dark:bg-purple-900 rounded-full flex items-center justify-center mx-auto mb-4">
+                                    <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6 text-purple-600 dark:text-purple-400" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m5.618-4.016A11.955 11.955 0 0112 2.944a11.955 11.955 0 01-8.618 3.04A12.02 12.02 0 003 9c0 5.591 3.824 10.29 9 11.622 5.176-1.332 9-6.031 9-11.622 0-1.042-.133-2.052-.382-3.016z" />
+                                    </svg>
+                                </div>
+                                <h3 class="text-xl font-semibold text-gray-900 dark:text-white mb-2">{{ __('messages.welcome.complete_tools') }}</h3>
+                                <p class="text-gray-600 dark:text-gray-300 font-sans "  style="line-height:2rem"">{{ __('messages.welcome.complete_tools_description') }}</p>
+                            </div>
+                        </div>
+                        
+                        <div class="mt-12">
+                            <p class="text-lg text-gray-600 dark:text-gray-300 font-jost mb-6">
+                                {{ __('messages.welcome.join_sellers') }}
+                            </p>
+                            <x-primary-link-button :href="route('partner.register')" class="py-3 inline-flex items-center gap-2">
+                                <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 10V3L4 14h7v7l9-11h-7z" />
+                                </svg>
+                                {{ __('messages.welcome.start_free_store') }}
+                            </x-primary-link-button>
+                        </div>
+                    </div>
+                </section>
+
+                @if($sellers->count() > 0)
+                <main id="sellers" >
+                    <!-- Existing Stores Section -->
+                    <div class="text-center mb-12">
+                        <h2 class="text-3xl font-bebas tracking-wider font-bold text-gray-900 dark:text-white mb-4">
+                            {{ __('messages.welcome.explore_stores') }}
+                        </h2>
+                        <p class="text-lg text-gray-600 dark:text-gray-300 font-jost">
+                            {{ __('messages.welcome.browse_community') }}
+                        </p>
+                    </div>
+                    
+                    <div class="grid gap-6 lg:grid-cols-2 lg:gap-8">
+                        @foreach ($sellers as $seller)
+                            {{-- their domain --}}
+                            <a href="http://{{ $seller->tenants->first()->domain->domain ?? '#' }}" target="_blank"
+                                class="flex items-start gap-4 rounded-lg bg-white p-6 animate-fade-in  shadow-[0px_14px_34px_0px_rgba(0,0,0,0.08)] ring-1 ring-white/[0.05] transition duration-300 hover:text-black/70 hover:ring-black/20 focus:outline-none focus-visible:ring-[#FF2D20] lg:pb-10 dark:bg-zinc-900 dark:ring-zinc-800 dark:hover:text-white/70 dark:hover:ring-zinc-700 dark:focus-visible:ring-[#FF2D20]">
+                                <img src="{{ $seller->getFirstMediaUrl('logos') }}" alt="{{ $seller->name }}"
+                                    class="w-16 h-16 rounded-full object-cover">
+                                <div>
+                                    <h2 class="text-xl font-bebas  font-semibold text-black dark:text-white">
+                                        {{ $seller->name }}</h2>
+                                    @if ($seller->addresses)
+                                        <div class="font-jost  border-gray-300   mt-4 ">
+                                            <h2 class=" font-bold mb-2 header_invoice">{{ __('messages.addresses') }}</h2>
+                                            @forelse ($seller->addresses as $index=>$address)
+                                                <div class="mt-2 text-xs">
+                                                    <p class=" text-xs">{{ $address->address }}</p>
+                                                </div>
+                                            @empty
+                                            @endforelse
+                                        </div>
+                                    @endif
+                                </div>
+                            </a>
+                        @endforeach
+                    </div>
+                </main>
+                @endif
             </div>
         </div>
-    </body>
+    </div>
+    <script>
+        // Check initial theme
+        if (localStorage.theme === 'dark' || (!('theme' in localStorage) && window.matchMedia('(prefers-color-scheme: dark)').matches)) {
+            document.documentElement.classList.add('dark');
+        } else {
+            document.documentElement.classList.remove('dark');
+        }
+    </script>
+</body>
+
 </html>

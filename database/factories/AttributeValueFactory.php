@@ -16,9 +16,10 @@ class AttributeValueFactory extends Factory
      */
     public function definition(): array
     {
-        $data = ['xl','l','kg','red','green'];
+        $data = ['xl', 'l', 'kg', 'red', 'green'];
+
         return [
-            'value' => $data[random_int(0,count($data)-1)]
+            'value' => $data[random_int(0, count($data) - 1)],
         ];
     }
 }

@@ -3,7 +3,6 @@
 namespace App\Filament\Admin\Resources;
 
 use App\Filament\Admin\Resources\CurrencyResource\Pages;
-use App\Filament\Admin\Resources\CurrencyResource\RelationManagers;
 use App\Models\Currency;
 use Filament\Forms;
 use Filament\Forms\Form;
@@ -17,7 +16,7 @@ class CurrencyResource extends Resource
 {
     protected static ?string $model = Currency::class;
 
-//    protected static ?string $navigationIcon = 'heroicon-o-rectangle-stack';
+    //    protected static ?string $navigationIcon = 'heroicon-o-rectangle-stack';
 
     protected static ?string $navigationGroup = 'Money Section';
 

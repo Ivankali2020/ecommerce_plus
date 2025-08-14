@@ -2,16 +2,30 @@
 
 namespace App\Models;
 
+use App\Observers\OrderProductObserver;
+use Illuminate\Database\Eloquent\Attributes\ObservedBy;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
+use Stancl\Tenancy\Database\Concerns\BelongsToPrimaryModel;
 
+// #[ObservedBy(\App\Observers\OrderProductObserver::class)]
 class OrderProduct extends Model
 {
-    use HasFactory;
+    use HasFactory,BelongsToPrimaryModel;
+
+    public function getRelationshipToPrimaryModel(): string
+    {
+        return 'order';
+    }
 
     protected $casts = [
-        'attributes' => 'json'
+        'attributes' => 'json',
     ];
+
+    public function order()
+    {
+        return $this->belongsTo(Order::class)->withTrashed();
+    }
 
     public function product()
     {
@@ -26,5 +40,10 @@ class OrderProduct extends Model
     public function currency()
     {
         return $this->belongsTo(Currency::class)->withTrashed();
+    }
+
+    protected static function booted()
+    {
+        self::observe(OrderProductObserver::class);
     }
 }

@@ -15,7 +15,7 @@ trait ResponseTraits
         ], $code);
     }
 
-    public function error($message = 'Fatal error', $code = Response::HTTP_INTERNAL_SERVER_ERROR, $errors = [],)
+    public function error($message = 'Fatal error', $code = Response::HTTP_INTERNAL_SERVER_ERROR, $errors = [])
     {
         return response()->json([
             'status' => 'error',

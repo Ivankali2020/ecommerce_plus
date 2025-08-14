@@ -13,15 +13,13 @@ use Filament\Resources\Pages\CreateRecord;
 use Filament\Resources\Resource;
 use Filament\Tables;
 use Filament\Tables\Table;
-use Illuminate\Database\Eloquent\Builder;
-use Illuminate\Database\Eloquent\SoftDeletingScope;
 use Illuminate\Support\Facades\Hash;
 
 class UserResource extends Resource
 {
     protected static ?string $model = User::class;
 
-//    protected static ?string $navigationIcon = 'heroicon-o-rectangle-stack';
+    //    protected static ?string $navigationIcon = 'heroicon-o-rectangle-stack';
     protected static ?string $navigationGroup = 'User Section';
 
     public static function form(Form $form): Form
@@ -30,22 +28,28 @@ class UserResource extends Resource
             ->schema([
 
                 Forms\Components\Select::make('seller_id')
-                    ->relationship('seller','name')
+                    ->relationship('seller', 'name')
                     ->required()->hidden(Filament::getAuthGuard() == 'seller')
                     ->searchable()->preload(),
 
                 Forms\Components\TextInput::make('firebase_uid')
+                    ->hidden(fn (Page $livewire) => $livewire instanceof CreateRecord)
                     ->maxLength(255),
-                Forms\Components\TextInput::make('device_uid')
-                    ->maxLength(255),
-                Forms\Components\TextInput::make('device_name')
+                Forms\Components\TextInput::make('google_id')
+                    ->hidden(fn (Page $livewire) => $livewire instanceof CreateRecord)
                     ->maxLength(255),
                 Forms\Components\TextInput::make('name')
+                    ->label(__('filament/resources/user-resource.form.name.label'))
+                    ->placeholder(__('filament/resources/user-resource.form.name.placeholder'))
                     ->maxLength(255)->required(),
                 Forms\Components\TextInput::make('email')
+                    ->label(__('filament/resources/user-resource.form.email.label'))
+                    ->placeholder(__('filament/resources/user-resource.form.email.placeholder'))
                     ->email()
                     ->maxLength(255)->required(),
                 Forms\Components\TextInput::make('phone')
+                    ->label(__('filament/resources/user-resource.form.phone.label'))
+                    ->placeholder(__('filament/resources/user-resource.form.phone.placeholder'))
                     ->maxLength(255)->required(),
 
                 Forms\Components\SpatieMediaLibraryFileUpload::make('profile_photo')
@@ -54,11 +58,15 @@ class UserResource extends Resource
 
                 Forms\Components\DateTimePicker::make('email_verified_at'),
 
+                Forms\Components\TextInput::make('points'),
+
                 Forms\Components\TextInput::make('password')
+                    ->label(__('filament/resources/user-resource.form.password.label'))
+                    ->placeholder(__('filament/resources/user-resource.form.password.placeholder'))
                     ->password()
-                    ->dehydrateStateUsing(fn($state) => Hash::make($state))
-                    ->dehydrated(fn($state)=>filled($state))
-                    ->required(fn(Page $livewire) => $livewire instanceof CreateRecord)
+                    ->dehydrateStateUsing(fn ($state) => Hash::make($state))
+                    ->dehydrated(fn ($state) => filled($state))
+                    ->required(fn (Page $livewire) => $livewire instanceof CreateRecord)
                     ->maxLength(255),
             ]);
     }
@@ -67,12 +75,15 @@ class UserResource extends Resource
     {
         return $table
             ->columns([
-               Tables\Columns\SpatieMediaLibraryImageColumn::make('thumb')->collection('profile_photos'),
+                Tables\Columns\SpatieMediaLibraryImageColumn::make('thumb')->collection('profile_photos'),
                 Tables\Columns\TextColumn::make('name')
+                    ->label(__('filament/resources/user-resource.table.columns.name'))
                     ->searchable(),
                 Tables\Columns\TextColumn::make('email')
+                    ->label(__('filament/resources/user-resource.table.columns.email'))
                     ->searchable(),
                 Tables\Columns\TextColumn::make('phone')
+                    ->label(__('filament/resources/user-resource.table.columns.phone'))
                     ->searchable(),
 
                 Tables\Columns\TextColumn::make('email_verified_at')
@@ -104,7 +115,7 @@ class UserResource extends Resource
     public static function getRelations(): array
     {
         return [
-            RelationManagers\UserAddressesRelationManager::class
+            RelationManagers\UserAddressesRelationManager::class,
         ];
     }
 

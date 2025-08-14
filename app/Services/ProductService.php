@@ -2,15 +2,10 @@
 
 namespace App\Services;
 
-use App\Models\Brand;
-use App\Models\Category;
 use App\Models\Product;
 use App\Models\Seller;
-use App\Models\User;
 use Illuminate\Database\Eloquent\Collection;
 use Illuminate\Pagination\LengthAwarePaginator;
-use Illuminate\Support\Facades\Auth;
-use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
 use Symfony\Component\Routing\Exception\ResourceNotFoundException;
 
 class ProductService
@@ -18,34 +13,36 @@ class ProductService
     /**
      * Get Brands
      *
-     * @param int $sellerId
+     * @param  int  $sellerId
      * @return Collection $brands
      */
     public function getBrands($sellerId): Collection
     {
         $seller = Seller::findOrFail($sellerId);
         $categories = $seller->brands;
+
         return $categories;
     }
 
     /**
      * Get Brands
      *
-     * @param int $sellerId
+     * @param  int  $sellerId
      * @return Collection $categories
      */
     public function getCategories($sellerId): Collection
     {
         $seller = Seller::findOrFail($sellerId);
         $categories = $seller->categories->where('parent_id', null);
+
         return $categories;
     }
 
     /**
      * Get Products
      *
-     * @param int $sellerId
-     * @param Request $parms
+     * @param  int  $sellerId
+     * @param  Request  $parms
      * @return LengthAwarePaginator $products
      */
     public function getProducts($params, $sellerId): LengthAwarePaginator
@@ -67,8 +64,8 @@ class ProductService
             })
             ->when(isset($params['q']), function ($q) use ($params) {
                 $q->where(function ($query) use ($params) {
-                    $query->where('name', 'like', '%' . $params['q'] . '%')
-                        ->orWhere('description', 'like', '%' . $params['q'] . '%');
+                    $query->where('name', 'like', '%'.$params['q'].'%')
+                        ->orWhere('description', 'like', '%'.$params['q'].'%');
                 });
             });
 
@@ -81,8 +78,8 @@ class ProductService
     /**
      * Get Product Detail
      *
-     * @param int $sellerId
-     * @param int $productId
+     * @param  int  $sellerId
+     * @param  int  $productId
      * @return Product $product
      */
     public function getProductDetail($sellerId, $productId): Product
@@ -90,8 +87,9 @@ class ProductService
         Seller::findOrFail($sellerId);
         $product = Product::findOrFail($productId);
         if ($sellerId != $product->seller_id) {
-            throw new ResourceNotFoundException("Product not found");
+            throw new ResourceNotFoundException('Product not found');
         }
+
         return $product;
     }
 }

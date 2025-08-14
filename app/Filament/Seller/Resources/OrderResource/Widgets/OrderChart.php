@@ -3,107 +3,265 @@
 namespace App\Filament\Seller\Resources\OrderResource\Widgets;
 
 use App\Helper\CheckFilamentSellerUser;
+use App\Helper\OrderStatus;
 use App\Models\Order;
 use Carbon\Carbon;
 use Filament\Support\RawJs;
 use Filament\Widgets\ChartWidget;
 use Flowframe\Trend\Trend;
 use Flowframe\Trend\TrendValue;
+use Livewire\Attributes\On;
 
 class OrderChart extends ChartWidget
 {
-    protected static ?string $heading = 'Monthly Order Chart';
+    // Add filter properties
+    public $admin_id = null;
 
-    protected int | string | array $columnSpan = '2';
+    public $year = null;
+
+    public $month = null;
+
+    public function getHeading(): string
+    {
+        return __('filament/widgets/order-chart.heading');
+    }
+
+    public function getDescription(): ?string
+    {
+        return __('filament/widgets/order-chart.description');
+    }
+
+    protected static ?string $pollingInterval = null;
+
+    protected static ?int $sort = 3;
+
+    protected int|string|array $columnSpan = 'full';
 
     protected static ?string $maxHeight = '300px';
 
+    public function mount(): void
+    {
+        $this->year = Carbon::now()->format('Y');
+        $this->month = Carbon::now()->format('n');
+    }
+
+    // Add filter event listeners
+    #[On('updateAdminId')]
+    public function updateAdminId(?string $admin_id): void
+    {
+        $this->admin_id = $admin_id;
+    }
+
+    #[On('updateYear')]
+    public function updateYear(?string $year): void
+    {
+        $this->year = $year;
+    }
+
+    #[On('updateMonth')]
+    public function updateMonth(?string $month): void
+    {
+        $this->month = $month;
+    }
+
     protected function getData(): array
     {
+        // Get seller ID based on filters
+        $sellerId = $this->admin_id ?? CheckFilamentSellerUser::getSellerId();
+
+        // Default to current year if not selected
+        $selectedYear = $this->year ?? Carbon::now()->format('Y');
+        $selectedMonth = $this->month;
+
         $activeFilter = $this->filter;
         switch ($activeFilter) {
-            case ('today') :
-                $data = Trend::query(Order::where('seller_id',CheckFilamentSellerUser::getSellerId()))
+            case 'all':
+                $revenueData = Trend::query(Order::where('seller_id', $sellerId)->where('status', OrderStatus::Delivered))
                     ->between(
-                        start: now()->startOfDay(),
-                        end: now()->endOfDay(),
+                        start: now()->subYears(6)->startOfYear(),
+                        end: now()->endOfYear(),
                     )
-                    ->perHour()
+                    ->perYear()
                     ->sum('total_price');
+
+                // Calculate profit data using OrderProduct model
+                $profitData = Trend::query(
+                    \App\Models\OrderProduct::whereHas('order', function ($q) use ($sellerId) {
+                        $q->where('seller_id', $sellerId);
+                    })->whereHas('order', function ($q) {
+                        $q->where('status', OrderStatus::Delivered);
+                    })
+                )
+                    ->between(
+                        start: now()->subYears(6)->startOfYear(),
+                        end: now()->endOfYear(),
+                    )
+                    ->perYear()
+                    ->sum('profit');
 
                 return [
                     'datasets' => [
                         [
-                            'label' => 'Total Order Amount',
-                            'data' => $data->map(fn(TrendValue $value)=> number_format($value->aggregate / 1000,2)) ,
+                            'label' => __('filament/widgets/order-chart.total_order_amount'),
+                            'data' => $revenueData->map(fn(TrendValue $value) => number_format($value->aggregate / 10000, 2)),
+                            'borderColor' => '#4e79a7',
+                            'backgroundColor' => 'rgba(78, 121, 167, 0.1)',
+                        ],
+                        [
+                            'label' => __('filament/widgets/order-chart.total_profit_amount'),
+                            'data' => $profitData->map(fn(TrendValue $value) => number_format($value->aggregate / 10000, 2)),
+                            'borderColor' => '#76b7b2',
+                            'backgroundColor' => 'rgba(118, 183, 178, 0.1)',
                         ],
                     ],
-                    'labels' => $data->map(fn (TrendValue $value) => Carbon::parse($value->date)->format('H:i A')),
+                    'labels' => $revenueData->map(fn(TrendValue $value) => Carbon::parse($value->date)->format('Y')),
                 ];
 
-            case ('week') :
-                $data = Trend::query(Order::where('seller_id',CheckFilamentSellerUser::getSellerId()))
+            case 'week':
+                // For week view, use the selected year and month if available
+                $startDate = $selectedMonth
+                    ? Carbon::createFromDate($selectedYear, $selectedMonth, 1)->startOfMonth()->startOfWeek()
+                    : now()->startOfWeek();
+                $endDate = $selectedMonth
+                    ? Carbon::createFromDate($selectedYear, $selectedMonth, 1)->endOfMonth()->endOfWeek()
+                    : now()->endOfWeek();
+
+                $revenueData = Trend::query(Order::where('seller_id', $sellerId)->where('status', OrderStatus::Delivered))
                     ->between(
-                        start: now()->startOfWeek(),
-                        end: now()->endOfWeek(),
+                        start: $startDate,
+                        end: $endDate,
                     )
                     ->perDay()
                     ->sum('total_price');
 
+                $profitData = Trend::query(
+                    \App\Models\OrderProduct::whereHas('order', function ($q) use ($sellerId) {
+                        $q->where('seller_id', $sellerId);
+                    })->whereHas('order', function ($q) {
+                        $q->where('status', OrderStatus::Delivered);
+                    })
+                )
+                    ->between(
+                        start: $startDate,
+                        end: $endDate,
+                    )
+                    ->perDay()
+                    ->sum('profit');
+
                 return [
                     'datasets' => [
                         [
-                            'label' => 'Total Order Amount',
-                            'data' => $data->map(fn(TrendValue $value)=> number_format($value->aggregate / 1000,2)) ,
+                            'label' => __('filament/widgets/order-chart.total_order_amount'),
+                            'data' => $revenueData->map(fn(TrendValue $value) => number_format($value->aggregate / 10000, 2)),
+                            'borderColor' => '#4e79a7',
+                            'backgroundColor' => 'rgba(78, 121, 167, 0.1)',
+                        ],
+                        [
+                            'label' => __('filament/widgets/order-chart.total_profit_amount'),
+                            'data' => $profitData->map(fn(TrendValue $value) => number_format($value->aggregate / 10000, 2)),
+                            'borderColor' => '#76b7b2',
+                            'backgroundColor' => 'rgba(118, 183, 178, 0.1)',
                         ],
                     ],
-                    'labels' => $data->map(fn (TrendValue $value) => Carbon::parse($value->date)->format('d M ')),
+                    'labels' => $revenueData->map(fn(TrendValue $value) => Carbon::parse($value->date)->format('d M ')),
                 ];
 
-            case ('year') :
-                $data = Trend::query(Order::where('seller_id',CheckFilamentSellerUser::getSellerId()))
+            case 'year':
+                // For year view, use the selected year
+                $revenueData = Trend::query(Order::where('seller_id', $sellerId)->where('status', OrderStatus::Delivered))
                     ->between(
-                        start: now()->startOfYear(),
-                        end: now()->endOfYear(),
+                        start: Carbon::createFromDate($selectedYear, 1, 1)->startOfYear(),
+                        end: Carbon::createFromDate($selectedYear, 12, 31)->endOfYear(),
                     )
                     ->perMonth()
                     ->sum('total_price');
 
+                $profitData = Trend::query(
+                    \App\Models\OrderProduct::whereHas('order', function ($q) use ($sellerId) {
+                        $q->where('seller_id', $sellerId);
+                    })->whereHas('order', function ($q) {
+                        $q->where('status', OrderStatus::Delivered);
+                    })
+                )
+                    ->between(
+                        start: Carbon::createFromDate($selectedYear, 1, 1)->startOfYear(),
+                        end: Carbon::createFromDate($selectedYear, 12, 31)->endOfYear(),
+                    )
+                    ->perMonth()
+                    ->sum('profit');
+
                 return [
                     'datasets' => [
                         [
-                            'label' => 'Total Order Amount',
-                            'data' => $data->map(fn(TrendValue $value)=> number_format($value->aggregate / 1000,2)) ,
+                            'label' => __('filament/widgets/order-chart.total_order_amount'),
+                            'data' => $revenueData->map(fn(TrendValue $value) => number_format($value->aggregate / 10000, 2)),
+                            'borderColor' => '#4e79a7',
+                            'backgroundColor' => 'rgba(78, 121, 167, 0.1)',
+                        ],
+                        [
+                            'label' => __('filament/widgets/order-chart.total_profit_amount'),
+                            'data' => $profitData->map(fn(TrendValue $value) => number_format($value->aggregate / 10000, 2)),
+                            'borderColor' => '#76b7b2',
+                            'backgroundColor' => 'rgba(118, 183, 178, 0.1)',
                         ],
                     ],
-                    'labels' => $data->map(fn (TrendValue $value) => Carbon::parse($value->date)->format('M')),
+                    'labels' => $revenueData->map(fn(TrendValue $value) => Carbon::parse($value->date)->format('M')),
                 ];
 
             default:
-                $data = Trend::query(Order::where('seller_id',CheckFilamentSellerUser::getSellerId()))
+                // For month view (default), use the selected year and month
+                $startDate = $selectedMonth
+                    ? Carbon::createFromDate($selectedYear, $selectedMonth, 1)->startOfMonth()
+                    : Carbon::createFromDate($selectedYear, 1, 1)->startOfMonth();
+                $endDate = $selectedMonth
+                    ? Carbon::createFromDate($selectedYear, $selectedMonth, 1)->endOfMonth()
+                    : Carbon::createFromDate($selectedYear, 12, 31)->endOfMonth();
+
+                $revenueData = Trend::query(Order::where('seller_id', $sellerId)->where('status', OrderStatus::Delivered))
                     ->between(
-                        start: now()->startOfMonth(),
-                        end: now()->endOfMonth(),
+                        start: $startDate,
+                        end: $endDate,
                     )
                     ->perDay()
                     ->sum('total_price');
 
+                $profitData = Trend::query(
+                    \App\Models\OrderProduct::whereHas('order', function ($q) use ($sellerId) {
+                        $q->where('seller_id', $sellerId);
+                    })->whereHas('order', function ($q) {
+                        $q->where('status', OrderStatus::Delivered);
+                    })
+                )
+                    ->between(
+                        start: $startDate,
+                        end: $endDate,
+                    )
+                    ->perDay()
+                    ->sum('profit');
+
                 return [
                     'datasets' => [
                         [
-                            'label' => 'Total Order Amount',
-                            'data' => $data->map(fn(TrendValue $value)=> $value->aggregate / 1000) ,
+                            'label' => __('filament/widgets/order-chart.total_order_amount'),
+                            'data' => $revenueData->map(fn(TrendValue $value) => $value->aggregate / 10000),
+                            'borderColor' => '#4e79a7',
+                            'backgroundColor' => 'rgba(78, 121, 167, 0.1)',
+                        ],
+                        [
+                            'label' => __('filament/widgets/order-chart.total_profit_amount'),
+                            'data' => $profitData->map(fn(TrendValue $value) => $value->aggregate / 10000),
+                            'borderColor' => '#76b7b2',
+                            'backgroundColor' => 'rgba(118, 183, 178, 0.1)',
                         ],
                     ],
-                    'labels' => $data->map(fn (TrendValue $value) => Carbon::parse($value->date)->format('d M')),
+                    'labels' => $revenueData->map(fn(TrendValue $value) => Carbon::parse($value->date)->format('d M')),
                 ];
         }
-
     }
 
-   protected function getOptions(): array|RawJs|null
-   {
-       return RawJs::make(<<<JS
+    protected function getOptions(): array|RawJs|null
+    {
+        return RawJs::make(<<<'JS'
         {
             scales: {
                 y: {
@@ -114,15 +272,15 @@ class OrderChart extends ChartWidget
             },
         }
     JS);
-   }
+    }
 
     protected function getFilters(): ?array
     {
         return [
-            'month' => 'This month',
-            'year' => 'This year',
-            'week' => 'Last week',
-            'today' => 'Today',
+            'month' => __('filament/widgets/order-chart.filters.month'),
+            'year' => __('filament/widgets/order-chart.filters.year'),
+            'week' => __('filament/widgets/order-chart.filters.week'),
+            'all' => __('filament/widgets/order-chart.filters.all'),
         ];
     }
 

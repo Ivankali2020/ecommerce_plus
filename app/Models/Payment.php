@@ -8,11 +8,11 @@ use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\SoftDeletes;
 use Spatie\MediaLibrary\HasMedia;
 use Spatie\MediaLibrary\InteractsWithMedia;
+use Stancl\Tenancy\Database\Concerns\BelongsToTenant;
 
 class Payment extends Model implements HasMedia
 {
-    use HasFactory,SoftDeletes,InteractsWithMedia;
-
+    use HasFactory,InteractsWithMedia,SoftDeletes,BelongsToTenant;
 
     public function registerMediaCollections(): void
     {

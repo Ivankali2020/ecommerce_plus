@@ -1,11 +1,11 @@
 <?php
 
-use App\Models\AttributeValue;
 use App\Models\Brand;
 use App\Models\Category;
 use App\Models\Exchange;
-use App\Models\Review;
 use App\Models\Seller;
+use App\Models\Supplier;
+use App\Models\Tenant;
 use Illuminate\Database\Migrations\Migration;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Support\Facades\Schema;
@@ -21,25 +21,30 @@ return new class extends Migration
             $table->id();
 
             $table->foreignIdFor(Seller::class)->constrained()->cascadeOnDelete()->cascadeOnUpdate();
-            $table->foreignIdFor(Brand::class)->constrained()->cascadeOnDelete()->cascadeOnUpdate();
+            $table->foreignIdFor(Tenant::class)->constrained()->cascadeOnDelete()->cascadeOnUpdate();
+            $table->foreignIdFor(Supplier::class)->nullable()->constrained()->cascadeOnDelete()->cascadeOnUpdate();
+
+            $table->foreignIdFor(Brand::class)->nullable()->constrained()->cascadeOnDelete()->cascadeOnUpdate();
+
             $table->foreignIdFor(Category::class)->constrained()->cascadeOnDelete()->cascadeOnUpdate();
             $table->foreignIdFor(Exchange::class)->constrained()->cascadeOnDelete()->cascadeOnUpdate();
             $table->string('name');
-            $table->mediumText('description');
+            $table->longText('description');
 
             $table->json('attributes')->nullable();
 
-            $table->integer('MOQ')->default(0);
-            $table->string('sku')->nullable()->unique();
+            $table->integer('MOQ')->default(1);
+            $table->string('sku')->nullable();
 
-            $table->decimal('buy_price',15,2)->nullable();
-            $table->decimal('price',15,2)->nullable();
+            $table->decimal('buy_price', 15, 2)->nullable();
+            $table->decimal('price', 15, 2)->nullable();
             $table->integer('quantity')->nullable();
             $table->integer('discount')->default(0)->nullable();
             $table->decimal('discount_price')->default(0)->nullable();
 
-            $table->decimal('mmk_price',15,2)->nullable();
-            $table->decimal('mmk_discount_price',15,2)->default(0)->nullable();
+            $table->decimal('mmk_buy_price', 15, 2)->nullable();
+            $table->decimal('mmk_price', 15, 2)->nullable();
+            $table->decimal('mmk_discount_price', 15, 2)->default(0)->nullable();
 
             $table->boolean('has_variant');
             $table->boolean('is_public');
@@ -52,6 +57,9 @@ return new class extends Migration
 
             $table->softDeletes();
             $table->timestamps();
+
+            // Make SKU unique per tenant
+            $table->unique(['sku', 'tenant_id']);
         });
     }
 

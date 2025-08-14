@@ -13,7 +13,7 @@ class MediaRegisterConversion implements HasMedia
 
     public function __construct($name)
     {
-       $this->name = $name;
+        $this->name = $name;
     }
 
     use InteractsWithMedia;
@@ -29,6 +29,7 @@ class MediaRegisterConversion implements HasMedia
                     'image/svg+xml',
                     'image/webp',
                 ];
+
                 return in_array($file->mimeType, $allowedMimeTypes);
             })
             ->registerMediaConversions(function (Media $media) {

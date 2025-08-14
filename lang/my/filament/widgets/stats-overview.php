@@ -1,0 +1,15 @@
+<?php
+
+return [
+    'unique_products' => 'သင့် ထုတ်ကုန်များ',
+    'pcs' => 'ခု',
+    'total_products' => 'သင့်ထုတ်ကုန် စုစုပေါင်း',
+    'unique_customers' => 'သင့် ဖောက်သည်များ',
+    'persons_all_time' => 'စုစုပေါင်းဖောက်သည်များ',
+    'total_revenue' => 'စုစုပေါင်းဝင်ငွေ',
+    'calculate_by_laks' => 'ကျပ် ',
+    'profit_loss' => 'စုစုပေါင်းအမြတ်ငွေ',
+    'total_amount' => 'စုစုပေါင်းငွေအရင်းပမာဏ',
+    'total_expenses' => 'စုစုပေါင်းအသုံးစရိတ်',
+    'final_profit' => 'နောက်ဆုံးအမြတ်ငွေ',
+];

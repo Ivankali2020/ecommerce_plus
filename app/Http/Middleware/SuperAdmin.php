@@ -16,8 +16,8 @@ class SuperAdmin
      */
     public function handle(Request $request, Closure $next): Response
     {
-        if (Filament::auth()->check()){
-            if (!Filament::auth()->user()->roles()->where('name','super_admin')->exists()){
+        if (Filament::auth()->check()) {
+            if (! Filament::auth()->user()->roles()->where('name', 'super_admin')->exists()) {
                 abort('403');
             }
         }

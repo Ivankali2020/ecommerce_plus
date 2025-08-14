@@ -3,7 +3,6 @@
 namespace Database\Seeders;
 
 use App\Models\Admin;
-use Illuminate\Database\Console\Seeds\WithoutModelEvents;
 use Illuminate\Database\Seeder;
 
 class AdminSeeder extends Seeder
@@ -16,7 +15,5 @@ class AdminSeeder extends Seeder
         Admin::factory()->state([
             'email' => 'admin@gmail.com',
         ])->create();
-
-        Admin::factory(3)->create();
     }
 }

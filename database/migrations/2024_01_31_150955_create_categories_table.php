@@ -1,6 +1,7 @@
 <?php
 
 use App\Models\Seller;
+use App\Models\Tenant;
 use Illuminate\Database\Migrations\Migration;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Support\Facades\Schema;
@@ -15,7 +16,8 @@ return new class extends Migration
         Schema::create('categories', function (Blueprint $table) {
             $table->id();
             $table->foreignIdFor(Seller::class)->constrained()->cascadeOnDelete()->cascadeOnUpdate();
-            $table->foreignId('parent_id')->nullable()->constrained('categories','id')->cascadeOnUpdate()->cascadeOnDelete();
+            $table->foreignIdFor(Tenant::class)->constrained()->cascadeOnDelete()->cascadeOnUpdate();
+            $table->foreignId('parent_id')->nullable()->constrained('categories', 'id')->cascadeOnUpdate()->cascadeOnDelete();
             $table->mediumText('description')->nullable();
             $table->string('name');
             $table->boolean('is_sub_category')->default(false);

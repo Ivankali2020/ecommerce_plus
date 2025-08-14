@@ -30,7 +30,6 @@ class ProductResource extends JsonResource
             // 'sku' => $this->sku,
             // 'quantity' => $this->quantity,
 
-
             // //TODO::odot
             // 'attributes' => $this->attributes,
             // 'variants' => $this->variants,
@@ -40,13 +39,13 @@ class ProductResource extends JsonResource
         ];
     }
 
-
     private function getImages(): array
     {
         $imageList = [];
         foreach ($this->getMedia('images') as $item) {
             $imageList[] = $item->getUrl();
         }
+
         return $imageList;
     }
 
@@ -56,6 +55,7 @@ class ProductResource extends JsonResource
         foreach ($this->getMedia('images') as $item) {
             $imageList[] = $item->getUrl('thumb');
         }
+
         return $imageList;
     }
 }

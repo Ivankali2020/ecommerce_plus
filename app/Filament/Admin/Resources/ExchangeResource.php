@@ -3,7 +3,6 @@
 namespace App\Filament\Admin\Resources;
 
 use App\Filament\Admin\Resources\ExchangeResource\Pages;
-use App\Filament\Admin\Resources\ExchangeResource\RelationManagers;
 use App\Models\Exchange;
 use Filament\Facades\Filament;
 use Filament\Forms;
@@ -19,9 +18,24 @@ class ExchangeResource extends Resource
 {
     protected static ?string $model = Exchange::class;
 
-//    protected static ?string $navigationIcon = 'heroicon-o-rectangle-stack';
+    //    protected static ?string $navigationIcon = 'heroicon-o-rectangle-stack';
 
     protected static ?string $navigationGroup = 'Money Section';
+
+    public static function getNavigationLabel(): string
+    {
+        return __('filament/resources/exchange-resource.navigation.label');
+    }
+
+    public static function getModelLabel(): string
+    {
+        return __('filament/resources/exchange-resource.model.label');
+    }
+
+    public static function getPluralModelLabel(): string
+    {
+        return __('filament/resources/exchange-resource.model.label');
+    }
 
     public static function form(Form $form): Form
     {
@@ -30,25 +44,28 @@ class ExchangeResource extends Resource
                 Forms\Components\Group::make()->schema([
                     Forms\Components\Section::make()->schema([
                         Forms\Components\Select::make('seller_id')
-                            ->required()->relationship('seller','name')
+                            ->required()->relationship('seller', 'name')
+                            ->label(__('filament/resources/exchange-resource.form.seller_id.label'))
                             ->hidden(Filament::getAuthGuard() == 'seller')
                             ->searchable()->preload(),
 
                         Forms\Components\Select::make('currency_id')
-                            ->required()->relationship('currency','name')
-                            ->unique(table: 'exchanges',column: 'currency_id',ignoreRecord: true,
-                                modifyRuleUsing: function (Unique $rule,Forms\Get $get){
-                                    return $rule->where('seller_id',$get('seller_id')??Filament::auth()->id())
-                                        ->where('currency_id',$get('currency_id'));
+                            ->required()->relationship('currency', 'name')
+                            ->label(__('filament/resources/exchange-resource.form.currency_id.label'))
+                            ->unique(table: 'exchanges', column: 'currency_id', ignoreRecord: true,
+                                modifyRuleUsing: function (Unique $rule, Forms\Get $get) {
+                                    return $rule->where('seller_id', $get('seller_id') ?? Filament::auth()->id())
+                                        ->where('currency_id', $get('currency_id'));
                                 })
                             ->searchable()->preload(),
 
                         Forms\Components\TextInput::make('rate')
-                            ->helperText('Calculate based on 1 USD')
+                            ->label(__('filament/resources/exchange-resource.form.rate.label'))
+                            ->helperText(__('filament/resources/exchange-resource.form.rate.helper'))
                             ->required()
                             ->numeric(),
-                    ])->columns(2)
-                ])
+                    ])->columns(2),
+                ]),
             ]);
     }
 
@@ -57,14 +74,19 @@ class ExchangeResource extends Resource
         return $table
             ->columns([
                 Tables\Columns\TextColumn::make('seller.name')
+                    ->label(__('filament/resources/exchange-resource.table.seller_name'))
                     ->hidden(Filament::getAuthGuard() == 'seller')
                     ->numeric()
                     ->sortable(),
                 Tables\Columns\TextColumn::make('currency.code')
-                    ->description(fn(Exchange $exchange)=>$exchange->currency->name)
+                    ->label(__('filament/resources/exchange-resource.table.currency_code'))
+                    ->description(fn (Exchange $exchange) => $exchange->currency->name)
                     ->sortable(),
                 Tables\Columns\TextColumn::make('rate')
-                    ->prefix(fn(Exchange $exchange)=> $exchange->currency->symbol_native ." ")
+                    ->label(__('filament/resources/exchange-resource.table.rate'))
+                    ->prefix(fn (Exchange $exchange) => $exchange->currency->symbol_native.' ')
+                    ->description(__('filament/resources/exchange-resource.table.rate_description'))
+                    ->prefix(fn (Exchange $exchange) => $exchange->currency->symbol_native.' ')
                     ->description('calculate base on 1 USD')
                     ->sortable(),
                 Tables\Columns\TextColumn::make('created_at')

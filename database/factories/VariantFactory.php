@@ -21,14 +21,14 @@ class VariantFactory extends Factory
     {
         return [
             'name' => fake()->name,
-            'MOQ' => random_int(1,10),
+            'MOQ' => random_int(1, 10),
             'sku' => Str::upper(uniqid()),
-            'price' => random_int(0,100),
-            'quantity' => random_int(10,100),
-            'discount' => random_int(0,50),
-            'discount_price' => random_int(10,5500),
+            'price' => random_int(0, 100),
+            'quantity' => random_int(10, 100),
+            'discount' => random_int(0, 50),
+            'discount_price' => random_int(10, 5500),
             'attributes' => [
-                ['attribute_id' => Attribute::get()->random()->id, 'attribute_value_id' => AttributeValue::get()->random()->id,]
+                ['attribute_id' => Attribute::get()->random()->id, 'attribute_value_id' => AttributeValue::get()->random()->id],
             ],
         ];
     }

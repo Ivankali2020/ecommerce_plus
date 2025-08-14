@@ -16,9 +16,10 @@ class BrandFactory extends Factory
      */
     public function definition(): array
     {
-        $data = ['Nike','Adidas','Purma','Apple','Sansumg','Huwai',''];
+        $data = ['Nike', 'Adidas', 'Purma', 'Apple', 'Sansumg', 'Huwai', ''];
+
         return [
-            'name' => $data[random_int(0,count($data)-1)]
+            'name' => $data[random_int(0, count($data) - 1)],
         ];
     }
 }

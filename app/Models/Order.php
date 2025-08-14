@@ -9,15 +9,16 @@ use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\SoftDeletes;
 use Spatie\MediaLibrary\HasMedia;
 use Spatie\MediaLibrary\InteractsWithMedia;
+use Stancl\Tenancy\Database\Concerns\BelongsToTenant;
 
 class Order extends Model implements HasMedia
 {
-    use HasFactory, InteractsWithMedia, SoftDeletes;
+    use HasFactory, InteractsWithMedia, SoftDeletes, BelongsToTenant;
 
-    protected $with = ['products','address','user'];
+    protected $with = ['products', 'address', 'user'];
 
     protected $casts = [
-        'status' => OrderStatus::class
+        'status' => OrderStatus::class,
     ];
 
     public function registerMediaCollections(): void
@@ -45,9 +46,20 @@ class Order extends Model implements HasMedia
         return $this->belongsTo(Payment::class)->withTrashed();
     }
 
+    public function paymentAccount()
+    {
+        return $this->belongsTo(PaymentAccount::class)->withTrashed();
+    }
+
     public function products()
     {
         return $this->hasMany(OrderProduct::class);
+    }
+
+    public function pointTransactions()
+    {
+        return $this->hasMany(PointTransaction::class, 'reference_id')
+            ->where('reference_type', 'order');
     }
 
     public function scopeGetOnlyConfirm($q)

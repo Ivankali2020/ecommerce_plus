@@ -17,29 +17,30 @@ class CategoryFactory extends Factory
     public function definition(): array
     {
         $data = [
-            "smartphones",
-            "laptops",
-            "fragrances",
-            "skincare",
-            "groceries",
-            "home-decoration",
-            "furniture",
-            "tops",
-            "womens-dresses",
-            "womens-shoes",
-            "mens-shirts",
-            "mens-shoes",
-            "mens-watches",
-            "womens-watches",
-            "womens-bags",
-            "womens-jewellery",
-            "sunglasses",
-            "automotive",
-            "motorcycle",
-            "lighting"
+            'smartphones',
+            'laptops',
+            'fragrances',
+            'skincare',
+            'groceries',
+            'home-decoration',
+            'furniture',
+            'tops',
+            'womens-dresses',
+            'womens-shoes',
+            'mens-shirts',
+            'mens-shoes',
+            'mens-watches',
+            'womens-watches',
+            'womens-bags',
+            'womens-jewellery',
+            'sunglasses',
+            'automotive',
+            'motorcycle',
+            'lighting',
         ];
+
         return [
-            'name' => $data[random_int(0,count($data)-1)],
+            'name' => $data[random_int(0, count($data) - 1)],
             'description' => fake()->paragraph(),
         ];
     }

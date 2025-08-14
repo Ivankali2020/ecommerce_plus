@@ -2,8 +2,8 @@
 
 namespace App\Providers\Filament;
 
-use App\Http\Middleware\AssignGlobeScope;
 use App\Http\Middleware\SuperAdmin;
+use App\Http\Middleware\CentralDomainOnly;
 use BezhanSalleh\FilamentShield\FilamentShieldPlugin;
 use Filament\Http\Middleware\Authenticate;
 use Filament\Http\Middleware\DisableBladeIconComponents;
@@ -27,15 +27,15 @@ class AdminPanelProvider extends PanelProvider
     {
         return $panel
             ->id('admin')
-            ->path('admin')
+            ->path('oh_my_admin')
             ->colors([
                 'primary' => Color::Orange,
-                'gray' => Color::Slate
+                'gray' => Color::Slate,
             ])
             ->default()
             ->login()
             ->profile()
-            //            ->topNavigation()
+
             ->authGuard('admin')
             ->discoverResources(in: app_path('Filament/Admin/Resources'), for: 'App\\Filament\\Admin\\Resources')
             ->discoverPages(in: app_path('Filament/Admin/Pages'), for: 'App\\Filament\\Admin\\Pages')
@@ -47,11 +47,12 @@ class AdminPanelProvider extends PanelProvider
                 Widgets\AccountWidget::class,
                 Widgets\FilamentInfoWidget::class,
             ])
-            ->brandName('IT PLUS')
+            ->brandName('IVAN')
             ->sidebarCollapsibleOnDesktop()
             ->sidebarWidth('18rem')
             //            ->maxContentWidth('xxl')
             ->middleware([
+                CentralDomainOnly::class,
                 EncryptCookies::class,
                 AddQueuedCookiesToResponse::class,
                 StartSession::class,
@@ -61,10 +62,10 @@ class AdminPanelProvider extends PanelProvider
                 SubstituteBindings::class,
                 DisableBladeIconComponents::class,
                 DispatchServingFilamentEvent::class,
-                SuperAdmin::class
+                // SuperAdmin::class
             ])
             ->plugins([
-                FilamentShieldPlugin::make()
+                FilamentShieldPlugin::make(),
             ])
             ->authMiddleware([
                 Authenticate::class,

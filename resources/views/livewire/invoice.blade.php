@@ -1,24 +1,26 @@
-<div class=" rounded-lg" >
-    <div id="invoice_id">
+
+<div class=" rounded-lg" x-data="{ isSmall: false }" >
+    <div id="invoice_id" x-show="!isSmall"  class="" >
         <div class="mx-auto  max-w-2xl above_margin" >
-            <div class="flex items-center justify-between mb-6">
-                <div class="flex items-center">
-                    <img class="h-16 w-16 mr-2" src="https://camo.githubusercontent.com/044c0d1693b12131f1de3d29d8e93ba5df8b4cf94bc1da39c3454ac711d1602c/68747470733a2f2f6d656469612e67697068792e636f6d2f6d656469612f456b73443167776545456447772f67697068792e676966"
-                         alt="Logo" />
-                    {{--            <div class="dark:text-slat-100 font-semibold text-lg">LOGO </div>--}}
+            <div class="flex items-center justify-between mb-8">
+                <div class="flex items-center gap-4 ">
+
+                    @if($record->seller->getFirstMediaUrl('logos'))
+                    <img class="h-16 w-16 mr-2 rounded-full mb-4 " src="{{ $record->seller->getFirstMediaUrl('logos') }}" alt="{{ $record->seller->name}}" />
+                    @endif
+                    <div class="dark:text-slat-100 header_invoice">
+                        <div class="dark:text-slat-100 font-bold text-lg"> {{ $record->seller->name}} </div>
+                        <div class=" header_invoice"> {{ $record->seller?->phone }}</div>
+                        <div class="text-sm header_invoice mb-2"> {{ $record->seller?->email }}</div>
+                    </div>
                 </div>
                 <div class="dark:text-slat-100 header_invoice" id="">
-                    <div class="font-bold text-xl mb-2 header_invoice">INVOICE</div>
-                    <div class="text-sm header_invoice">Date: {{ $record->created_at->format('d M, Y H:i A') }}</div>
-                    <div class="text-sm header_invoice">Invoice #: {{ $record->invoice_number }}</div>
+                    <div class="font-bold text-xl mb-4 header_invoice">INVOICE</div>
+                    <div class="text-sm header_invoice mb-2">Date: {{ $record->created_at->format('d M, Y H:i A') }}</div>
+                    <div class="text-sm header_invoice mb-2">Invoice #: {{ $record->invoice_number }}</div>
                 </div>
             </div>
-            <div class="border-b-2  border-gray-300 pb-8 mb-8 ">
-                <h2 class="text-2xl font-bold mb-4 header_invoice">Bill To:</h2>
-                <div class="dark:text-slat-100 text-sm header_invoice mb-2"> Name : {{ $record->user->name }}</div>
-                <div class="dark:text-slat-100 text-sm header_invoice mb-2"> Address : {{ $record->address->modAddress }}</div>
-                <div class="dark:text-slat-100 text-sm header_invoice"> Phone : {{ $record->user->phone }}</div>
-            </div>
+
             <table class="w-full text-left mb-8 mt-2 text-sm ">
                 <thead>
                 <tr>
@@ -60,31 +62,182 @@
                 <tr >
                     <td colspan="3" class="py-2 text-right px-6 font-bold   dark:text-slat-100"></td>
                     <td colspan="2" class="py-2 text-left  font-bold   dark:text-slat-100">Grand Total:</td>
-                    <td  class="py-2 dark:text-slat-100 text-right text-xl font-bold header_invoice"> <span class=" header_invoice">{{ $record->payment->currency->symbol_native }}</span> {{ $record->total_price }}</td>
+                    <td  class="py-2 dark:text-slat-100 text-right text-xl font-bold header_invoice"> <span class=" header_invoice">ကျပ်</span> {{ $record->total_price }}</td>
                 </tr>
                 </tbody>
             </table>
         </div>
 
+        @if($record->user)
+        <div class="border-b-2  border-gray-300 py-8 ">
+            <h2 class="text-2xl font-bold mb-4 header_invoice">Bill To:</h2>
+            <div class="dark:text-slat-100 text-sm header_invoice mb-2"> Name : {{ $record->user?->name }}</div>
+            <div class="dark:text-slat-100 text-sm header_invoice mb-2"> Address : {{ $record->address?->modAddress }}</div>
+            <div class="dark:text-slat-100 text-sm header_invoice"> Phone : {{ $record->user?->phone }}</div>
+        </div>
+        @endif
 
+        @if($record->seller->addresses)
+        <div class=" border-gray-300 pb-8  mt-2">
+            <h2 class=" font-bold mb-2 header_invoice">Seller Address:</h2>
+            @forelse ($record->seller->addresses as $index=>$address)
+            <div class="mb-2 text-xs">
+                <p class=" text-xs">{{ $address->address }}</p>
+            </div>
+         @empty
+
+         @endforelse
+        </div>
+        @endif
 
     </div>
 
-    <div class="mt-4 " x-data="counter">
-        <x-filament::button @click="printDoc">
+    <div id="small" class=" rounded-lg " x-show="isSmall" style="font-size: 12px !important" >
+        <div id="invoice" class="m-5 shadow-sm mx-auto p-3 rounded  lg:m-10"  style="max-width: 320px;">
+            <div class="mx-auto p-sm-2 w-md " >
+
+                <div class="flex justify-between items-center">
+                    <div class="flex items-center">
+                        @if($record->seller->getFirstMediaUrl('logos'))
+                         <img class="h-16 w-16 mr-2 rounded-full mb-4 " src="{{ $record->seller->getFirstMediaUrl('logos') }}" alt="{{ $record->seller->name}}" />
+                        @endif
+                    </div>
+                    <div class="mb-6">
+                        {{-- <div  class="font-bold text-sm text-end my-5 header_invoice">ပြေစာအမှတ်</div> --}}
+                        <div class=" header_invoice flex justify-end  " id="" >
+
+                            <table class="mb-2 ">
+                                <tr>
+                                    <td class="pb-2 px-1 text-start ">ရက်စွဲ</td>
+                                    <td class="pb-2 px-4  text-start "> : </td>
+                                    <td class="pb-2 text-end ">
+                                        {{ $record->created_at->format('d M Y') }}
+                                    </td>
+                                </tr>
+                                <tr class="mt-2">
+                                    <td class="pb-2 px-1 text-start ">အမှတ်စဉ်</td>
+                                    <td class="pb-2 px-4  text-start ">: </td>
+                                    <td class="pb-2 text-end ">{{ $record->invoice_number }}</td>
+                                </tr>
+                            </table>
+                        </div>
+                    </div>
+                </div>
+
+                <table class="w-full    text-left mb-8 mt-6  ">
+                    <thead >
+                        <tr>
+                            <th class=" header_invoice  pb-3">Name</th>
+                            <th class=" header_invoice print:hidden pb-3 text-right ">Qty</th>
+                            <th class=" header_invoice  pb-3 text-right ">Price</th>
+                            <th class=" header_invoice  pb-3 text-right ">Total</th>
+                        </tr>
+                    </thead>
+                    <tbody class="">
+                    @foreach($record->products as $detail)
+                        <tr class="">
+                            <td class="pb-3 text-xs  header_invoice" style="line-height: 1.3rem">{{ $detail->product->name }}</td>
+                            <td class="pb-3 text-right ">{{ $detail->quantity }}</td>
+                            <td class="pb-3 text-right ">
+                                @if($detail->discount > 0)
+                                <sup style="font-size:8px">{{ number_format($detail->discount,0) }} %</sup> <span>  {{ number_format($detail->discount_price,0) }}</span> 
+                                @else
+                                    {{ number_format($detail->price,0) }}
+                                @endif
+                            </td>
+                            <td class="pb-3  text-right "> {{ number_format($detail->sub_price,0) }}</td>
+                        </tr>
+                    @endforeach
+
+                    <tr class="">
+                        {{-- <td colspan="1" class="pb-3 text-right px-6 font-bold   "></td> --}}
+                        <td colspan="3" class="pb-3 text-right">Sub Total:</td>
+                        <td  class="pb-3  text-right header_invoice font-bold ">{{ $record->sub_total }} </td>
+                    </tr>
+
+                    <tr >
+                        {{-- <td colspan="1" class="pb-3 text-right px-6 font-bold   "></td> --}}
+                        <td colspan="3" class="pb-3 text-right  text-nowrap ">Tax Fees ({{ number_format($record->tax ,0)}} %):</td>
+                        <td  class="pb-3  text-right header_invoice font-bold   ">{{ $record->tax_price ?? 0 }} </td>
+                    </tr>
+                    <tr >
+                        {{-- <td colspan="1" class="pb-3 text-right px-6 font-bold   "></td> --}}
+                        <td colspan="3" class="pb-3 text-right    "> Delivery Fees:</td>
+                        <td  class="pb-3  text-right header_invoice font-bold   ">{{ $record->delivery_fees ?? 0 }} </td>
+                    </tr>
+                    <tr >
+                        {{-- <td colspan="1" class="pb-3 text-right px-6 font-bold   "></td> --}}
+                        <td colspan="3" class="pb-3 text-right    ">Grand Total:</td>
+                        <td  class="pb-3  text-right  font-bold header_invoice"> ကျပ် <span class=" header_invoice">{{ number_format($record->total_price,0) }} </span> </td>
+                    </tr>
+                    </tbody>
+                </table>
+
+                @if($record->user)
+                <div class=" border-gray-300 pb-8 mb-8 mt-2 ">
+                    <table class="w-full " >
+                        <tr>
+                            <td class="px-1 pb-2 text-light  ">နာမည်</td>
+                            <td class="px-1 pb-2 ">:</td>
+                            <td class="px-1 pb-2 ">{{ $record->user?->name }}</td>
+                        </tr>
+                        <tr>
+                            <td class="px-1 pb-2 text-light  ">လိပ်စာ</td>
+                            <td class="px-1 pb-2 ">:</td>
+                            <td class="px-1 pb-2 ">{{ $record->user?->address }}</td>
+                        </tr>
+                        <tr>
+                            <td class="px-1 pb-2 text-light  ">ဖုန်း</td>
+                            <td class="px-1 pb-2 ">:</td>
+                            <td class="px-1 pb-2 ">{{ $record->user?->phone }}</td>
+                        </tr>
+
+                    </table>
+                </div>
+                @endif
+
+                @if($record->seller->addresses->count() > 0)
+                <div class=" border-gray-300 pb-8  mt-2">
+                    <h2 class=" font-bold mb-2 header_invoice">Seller Address:</h2>
+                    @forelse ($record->seller->addresses as $index=>$address)
+                    <div class="mb-2 text-xs">
+                        <p class=" text-xs">{{ $address->address }}</p>
+                    </div>
+                 @empty
+
+                 @endforelse
+                </div>
+                @endif
+
+            </div>
+
+        </div>
+    </div>
+
+    <div class="mt-2 pt-4    " x-data="counter">
+        <x-filament::button  @click="isSmall ? printDoc('small') : printDoc('invoice_id')">
             Print Invoice
+        </x-filament::button>
+
+        <x-filament::button @click="isSmall = !isSmall">
+            <span x-text="isSmall ? 'Show Large Invoice' : 'Show Small Invoice'"></span>
+        </x-filament::button>
+
+        <x-filament::button color="warning" outlined @click="isSmall ? saveImage('invoice') : saveImage('invoice_id')">
+            Save
         </x-filament::button>
     </div>
 
 </div>
-
+@assets
+<script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
+@endassets
 @script
 <script>
     Alpine.data('counter', () => {
         return {
-            printDoc() {
-                var prtContent = document.getElementById("invoice_id");
-
+            printDoc(id) {
+                var prtContent = document.getElementById(id);
                 var WinPrint = window.open('', '', 'left=0,top=0,width=800,height=900,toolbar=0,scrollbars=0,status=0');
 
                 WinPrint.document.write(
@@ -105,7 +258,48 @@
                 },300)
 
             },
+            saveImage(id){
+                const invoiceElement = document.getElementById(id);
+                    if(id == 'invoice_id'){
+                        invoiceElement.classList.add('p-4')
+                    }
+                    // Use html2canvas to capture the invoice element
+                    html2canvas(invoiceElement,{scale : 3}).then(canvas => {
+                        // Convert canvas to image
+                        const imageData = canvas.toDataURL('image/png');
+
+                        // Create a link element for download
+                        const downloadLink = document.createElement('a');
+                        downloadLink.href = imageData;
+                        downloadLink.download = 'purchase.png'; // Specify the name of the downloaded file
+
+                        // Trigger the download
+                        downloadLink.click();
+                    });
+            }
         }
     })
+
+    document.addEventListener('livewire:initialized', () => {
+        document.getElementById('button').onclick = saveImage;
+        function saveImage(){
+            const invoiceElement = document.getElementById('invoice_id');
+
+            // Use html2canvas to capture the invoice element
+            html2canvas(invoiceElement).then(canvas => {
+                // Convert canvas to image
+                const imageData = canvas.toDataURL('image/png');
+
+                // Create a link element for download
+                const downloadLink = document.createElement('a');
+                downloadLink.href = imageData;
+                downloadLink.download = 'purchase.png'; // Specify the name of the downloaded file
+
+                // Trigger the download
+                downloadLink.click();
+            });
+        }
+    })
+
 </script>
 @endscript

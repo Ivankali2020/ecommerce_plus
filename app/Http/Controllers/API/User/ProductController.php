@@ -6,7 +6,6 @@ use App\Http\Controllers\Controller;
 use App\Http\Resources\BrandResource;
 use App\Http\Resources\CategoryResource;
 use App\Http\Resources\ProductResource;
-use App\Models\Seller;
 use App\Services\ProductService;
 use App\Traits\ResponseTraits;
 use Illuminate\Http\Request;
@@ -16,7 +15,7 @@ class ProductController extends Controller
     use ResponseTraits;
 
     /**
-     * @var UserAuthService $userAuthService
+     * @var UserAuthService
      */
     private ProductService $productService;
 
@@ -25,16 +24,17 @@ class ProductController extends Controller
         $this->productService = $productService;
     }
 
-
     public function getBrands($sellerId)
     {
         $brands = $this->productService->getBrands($sellerId);
+
         return $this->success('Get brands successful', BrandResource::collection($brands));
     }
 
     public function getCategories($sellerId)
     {
         $categories = $this->productService->getCategories($sellerId);
+
         return $this->success('Get categories successful', CategoryResource::collection($categories));
     }
 
@@ -51,12 +51,14 @@ class ProductController extends Controller
                 'per_page' => $products->perPage(),
             ],
         ];
+
         return $this->success('Get products successful', $data);
     }
 
     public function getProductDetail($sellerId, $productId)
     {
         $product = $this->productService->getProductDetail($sellerId, $productId);
+
         return $this->success('Get product successful', new ProductResource($product));
     }
 }

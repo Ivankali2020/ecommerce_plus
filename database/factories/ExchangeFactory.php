@@ -19,7 +19,7 @@ class ExchangeFactory extends Factory
     {
         return [
             'currency_id' => Currency::get()->random()->id,
-            'rate' => random_int(10,1000),
+            'rate' => random_int(10, 1000),
         ];
     }
 }

@@ -3,13 +3,10 @@
 namespace App\Filament\Seller\Resources;
 
 use App\Filament\Seller\Resources\DeliveryResource\Pages;
-use App\Filament\Seller\Resources\DeliveryResource\RelationManagers;
 use App\Models\Delivery;
 use Filament\Facades\Filament;
-use Filament\Forms;
 use Filament\Forms\Form;
 use Filament\Resources\Resource;
-use Filament\Tables;
 use Filament\Tables\Table;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\SoftDeletingScope;
@@ -18,9 +15,26 @@ class DeliveryResource extends Resource
 {
     protected static ?string $model = Delivery::class;
 
-//    protected static ?string $navigationIcon = 'heroicon-o-rectangle-stack';
+    // protected static ?string $navigationGroup = 'Payment Section';
+    public static function getNavigationGroup(): string
+    {
+        return __('filament/resources/payment-resource.navigation.group');
+    }
 
-    protected static ?string $navigationGroup = 'Order Section';
+    public static function getModelLabel(): string
+    {
+        return __('filament/resources/delivery-resource.model.label');
+    }
+
+    public static function getPluralModelLabel(): string
+    {
+        return __('filament/resources/delivery-resource.model.plural_label');
+    }
+
+    // public static function getNavigationGroup(): ?string
+    // {
+    //     return __("filament/resources/delivery-resource.navigation.group");
+    // }
 
     public static function form(Form $form): Form
     {
@@ -51,7 +65,7 @@ class DeliveryResource extends Resource
     public static function getEloquentQuery(): Builder
     {
         return parent::getEloquentQuery()
-            ->where('seller_id',Filament::auth()->id())
+            ->where('seller_id', Filament::auth()->id())
             ->withoutGlobalScopes([
                 SoftDeletingScope::class,
             ]);

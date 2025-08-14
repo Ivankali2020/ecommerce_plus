@@ -1,7 +1,8 @@
 <?php
 
 use App\Models\Product;
-use App\Models\Region;
+use App\Models\Seller;
+use App\Models\Tenant;
 use App\Models\User;
 use App\Models\Variant;
 use Illuminate\Database\Migrations\Migration;
@@ -17,9 +18,13 @@ return new class extends Migration
     {
         Schema::create('carts', function (Blueprint $table) {
             $table->id();
+            $table->foreignIdFor(Seller::class)->constrained()->cascadeOnUpdate()->cascadeOnDelete();
+            $table->foreignIdFor(Tenant::class)->constrained()->cascadeOnUpdate()->cascadeOnDelete();
             $table->foreignIdFor(User::class)->constrained()->cascadeOnUpdate()->cascadeOnDelete();
             $table->foreignIdFor(Product::class)->constrained()->cascadeOnUpdate()->cascadeOnDelete();
-            $table->foreignIdFor(Variant::class)->constrained()->cascadeOnUpdate()->cascadeOnDelete();
+            $table->foreignIdFor(Variant::class)->nullable()->constrained()->cascadeOnUpdate()->cascadeOnDelete();
+            $table->decimal('price', 18, 2);
+            $table->decimal('total', 18, 2);
             $table->bigInteger('quantity');
             $table->timestamps();
         });
@@ -30,6 +35,8 @@ return new class extends Migration
      */
     public function down(): void
     {
+        Schema::disableForeignKeyConstraints();
         Schema::dropIfExists('carts');
+        Schema::enableForeignKeyConstraints();
     }
 };

@@ -1,0 +1,128 @@
+<?php
+
+namespace App\Traits;
+
+use App\Models\Cart;
+use App\Models\Product as ProductModel;
+use Filament\Notifications\Notification;
+use Illuminate\Support\Facades\Auth;
+
+trait WithCart
+{
+    public function addToCart($productId, $variantId = null, $quantity = 1)
+    {
+        try {
+            if (! Auth::check()) {
+                return redirect()->route('login');
+            }
+
+            $product = ProductModel::where('id', $productId)
+                ->with(['variants'])
+                ->first();
+
+            $variant = $variantId
+                ? $product->variants->find($variantId)
+                : ($product->has_variant ? $product->variants->first() : null);
+
+            $price = $variant
+                ? ($variant->discount > 0 ? $variant->mmk_discount_price : $variant->mmk_price)
+                : ($product->discount > 0 ? $product->mmk_discount_price : $product->mmk_price);
+
+            // Check existing cart item
+            $existingCart = Cart::where([
+                'user_id' => Auth::id(),
+                'product_id' => $productId,
+                'variant_id' => $variant?->id,
+                'tenant_id' => $product->tenant_id
+            ])->first();
+
+            $newQuantity = $existingCart ? $existingCart->quantity + 1 : $quantity;
+
+            $this->dispatch('cartUpdated');
+            // Check MOQ
+            if ($newQuantity < ($variant?->MOQ ?? $product->MOQ)) {
+                Notification::make()
+                    ->title(__('messages.cart.min_order_not_met'))
+                    ->body(__('messages.cart.min_order_quantity', ['quantity' => $product->MOQ]))
+                    ->warning()
+                    ->send();
+
+                return;
+            }
+            // Check stock
+            if ($newQuantity > ($variant?->quantity ?? $product->quantity)) {
+                Notification::make()
+                    ->title(__('messages.cart.out_of_stock'))
+                    ->body(__('messages.cart.limited_stock', ['quantity' => $product->quantity]))
+                    ->warning()
+                    ->send();
+
+                return;
+            }
+
+            // Update or create cart item
+            Cart::updateOrCreate(
+                [
+                    'seller_id' => $product->seller_id,
+                    'tenant_id' => $product->tenant_id,
+                    'user_id' => Auth::id(),
+                    'product_id' => $productId,
+                    'price' => $price,
+                    'variant_id' => $variant?->id,
+                ],
+                [
+                    'quantity' => $newQuantity,
+                    'price' => $price,
+                    'total' => $newQuantity * $price,
+                ]
+            );
+
+            $this->dispatch('cart-updated');
+
+            if ($existingCart) {
+                Notification::make()
+                    ->title(__('messages.cart.quantity_updated'))
+                    ->success()->duration(500)
+                    ->send();
+            } else {
+                Notification::make()
+                    ->title(__('messages.cart.product_added'))
+                    ->success()
+                    ->duration(500)->send();
+            }
+        } catch (\Exception $e) {
+            logger()->error('Error adding to cart: ' . $e->getMessage());
+
+            Notification::make()
+                ->title('Failed to add product to cart')
+                ->body($e->getMessage())
+                ->danger()
+                ->duration(500)->send();
+        }
+    }
+
+    public function addVariantToCart($variantId, $quantity = 1)
+    {
+        try {
+            $variant = \App\Models\Variant::with('product')->find($variantId);
+
+            if (!$variant) {
+                Notification::make()
+                    ->title('Variant not found')
+                    ->danger()
+                    ->send();
+                return;
+            }
+
+            return $this->addToCart($variant->product_id, $variantId, $quantity);
+        } catch (\Exception $e) {
+            logger()->error('Error adding variant to cart: ' . $e->getMessage());
+
+            Notification::make()
+                ->title('Failed to add variant to cart')
+                ->body($e->getMessage())
+                ->danger()
+                ->duration(500)->send();
+        }
+    }
+}

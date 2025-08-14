@@ -13,38 +13,48 @@ class OrderProductObserver
      */
     public function creating(OrderProduct $orderProduct): void
     {
-        if ($orderProduct->getOriginal('quantity') == null ){
-            $product = Product::where('id',$orderProduct->product_id)->first();
-            if ($product->has_variant){
-                $variant = Variant::where('id',$orderProduct->variant_id)->first();
-                $variant->decrement('quantity',$orderProduct->quantity);
-            }else{
-                $product->decrement('quantity',$orderProduct->quantity);
-            }
-        }
+        $product = $orderProduct->product;
+        // if ($orderProduct->getOriginal('quantity') == null ){
+        //
+        // if ($product->has_variant){
+        //     $variant = Variant::where('id',$orderProduct->variant_id)->first();
+        //     $variant->decrement('quantity',$orderProduct->quantity);
+        // }else{
+        //     $product->decrement('quantity',$orderProduct->quantity);
+        //     logger('logger from order product observer '.$product->quantity);
+        // }
+        // }
+        // $product->decrement('quantity',$orderProduct->quantity);
+        $orderProduct->profit = $orderProduct->discount_price > 0 ?
+                                    ($orderProduct->discount_price * $orderProduct->quantity) - ($orderProduct->original_buy_price * $orderProduct->quantity) :
+                                    ($orderProduct->original_price * $orderProduct->quantity) - ($orderProduct->original_buy_price * $orderProduct->quantity);
 
     }
 
-    /**
-     * Handle the OrderProduct "updated" event.
-     */
-    public function saving(OrderProduct $orderProduct): void
+    public function created(OrderProduct $orderProduct): void
     {
-        //add original price and currency
-//        $orderProduct->original_price = $orderProduct->price;
-//        $orderProduct->original_discount_price = $orderProduct->discount_price;
-//        $orderProduct->exchange_rate = $orderProduct->product->exchange->rate;
-//        $orderProduct->currency_id = $orderProduct->product->exchange->currency_id;
-//        $orderProduct->update();
-
+        $product = $orderProduct->product;
+        if ($product->has_variant) {
+            $variant = Variant::where('id', $orderProduct->variant_id)->first();
+            $variant->preventObserver = true;
+            $variant->decrement('quantity', $orderProduct->quantity);
+            $variant->preventObserver = false;
+        } else {
+            // Set the preventObserver flag to true before decrementing
+            $product->preventObserver = true;
+            $product->decrement('quantity', $orderProduct->quantity);
+            // Reset the flag after operation
+            $product->preventObserver = false;
+        }
     }
 
     public function updated(OrderProduct $orderProduct)
     {
-        if ($orderProduct->getOriginal('quantity') != $orderProduct->quantity && $orderProduct->getOriginal('product_id') == $orderProduct->product_id) {
+
+        if ($orderProduct->isDirty('quantity') && $orderProduct->getOriginal('quantity') != $orderProduct->quantity) { // && $orderProduct->getOriginal('product_id') == $orderProduct->product_id
             $product = Product::where('id', $orderProduct->product_id)->first();
             if ($orderProduct->getOriginal('quantity') > $orderProduct->quantity) {
-                //if reduce quantity we will increment the original quantity
+                // if reduce quantity we will increment the original quantity
                 $incrementQuantity = $orderProduct->getOriginal('quantity') - $orderProduct->quantity;
                 if ($product->has_variant) {
                     $variant = Variant::where('id', $orderProduct->variant_id)->first();
@@ -52,9 +62,9 @@ class OrderProductObserver
                 } else {
                     $product->increment('quantity', $incrementQuantity);
                 }
-            } else if ($orderProduct->getOriginal('quantity') < $orderProduct->quantity) {
+            } elseif ($orderProduct->getOriginal('quantity') < $orderProduct->quantity) {
 
-                //if increase quantity we will decrement the original quantity
+                // if increase quantity we will decrement the original quantity
                 $decrementQuantity = $orderProduct->quantity - $orderProduct->getOriginal('quantity');
                 if ($product->has_variant) {
                     $variant = Variant::where('id', $orderProduct->variant_id)->first();
@@ -63,27 +73,34 @@ class OrderProductObserver
                     $product->decrement('quantity', $decrementQuantity);
                 }
             }
+
+            $orderProduct->profit = $orderProduct->discount_price > 0 ?
+            ($orderProduct->discount_price * $orderProduct->quantity) - ($orderProduct->original_buy_price * $orderProduct->quantity) :
+            ($product->original_price * $orderProduct->quantity) - ($orderProduct->original_buy_price * $orderProduct->quantity);
         }
     }
-
-//    public function updated(OrderProduct $orderProduct): void
-//    {
-//        if ($orderProduct->getOriginal('quantity') == $orderProduct->quantity) {
-//            //add original price and currency
-//            $orderProduct->original_price = $orderProduct->price;
-//            $orderProduct->original_discount_price = $orderProduct->discount_price;
-//            $orderProduct->exchange_rate = $orderProduct->product->exchange->rate;
-//            $orderProduct->currency_id = $orderProduct->product->exchange->currency_id;
-//            $orderProduct->update();
-//        }
-//    }
 
     /**
      * Handle the OrderProduct "deleted" event.
      */
     public function deleted(OrderProduct $orderProduct): void
     {
-        //
+        $product = $orderProduct->product;
+        
+        if ($product->has_variant) {
+            $variant = Variant::where('id', $orderProduct->variant_id)->first();
+            if ($variant) {
+                $variant->preventObserver = true;
+                $variant->increment('quantity', $orderProduct->quantity);
+                $variant->preventObserver = false;
+            }
+        } else {
+            // Set the preventObserver flag to true before incrementing
+            $product->preventObserver = true;
+            $product->increment('quantity', $orderProduct->quantity);
+            // Reset the flag after operation
+            $product->preventObserver = false;
+        }
     }
 
     /**

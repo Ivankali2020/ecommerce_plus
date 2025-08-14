@@ -1,0 +1,71 @@
+@import url('https://fonts.googleapis.com/css2?family=Bebas+Neue&family=Jost:wght@300;400;500;600;700&display=swap');
+
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+@tailwind variants;
+
+@layer base {
+    @font-face {
+      font-family: 'mm';
+      src: url("/fonts/mm.ttf") format('truetype'); 
+      /* src: url("/fonts/KT_03.ttf") format('truetype');  */
+      font-style: normal;
+      font-display: swap;
+      font-weight: normal;
+    }
+}
+
+@layer base {
+    @font-face {
+      font-family: 'mm_lat';
+      /* src: url("/fonts/mm.ttf") format('truetype');  */
+      src: url("/fonts/KT_03.ttf") format('truetype'); 
+      font-style: normal;
+      font-display: swap;
+      font-weight: normal;
+    }
+}
+
+@layer utilities {
+    .transition-transform {
+        transition-property: transform;
+        transition-timing-function: cubic-bezier(0.4, 0, 0.2, 1);
+    }
+}
+
+.hide-scrollbar {
+    -ms-overflow-style: none;
+    scrollbar-width: none;
+}
+.hide-scrollbar::-webkit-scrollbar {
+    display: none;
+}
+
+/* English placeholder font */
+.placeholder-font::placeholder {
+    font-family: 'jost', sans-serif;
+}
+
+/* Myanmar placeholder font */
+.placeholder-font-mm::placeholder {
+    font-family: 'mm', 'jost', sans-serif;
+}
+
+
+/* Hide scrollbars while maintaining scroll functionality */
+::-webkit-scrollbar {
+    width: 0;
+    height: 0;
+    display: none;
+}
+
+/* For Firefox */
+* {
+    scrollbar-width: none;
+}
+
+/* For IE and Edge */
+* {
+    -ms-overflow-style: none;
+}

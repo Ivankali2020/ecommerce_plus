@@ -1,0 +1,527 @@
+[
+    {
+        "label": "Promotions",
+        "children": [
+            {
+                "label": "Self Love Week ( Pamper Yourself Week)",
+                "children": []
+            }
+        ]
+    },
+    {
+        "label": "အအေးမိ ချောင်းဆိုး",
+        "children": [
+            {
+                "label": "Cough & Cold",
+                "children": [
+                    {
+                        "label": "Gargles, Mouthwash & Spray",
+                        "children": []
+                    },
+                    {
+                        "label": "Lozenges",
+                        "children": []
+                    },
+                    {
+                        "label": "Nasal Drops & Spray",
+                        "children": []
+                    },
+                    {
+                        "label": "Cough Medicines",
+                        "children": []
+                    },
+                    {
+                        "label": "Nasal Inhalers",
+                        "children": []
+                    }
+                ]
+            },
+            {
+                "label": "Pain & Inflammation",
+                "children": [
+                    {
+                        "label": "Analgesic",
+                        "children": []
+                    },
+                    {
+                        "label": "Anti Inflammatory Medicines",
+                        "children": []
+                    },
+                    {
+                        "label": "Muscle Relaxants",
+                        "children": []
+                    },
+                    {
+                        "label": "Pain Relief Ointment, Spray, Cream & Gel",
+                        "children": []
+                    }
+                ]
+            },
+            {
+                "label": "Fever",
+                "children": [
+                    {
+                        "label": "Fever Medicines",
+                        "children": []
+                    }
+                ]
+            }
+        ]
+    },
+    {
+        "label": "ဗီတာမင် အားဆေး နှင့် ဖြည့်စွက်စာများ",
+        "children": [
+            {
+                "label": "Speciality Supplements",
+                "children": [
+                    {
+                        "label": "Antioxidants Co Enz Q",
+                        "children": []
+                    },
+                    {
+                        "label": "Beauty Supplements",
+                        "children": []
+                    },
+                    {
+                        "label": "Bone & Joint",
+                        "children": []
+                    },
+                    {
+                        "label": "Brain & Nerve",
+                        "children": []
+                    },
+                    {
+                        "label": "Collagen",
+                        "children": []
+                    },
+                    {
+                        "label": "Eye Supplement",
+                        "children": []
+                    },
+                    {
+                        "label": "Uro Care",
+                        "children": []
+                    },
+                    {
+                        "label": "Liver Supplement",
+                        "children": []
+                    }
+                ]
+            },
+            {
+                "label": "Vitamins",
+                "children": [
+                    {
+                        "label": "Multivitamins & Minerals",
+                        "children": [
+                            {
+                                "label": "Best-Selling Multivitamins",
+                                "children": []
+                            }
+                        ]
+                    },
+                    {
+                        "label": "Vitamin A-Z",
+                        "children": []
+                    },
+                    {
+                        "label": "Women Care Supplements",
+                        "children": []
+                    },
+                    {
+                        "label": "Omega & Fish Oil",
+                        "children": []
+                    }
+                ]
+            },
+            {
+                "label": "Immunity Boosters",
+                "children": []
+            },
+            {
+                "label": "Protein Supplements",
+                "children": []
+            },
+            {
+                "label": "Herbal Medicines",
+                "children": []
+            },
+            {
+                "label": "Health Food & Nutritional Drinks",
+                "children": []
+            },
+            {
+                "label": "Weight Management",
+                "children": [
+                    {
+                        "label": "Fat Burners",
+                        "children": []
+                    }
+                ]
+            }
+        ]
+    },
+    {
+        "label": "မိခင် နှင့် ကလေး အသုံးအဆောင်များ",
+        "children": [
+            {
+                "label": "Mother Care",
+                "children": [
+                    {
+                        "label": "Mom Accessories",
+                        "children": []
+                    },
+                    {
+                        "label": "Nutrition & Supplements",
+                        "children": []
+                    }
+                ]
+            },
+            {
+                "label": "Baby Care",
+                "children": [
+                    {
+                        "label": "Baby Bath Essentials",
+                        "children": []
+                    },
+                    {
+                        "label": "Baby Skin Care",
+                        "children": []
+                    },
+                    {
+                        "label": "Diapers & Wipes",
+                        "children": []
+                    },
+                    {
+                        "label": "Nursing & Feeding",
+                        "children": []
+                    }
+                ]
+            },
+            {
+                "label": "Child Health",
+                "children": [
+                    {
+                        "label": "Fever, Cough & Cold",
+                        "children": []
+                    },
+                    {
+                        "label": "Multivitamins & Minerals",
+                        "children": []
+                    },
+                    {
+                        "label": "Nutritional Drink",
+                        "children": []
+                    },
+                    {
+                        "label": "Respiratory",
+                        "children": []
+                    },
+                    {
+                        "label": "GI Care",
+                        "children": []
+                    }
+                ]
+            }
+        ]
+    },
+    {
+        "label": "ဆေးဘက်ဆိုင်ရာပစ္စည်းများ",
+        "children": [
+            {
+                "label": "Health Supplies",
+                "children": [
+                    {
+                        "label": "Disinfectants",
+                        "children": []
+                    },
+                    {
+                        "label": "Hygiene Products",
+                        "children": []
+                    },
+                    {
+                        "label": "Mobility & Exercise Equipment",
+                        "children": []
+                    },
+                    {
+                        "label": "Thermometer",
+                        "children": []
+                    },
+                    {
+                        "label": "Safety Wearables",
+                        "children": []
+                    }
+                ]
+            },
+            {
+                "label": "Healthcare Devices",
+                "children": [
+                    {
+                        "label": "BP Monitor",
+                        "children": []
+                    },
+                    {
+                        "label": "Covid 19 Test Kit",
+                        "children": []
+                    },
+                    {
+                        "label": "Nebulizers & Vaporizers",
+                        "children": []
+                    },
+                    {
+                        "label": "Oximeters",
+                        "children": []
+                    },
+                    {
+                        "label": "Weighing Scales",
+                        "children": []
+                    }
+                ]
+            },
+            {
+                "label": "Test Kits",
+                "children": []
+            }
+        ]
+    },
+    {
+        "label": "အလှအပ နှင့် တစ်ကိုယ်ရေသုံး ပစ္စည်းများ",
+        "children": [
+            {
+                "label": "Sanitizers & Hand Wash",
+                "children": [
+                    {
+                        "label": "Sanitizers",
+                        "children": []
+                    },
+                    {
+                        "label": "Soaps",
+                        "children": []
+                    },
+                    {
+                        "label": "Wet tissue & Wipes",
+                        "children": []
+                    }
+                ]
+            },
+            {
+                "label": "Elderly Care",
+                "children": [
+                    {
+                        "label": "Adult Diapers",
+                        "children": []
+                    }
+                ]
+            },
+            {
+                "label": "Women Care",
+                "children": [
+                    {
+                        "label": "Feminine Wash",
+                        "children": []
+                    },
+                    {
+                        "label": "Sanitary Pad",
+                        "children": []
+                    },
+                    {
+                        "label": "Tampons",
+                        "children": []
+                    }
+                ]
+            },
+            {
+                "label": "Skin Care",
+                "children": [
+                    {
+                        "label": "Acnes & Scar Care",
+                        "children": []
+                    },
+                    {
+                        "label": "Bath & Body",
+                        "children": []
+                    },
+                    {
+                        "label": "Face Care",
+                        "children": []
+                    },
+                    {
+                        "label": "Lip Care",
+                        "children": []
+                    },
+                    {
+                        "label": "Roll on",
+                        "children": []
+                    },
+                    {
+                        "label": "Foot & Hand Care",
+                        "children": []
+                    }
+                ]
+            },
+            {
+                "label": "Hair Care",
+                "children": [
+                    {
+                        "label": "Hair Coat, Serum, Gel, Cream & Oils",
+                        "children": []
+                    },
+                    {
+                        "label": "Hair Growth Supplements",
+                        "children": []
+                    },
+                    {
+                        "label": "Shampoo & Conditioner",
+                        "children": []
+                    }
+                ]
+            },
+            {
+                "label": "Oral Care",
+                "children": [
+                    {
+                        "label": "Dental Floss",
+                        "children": []
+                    },
+                    {
+                        "label": "Mouth Wash & Freshners",
+                        "children": []
+                    },
+                    {
+                        "label": "Toothpastes",
+                        "children": []
+                    }
+                ]
+            },
+            {
+                "label": "Anti Mosquitoes",
+                "children": [
+                    {
+                        "label": "Mosquito Repellents",
+                        "children": []
+                    }
+                ]
+            }
+        ]
+    },
+    {
+        "label": "လိင်နှင့်မျိုးဆတ်ပွား ကျန်းမာရေး",
+        "children": [
+            {
+                "label": "Contraceptives",
+                "children": []
+            },
+            {
+                "label": "Condoms",
+                "children": []
+            }
+        ]
+    },
+    {
+        "label": "ရောဂါအမျိုးအစားအလိုက်ဆေး၀ါးများ",
+        "children": [
+            {
+                "label": "Diabetes Care",
+                "children": []
+            },
+            {
+                "label": "Hypertension Medicines",
+                "children": []
+            },
+            {
+                "label": "Heart Medicines",
+                "children": []
+            }
+        ]
+    },
+    {
+        "label": "ဆီးချို သွေးတိုး နှလုံးရောဂါ",
+        "children": [
+            {
+                "label": "Blood Sugar Control",
+                "children": []
+            },
+            {
+                "label": "Cholesterol Control",
+                "children": []
+            },
+            {
+                "label": "Blood Pressure Control",
+                "children": []
+            }
+        ]
+    },
+    {
+        "label": "Traditional Medicine",
+        "children": [
+            {
+                "label": "Herbal Supplements",
+                "children": []
+            },
+            {
+                "label": "Ayurvedic Medicines",
+                "children": []
+            },
+            {
+                "label": "Chinese Herbal Medicine",
+                "children": []
+            }
+        ]
+    },
+    {
+        "label": "Back In Stock!",
+        "children": [
+            {
+                "label": "Popular Medicines",
+                "children": []
+            },
+            {
+                "label": "Essential Health Products",
+                "children": []
+            }
+        ]
+    },
+    {
+        "label": "Asthma & Respiratory Care",
+        "children": [
+            {
+                "label": "Inhalers & Nebulizers",
+                "children": []
+            },
+            {
+                "label": "Allergy & Sinus Care",
+                "children": []
+            }
+        ]
+    },
+    {
+        "label": "New Arrival",
+        "children": [
+            {
+                "label": "Latest Medicines",
+                "children": []
+            },
+            {
+                "label": "New Supplements",
+                "children": []
+            }
+        ]
+    },
+    {
+        "label": "Easy Self-Test Kits",
+        "children": [
+            {
+                "label": "Covid-19 Test Kits",
+                "children": []
+            },
+            {
+                "label": "Blood Sugar Test Kits",
+                "children": []
+            },
+            {
+                "label": "Pregnancy Test Kits",
+                "children": []
+            }
+        ]
+    }
+]
