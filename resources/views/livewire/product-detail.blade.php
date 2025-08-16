@@ -1,4 +1,4 @@
-<div class="container mx-auto lg:mt-10 p-6 lg:p-0 ">
+<div class="lg:mt-10 p-6 lg:p-0 max-w-7xl mx-auto">
     <div x-data="productDetail({{ json_encode($product) }}, {{ json_encode($product->variants) }})" class="space-y-4 grid grid-cols-1 md:grid-cols-2 gap-6">
         <!-- Image Gallery -->
         <div class="space-y-4">
@@ -282,6 +282,11 @@
             <div class="mt-10 font-thin font-sans text-justify" style="line-height: 2rem;"> {!! $product->description !!} </div>
 
         </div>
+    </div>
+
+    <!-- Reviews Section -->
+    <div class="mt-16 mb-10">
+        <livewire:product-reviews :product="$product" />
     </div>
 
     <!-- Related Products Section -->

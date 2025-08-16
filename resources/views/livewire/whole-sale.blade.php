@@ -1,4 +1,4 @@
-<div class="container mb-20 lg:mb-0 mx-auto px-4 py-4 lg:py-8" x-data="{ showFilters: false }">
+<div class="container mb-20 lg:mb-0 mx-auto px-4 py-4 lg:py-8" x-data="{ showFilters: false, showCategories: true, showBrands: true }">
     <div class="flex justify-between items-center mb-4 lg:mb-8">
         <h2 class="text-xl lg:text-3xl mb-0 {{ app()->currentLocale() === 'my' ? 'font-mm' : '' }}">
             {{ __('messages.wholesale.title', ['count' => $totalProducts]) }}
@@ -16,7 +16,7 @@
     <div class="flex flex-col lg:flex-row gap-6">
         <!-- Filters Sidebar -->
         <div class="w-full lg:w-1/4" :class="showFilters || window.innerWidth >= 1024 ? 'block' : 'hidden'">
-            <div class="bg-white rounded-xl shadow-lg p-6 sticky top-4">
+            <div class="bg-white rounded-xl shadow-lg p-6 sticky top-20">
                 <div class="flex justify-between items-center mb-6">
                     <h3 class="text-lg font-semibold {{ app()->currentLocale() === 'my' ? 'font-mm' : '' }}">
                         {{ __('messages.filters') }}
@@ -58,14 +58,14 @@
                         <input 
                             type="number" 
                             wire:model.live.debounce.500ms="minPrice"
-                            class="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-slate-500 focus:border-transparent text-sm"
+                            class="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-slate-500 focus:border-transparent text-sm {{ app()->currentLocale() === 'my' ? 'font-mm' : '' }}"
                             placeholder="{{ __('messages.min_price') }}"
                             min="0"
                         >
                         <input 
                             type="number" 
                             wire:model.live.debounce.500ms="maxPrice"
-                            class="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-slate-500 focus:border-transparent text-sm"
+                            class="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-slate-500 focus:border-transparent text-sm {{ app()->currentLocale() === 'my' ? 'font-mm' : '' }}"
                             placeholder="{{ __('messages.max_price') }}"
                             min="0"
                         >
@@ -83,38 +83,57 @@
                 <!-- Category Filter -->
                 @if($categories->count() > 0)
                 <div class="mb-6">
-                    <label class="block text-sm font-medium text-gray-700 mb-3 {{ app()->currentLocale() === 'my' ? 'font-mm' : '' }}">
-                        {{ __('messages.categories') }}
-                    </label>
-                    <div class="space-y-2 ">
-                        <!-- Clear category option -->
-                        @if($selectedCategory)
-                        <div class="pb-2 border-b border-gray-200 mb-2">
-                            <button 
-                                wire:click="$set('selectedCategory', null)"
-                                class="text-sm text-red-600 hover:text-red-800 {{ app()->currentLocale() === 'my' ? 'font-mm' : '' }} px-2 py-1 rounded hover:bg-red-50"
+                    <button 
+                        @click="showCategories = !showCategories"
+                        class="w-full flex justify-between items-center text-sm font-medium text-gray-700 mb-3 {{ app()->currentLocale() === 'my' ? 'font-mm' : '' }} hover:text-gray-900 transition-colors duration-200"
+                    >
+                        <span>{{ __('messages.categories') }}</span>
+                        <div class="flex-shrink-0 ml-2">
+                            <svg 
+                                class="w-4 h-4 text-gray-500 transform transition-transform duration-300 ease-in-out" 
+                                :class="showCategories ? 'rotate-180' : 'rotate-0'"
+                                fill="none" 
+                                stroke="currentColor" 
+                                viewBox="0 0 24 24"
                             >
-                                ✕ {{ __('messages.clear_category') }}
-                            </button>
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"></path>
+                            </svg>
                         </div>
-                        @endif
-                        
-                        @foreach($categories as $category)
-                        <label for="{{ 'category_label' . $category->id }}" class="flex items-center p-2 rounded-lg hover:bg-gray-50 cursor-pointer" wire:key="category-{{ $category->id }}">
-                            <input 
-                                id="{{ 'category_label' . $category->id }}"
-                                type="radio" 
-                                name="category_filter"
-                                value="{{ $category->id }}"
-                                wire:model.live="selectedCategory"
-                                class="h-4 w-4 text-slate-600 focus:ring-slate-500 border-gray-300 rounded"
-                            >
-                            <span class="ml-2 text-sm {{ app()->currentLocale() === 'my' ? 'font-mm' : '' }}">
-                                {{ $category->name }}
-                                <span class="text-gray-500">({{ $category->products_count }})</span>
-                            </span>
-                        </label>
-                        @endforeach
+                    </button>
+                    <div 
+                        class="overflow-hidden transition-all duration-300 ease-in-out" 
+                        :class="showCategories ? 'max-h-screen opacity-100' : 'max-h-0 opacity-0'"
+                    >
+                        <div class="space-y-2">
+                            <!-- Clear category option -->
+                            @if($selectedCategory)
+                            <div class="pb-2 border-b border-gray-200 mb-2">
+                                <button 
+                                    wire:click="$set('selectedCategory', null)"
+                                    class="text-sm text-red-600 hover:text-red-800 {{ app()->currentLocale() === 'my' ? 'font-mm' : '' }} px-2 py-1 rounded hover:bg-red-50"
+                                >
+                                    ✕ {{ __('messages.clear_category') }}
+                                </button>
+                            </div>
+                            @endif
+                            
+                            @foreach($categories as $category)
+                            <label for="{{ 'category_label' . $category->id }}" class="flex items-center p-2 rounded-lg hover:bg-gray-50 cursor-pointer" wire:key="category-{{ $category->id }}">
+                                <input 
+                                    id="{{ 'category_label' . $category->id }}"
+                                    type="radio" 
+                                    name="category_filter"
+                                    value="{{ $category->id }}"
+                                    wire:model.live="selectedCategory"
+                                    class="h-4 w-4 text-slate-600 border-gray-300 rounded focus:ring-0 focus:outline-none"
+                                >
+                                <span class="ml-2 text-sm {{ app()->currentLocale() === 'my' ? 'font-mm' : '' }}">
+                                    {{ $category->name }}
+                                    <span class="text-gray-500">({{ $category->products_count }})</span>
+                                </span>
+                            </label>
+                            @endforeach
+                        </div>
                     </div>
                 </div>
                 @endif
@@ -122,40 +141,56 @@
                 <!-- Brand Filter -->
                 @if($brands->count() > 0)
                 <div class="mb-6">
-                    <label class="block text-sm font-medium text-gray-700 mb-3 {{ app()->currentLocale() === 'my' ? 'font-mm' : '' }}">
-                        {{ __('messages.brands') }}
-                    </label>
-                    <div class="space-y-2 ">
-                        <!-- Clear brand option -->
-                        @if($selectedBrand)
-                        <div class="pb-2 border-b border-gray-200 mb-2">
-                            <button 
-                                wire:click="$set('selectedBrand', null)"
-                                class="text-sm text-red-600 hover:text-red-800 {{ app()->currentLocale() === 'my' ? 'font-mm' : '' }} px-2 py-1 rounded hover:bg-red-50"
+                    <button 
+                        @click="showBrands = !showBrands"
+                        class="w-full flex justify-between items-center text-sm font-medium text-gray-700 mb-3 {{ app()->currentLocale() === 'my' ? 'font-mm' : '' }} hover:text-gray-900 transition-colors duration-200"
+                    >
+                        <span>{{ __('messages.brands') }}</span>
+                        <div class="flex-shrink-0 ml-2">
+                            <svg 
+                                class="w-4 h-4 text-gray-500 transform transition-transform duration-300 ease-in-out" 
+                                :class="showBrands ? 'rotate-180' : 'rotate-0'"
+                                fill="none" 
+                                stroke="currentColor" 
+                                viewBox="0 0 24 24"
                             >
-                                ✕ {{ __('messages.clear_brand') }}
-                            </button>
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"></path>
+                            </svg>
                         </div>
-                        @endif
-                        
-                        @foreach($brands as $brand)
-                        <label class="flex items-center p-2 rounded-lg hover:bg-gray-50 cursor-pointer" wire:key="brand-{{ $brand->id }}">
-                            <input 
-                                type="radio" 
-                                name="brand_filter"
-                                value="{{ $brand->id }}"
-                                wire:model.live="selectedBrand"
-                                class="h-4 w-4 text-slate-600 focus:ring-slate-500 border-gray-300 rounded"
-                            >
-                            <span class="ml-2 text-sm {{ app()->currentLocale() === 'my' ? 'font-mm' : '' }}">
-                                {{ $brand->name }}
-                                @if($selectedBrand == $brand->id) 
-                                    <span class="text-green-600 font-bold">✓</span>
-                                @endif
-                                <span class="text-gray-500">({{ $brand->products_count }})</span>
-                            </span>
-                        </label>
-                        @endforeach
+                    </button>
+                    <div 
+                        class="overflow-hidden transition-all duration-300 ease-in-out" 
+                        :class="showBrands ? 'max-h-screen opacity-100' : 'max-h-0 opacity-0'"
+                    >
+                        <div class="space-y-2">
+                            <!-- Clear brand option -->
+                            @if($selectedBrand)
+                            <div class="pb-2 border-b border-gray-200 mb-2">
+                                <button 
+                                    wire:click="$set('selectedBrand', null)"
+                                    class="text-sm text-red-600 hover:text-red-800 {{ app()->currentLocale() === 'my' ? 'font-mm' : '' }} px-2 py-1 rounded hover:bg-red-50"
+                                >
+                                    ✕ {{ __('messages.clear_brand') }}
+                                </button>
+                            </div>
+                            @endif
+                            
+                            @foreach($brands as $brand)
+                            <label class="flex items-center p-2 rounded-lg hover:bg-gray-50 cursor-pointer" wire:key="brand-{{ $brand->id }}">
+                                <input 
+                                    type="radio" 
+                                    name="brand_filter"
+                                    value="{{ $brand->id }}"
+                                    wire:model.live="selectedBrand"
+                                    class="h-4 w-4 text-slate-600 border-gray-300 rounded focus:ring-0 focus:outline-none"
+                                >
+                                <span class="ml-2 text-sm {{ app()->currentLocale() === 'my' ? 'font-mm' : '' }}">
+                                    {{ $brand->name }}
+                                    <span class="text-gray-500">({{ $brand->products_count }})</span>
+                                </span>
+                            </label>
+                            @endforeach
+                        </div>
                     </div>
                 </div>
                 @endif
@@ -167,7 +202,7 @@
                             type="checkbox" 
                             wire:click="toggleAvailableOnly"
                             {{ $availableOnly ? 'checked' : '' }}
-                            class="h-4 w-4 text-slate-600 focus:ring-slate-500 border-gray-300 rounded"
+                            class="h-4 w-4 text-slate-600 border-gray-300 rounded"
                         >
                         <span class="ml-2 text-sm {{ app()->currentLocale() === 'my' ? 'font-mm' : '' }}">
                             {{ __('messages.available_only') }}
@@ -179,7 +214,7 @@
                             type="checkbox" 
                             wire:click="toggleShowVariants"
                             {{ $showVariants ? 'checked' : '' }}
-                            class="h-4 w-4 text-slate-600 focus:ring-slate-500 border-gray-300 rounded"
+                            class="h-4 w-4 text-slate-600 border-gray-300 rounded"
                         >
                         <span class="ml-2 text-sm {{ app()->currentLocale() === 'my' ? 'font-mm' : '' }}">
                             {{ __('messages.show_variants') }}
@@ -243,14 +278,14 @@
                     <h3 class="text-lg font-semibold mb-4 {{ app()->currentLocale() === 'my' ? 'font-mm' : '' }}">
                         {{ __('messages.wholesale.products') }} ({{ $products->count() }})
                     </h3>
-                    <div class="grid grid-cols-2 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-2 md:gap-6">
+                    <div class="grid grid-cols-2 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-2 lg:4 2xl:gap-6">
                         @foreach($products as $product)
                         <div class="bg-white rounded-xl shadow-lg overflow-hidden hover:shadow-xl transition-shadow duration-300" wire:key="product-{{ $product->id }}">
                             <a href="{{ route('product', $product->id ) }}" class="relative">
                                 <img 
                                     src="{{ $product->productImg ?: asset('images/placeholder.jpg') }}" 
                                     alt="{{ $product->name }}"
-                                    class="w-full h-40 md:h-48 lg:h-60  object-cover"
+                                    class="w-full h-40 md:h-48 lg:52 2xl:h-60  object-cover"
                                 >
                                 <div class="absolute top-2 right-2">
                                     <span class="bg-purple-100 text-purple-800 text-xs font-medium px-2.5 py-0.5 rounded-full">
@@ -313,7 +348,7 @@
                                     <button 
                                         wire:click="addToCart({{ $product->id }},null,{{  $product->MOQ }})"
                                         @if($product->quantity <= 0) disabled @endif
-                                        class="flex-1 bg-slate-900 text-white py-2 px-4 rounded-lg hover:bg-slate-800 transition-colors disabled:bg-gray-300 disabled:cursor-not-allowed text-sm {{ app()->currentLocale() === 'my' ? 'font-mm' : '' }}"
+                                        class="flex-1 bg-slate-900 text-white py-2 px-4 rounded-lg hover:bg-slate-800 transition-colors disabled:bg-gray-300 disabled:cursor-not-allowed text-xs 2xl:text-sm {{ app()->currentLocale() === 'my' ? 'font-mm' : '' }}"
                                     >
                                         {{ __('messages.add_to_cart') }}
                                     </button>
@@ -347,7 +382,7 @@
                                 <img 
                                     src="{{ $variant->getFirstMediaUrl('images') ?: $variant->product->productImg ?: asset('images/placeholder.jpg') }}" 
                                     alt="{{ $variant->name }}"
-                                    class="w-full h-32 md:h-48 lg:h-60  object-cover"
+                                    class="w-full h-32 md:h-48 lg:52 2xl:h-60 object-cover"
                                 >
                                 <div class="absolute top-2 right-2">
                                     <span class="bg-blue-100 text-blue-800 text-xs font-medium px-2.5 py-0.5 rounded-full">
@@ -423,7 +458,7 @@
                                     <button 
                                         wire:click="addVariantToCart({{ $variant->id }}, '{{ $variant->MOQ }}')"
                                         @if($variant->quantity <= 0) disabled @endif
-                                        class="flex-1 bg-slate-900 text-white py-2 px-4 rounded-lg hover:bg-slate-800 transition-colors disabled:bg-gray-300 disabled:cursor-not-allowed text-sm {{ app()->currentLocale() === 'my' ? 'font-mm' : '' }}"
+                                        class="flex-1 bg-slate-900 text-white py-2 px-4 rounded-lg hover:bg-slate-800 transition-colors disabled:bg-gray-300 disabled:cursor-not-allowed text-xs 2xl:text-sm {{ app()->currentLocale() === 'my' ? 'font-mm' : '' }}"
                                     >
                                         {{ __('messages.add_to_cart') }}
                                     </button>

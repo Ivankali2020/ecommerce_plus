@@ -60,6 +60,8 @@ return [
         'balance' => 'Balance',
         'exchange_gifts' => 'Exchange Gifts',
         'shop_earn_points' => 'Shop & Earn Points',
+        'view_gift_history' => 'Gift Exchange History',
+        'view_point_history' => 'Point Transaction History',
         'login_required_title' => 'Login Required',
         'login_required_subtitle' => 'Sign in to view your loyalty points and exchange gifts',
         'transaction_types' => [

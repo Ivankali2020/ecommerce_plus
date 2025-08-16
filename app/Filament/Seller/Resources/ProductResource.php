@@ -4,29 +4,31 @@ namespace App\Filament\Seller\Resources;
 
 use App\Filament\Seller\Resources\ProductResource\Pages;
 use App\Helper\CheckFilamentSellerUser;
-use App\Models\Product;
-use Filament\Forms\Form;
-use Filament\Resources\Resource;
-use Filament\Tables\Table;
-use Illuminate\Database\Eloquent\Builder;
-use Illuminate\Database\Eloquent\SoftDeletingScope;
-use Filament\Forms;
-use Filament\Tables;
-use App\Models\Brand;
-use App\Models\Exchange;
 use App\Models\Attribute;
 use App\Models\AttributeValue;
-use Filament\Facades\Filament;
-use Filament\Tables\Columns\TextColumn;
-use Illuminate\Database\Eloquent\Model;
-use Filament\Resources\Pages\EditRecord;
+use App\Models\Exchange;
+use App\Models\Product;
 use CodeWithDennis\FilamentSelectTree\SelectTree;
+use Filament\Facades\Filament;
+use Filament\Forms;
+use Filament\Forms\Components\TextInput;
+use Filament\Forms\Form;
 use Filament\Pages\Page;
+use Filament\Resources\Pages\EditRecord;
+use Filament\Resources\Resource;
+use Filament\Tables;
+use Filament\Tables\Columns\TextColumn;
+use Filament\Tables\Table;
+use Illuminate\Database\Eloquent\Builder;
+use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\SoftDeletingScope;
 use Illuminate\Support\Str;
 
 class ProductResource extends Resource
 {
     protected static ?string $model = Product::class;
+
+    protected static ?string $recordTitleAttribute = 'name';
 
     //    protected static ?string $navigationIcon = 'heroicon-o-rectangle-stack';
 
@@ -64,7 +66,7 @@ class ProductResource extends Resource
                             ->searchable()->preload()
                             ->live(onBlur: true, debounce: 200)
                             ->options(function (Forms\Get $get) {
-                                $seller_id =  CheckFilamentSellerUser::getSellerId();
+                                $seller_id = CheckFilamentSellerUser::getSellerId();
                                 $data = Exchange::where('seller_id', $seller_id)->with('currency')->get()->map(function ($item) {
                                     return [$item->id => $item->currency->code];
                                 });
@@ -81,7 +83,7 @@ class ProductResource extends Resource
                             ->label(__('filament/resources/product-resource.form.brand.label'))
                             ->searchable()->preload()->live(onBlur: true, debounce: 200)
                             ->required()
-                            ->relationship('brand','name'),
+                            ->relationship('brand', 'name'),
 
                         SelectTree::make('category_id')
                             ->label(__('filament/resources/product-resource.form.category.label'))
@@ -100,6 +102,14 @@ class ProductResource extends Resource
                             ->required(fn (Forms\Get $get) => ! $get('has_variant'))
                             ->hidden(fn (Forms\Get $get) => $get('has_variant'))
                             ->maxLength(255),
+
+                        TextInput::make('expired_date')
+                            ->label(__('filament/resources/product-resource.form.expired_date.label'))
+                            ->type('date')
+                            ->placeholder(__('filament/resources/product-resource.form.expired_date.placeholder'))
+                            ->helperText(__('filament/resources/product-resource.form.expired_date.helper_text'))
+                            ->live(onBlur: true, debounce: 200)
+                            ->nullable(),
 
                         Forms\Components\RichEditor::make('description')
                             ->required()->visible(fn (Forms\Get $get) => ! $get('has_variant') || blank($get('exchange_id')))
@@ -555,15 +565,15 @@ class ProductResource extends Resource
                     ->label(__('filament/resources/product-resource.table.columns.currency'))
                     ->description(fn (Product $product) => $product->exchange->currency->name)
                     ->sortable(),
-                    TextColumn::make('price') ->numeric(),
-                    TextColumn::make('mmk_buy_price') ->numeric(),
-                    TextColumn::make('quantity') ->numeric(),
-                    TextColumn::make('total_price')
+                TextColumn::make('price')->numeric(),
+                TextColumn::make('mmk_buy_price')->numeric(),
+                TextColumn::make('quantity')->numeric(),
+                TextColumn::make('total_price')
                     ->state(function (Product $record): float {
                         return $record->quantity * $record->mmk_buy_price;
                     })
                     ->numeric()
-                    // ->money('mmk')
+                // ->money('mmk')
                     ->label('Total Capital'),
 
                 //                Tables\Columns\IconColumn::make('has_variant')
@@ -633,7 +643,7 @@ class ProductResource extends Resource
                         });
                     }),
 
-                 Tables\Filters\Filter::make('is_whole_sale')
+                Tables\Filters\Filter::make('is_whole_sale')
                     ->form([
                         Forms\Components\Toggle::make('is_whole_sale')
                             ->label('Whole Sale')
@@ -647,7 +657,7 @@ class ProductResource extends Resource
                         });
                     }),
 
-                 Tables\Filters\Filter::make('Empty Stock')
+                Tables\Filters\Filter::make('Empty Stock')
                     ->form([
                         Forms\Components\Toggle::make('empty_out_stock')
                             ->label('Empty Stock')

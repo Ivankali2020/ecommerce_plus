@@ -118,17 +118,16 @@ class Cart extends Component
     #[Computed]
     public function pointsToEarn()
     {
-        if (!Auth::check()) {
+        if (! Auth::check()) {
             return 0;
         }
 
-        $subtotal = $this->cartItems->sum(fn($item) => $item->total);
+        $subtotal = $this->cartItems->sum(fn ($item) => $item->total);
 
         // Get points earning percentage from system settings (default to 1% if not set)
-        $pointsPercentage = Seller::find($this->seller_id)->setting->data[0]['value'];
+        $pointsPercentage = Seller::find($this->seller_id)->setting->data['point_percentage'];
 
-
-        return floor($subtotal * ((int)$pointsPercentage / 100));
+        return floor($subtotal * ((int) $pointsPercentage / 100));
     }
 
     public function updatedSelectedRegion()
@@ -170,13 +169,14 @@ class Cart extends Component
             return;
         }
 
-        //checking wholesale MOQ when decreasing quantity
+        // checking wholesale MOQ when decreasing quantity
         if ($cart->product->is_whole_sale && $quantity < $cart->product->MOQ) {
             Notification::make()
                 ->title(__('messages.cart.wholesale_moq_title'))
                 ->body(__('messages.cart.wholesale_moq_message', ['moq' => $cart->product->MOQ]))
                 ->warning()
                 ->send();
+
             return;
         }
 
@@ -228,7 +228,7 @@ class Cart extends Component
 
             $delivery = Delivery::where('id', $this->delivery_id)->first();
 
-            $total = $this->cartItems->sum(fn($item) => $item->total);
+            $total = $this->cartItems->sum(fn ($item) => $item->total);
 
             $paymentAccount = PaymentAccount::find($this->payment_account_id);
 
@@ -252,13 +252,13 @@ class Cart extends Component
             foreach ($this->cartItems as $cartItem) {
                 if ($cartItem->variant) {
                     if ($cartItem->quantity > $cartItem->variant->quantity) {
-                        throw new Exception($cartItem->product->name . ' stock is not enough');
+                        throw new Exception($cartItem->product->name.' stock is not enough');
                     }
                     // $cartItem->variant->decrement('quantity', $cartItem->quantity);
 
                 } else {
                     if ($cartItem->quantity > $cartItem->product->quantity) {
-                        throw new Exception($cartItem->product->name . ' stock is not enough');
+                        throw new Exception($cartItem->product->name.' stock is not enough');
                     }
                     // $cartItem->decrement('quantity', $cartItem->quantity);
                 }

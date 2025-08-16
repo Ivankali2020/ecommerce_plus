@@ -140,7 +140,7 @@
                                     </svg>
                                 </div>
                                 <h3 class="text-xl font-semibold text-gray-900 dark:text-white mb-2">{{ __('messages.welcome.quick_setup') }}</h3>
-                                <p class="text-gray-600 dark:text-gray-300 font-sans  " style="line-height:2rem">{{ __('messages.welcome.quick_setup_description') }}</p>
+                                <p class="text-gray-600 dark:text-gray-300   " style="line-height:2rem">{{ __('messages.welcome.quick_setup_description') }}</p>
                             </div>
                             
                             <div class="bg-white dark:bg-zinc-900 rounded-lg  p-6 shadow-lg ring-1 ring-black/5 dark:ring-zinc-800">
@@ -152,7 +152,7 @@
                                 </div>
 
                                 <h3 class="text-xl font-semibold text-gray-900 dark:text-white mb-2">{{ __('messages.welcome.custom_domain') }}</h3>
-                                <p class="text-gray-600 dark:text-gray-300 font-sans  " style="line-height:2rem">{{ __('messages.welcome.custom_domain_description') }}</p>
+                                <p class="text-gray-600 dark:text-gray-300   " style="line-height:2rem">{{ __('messages.welcome.custom_domain_description') }}</p>
                             </div>
                             
                             <div class="bg-white dark:bg-zinc-900 rounded-lg p-6 shadow-lg ring-1 ring-black/5 dark:ring-zinc-800">
@@ -162,7 +162,7 @@
                                     </svg>
                                 </div>
                                 <h3 class="text-xl font-semibold text-gray-900 dark:text-white mb-2">{{ __('messages.welcome.complete_tools') }}</h3>
-                                <p class="text-gray-600 dark:text-gray-300 font-sans "  style="line-height:2rem"">{{ __('messages.welcome.complete_tools_description') }}</p>
+                                <p class="text-gray-600 dark:text-gray-300  "  style="line-height:2rem"">{{ __('messages.welcome.complete_tools_description') }}</p>
                             </div>
                         </div>
                         

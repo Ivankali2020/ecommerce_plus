@@ -1,7 +1,7 @@
-<div class="min-h-screen {{ app()->currentLocale() === 'my' ? 'font-mm' : '' }}">
+<div class="min-h-screen  {{ app()->currentLocale() === 'my' ? 'font-mm' : '' }}">
     <!-- Header Section -->
     <div class="py-8">
-        <div class="container mx-auto px-4">
+        <div class="max-w-7xl mx-auto px-4">
             <div class="text-center">
                 <h1 class="text-4xl font-bold mb-2">{{ __('gifts.page_title') }}</h1>
                 <p class="text-lg opacity-90">{{ __('gifts.page_subtitle') }}</p>
@@ -36,7 +36,7 @@
 
 
     <!-- Filters and Search -->
-    <div class="container mx-auto px-4 py-6">
+    <div class="max-w-7xl  mx-auto px-4 py-6">
         <!-- Gifts Grid -->
         <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6">
             @forelse($gifts as $gift)

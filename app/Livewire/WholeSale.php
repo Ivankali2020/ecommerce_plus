@@ -16,15 +16,25 @@ class WholeSale extends Component
     use WithCart, WithPagination;
 
     public $search = '';
+
     public $selectedCategory = null;
+
     public $selectedBrand = null;
+
     public $minPrice = null;
+
     public $maxPrice = null;
-    public $sortBy = 'created_at';
+
+    public $sortBy = null;
+
     public $sortDirection = 'desc';
+
     public $perPage = 15;
+
     public $seller_id;
+
     public $showVariants = true;
+
     public $availableOnly = false;
 
     protected $queryString = [
@@ -112,13 +122,13 @@ class WholeSale extends Component
 
     public function toggleAvailableOnly()
     {
-        $this->availableOnly = !$this->availableOnly;
+        $this->availableOnly = ! $this->availableOnly;
         $this->resetPage();
     }
 
     public function toggleShowVariants()
     {
-        $this->showVariants = !$this->showVariants;
+        $this->showVariants = ! $this->showVariants;
         $this->resetPage();
     }
 
@@ -154,10 +164,9 @@ class WholeSale extends Component
             ->where('is_whole_sale', true)
             ->when($this->search, function ($query) {
                 return $query->where(function ($q) {
-                    $q->where('name', 'like', '%' . $this->search . '%')
-                        ->orWhere('description', 'like', '%' . $this->search . '%')
-                        ->orWhere('sku', 'like', '%' . $this->search . '%')
-                        ;
+                    $q->where('name', 'like', '%'.$this->search.'%')
+                        ->orWhere('description', 'like', '%'.$this->search.'%')
+                        ->orWhere('sku', 'like', '%'.$this->search.'%');
                 });
             })
             ->when($this->selectedCategory, function ($query) {
@@ -180,7 +189,8 @@ class WholeSale extends Component
                     $query->where('quantity', '>', 0);
                 }
             }])
-            ->orderBy($this->sortBy, $this->sortDirection);
+            // ->orderBy($this->sortBy, $this->sortDirection)
+            ->orderBy($this->sortBy === null ? 'created_at' : 'name', $this->sortDirection);
 
         $products = $productsQuery->take($this->perPage)->get();
         $hasMorePages = $productsQuery->count() > $this->perPage;
@@ -196,11 +206,11 @@ class WholeSale extends Component
                 ->where('is_whole_sale', true)
                 ->when($this->search, function ($query) {
                     return $query->where(function ($q) {
-                        $q->where('name', 'like', '%' . $this->search . '%')
-                            ->orWhere('sku', 'like', '%' . $this->search . '%')
+                        $q->where('name', 'like', '%'.$this->search.'%')
+                            ->orWhere('sku', 'like', '%'.$this->search.'%')
                             ->orWhereHas('product', function ($productQuery) {
-                                $productQuery->where('name', 'like', '%' . $this->search . '%')
-                                    ->orWhere('description', 'like', '%' . $this->search . '%');
+                                $productQuery->where('name', 'like', '%'.$this->search.'%')
+                                    ->orWhere('description', 'like', '%'.$this->search.'%');
                             });
                     });
                 })
@@ -224,11 +234,10 @@ class WholeSale extends Component
                     return $query->where('quantity', '>', 0);
                 })
                 ->with(['product.category', 'product.brand'])
-                ->orderBy($this->sortBy === 'created_at' ? 'created_at' : 'name', $this->sortDirection);
+                ->orderBy($this->sortBy === null ? 'created_at' : 'name', $this->sortDirection);
 
             $variants = $variantsQuery->take($this->perPage)->get();
         }
-
 
         return view('livewire.whole-sale', [
             'products' => $products,

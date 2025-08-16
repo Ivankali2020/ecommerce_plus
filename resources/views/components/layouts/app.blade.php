@@ -4,16 +4,41 @@
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <link icon rel="icon" type="image/png" href="{{ $tenantSellerLogo ?? asset('images/favicon.png') }}">
+
+    <title>{{ isset($seo['title']) ? $seo['title'] : $tenantSellerName }}</title>
+    
+    <!-- SEO Meta Tags -->
+    <meta name="description" content="{{ $seo['description'] ?? $tenantSellerName }}">
+    
+    <!-- Open Graph / Facebook -->
+    <meta property="og:type" content="{{ $seo['type'] ?? 'website' }}">
+    <meta property="og:url" content="{{ $seo['url'] ?? url()->current() }}">
+    <meta property="og:title" content="{{ $seo['title'] ?? $tenantSellerName }}">
+    <meta property="og:description" content="{{ $seo['description'] ?? $tenantSellerName }}">
+    <meta property="og:image" content="{{ $seo['image'] ?? $tenantSellerLogo }}">
+    
+    @if(isset($seo['type']) && $seo['type'] === 'product')
+    <!-- Product specific tags -->
+    <meta property="product:price:amount" content="{{ $seo['price'] ?? '' }}">
+    <meta property="product:price:currency" content="{{ $seo['currency'] ?? 'MMK' }}">
+    @endif
+    
+    <!-- Twitter -->
+    <meta property="twitter:card" content="summary_large_image">
+    <meta property="twitter:url" content="{{ $seo['url'] ?? url()->current() }}">
+    <meta property="twitter:title" content="{{ $seo['title'] ?? $tenantSellerName }}">
+    <meta property="twitter:description" content="{{ $seo['description'] ?? $tenantSellerName }}">
+    <meta property="twitter:image" content="{{ $seo['image'] ?? $tenantSellerLogo }}">
+    
+
     <style>
         [x-cloak] {
             display: none !important;
         }
     </style>
-    {{-- @livewireStyles --}}
     @filamentStyles
     @vite('resources/css/app.css')
 
-    <title>{{ $title ?? $tenantSellerName }}</title>
 </head>
 <body class=' hide-scrollbar'>
 
@@ -26,8 +51,9 @@
 
     <livewire:layout.navigation />
 
-
     {{ $slot }}
+
+    <x-footer />
 
     <div class="fixed inset-x-0 top-[calc(100%-13rem)] -z-10 transform-gpu overflow-hidden blur-3xl sm:top-[calc(100%-30rem)]"
         aria-hidden="true">
@@ -37,7 +63,6 @@
     </div>
 
     @livewire('notifications')
-    {{-- @livewireScripts --}}
     @filamentScripts
     @vite('resources/js/app.js')
 </body>

@@ -33,7 +33,7 @@ return new class extends Migration
             $table->decimal('mmk_discount_price', 15)->default(0)->nullable();
 
             $table->boolean('is_whole_sale')->default(false);
-
+            $table->dateTime('expired_date')->nullable();
             $table->softDeletes();
             $table->timestamps();
 

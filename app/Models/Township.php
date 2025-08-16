@@ -8,10 +8,15 @@ use Illuminate\Database\Eloquent\SoftDeletes;
 
 class Township extends Model
 {
-    use HasFactory,SoftDeletes;
+    use HasFactory, SoftDeletes;
 
     public function region()
     {
         return $this->belongsTo(Region::class)->withTrashed();
+    }
+
+    public function deliveries()
+    {
+        return $this->hasMany(Delivery::class);
     }
 }

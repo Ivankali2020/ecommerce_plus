@@ -32,11 +32,6 @@ class RecentOrders extends Component
 
         return view('livewire.recent-orders', [
             'recentProducts' => $recentProducts,
-        ])->layout('layouts.app', [
-            'seo' => [
-                'title' => 'Recently Ordered Products',
-                'description' => 'View products from your recent orders',
-            ],
         ]);
     }
 }

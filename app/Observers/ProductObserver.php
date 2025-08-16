@@ -19,7 +19,7 @@ class ProductObserver
 
     public function updated(Product $product): void
     {
-        logger('logger from product observer '.$product->quantity);
+        // logger('logger from product observer '.$product->quantity);
         if ($product->preventObserver) {
             return;
         }

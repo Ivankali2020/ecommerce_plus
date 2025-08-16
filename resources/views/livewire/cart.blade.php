@@ -123,7 +123,7 @@
                         {{ __('messages.cart.start_adding') }}
                     </p>
                     <div class="mt-6">
-                        <a href="{{ route('store', $this->seller_id) }}"
+                        <a href="{{ route('welcome') }}"
                             class="inline-flex items-center px-4 py-2 border border-transparent shadow-sm text-sm font-medium rounded-md text-white bg-slate-900 hover:bg-slate-800 focus:outline-none focus:ring-0 focus:ring-offset-0  {{ app()->currentLocale() === 'my' ? 'font-mm' : '' }}">
                             {{ __('messages.cart.continue_shopping') }}
                         </a>

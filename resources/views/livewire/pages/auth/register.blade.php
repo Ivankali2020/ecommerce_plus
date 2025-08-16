@@ -18,15 +18,13 @@ new #[Layout('layouts.guest')] class extends Component
     public string $cfTurnstileResponse = '';
 
     public ?string $seller_log = null;
-    
+    public ?string $seller_name = null;
+
     public function mount(): void
     {   
-        if (session()->has('seller_log')) {
-            $this->seller_log = session('seller_log');
-        } else {
-            $this->seller_log = Tenant::where('id', tenant('id'))->first()->sellers->first()->getFirstMediaUrl('logos');
-            session(['seller_log' => $this->seller_log]);
-        }
+        $seller = Tenant::where('id',tenant('id'))->first()->sellers->first();
+        $this->seller_log = $seller->getFirstMediaUrl('logos');
+        $this->seller_name = $seller->name;
     }
 
     /**
@@ -65,7 +63,11 @@ new #[Layout('layouts.guest')] class extends Component
         <!-- Logo and Header -->
         <div class="text-center">
             <a href="/">
-               <img class="mx-auto h-20 w-auto" src="{{ $this->seller_log }}" alt="Your Logo">
+                 @if ($this->seller_log)
+                    <img class="mx-auto h-20 w-auto" src="{{ $this->seller_log }}" alt="{{  $this->seller_name }}">
+                    @else
+                    <h1 class="text-6xl font-bold font-bebas text-center ">{{  $this->seller_name  }}</h1>
+                @endif
             </a>
             <h2 class="mt-6 text-3xl font-extrabold text-gray-900 dark:text-white {{ app()->currentLocale() === 'my' ? 'font-mm' : '' }}">
                 {{ __('messages.auth.register_page.title') }}

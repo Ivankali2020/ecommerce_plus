@@ -3,16 +3,15 @@
 namespace App\Filament\Seller\Resources;
 
 use App\Filament\Seller\Resources\SettingResource\Pages;
-use App\Filament\Seller\Resources\SettingResource\RelationManagers;
 use App\Models\Setting;
 use Filament\Forms;
 use Filament\Forms\Components\Repeater;
+use Filament\Forms\Components\RichEditor;
+use Filament\Forms\Components\Tabs;
 use Filament\Forms\Form;
 use Filament\Resources\Resource;
 use Filament\Tables;
 use Filament\Tables\Table;
-use Illuminate\Database\Eloquent\Builder;
-use Illuminate\Database\Eloquent\SoftDeletingScope;
 
 class SettingResource extends Resource
 {
@@ -29,27 +28,139 @@ class SettingResource extends Resource
     {
         return $form
             ->schema([
-                Repeater::make('data')
-                    ->label('Settings')
-                    ->schema([
+                Tabs::make('Settings')
+                    ->tabs([
+                        Tabs\Tab::make('General Settings')
+                            ->schema([
+                                Forms\Components\TextInput::make('data.point_percentage')
+                                    ->label('Point Percentage')
+                                    ->numeric()
+                                    ->required(),
+                                Forms\Components\TextInput::make('data.tax_percentage')
+                                    ->label('Tax Percentage')
+                                    ->numeric()
+                                    ->required(),
+                                Forms\Components\TextInput::make('data.referral_points')
+                                    ->label('Referral Points')
+                                    ->numeric()
+                                    ->required(),
+                            ]),
 
-                        Forms\Components\TextInput::make('key')
-                            ->label('Key')
-                            ->required()
-                            ->disabled()
-                            ->readOnly()
-                            ->maxLength(255),
+                        Tabs\Tab::make('Social Media')
+                            ->schema([
+                                Forms\Components\TextInput::make('data.facebook')
+                                    ->label('Facebook URL')
+                                    ->url()
+                                    ->maxLength(255),
+                                Forms\Components\TextInput::make('data.twitter')
+                                    ->label('Twitter URL')
+                                    ->url()
+                                    ->maxLength(255),
+                                Forms\Components\TextInput::make('data.youtube')
+                                    ->label('YouTube URL')
+                                    ->url()
+                                    ->maxLength(255),
+                                Forms\Components\TextInput::make('data.instagram')
+                                    ->label('Instagram URL')
+                                    ->url()
+                                    ->maxLength(255),
+                            ]),
 
-                        Forms\Components\TextInput::make('value')
-                            ->label('Value')
-                            ->required()
-                            ->numeric()
-                            ->maxLength(255),
+                        Tabs\Tab::make('Content Pages')
+                            ->schema([
+                                RichEditor::make('data.privacy_policy')
+                                    ->label('Privacy Policy')
+                                    ->toolbarButtons([
+                                        'bold',
+                                        'italic',
+                                        'underline',
+                                        'link',
+                                        'bulletList',
+                                        'orderedList',
+                                        'h2',
+                                        'h3',
+                                        'blockquote',
+                                    ])
+                                    ->columnSpanFull(),
+
+                                RichEditor::make('data.terms_conditions')
+                                    ->label('Terms & Conditions')
+                                    ->toolbarButtons([
+                                        'bold',
+                                        'italic',
+                                        'underline',
+                                        'link',
+                                        'bulletList',
+                                        'orderedList',
+                                        'h2',
+                                        'h3',
+                                        'blockquote',
+                                    ])
+                                    ->columnSpanFull(),
+
+                                RichEditor::make('data.about_us')
+                                    ->label('About Us')
+                                    ->toolbarButtons([
+                                        'bold',
+                                        'italic',
+                                        'underline',
+                                        'link',
+                                        'bulletList',
+                                        'orderedList',
+                                        'h2',
+                                        'h3',
+                                        'blockquote',
+                                    ])
+                                    ->columnSpanFull(),
+
+                                RichEditor::make('data.returns_exchanges')
+                                    ->label('Returns & Exchanges Policy')
+                                    ->toolbarButtons([
+                                        'bold',
+                                        'italic',
+                                        'underline',
+                                        'link',
+                                        'bulletList',
+                                        'orderedList',
+                                        'h2',
+                                        'h3',
+                                        'blockquote',
+                                    ])
+                                    ->columnSpanFull(),
+                            ]),
+
+                        Tabs\Tab::make('FAQ')
+                            ->schema([
+                                Repeater::make('data.faq')
+                                    ->label('Frequently Asked Questions')
+                                    ->schema([
+                                        Forms\Components\TextInput::make('question')
+                                            ->label('Question')
+                                            ->required()
+                                            ->maxLength(255),
+                                        RichEditor::make('answer')
+                                            ->label('Answer')
+                                            ->required()
+                                            ->toolbarButtons([
+                                                'bold',
+                                                'italic',
+                                                'underline',
+                                                'link',
+                                                'bulletList',
+                                                'orderedList',
+                                            ])
+                                            ->columnSpanFull(),
+                                    ])
+                                    ->columns(2)
+                                    ->collapsed()
+                                    ->itemLabel(fn (array $state): ?string => $state['question'] ?? null)
+                                    ->addActionLabel('Add FAQ Item')
+                                    ->reorderable()
+                                    ->collapsible()
+                                    ->columnSpanFull(),
+                            ]),
                     ])
-                    ->columns(2)
-                    ->deletable(false)
-                    ->addable(false)
-                    ->defaultItems(1),
+                    ->columnSpanFull(),
             ]);
     }
 
@@ -57,37 +168,21 @@ class SettingResource extends Resource
     {
         return $table
             ->columns([
-                
+
                 Tables\Columns\TextColumn::make('data.point_percentage')
                     ->label('Point Percentage')
-                    ->getStateUsing(function ($record) {
-                        $data = $record->data;
-                        return $data[0]['value'] ?? '-';
-                    })
                     ->suffix(' % ')
-                    ->sortable()
-                    ,
+                    ->sortable(),
 
                 Tables\Columns\TextColumn::make('data.referral_points')
                     ->label('Referral Points')
-                    ->getStateUsing(function ($record) {
-                        $data = is_array($record->data) ? $record->data : json_decode($record->data, true);
-                       return $data[2]['value'] ?? '-';
-                    })
                     ->suffix(' PT ')
-                    ->sortable()
-                    ,
+                    ->sortable(),
 
-                
                 Tables\Columns\TextColumn::make('data.tax_percentage')
                     ->label('Tax Percentage')
                     ->suffix(' % ')
-                    ->getStateUsing(function ($record) {
-                        $data = is_array($record->data) ? $record->data : json_decode($record->data, true);
-                        return $data[1]['value'] ?? '-';
-                    })
-                    ->sortable()
-                    ,
+                    ->sortable(),
 
             ])
             ->paginated(false)

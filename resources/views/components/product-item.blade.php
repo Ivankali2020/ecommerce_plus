@@ -34,7 +34,7 @@
             @endif
                 
             <img src="{{ $product->productImg }}"
-                 class="rounded w-full h-32 md:h-48 lg:h-60 object-cover transition duration-700 ease-out group-hover:scale-105"
+                 class="rounded w-full h-32 md:h-48 lg:52 2xl:h-60 object-cover transition duration-700 ease-out group-hover:scale-105"
                  alt="{{ $product->name }}" />
         </a>
 

@@ -44,7 +44,11 @@ new #[Layout('layouts.guest')] class extends Component
 
             {{-- check tenant logo  --}}
             <a href="/">
-                <img class="mx-auto h-20 w-auto" src="{{ $this->seller_log }}" alt="{{  $this->seller_name }}">
+                @if ($this->seller_log)
+                    <img class="mx-auto h-20 w-auto" src="{{ $this->seller_log }}" alt="{{  $this->seller_name }}">
+                    @else
+                    <h1 class="text-6xl font-bold font-bebas text-center ">{{  $this->seller_name  }}</h1>
+                @endif
             </a>
             <h2 class="mt-6 text-3xl font-extrabold text-gray-900 dark:text-white {{ app()->currentLocale() === 'my' ? 'font-mm' : '' }}">
                 {{ __('messages.auth.login_page.title') }}

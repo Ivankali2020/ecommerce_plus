@@ -4,20 +4,9 @@ namespace App\Policies;
 
 use App\Models\Admin;
 use App\Models\Seller;
-use Filament\Models\Contracts\FilamentUser;
-use Illuminate\Auth\Access\HandlesAuthorization;
 
-class AdminPolicy
+class AdminPolicy extends BasePolicy
 {
-    use HandlesAuthorization;
-
-    public function before(FilamentUser $user, $ability)
-    {
-        if (auth()->guard('admin')->check()) {
-            return true;
-        }
-    }
-
     /**
      * Determine whether the seller can view any models.
      */

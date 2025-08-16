@@ -4,13 +4,12 @@ declare(strict_types=1);
 
 use App\Livewire\ProductDetail;
 use App\Livewire\Seller\SubscriptionPlans;
-use App\Livewire\Store;
 use Filament\Actions\Exports\Http\Controllers\DownloadExport;
-use Illuminate\Support\Facades\Route;
 use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Route;
 use Stancl\Tenancy\Middleware\InitializeTenancyByDomain;
 use Stancl\Tenancy\Middleware\PreventAccessFromCentralDomains;
-use Filament\Http\Middleware\Authenticate;
+
 /*
 |--------------------------------------------------------------------------
 | Tenant Routes
@@ -25,7 +24,7 @@ use Filament\Http\Middleware\Authenticate;
 
 // Only execute these routes if we're on a tenant domain
 $isCentralDomain = in_array(request()->getHost(), config('tenancy.central_domains'));
-if (!$isCentralDomain) {
+if (! $isCentralDomain) {
 
     Route::middleware([
         'web',
@@ -35,7 +34,7 @@ if (!$isCentralDomain) {
     ])->group(function () {
 
         // Include authentication routes for tenants
-        require __DIR__ . '/auth.php';
+        require __DIR__.'/auth.php';
 
         // Public tenant routes - accessible without authentication
         Route::get('/', function () {
@@ -46,35 +45,34 @@ if (!$isCentralDomain) {
         })->name('welcome');
 
         // Authenticated tenant routes
-        Route::middleware(['auth'])->group(function () {
+        Route::middleware(['auth', 'verified'])->group(function () {
             Route::get('cart', \App\Livewire\Cart::class)->name('cart');
             Route::get('order', \App\Livewire\Order::class)->name('order');
             Route::get('order/{order}', \App\Livewire\OrderDetail::class)->name('order.detail');
             Route::get('recent-orders', \App\Livewire\RecentOrders::class)->name('recent.orders');
             Route::get('gifts', \App\Livewire\GiftPage::class)->name('gifts');
+            Route::get('gift-exchange-history', \App\Livewire\GiftExchangeHistory::class)->name('gift.exchange.history');
+            Route::get('point-transaction-history', \App\Livewire\PointTransactionHistory::class)->name('point.transaction.history');
+            Route::view('dashboard', 'dashboard')->name('dashboard');
+            Route::view('profile', 'profile')->name('profile');
         });
-
-        Route::view('dashboard', 'dashboard')
-            ->middleware(['auth']) //, 'verified'
-            ->name('dashboard');
-
-        Route::view('profile', 'profile')
-            ->middleware(['auth'])
-            ->name('profile');
-
 
         Route::get('products', \App\Livewire\AllProduct::class)->name('products');
         Route::get('product/{product}', ProductDetail::class)->name('product');
         Route::get('wholesale', \App\Livewire\WholeSale::class)->name('wholesale');
+        Route::get('delivery', \App\Livewire\DeliveryFees::class)->name('delivery');
 
-        // Add these routes for Google authentication 
+        // Content Pages Routes (Public Access)
+        Route::get('privacy-policy', \App\Livewire\Content\PrivacyPolicy::class)->name('privacy-policy');
+        Route::get('terms-conditions', \App\Livewire\Content\TermsConditions::class)->name('terms-conditions');
+        Route::get('about-us', \App\Livewire\Content\AboutUs::class)->name('about-us');
+        Route::get('returns-exchanges', \App\Livewire\Content\ReturnsExchanges::class)->name('returns-exchanges');
+        Route::get('faq', \App\Livewire\Content\Faq::class)->name('faq');
+
+        // Add these routes for Google authentication
         Route::get('/auth/google', [App\Http\Controllers\SocialAuthController::class, 'redirectToGoogle'])->name('auth.google');
         Route::get('/google/callback', [App\Http\Controllers\SocialAuthController::class, 'handleGoogleCallback'])->name('auth.google.callback');
     });
-
-    Route::get('store/{id}', Store::class)->name('store');
-
-
 
     Route::middleware([
         'web',
@@ -97,7 +95,7 @@ if (!$isCentralDomain) {
                 ],
                 'session_data' => [
                     'all_sessions' => array_keys(session()->all()),
-                    'seller_login_session' => session()->has('login_seller_' . sha1('seller')),
+                    'seller_login_session' => session()->has('login_seller_'.sha1('seller')),
                 ],
                 'tenant' => tenant()?->only(['id', 'data']),
                 'domain' => request()->getHost(),
@@ -118,10 +116,8 @@ if (!$isCentralDomain) {
             Route::get('/pos', \App\Livewire\Seller\Pos::class)->name('pos');
 
             Route::get('seller/invoice/{record}', \App\Livewire\Invoice::class)->name('invoice');
-
         });
     });
-
 
     Route::get('/filament/exports/{export}/download', DownloadExport::class)
         ->name('filament.exports.download')

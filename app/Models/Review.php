@@ -8,7 +8,18 @@ use Stancl\Tenancy\Database\Concerns\BelongsToPrimaryModel;
 
 class Review extends Model
 {
-    use HasFactory, BelongsToPrimaryModel;
+    use BelongsToPrimaryModel, HasFactory;
+
+    protected $fillable = [
+        'user_id',
+        'product_id',
+        'stars',
+        'comment',
+    ];
+
+    protected $casts = [
+        'stars' => 'integer',
+    ];
 
     public function getRelationshipToPrimaryModel(): string
     {

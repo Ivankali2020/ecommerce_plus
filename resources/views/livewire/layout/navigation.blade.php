@@ -41,18 +41,22 @@ new class extends Component
                 <!-- Logo -->
                     <div class="shrink-0 flex items-center">
                         <a href="{{ route('welcome') }}" >
-                            <img src="{{ $this->logo != null ? $this->logo : asset('assets/logo.png') }}" alt="{{  $seller->name }}" class="block rounded h-12 w-auto fill-current text-slate-800 dark:text-slate-200" />
+                            @if ($this->logo)
+                                <img src="{{ $this->logo != null ? $this->logo : asset('assets/logo.png') }}" alt="{{  $seller->name }}" class="block rounded h-12 w-auto fill-current text-slate-800 dark:text-slate-200" />
+                                @else
+                                <h1 class="text-2xl font-bold font-bebas text-center ">{{  $seller->name  }}</h1>
+                            @endif
                         </a>
                     </div>
 
                     <div class="hidden space-x-8 sm:-my-px sm:ms-10 sm:flex h-[100%] ">
-                        <x-nav-link :href="route('welcome')" :active="request()->routeIs('store')" wire:navigate>
+                        <x-nav-link :href="route('welcome')" :active="request()->routeIs('welcome')" wire:navigate>
                             {{ __('messages.navigation.main_store') }}
                         </x-nav-link>
                     </div>
 
                     <div class="hidden space-x-8 sm:-my-px sm:ms-10 sm:flex h-[100%] ">
-                        <x-nav-link :href="route('products', $this->sellerId())" :active="request()->routeIs('products')" wire:navigate>
+                        <x-nav-link :href="route('products')" :active="request()->routeIs('products')" wire:navigate>
                             {{ __('messages.navigation.products') }}
                         </x-nav-link>
                     </div>
@@ -63,14 +67,20 @@ new class extends Component
                         </x-nav-link>
                     </div>
 
+                    <div class="hidden space-x-8 sm:-my-px sm:ms-10 sm:flex h-[100%] ">
+                        <x-nav-link :href="route('delivery')" :active="request()->routeIs('delivery')" wire:navigate>
+                            {{ __('messages.navigation.delivery') }}
+                        </x-nav-link>
+                    </div>
+
                 @auth
 
                     <!-- Navigation Links -->
-                    <div class="hidden space-x-8 sm:-my-px sm:ms-10 sm:flex h-[100%] ">
+                    {{-- <div class="hidden space-x-8 sm:-my-px sm:ms-10 sm:flex h-[100%] ">
                         <x-nav-link :href="route('dashboard')" :active="request()->routeIs('dashboard')" >
                             {{ __('messages.navigation.dashboard') }}
                         </x-nav-link>
-                    </div>
+                    </div> --}}
 
 
                     <div class="hidden space-x-8 sm:-my-px sm:ms-10 sm:flex h-[100%] ">
@@ -121,10 +131,34 @@ new class extends Component
                             {{ __('messages.auth.profile.title') }}
                         </x-dropdown-link>
 
+                        <x-dropdown-link :href="route('dashboard')" wire:navigate class="flex gap-3 items-center">
+                            <svg xmlns="http://www.w3.org/2000/svg" class="w-5 h-5 " fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="size-6">
+                                <path stroke-linecap="round" stroke-linejoin="round" d="m7.875 14.25 1.214 1.942a2.25 2.25 0 0 0 1.908 1.058h2.006c.776 0 1.497-.4 1.908-1.058l1.214-1.942M2.41 9h4.636a2.25 2.25 0 0 1 1.872 1.002l.164.246a2.25 2.25 0 0 0 1.872 1.002h2.092a2.25 2.25 0 0 0 1.872-1.002l.164-.246A2.25 2.25 0 0 1 16.954 9h4.636M2.41 9a2.25 2.25 0 0 0-.16.832V12a2.25 2.25 0 0 0 2.25 2.25h15A2.25 2.25 0 0 0 21.75 12V9.832c0-.287-.055-.57-.16-.832M2.41 9a2.25 2.25 0 0 1 .382-.632l3.285-3.832a2.25 2.25 0 0 1 1.708-.786h8.43c.657 0 1.281.287 1.709.786l3.284 3.832c.163.19.291.404.382.632M4.5 20.25h15A2.25 2.25 0 0 0 21.75 18v-2.625c0-.621-.504-1.125-1.125-1.125H3.375c-.621 0-1.125.504-1.125 1.125V18a2.25 2.25 0 0 0 2.25 2.25Z" />
+                            </svg>
+                            {{ __('messages.navigation.dashboard') }}
+                        </x-dropdown-link>
+
+
+
+                        <x-dropdown-link :href="route('recent.orders')" wire:abort="navigate" class="flex gap-3 items-center">
+                            <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="size-5">
+                                <path stroke-linecap="round" stroke-linejoin="round" d="M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2m-3 7h3m-3 4h3m-6-4h.01M9 16h.01"></path>
+                            </svg>
+                            {{ __('messages.navigation.recent_orders') }}
+                        </x-dropdown-link>
+
+                        <x-dropdown-link :href="route('gifts')" wire:abort="navigate" class="flex gap-3 items-center">
+                            <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="size-5">
+                            <path stroke-linecap="round" stroke-linejoin="round" d="M21 11.25v8.25a1.5 1.5 0 0 1-1.5 1.5H5.25a1.5 1.5 0 0 1-1.5-1.5v-8.25M12 4.875A2.625 2.625 0 1 0 9.375 7.5H12m0-2.625V7.5m0-2.625A2.625 2.625 0 1 1 14.625 7.5H12m0 0V21m-8.625-9.75h18c.621 0 1.125-.504 1.125-1.125v-1.5c0-.621-.504-1.125-1.125-1.125h-18c-.621 0-1.125.504-1.125 1.125v1.5c0 .621.504 1.125 1.125 1.125Z" />
+                            </svg>
+
+                            {{ __('gifts.gifts') }}
+                        </x-dropdown-link>
+
                         <!-- Authentication -->
-                        <button wire:click="logout" class="w-full text-start">
-                            <x-dropdown-link class="flex gap-3 items-center">
-                                <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="currentColor" class="size-5">
+                        <button wire:click="logout" class="w-full text-start bg-red-100 rounded-sm ">
+                            <x-dropdown-link class="flex gap-3 items-center text-red-500">
+                                <svg xmlns="http://www.w3.org/2000/svg"  viewBox="0 0 20 20" fill="currentColor" class="size-5">
                                     <path fill-rule="evenodd" d="M10 1a4.5 4.5 0 0 0-4.5 4.5V9H5a2 2 0 0 0-2 2v6a2 2 0 0 0 2 2h10a2 2 0 0 0 2-2v-6a2 2 0 0 0-2-2h-.5V5.5A4.5 4.5 0 0 0 10 1Zm3 8V5.5a3 3 0 1 0-6 0V9h6Z" clip-rule="evenodd" />
                                   </svg>
                                 {{ __('messages.auth.logout') }}
@@ -220,8 +254,12 @@ new class extends Component
                     {{ __('messages.auth.profile.title') }}
                 </x-responsive-nav-link>
 
-                <x-responsive-nav-link :href="route('store',Auth::user()->seller_id ?? 1)" wire:navigate>
+                <x-responsive-nav-link :href="route('welcome')" wire:navigate>
                     {{ __('messages.navigation.main_store') }}
+                </x-responsive-nav-link>
+
+                <x-responsive-nav-link :href="route('delivery')" wire:navigate>
+                    {{ __('messages.navigation.delivery') }}
                 </x-responsive-nav-link>
 
                 <x-responsive-nav-link :href="route('dashboard')" wire:navigate>
