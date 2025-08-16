@@ -22,17 +22,7 @@
                 <x-language-switcher />
             </div>
 
-            <!-- Quick Links -->
-            <div class="space-y-4">
-                <h3 class="text-lg font-semibold">{{ __('messages.footer.quick_links') }}</h3>
-                <ul class="space-y-2">
-                    <li><a href="{{ route('welcome') }}" class="text-gray-500 hover:text-black transition-colors">{{ __('messages.navigation.main_store') }}</a></li>
-                    <li><a href="{{ route('products', $seller ? $seller->id : 1) }}" class="text-gray-500 hover:text-black transition-colors">{{ __('messages.navigation.products') }}</a></li>
-                    <li><a href="{{ route('wholesale') }}" class="text-gray-500 hover:text-black transition-colors">{{ __('messages.navigation.wholesale') }}</a></li>
-                    <li><a href="{{ route('delivery') }}" class="text-gray-500 hover:text-black transition-colors">{{ __('messages.navigation.delivery') }}</a></li>
-                </ul>
-            </div>
-
+           
             <!-- Customer Support -->
             <div class="space-y-4">
                 <h3 class="text-lg font-semibold">{{ __('messages.footer.support') }}</h3>
@@ -45,26 +35,35 @@
                 </ul>
             </div>
 
+
+            <!-- Quick Links -->
+            <div class="space-y-4  ">
+                <h3 class="text-lg font-semibold">{{ __('messages.footer.quick_links') }}</h3>
+                <ul class="space-y-2">
+                    <li><a href="{{ route('welcome') }}" class="text-gray-500 hover:text-black transition-colors">{{ __('messages.navigation.main_store') }}</a></li>
+                    <li><a href="{{ route('products') }}" class="text-gray-500 hover:text-black transition-colors">{{ __('messages.navigation.products') }}</a></li>
+                    <li><a href="{{ route('wholesale') }}" class="text-gray-500 hover:text-black transition-colors">{{ __('messages.navigation.wholesale') }}</a></li>
+                    <li><a href="{{ route('delivery') }}" class="text-gray-500 hover:text-black transition-colors">{{ __('messages.navigation.delivery') }}</a></li>
+                </ul>
+            </div>
+
             <div class="space-y-4">
                 <h3 class="text-lg font-semibold">{{ __('messages.footer.payment_methods') }}</h3>
                 @if($seller && $seller->payments->isNotEmpty())
-                    <div class="grid grid-cols-2 gap-3">
+                    <div class="grid grid-cols-2 lg:grid-cols-3 gap-3">
                         @foreach($seller->payments as $payment)
-                            <div class="bg-gray-800 rounded-lg p-3 text-center">
+                            <div class="rounded-md bg-slate-100 h-14 w-14 text-center p-2 flex items-center justify-center ">
                                 @if($payment->media->isNotEmpty())
                                     <img src="{{ $payment->media->first()->getUrl() }}" 
                                          alt="{{ $payment->name }}" 
-                                         class="w-full h-12 object-contain rounded mb-2">
-                                @endif
-                                <p class="text-xs text-gray-300">{{ $payment->name }}</p>
-                                @if($payment->phone)
-                                    <p class="text-xs text-gray-400">{{ $payment->phone }}</p>
+                                         class="w-full h-full object-cover rounded-lg">
                                 @endif
                             </div>
                         @endforeach
                     </div>
                 @endif
             </div>
+
         </div>
 
         <!-- Bottom Bar -->

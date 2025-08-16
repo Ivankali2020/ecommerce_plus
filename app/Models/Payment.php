@@ -12,11 +12,11 @@ use Stancl\Tenancy\Database\Concerns\BelongsToTenant;
 
 class Payment extends Model implements HasMedia
 {
-    use HasFactory,InteractsWithMedia,SoftDeletes,BelongsToTenant;
+    use BelongsToTenant,HasFactory,InteractsWithMedia,SoftDeletes;
 
     public function registerMediaCollections(): void
     {
-        (new MediaRegisterConversion('profile_photo'))->registerMediaConversions();
+        (new MediaRegisterConversion('logos'))->registerMediaConversions();
     }
 
     public function accounts()

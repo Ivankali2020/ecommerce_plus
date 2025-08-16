@@ -8,15 +8,6 @@ use App\Models\Tenant;
 
 new class extends Component
 {
-    public $seller;
-    public $logo;
-
-
-    public function mount()
-    {
-        $this->seller = Tenant::where('id',tenant('id'))->first()->sellers()->first();
-        $this->logo = $this->seller->getFirstMediaUrl('logos');
-    }
     /**
      * Log the current user out of the application.
      */
@@ -41,10 +32,10 @@ new class extends Component
                 <!-- Logo -->
                     <div class="shrink-0 flex items-center">
                         <a href="{{ route('welcome') }}" >
-                            @if ($this->logo)
-                                <img src="{{ $this->logo != null ? $this->logo : asset('assets/logo.png') }}" alt="{{  $seller->name }}" class="block rounded h-12 w-auto fill-current text-slate-800 dark:text-slate-200" />
+                            @if ($tenantSellerLogo)
+                                <img src="{{ $tenantSellerLogo != null ? $tenantSellerLogo : asset('assets/logo.png') }}" alt="{{  $seller->name }}" class="block rounded h-12 w-auto fill-current text-slate-800 dark:text-slate-200" />
                                 @else
-                                <h1 class="text-2xl font-bold font-bebas text-center ">{{  $seller->name  }}</h1>
+                                <h1 class="text-2xl font-bold font-bebas text-center ">{{  $tenantSellerName  }}</h1>
                             @endif
                         </a>
                     </div>
@@ -67,11 +58,11 @@ new class extends Component
                         </x-nav-link>
                     </div>
 
-                    <div class="hidden space-x-8 sm:-my-px sm:ms-10 sm:flex h-[100%] ">
+                    {{-- <div class="hidden space-x-8 sm:-my-px sm:ms-10 sm:flex h-[100%] ">
                         <x-nav-link :href="route('delivery')" :active="request()->routeIs('delivery')" wire:navigate>
                             {{ __('messages.navigation.delivery') }}
                         </x-nav-link>
-                    </div>
+                    </div> --}}
 
                 @auth
 
@@ -138,7 +129,13 @@ new class extends Component
                             {{ __('messages.navigation.dashboard') }}
                         </x-dropdown-link>
 
+                        <x-dropdown-link :href="route('delivery')" wire:navigate class="flex gap-3 items-center">
+                            <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="size-5">
+                                <path stroke-linecap="round" stroke-linejoin="round" d="M8.25 18.75a1.5 1.5 0 0 1-3 0m3 0a1.5 1.5 0 0 0-3 0m3 0h6m-9 0H3.375a1.125 1.125 0 0 1-1.125-1.125V14.25m17.25 4.5a1.5 1.5 0 0 1-3 0m3 0a1.5 1.5 0 0 0-3 0m3 0h1.125c.621 0 1.129-.504 1.09-1.124a17.902 17.902 0 0 0-3.213-9.193 2.056 2.056 0 0 0-1.58-.86H14.25M16.5 18.75h-2.25m0-11.177v-.958c0-.568-.422-1.048-.987-1.106a48.554 48.554 0 0 0-10.026 0 1.106 1.106 0 0 0-.987 1.106v7.635m12-6.677v6.677m0 4.5v-4.5m0 0h-12" />
+                            </svg>
 
+                             {{ __('messages.navigation.delivery') }}
+                        </x-dropdown-link>
 
                         <x-dropdown-link :href="route('recent.orders')" wire:abort="navigate" class="flex gap-3 items-center">
                             <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="size-5">

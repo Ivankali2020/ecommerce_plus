@@ -22,6 +22,7 @@ class UserAddressFactory extends Factory
             'region_id' => Region::get()->random()->id,
             'township_id' => Township::get()->random()->id,
             'address' => fake()->streetAddress(),
+            'phone' => fake()->phoneNumber(),
         ];
     }
 }

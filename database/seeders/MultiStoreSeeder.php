@@ -16,6 +16,8 @@ use App\Models\Region;
 use App\Models\Seller;
 use App\Models\Tenant;
 use App\Models\Township;
+use App\Models\User;
+use App\Models\UserAddress;
 use Illuminate\Database\Seeder;
 use Illuminate\Support\Facades\DB;
 use Stancl\Tenancy\Database\Models\Domain;
@@ -55,6 +57,7 @@ class MultiStoreSeeder extends Seeder
                 ])
                 // ->has(Attribute::factory(3)->has(AttributeValue::factory(3), 'values'))
                 ->has(Payment::factory(5)->state(fn () => ['tenant_id' => isset($tenant) ? $tenant->id : null])->has(PaymentAccount::factory(2), 'accounts'))
+                ->has(User::factory(3)->state(fn () => ['tenant_id' => isset($tenant) ? $tenant->id : null])->has(UserAddress::factory(2), 'addresses'))
                 ->create()->toArray()[0];
 
             // create domains

@@ -51,6 +51,10 @@ return [
         'logo' => [
             'label' => 'Logo',
         ],
+        'note' => [
+            'label' => 'Note',
+            'helper_text' => 'Optional note for the payment method',
+        ],
     ],
 
     'messages' => [

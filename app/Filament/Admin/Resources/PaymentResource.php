@@ -40,6 +40,7 @@ class PaymentResource extends Resource
                             Forms\Components\Select::make('currency_id')
                                 ->label(__('filament/resources/payment-resource.form.currency.label'))
                                 ->searchable()->preload()->disabled()
+                                ->hidden()
                                 ->default(fn () => Currency::where('code', 'MMK')->first()->id)
                                 ->helperText(__('filament/resources/payment-resource.form.currency.helper_text'))
                                 ->required()->relationship('currency', 'name'),
@@ -49,6 +50,12 @@ class PaymentResource extends Resource
                                 ->helperText(__('filament/resources/payment-resource.form.name.helper_text'))
                                 ->required()
                                 ->maxLength(255),
+
+                            Forms\Components\TextInput::make('note')
+                                ->label(__('filament/resources/payment-resource.form.note.label'))
+                                ->helperText(__('filament/resources/payment-resource.form.note.helper_text'))
+                                ->maxLength(255)
+                                ->nullable(),
 
                             Forms\Components\SpatieMediaLibraryFileUpload::make('logo')
                                 ->label(__('filament/resources/payment-resource.form.logo.label'))
