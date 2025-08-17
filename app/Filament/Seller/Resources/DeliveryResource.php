@@ -2,11 +2,13 @@
 
 namespace App\Filament\Seller\Resources;
 
-use App\Filament\Seller\Resources\DeliveryResource\Pages;
+use App\Filament\Seller\Resources\DeliveryResource\Pages\CreateDelivery;
+use App\Filament\Seller\Resources\DeliveryResource\Pages\EditDelivery;
+use App\Filament\Seller\Resources\DeliveryResource\Pages\ListDeliveries;
 use App\Models\Delivery;
 use Filament\Facades\Filament;
-use Filament\Forms\Form;
 use Filament\Resources\Resource;
+use Filament\Schemas\Schema;
 use Filament\Tables\Table;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\SoftDeletingScope;
@@ -36,9 +38,9 @@ class DeliveryResource extends Resource
     //     return __("filament/resources/delivery-resource.navigation.group");
     // }
 
-    public static function form(Form $form): Form
+    public static function form(Schema $schema): Schema
     {
-        return \App\Filament\Admin\Resources\DeliveryResource::form($form);
+        return \App\Filament\Admin\Resources\DeliveryResource::form($schema);
     }
 
     public static function table(Table $table): Table
@@ -56,9 +58,9 @@ class DeliveryResource extends Resource
     public static function getPages(): array
     {
         return [
-            'index' => Pages\ListDeliveries::route('/'),
-            'create' => Pages\CreateDelivery::route('/create'),
-            'edit' => Pages\EditDelivery::route('/{record}/edit'),
+            'index' => ListDeliveries::route('/'),
+            'create' => CreateDelivery::route('/create'),
+            'edit' => EditDelivery::route('/{record}/edit'),
         ];
     }
 

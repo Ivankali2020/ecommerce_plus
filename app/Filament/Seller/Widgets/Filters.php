@@ -4,13 +4,13 @@ namespace App\Filament\Seller\Widgets;
 
 use App\Helper\CheckFilamentSellerUser;
 use App\Models\Seller;
-use Filament\Forms\Components\Actions\Action;
-use Filament\Forms\Components\Grid;
-use Filament\Forms\Components\Section;
+use Filament\Actions\Action;
 use Filament\Forms\Components\Select;
 use Filament\Forms\Concerns\InteractsWithForms;
 use Filament\Forms\Contracts\HasForms;
-use Filament\Forms\Form;
+use Filament\Schemas\Components\Grid;
+use Filament\Schemas\Components\Section;
+use Filament\Schemas\Schema;
 use Filament\Widgets\Widget;
 use Illuminate\Support\Carbon;
 
@@ -18,7 +18,7 @@ class Filters extends Widget implements HasForms
 {
     use InteractsWithForms;
 
-    protected static string $view = 'filament.seller.widgets.filters';
+    protected string $view = 'filament.seller.widgets.filters';
 
     protected int|string|array $columnSpan = 'full';
 
@@ -57,10 +57,10 @@ class Filters extends Widget implements HasForms
         $this->dispatch('updateMonth', $this->month);
     }
 
-    public function form(Form $form): Form
+    public function form(Schema $schema): Schema
     {
-        return $form
-            ->schema([
+        return $schema
+            ->components([
                 Section::make()
                     // ->compact()
                     ->schema([

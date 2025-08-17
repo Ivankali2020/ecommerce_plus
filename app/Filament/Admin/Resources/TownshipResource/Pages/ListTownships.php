@@ -3,7 +3,7 @@
 namespace App\Filament\Admin\Resources\TownshipResource\Pages;
 
 use App\Filament\Admin\Resources\TownshipResource;
-use Filament\Actions;
+use Filament\Actions\CreateAction;
 use Filament\Resources\Pages\ListRecords;
 
 class ListTownships extends ListRecords
@@ -13,7 +13,7 @@ class ListTownships extends ListRecords
     protected function getHeaderActions(): array
     {
         return [
-            Actions\CreateAction::make(),
+            CreateAction::make(),
         ];
     }
 }

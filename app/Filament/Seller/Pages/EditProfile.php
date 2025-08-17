@@ -7,10 +7,10 @@ use Filament\Actions\Concerns\InteractsWithActions;
 use Filament\Forms\Components\SpatieMediaLibraryFileUpload;
 use Filament\Forms\Concerns\InteractsWithForms;
 use Filament\Forms\Contracts\HasForms;
-use Filament\Forms\Form;
+use Filament\Schemas\Schema;
 use Illuminate\Support\Js;
 
-class EditProfile extends \Filament\Pages\Auth\EditProfile implements HasForms
+class EditProfile extends \Filament\Auth\Pages\EditProfile implements HasForms
 {
     use InteractsWithActions;
     use InteractsWithForms;
@@ -20,9 +20,9 @@ class EditProfile extends \Filament\Pages\Auth\EditProfile implements HasForms
         return false;
     }
 
-    protected static ?string $navigationIcon = 'heroicon-o-document-text';
+    protected static string|\BackedEnum|null $navigationIcon = 'heroicon-o-document-text';
 
-    protected static string $view = 'filament.seller.pages.edit-profile';
+    protected string $view = 'filament.seller.pages.edit-profile';
 
     public ?array $data = [];
 
@@ -34,10 +34,10 @@ class EditProfile extends \Filament\Pages\Auth\EditProfile implements HasForms
         );
     }
 
-    public function form(Form $form): Form
+    public function form(Schema $schema): Schema
     {
-        return $form
-            ->schema([
+        return $schema
+            ->components([
                 $this->getNameFormComponent(),
                 $this->getEmailFormComponent(),
                 $this->getPasswordFormComponent(),

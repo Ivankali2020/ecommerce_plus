@@ -5,6 +5,7 @@ namespace App\Filament\Seller\Resources\OrderResource\Widgets;
 use App\Helper\CheckFilamentSellerUser;
 use App\Helper\OrderStatus;
 use App\Models\Order;
+use App\Models\OrderProduct;
 use Carbon\Carbon;
 use Filament\Support\RawJs;
 use Filament\Widgets\ChartWidget;
@@ -31,13 +32,13 @@ class OrderChart extends ChartWidget
         return __('filament/widgets/order-chart.description');
     }
 
-    protected static ?string $pollingInterval = null;
+    protected ?string $pollingInterval = null;
 
     protected static ?int $sort = 3;
 
     protected int|string|array $columnSpan = 'full';
 
-    protected static ?string $maxHeight = '300px';
+    protected ?string $maxHeight = '300px';
 
     public function mount(): void
     {
@@ -86,7 +87,7 @@ class OrderChart extends ChartWidget
 
                 // Calculate profit data using OrderProduct model
                 $profitData = Trend::query(
-                    \App\Models\OrderProduct::whereHas('order', function ($q) use ($sellerId) {
+                    OrderProduct::whereHas('order', function ($q) use ($sellerId) {
                         $q->where('seller_id', $sellerId);
                     })->whereHas('order', function ($q) {
                         $q->where('status', OrderStatus::Delivered);
@@ -103,18 +104,18 @@ class OrderChart extends ChartWidget
                     'datasets' => [
                         [
                             'label' => __('filament/widgets/order-chart.total_order_amount'),
-                            'data' => $revenueData->map(fn(TrendValue $value) => number_format($value->aggregate / 10000, 2)),
+                            'data' => $revenueData->map(fn (TrendValue $value) => number_format($value->aggregate / 10000, 2)),
                             'borderColor' => '#4e79a7',
                             'backgroundColor' => 'rgba(78, 121, 167, 0.1)',
                         ],
                         [
                             'label' => __('filament/widgets/order-chart.total_profit_amount'),
-                            'data' => $profitData->map(fn(TrendValue $value) => number_format($value->aggregate / 10000, 2)),
+                            'data' => $profitData->map(fn (TrendValue $value) => number_format($value->aggregate / 10000, 2)),
                             'borderColor' => '#76b7b2',
                             'backgroundColor' => 'rgba(118, 183, 178, 0.1)',
                         ],
                     ],
-                    'labels' => $revenueData->map(fn(TrendValue $value) => Carbon::parse($value->date)->format('Y')),
+                    'labels' => $revenueData->map(fn (TrendValue $value) => Carbon::parse($value->date)->format('Y')),
                 ];
 
             case 'week':
@@ -135,7 +136,7 @@ class OrderChart extends ChartWidget
                     ->sum('total_price');
 
                 $profitData = Trend::query(
-                    \App\Models\OrderProduct::whereHas('order', function ($q) use ($sellerId) {
+                    OrderProduct::whereHas('order', function ($q) use ($sellerId) {
                         $q->where('seller_id', $sellerId);
                     })->whereHas('order', function ($q) {
                         $q->where('status', OrderStatus::Delivered);
@@ -152,18 +153,18 @@ class OrderChart extends ChartWidget
                     'datasets' => [
                         [
                             'label' => __('filament/widgets/order-chart.total_order_amount'),
-                            'data' => $revenueData->map(fn(TrendValue $value) => number_format($value->aggregate / 10000, 2)),
+                            'data' => $revenueData->map(fn (TrendValue $value) => number_format($value->aggregate / 10000, 2)),
                             'borderColor' => '#4e79a7',
                             'backgroundColor' => 'rgba(78, 121, 167, 0.1)',
                         ],
                         [
                             'label' => __('filament/widgets/order-chart.total_profit_amount'),
-                            'data' => $profitData->map(fn(TrendValue $value) => number_format($value->aggregate / 10000, 2)),
+                            'data' => $profitData->map(fn (TrendValue $value) => number_format($value->aggregate / 10000, 2)),
                             'borderColor' => '#76b7b2',
                             'backgroundColor' => 'rgba(118, 183, 178, 0.1)',
                         ],
                     ],
-                    'labels' => $revenueData->map(fn(TrendValue $value) => Carbon::parse($value->date)->format('d M ')),
+                    'labels' => $revenueData->map(fn (TrendValue $value) => Carbon::parse($value->date)->format('d M ')),
                 ];
 
             case 'year':
@@ -177,7 +178,7 @@ class OrderChart extends ChartWidget
                     ->sum('total_price');
 
                 $profitData = Trend::query(
-                    \App\Models\OrderProduct::whereHas('order', function ($q) use ($sellerId) {
+                    OrderProduct::whereHas('order', function ($q) use ($sellerId) {
                         $q->where('seller_id', $sellerId);
                     })->whereHas('order', function ($q) {
                         $q->where('status', OrderStatus::Delivered);
@@ -194,18 +195,18 @@ class OrderChart extends ChartWidget
                     'datasets' => [
                         [
                             'label' => __('filament/widgets/order-chart.total_order_amount'),
-                            'data' => $revenueData->map(fn(TrendValue $value) => number_format($value->aggregate / 10000, 2)),
+                            'data' => $revenueData->map(fn (TrendValue $value) => number_format($value->aggregate / 10000, 2)),
                             'borderColor' => '#4e79a7',
                             'backgroundColor' => 'rgba(78, 121, 167, 0.1)',
                         ],
                         [
                             'label' => __('filament/widgets/order-chart.total_profit_amount'),
-                            'data' => $profitData->map(fn(TrendValue $value) => number_format($value->aggregate / 10000, 2)),
+                            'data' => $profitData->map(fn (TrendValue $value) => number_format($value->aggregate / 10000, 2)),
                             'borderColor' => '#76b7b2',
                             'backgroundColor' => 'rgba(118, 183, 178, 0.1)',
                         ],
                     ],
-                    'labels' => $revenueData->map(fn(TrendValue $value) => Carbon::parse($value->date)->format('M')),
+                    'labels' => $revenueData->map(fn (TrendValue $value) => Carbon::parse($value->date)->format('M')),
                 ];
 
             default:
@@ -226,7 +227,7 @@ class OrderChart extends ChartWidget
                     ->sum('total_price');
 
                 $profitData = Trend::query(
-                    \App\Models\OrderProduct::whereHas('order', function ($q) use ($sellerId) {
+                    OrderProduct::whereHas('order', function ($q) use ($sellerId) {
                         $q->where('seller_id', $sellerId);
                     })->whereHas('order', function ($q) {
                         $q->where('status', OrderStatus::Delivered);
@@ -243,18 +244,18 @@ class OrderChart extends ChartWidget
                     'datasets' => [
                         [
                             'label' => __('filament/widgets/order-chart.total_order_amount'),
-                            'data' => $revenueData->map(fn(TrendValue $value) => $value->aggregate / 10000),
+                            'data' => $revenueData->map(fn (TrendValue $value) => $value->aggregate / 10000),
                             'borderColor' => '#4e79a7',
                             'backgroundColor' => 'rgba(78, 121, 167, 0.1)',
                         ],
                         [
                             'label' => __('filament/widgets/order-chart.total_profit_amount'),
-                            'data' => $profitData->map(fn(TrendValue $value) => $value->aggregate / 10000),
+                            'data' => $profitData->map(fn (TrendValue $value) => $value->aggregate / 10000),
                             'borderColor' => '#76b7b2',
                             'backgroundColor' => 'rgba(118, 183, 178, 0.1)',
                         ],
                     ],
-                    'labels' => $revenueData->map(fn(TrendValue $value) => Carbon::parse($value->date)->format('d M')),
+                    'labels' => $revenueData->map(fn (TrendValue $value) => Carbon::parse($value->date)->format('d M')),
                 ];
         }
     }

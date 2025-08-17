@@ -2,11 +2,13 @@
 
 namespace App\Filament\Seller\Resources;
 
-use App\Filament\Seller\Resources\AttributeResource\Pages;
+use App\Filament\Seller\Resources\AttributeResource\Pages\CreateAttribute;
+use App\Filament\Seller\Resources\AttributeResource\Pages\EditAttribute;
+use App\Filament\Seller\Resources\AttributeResource\Pages\ListAttributes;
 use App\Helper\CheckFilamentSellerUser;
 use App\Models\Attribute;
-use Filament\Forms\Form;
 use Filament\Resources\Resource;
+use Filament\Schemas\Schema;
 use Filament\Tables\Table;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\SoftDeletingScope;
@@ -17,7 +19,7 @@ class AttributeResource extends Resource
 
     //    protected static ?string $navigationIcon = 'heroicon-o-rectangle-stack';
 
-    protected static ?string $navigationGroup = 'Business Section';
+    protected static string|\UnitEnum|null $navigationGroup = 'Business Section';
 
     public static function getNavigationLabel(): string
     {
@@ -29,9 +31,9 @@ class AttributeResource extends Resource
         return __('filament/resources/attribute-resource.navigation_label');
     }
 
-    public static function form(Form $form): Form
+    public static function form(Schema $schema): Schema
     {
-        return \App\Filament\Admin\Resources\AttributeResource::form($form);
+        return \App\Filament\Admin\Resources\AttributeResource::form($schema);
     }
 
     public static function table(Table $table): Table
@@ -49,9 +51,9 @@ class AttributeResource extends Resource
     public static function getPages(): array
     {
         return [
-            'index' => Pages\ListAttributes::route('/'),
-            'create' => Pages\CreateAttribute::route('/create'),
-            'edit' => Pages\EditAttribute::route('/{record}/edit'),
+            'index' => ListAttributes::route('/'),
+            'create' => CreateAttribute::route('/create'),
+            'edit' => EditAttribute::route('/{record}/edit'),
         ];
     }
 

@@ -2,12 +2,20 @@
 
 namespace App\Filament\Admin\Resources;
 
-use App\Filament\Admin\Resources\CurrencyResource\Pages;
+use App\Filament\Admin\Resources\CurrencyResource\Pages\CreateCurrency;
+use App\Filament\Admin\Resources\CurrencyResource\Pages\EditCurrency;
+use App\Filament\Admin\Resources\CurrencyResource\Pages\ListCurrencies;
 use App\Models\Currency;
-use Filament\Forms;
-use Filament\Forms\Form;
+use Filament\Actions\BulkActionGroup;
+use Filament\Actions\DeleteBulkAction;
+use Filament\Actions\EditAction;
+use Filament\Actions\ForceDeleteBulkAction;
+use Filament\Actions\RestoreBulkAction;
+use Filament\Forms\Components\TextInput;
 use Filament\Resources\Resource;
-use Filament\Tables;
+use Filament\Schemas\Schema;
+use Filament\Tables\Columns\TextColumn;
+use Filament\Tables\Filters\TrashedFilter;
 use Filament\Tables\Table;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\SoftDeletingScope;
@@ -18,25 +26,25 @@ class CurrencyResource extends Resource
 
     //    protected static ?string $navigationIcon = 'heroicon-o-rectangle-stack';
 
-    protected static ?string $navigationGroup = 'Money Section';
+    protected static string|\UnitEnum|null $navigationGroup = 'Money Section';
 
-    public static function form(Form $form): Form
+    public static function form(Schema $schema): Schema
     {
-        return $form
-            ->schema([
-                Forms\Components\TextInput::make('code')
+        return $schema
+            ->components([
+                TextInput::make('code')
                     ->required()
                     ->maxLength(255),
-                Forms\Components\TextInput::make('symbol_native')
+                TextInput::make('symbol_native')
                     ->required()
                     ->maxLength(255),
-                Forms\Components\TextInput::make('symbol')
+                TextInput::make('symbol')
                     ->required()
                     ->maxLength(255),
-                Forms\Components\TextInput::make('name')
+                TextInput::make('name')
                     ->required()
                     ->maxLength(255),
-                Forms\Components\TextInput::make('name_plural')
+                TextInput::make('name_plural')
                     ->required()
                     ->maxLength(255),
             ]);
@@ -46,40 +54,40 @@ class CurrencyResource extends Resource
     {
         return $table
             ->columns([
-                Tables\Columns\TextColumn::make('code')
+                TextColumn::make('code')
                     ->searchable(),
-                Tables\Columns\TextColumn::make('symbol_native')
+                TextColumn::make('symbol_native')
                     ->searchable(),
-                Tables\Columns\TextColumn::make('symbol')
+                TextColumn::make('symbol')
                     ->searchable(),
-                Tables\Columns\TextColumn::make('name')
+                TextColumn::make('name')
                     ->searchable(),
-                Tables\Columns\TextColumn::make('name_plural')
+                TextColumn::make('name_plural')
                     ->searchable(),
-                Tables\Columns\TextColumn::make('deleted_at')
+                TextColumn::make('deleted_at')
                     ->dateTime()
                     ->sortable()
                     ->toggleable(isToggledHiddenByDefault: true),
-                Tables\Columns\TextColumn::make('created_at')
+                TextColumn::make('created_at')
                     ->dateTime()
                     ->sortable()
                     ->toggleable(isToggledHiddenByDefault: true),
-                Tables\Columns\TextColumn::make('updated_at')
+                TextColumn::make('updated_at')
                     ->dateTime()
                     ->sortable()
                     ->toggleable(isToggledHiddenByDefault: true),
             ])
             ->filters([
-                Tables\Filters\TrashedFilter::make(),
+                TrashedFilter::make(),
             ])
-            ->actions([
-                Tables\Actions\EditAction::make(),
+            ->recordActions([
+                EditAction::make(),
             ])
-            ->bulkActions([
-                Tables\Actions\BulkActionGroup::make([
-                    Tables\Actions\DeleteBulkAction::make(),
-                    Tables\Actions\ForceDeleteBulkAction::make(),
-                    Tables\Actions\RestoreBulkAction::make(),
+            ->toolbarActions([
+                BulkActionGroup::make([
+                    DeleteBulkAction::make(),
+                    ForceDeleteBulkAction::make(),
+                    RestoreBulkAction::make(),
                 ]),
             ]);
     }
@@ -94,9 +102,9 @@ class CurrencyResource extends Resource
     public static function getPages(): array
     {
         return [
-            'index' => Pages\ListCurrencies::route('/'),
-            'create' => Pages\CreateCurrency::route('/create'),
-            'edit' => Pages\EditCurrency::route('/{record}/edit'),
+            'index' => ListCurrencies::route('/'),
+            'create' => CreateCurrency::route('/create'),
+            'edit' => EditCurrency::route('/{record}/edit'),
         ];
     }
 

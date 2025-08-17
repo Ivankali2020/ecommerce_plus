@@ -4,7 +4,7 @@ namespace App\Filament\Seller\Resources\ExpanseResource\Pages;
 
 use App\Filament\Seller\Resources\ExpanseResource;
 use App\Filament\Seller\Resources\ExpanseResource\Widgets\ExpanseChart;
-use Filament\Actions;
+use Filament\Actions\CreateAction;
 use Filament\Resources\Pages\ListRecords;
 
 class ListExpanses extends ListRecords
@@ -14,7 +14,7 @@ class ListExpanses extends ListRecords
     protected function getHeaderActions(): array
     {
         return [
-            Actions\CreateAction::make(),
+            CreateAction::make(),
         ];
     }
 

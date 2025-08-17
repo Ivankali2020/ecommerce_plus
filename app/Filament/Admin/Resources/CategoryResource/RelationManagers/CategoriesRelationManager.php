@@ -3,11 +3,21 @@
 namespace App\Filament\Admin\Resources\CategoryResource\RelationManagers;
 
 use App\Models\Category;
+use Filament\Actions\BulkActionGroup;
+use Filament\Actions\CreateAction;
+use Filament\Actions\DeleteAction;
+use Filament\Actions\DeleteBulkAction;
+use Filament\Actions\EditAction;
+use Filament\Actions\ForceDeleteAction;
 use Filament\Facades\Filament;
-use Filament\Forms;
-use Filament\Forms\Form;
+use Filament\Forms\Components\Hidden;
+use Filament\Forms\Components\Select;
+use Filament\Forms\Components\Textarea;
+use Filament\Forms\Components\TextInput;
 use Filament\Resources\RelationManagers\RelationManager;
-use Filament\Tables;
+use Filament\Schemas\Schema;
+use Filament\Tables\Columns\TextColumn;
+use Filament\Tables\Filters\TrashedFilter;
 use Filament\Tables\Table;
 use Illuminate\Support\Str;
 
@@ -15,13 +25,13 @@ class CategoriesRelationManager extends RelationManager
 {
     protected static string $relationship = 'subCategories';
 
-    public function form(Form $form): Form
+    public function form(Schema $schema): Schema
     {
-        return $form
-            ->schema([
+        return $schema
+            ->components([
 
                 // this is for seller
-                Forms\Components\Hidden::make('seller_id')
+                Hidden::make('seller_id')
                     ->default(function () {
                         if (Filament::getAuthGuard() == 'seller') {
                             return Filament::auth()->id();
@@ -31,7 +41,7 @@ class CategoriesRelationManager extends RelationManager
                     }),
                 // end
 
-                Forms\Components\Select::make('seller_id')
+                Select::make('seller_id')
                     ->searchable()->preload()
                     // this is for seller
                     ->disabled(Filament::getAuthGuard() == 'seller')
@@ -39,11 +49,11 @@ class CategoriesRelationManager extends RelationManager
                     // end
                     ->required()->relationship('seller', 'name'),
 
-                Forms\Components\TextInput::make('name')
+                TextInput::make('name')
                     ->required()
                     ->maxLength(255),
 
-                Forms\Components\Textarea::make('description')
+                Textarea::make('description')
                     ->maxLength(16777215),
             ]);
     }
@@ -53,25 +63,25 @@ class CategoriesRelationManager extends RelationManager
         return $table
             ->recordTitleAttribute('name')
             ->columns([
-                Tables\Columns\TextColumn::make('seller.name')
+                TextColumn::make('seller.name')
                     ->hidden(Filament::getAuthGuard() == 'seller'),
-                Tables\Columns\TextColumn::make('name')
+                TextColumn::make('name')
                     ->description(fn (Category $category) => Str::limit($category->description, 80)),
             ])
             ->filters([
-                Tables\Filters\TrashedFilter::make(),
+                TrashedFilter::make(),
             ])
             ->headerActions([
-                Tables\Actions\CreateAction::make(),
+                CreateAction::make(),
             ])
-            ->actions([
-                Tables\Actions\EditAction::make(),
-                Tables\Actions\DeleteAction::make(),
-                Tables\Actions\ForceDeleteAction::make(),
+            ->recordActions([
+                EditAction::make(),
+                DeleteAction::make(),
+                ForceDeleteAction::make(),
             ])
-            ->bulkActions([
-                Tables\Actions\BulkActionGroup::make([
-                    Tables\Actions\DeleteBulkAction::make(),
+            ->toolbarActions([
+                BulkActionGroup::make([
+                    DeleteBulkAction::make(),
                 ]),
             ]);
     }

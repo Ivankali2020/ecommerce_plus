@@ -2,13 +2,26 @@
 
 namespace App\Filament\Admin\Resources;
 
-use App\Filament\Admin\Resources\ExchangeResource\Pages;
+use App\Filament\Admin\Resources\ExchangeResource\Pages\CreateExchange;
+use App\Filament\Admin\Resources\ExchangeResource\Pages\EditExchange;
+use App\Filament\Admin\Resources\ExchangeResource\Pages\ListExchanges;
 use App\Models\Exchange;
+use Filament\Actions\BulkActionGroup;
+use Filament\Actions\DeleteBulkAction;
+use Filament\Actions\EditAction;
+use Filament\Actions\ForceDeleteBulkAction;
+use Filament\Actions\RestoreBulkAction;
+use Filament\Actions\ViewAction;
 use Filament\Facades\Filament;
-use Filament\Forms;
-use Filament\Forms\Form;
+use Filament\Forms\Components\Select;
+use Filament\Forms\Components\TextInput;
 use Filament\Resources\Resource;
-use Filament\Tables;
+use Filament\Schemas\Components\Group;
+use Filament\Schemas\Components\Section;
+use Filament\Schemas\Components\Utilities\Get;
+use Filament\Schemas\Schema;
+use Filament\Tables\Columns\TextColumn;
+use Filament\Tables\Filters\TrashedFilter;
 use Filament\Tables\Table;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\SoftDeletingScope;
@@ -20,7 +33,7 @@ class ExchangeResource extends Resource
 
     //    protected static ?string $navigationIcon = 'heroicon-o-rectangle-stack';
 
-    protected static ?string $navigationGroup = 'Money Section';
+    protected static string|\UnitEnum|null $navigationGroup = 'Money Section';
 
     public static function getNavigationLabel(): string
     {
@@ -37,29 +50,29 @@ class ExchangeResource extends Resource
         return __('filament/resources/exchange-resource.model.label');
     }
 
-    public static function form(Form $form): Form
+    public static function form(Schema $schema): Schema
     {
-        return $form
-            ->schema([
-                Forms\Components\Group::make()->schema([
-                    Forms\Components\Section::make()->schema([
-                        Forms\Components\Select::make('seller_id')
+        return $schema
+            ->components([
+                Group::make()->schema([
+                    Section::make()->schema([
+                        Select::make('seller_id')
                             ->required()->relationship('seller', 'name')
                             ->label(__('filament/resources/exchange-resource.form.seller_id.label'))
                             ->hidden(Filament::getAuthGuard() == 'seller')
                             ->searchable()->preload(),
 
-                        Forms\Components\Select::make('currency_id')
+                        Select::make('currency_id')
                             ->required()->relationship('currency', 'name')
                             ->label(__('filament/resources/exchange-resource.form.currency_id.label'))
                             ->unique(table: 'exchanges', column: 'currency_id', ignoreRecord: true,
-                                modifyRuleUsing: function (Unique $rule, Forms\Get $get) {
+                                modifyRuleUsing: function (Unique $rule, Get $get) {
                                     return $rule->where('seller_id', $get('seller_id') ?? Filament::auth()->id())
                                         ->where('currency_id', $get('currency_id'));
                                 })
                             ->searchable()->preload(),
 
-                        Forms\Components\TextInput::make('rate')
+                        TextInput::make('rate')
                             ->label(__('filament/resources/exchange-resource.form.rate.label'))
                             ->helperText(__('filament/resources/exchange-resource.form.rate.helper'))
                             ->required()
@@ -73,43 +86,43 @@ class ExchangeResource extends Resource
     {
         return $table
             ->columns([
-                Tables\Columns\TextColumn::make('seller.name')
+                TextColumn::make('seller.name')
                     ->label(__('filament/resources/exchange-resource.table.seller_name'))
                     ->hidden(Filament::getAuthGuard() == 'seller')
                     ->numeric()
                     ->sortable(),
-                Tables\Columns\TextColumn::make('currency.code')
+                TextColumn::make('currency.code')
                     ->label(__('filament/resources/exchange-resource.table.currency_code'))
                     ->description(fn (Exchange $exchange) => $exchange->currency->name)
                     ->sortable(),
-                Tables\Columns\TextColumn::make('rate')
+                TextColumn::make('rate')
                     ->label(__('filament/resources/exchange-resource.table.rate'))
                     ->prefix(fn (Exchange $exchange) => $exchange->currency->symbol_native.' ')
                     ->description(__('filament/resources/exchange-resource.table.rate_description'))
                     ->prefix(fn (Exchange $exchange) => $exchange->currency->symbol_native.' ')
                     ->description('calculate base on 1 USD')
                     ->sortable(),
-                Tables\Columns\TextColumn::make('created_at')
+                TextColumn::make('created_at')
                     ->dateTime()
                     ->sortable()
                     ->toggleable(isToggledHiddenByDefault: true),
-                Tables\Columns\TextColumn::make('updated_at')
+                TextColumn::make('updated_at')
                     ->dateTime()
                     ->sortable()
                     ->toggleable(isToggledHiddenByDefault: true),
             ])
             ->filters([
-                Tables\Filters\TrashedFilter::make(),
+                TrashedFilter::make(),
             ])
-            ->actions([
-                Tables\Actions\EditAction::make(),
-                Tables\Actions\ViewAction::make()->modalWidth('sm'),
+            ->recordActions([
+                EditAction::make(),
+                ViewAction::make()->modalWidth('sm'),
             ])
-            ->bulkActions([
-                Tables\Actions\BulkActionGroup::make([
-                    Tables\Actions\DeleteBulkAction::make(),
-                    Tables\Actions\ForceDeleteBulkAction::make(),
-                    Tables\Actions\RestoreBulkAction::make(),
+            ->toolbarActions([
+                BulkActionGroup::make([
+                    DeleteBulkAction::make(),
+                    ForceDeleteBulkAction::make(),
+                    RestoreBulkAction::make(),
                 ]),
             ]);
     }
@@ -124,9 +137,9 @@ class ExchangeResource extends Resource
     public static function getPages(): array
     {
         return [
-            'index' => Pages\ListExchanges::route('/'),
-            'create' => Pages\CreateExchange::route('/create'),
-            'edit' => Pages\EditExchange::route('/{record}/edit'),
+            'index' => ListExchanges::route('/'),
+            'create' => CreateExchange::route('/create'),
+            'edit' => EditExchange::route('/{record}/edit'),
         ];
     }
 

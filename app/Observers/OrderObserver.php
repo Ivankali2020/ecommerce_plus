@@ -4,8 +4,10 @@ namespace App\Observers;
 
 use App\Helper\OrderStatus;
 use App\Models\Order;
+use App\Models\PointTransaction;
 use App\Services\PointService;
-use Filament\Notifications\Actions\Action;
+use Exception;
+use Filament\Actions\Action;
 use Filament\Notifications\Notification;
 use Illuminate\Support\Facades\Log;
 
@@ -59,7 +61,7 @@ class OrderObserver
                             ->success()
                             ->sendToDatabase($order->user);
                     }
-                } catch (\Exception $e) {
+                } catch (Exception $e) {
                     // Log error if points awarding fails
                     Log::error('Failed to award points for order: '.$order->id, [
                         'error' => $e->getMessage(),
@@ -80,7 +82,7 @@ class OrderObserver
      */
     protected function hasPointsBeenAwarded(Order $order): bool
     {
-        return \App\Models\PointTransaction::where('user_id', $order->user_id)
+        return PointTransaction::where('user_id', $order->user_id)
             ->where('reference_type', 'order')
             ->where('reference_id', $order->id)
             ->where('type', 'earned')

@@ -10,11 +10,11 @@ use Illuminate\Support\Carbon;
 
 class ExpanseChart extends ChartWidget
 {
-    protected static ?string $heading = null;
+    protected ?string $heading = null;
 
     public ?string $filter = 'year';
 
-    protected static ?string $maxHeight = '300px';
+    protected ?string $maxHeight = '300px';
 
     protected int|string|array $columnSpan = 'full';
 

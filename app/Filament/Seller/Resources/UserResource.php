@@ -2,17 +2,19 @@
 
 namespace App\Filament\Seller\Resources;
 
-use App\Filament\Seller\Resources\UserResource\Pages;
+use App\Filament\Seller\Resources\UserResource\Pages\CreateUser;
+use App\Filament\Seller\Resources\UserResource\Pages\EditUser;
+use App\Filament\Seller\Resources\UserResource\Pages\ListUsers;
 use App\Models\User;
-use Filament\Forms\Form;
 use Filament\Resources\Resource;
+use Filament\Schemas\Schema;
 use Filament\Tables\Table;
 
 class UserResource extends Resource
 {
     protected static ?string $model = User::class;
 
-    protected static ?string $navigationIcon = 'heroicon-o-user-group';
+    protected static string|\BackedEnum|null $navigationIcon = 'heroicon-o-user-group';
 
     public static function getNavigationLabel(): string
     {
@@ -29,9 +31,9 @@ class UserResource extends Resource
         return __('filament/resources/user-resource.navigation.plural');
     }
 
-    public static function form(Form $form): Form
+    public static function form(Schema $schema): Schema
     {
-        return \App\Filament\Admin\Resources\UserResource::form($form);
+        return \App\Filament\Admin\Resources\UserResource::form($schema);
     }
 
     public static function table(Table $table): Table
@@ -49,9 +51,9 @@ class UserResource extends Resource
     public static function getPages(): array
     {
         return [
-            'index' => Pages\ListUsers::route('/'),
-            'create' => Pages\CreateUser::route('/create'),
-            'edit' => Pages\EditUser::route('/{record}/edit'),
+            'index' => ListUsers::route('/'),
+            'create' => CreateUser::route('/create'),
+            'edit' => EditUser::route('/{record}/edit'),
         ];
     }
 }

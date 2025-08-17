@@ -2,17 +2,18 @@
 
 namespace App\Filament\Seller\Resources;
 
-use App\Filament\Seller\Resources\BrandResource\Pages;
+use App\Filament\Seller\Resources\BrandResource\Pages\CreateBrand;
+use App\Filament\Seller\Resources\BrandResource\Pages\EditBrand;
+use App\Filament\Seller\Resources\BrandResource\Pages\ListBrands;
 use App\Models\Brand;
 use Filament\Facades\Filament;
-use Filament\Forms\Components\Group;
-use Filament\Forms\Components\Section;
-use Filament\Forms\Components\Select;
 use Filament\Forms\Components\SpatieMediaLibraryFileUpload;
 use Filament\Forms\Components\Textarea;
 use Filament\Forms\Components\TextInput;
-use Filament\Forms\Form;
 use Filament\Resources\Resource;
+use Filament\Schemas\Components\Group;
+use Filament\Schemas\Components\Section;
+use Filament\Schemas\Schema;
 use Filament\Tables\Table;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\SoftDeletingScope;
@@ -23,7 +24,7 @@ class BrandResource extends Resource
 
     //    protected static ?string $navigationIcon = 'heroicon-o-rectangle-stack';
 
-    protected static ?string $navigationGroup = 'Business Section';
+    protected static string|\UnitEnum|null $navigationGroup = 'Business Section';
 
     public static function getModelLabel(): string
     {
@@ -35,10 +36,10 @@ class BrandResource extends Resource
     //     return __("filament/resources/brand-resource.navigation.group");
     // }
 
-    public static function form(Form $form): Form
+    public static function form(Schema $schema): Schema
     {
-        return  $form
-            ->schema([
+        return $schema
+            ->components([
                 Group::make()->schema([
                     Section::make()->schema([
 
@@ -77,9 +78,9 @@ class BrandResource extends Resource
     public static function getPages(): array
     {
         return [
-            'index' => Pages\ListBrands::route('/'),
-            'create' => Pages\CreateBrand::route('/create'),
-            'edit' => Pages\EditBrand::route('/{record}/edit'),
+            'index' => ListBrands::route('/'),
+            'create' => CreateBrand::route('/create'),
+            'edit' => EditBrand::route('/{record}/edit'),
         ];
     }
 

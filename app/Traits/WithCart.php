@@ -4,6 +4,8 @@ namespace App\Traits;
 
 use App\Models\Cart;
 use App\Models\Product as ProductModel;
+use App\Models\Variant;
+use Exception;
 use Filament\Notifications\Notification;
 use Illuminate\Support\Facades\Auth;
 
@@ -33,7 +35,7 @@ trait WithCart
                 'user_id' => Auth::id(),
                 'product_id' => $productId,
                 'variant_id' => $variant?->id,
-                'tenant_id' => $product->tenant_id
+                'tenant_id' => $product->tenant_id,
             ])->first();
 
             $newQuantity = $existingCart ? $existingCart->quantity + 1 : $quantity;
@@ -90,8 +92,8 @@ trait WithCart
                     ->success()
                     ->duration(500)->send();
             }
-        } catch (\Exception $e) {
-            logger()->error('Error adding to cart: ' . $e->getMessage());
+        } catch (Exception $e) {
+            logger()->error('Error adding to cart: '.$e->getMessage());
 
             Notification::make()
                 ->title('Failed to add product to cart')
@@ -104,19 +106,20 @@ trait WithCart
     public function addVariantToCart($variantId, $quantity = 1)
     {
         try {
-            $variant = \App\Models\Variant::with('product')->find($variantId);
+            $variant = Variant::with('product')->find($variantId);
 
-            if (!$variant) {
+            if (! $variant) {
                 Notification::make()
                     ->title('Variant not found')
                     ->danger()
                     ->send();
+
                 return;
             }
 
             return $this->addToCart($variant->product_id, $variantId, $quantity);
-        } catch (\Exception $e) {
-            logger()->error('Error adding variant to cart: ' . $e->getMessage());
+        } catch (Exception $e) {
+            logger()->error('Error adding variant to cart: '.$e->getMessage());
 
             Notification::make()
                 ->title('Failed to add variant to cart')

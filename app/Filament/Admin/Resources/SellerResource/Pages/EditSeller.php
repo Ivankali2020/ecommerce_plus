@@ -3,7 +3,7 @@
 namespace App\Filament\Admin\Resources\SellerResource\Pages;
 
 use App\Filament\Admin\Resources\SellerResource;
-use Filament\Actions;
+use Filament\Actions\DeleteAction;
 use Filament\Resources\Pages\EditRecord;
 
 class EditSeller extends EditRecord
@@ -13,7 +13,7 @@ class EditSeller extends EditRecord
     protected function getHeaderActions(): array
     {
         return [
-            Actions\DeleteAction::make(),
+            DeleteAction::make(),
         ];
     }
 }

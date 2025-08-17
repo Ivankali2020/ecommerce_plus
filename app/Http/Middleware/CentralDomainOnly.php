@@ -11,7 +11,7 @@ class CentralDomainOnly
     /**
      * Handle an incoming request.
      *
-     * @param  \Closure(\Illuminate\Http\Request): (\Symfony\Component\HttpFoundation\Response)  $next
+     * @param  Closure(Request):Response  $next
      */
     public function handle(Request $request, Closure $next): Response
     {
@@ -24,10 +24,11 @@ class CentralDomainOnly
         $currentHost = $request->getHost();
 
         // Check if current domain is in central domains list
-        if (!in_array($currentHost, $centralDomains)) {
+        if (! in_array($currentHost, $centralDomains)) {
             // Redirect to central domain admin panel
             $centralDomain = $centralDomains[0] ?? 'localhost';
             $protocol = $request->isSecure() ? 'https' : 'http';
+
             return redirect()->to("{$protocol}://{$centralDomain}/oh_my_admin");
         }
 

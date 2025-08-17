@@ -3,7 +3,8 @@
 namespace App\Filament\Seller\Resources\GiftExchangeResource\Pages;
 
 use App\Filament\Seller\Resources\GiftExchangeResource;
-use Filament\Actions;
+use Filament\Actions\Action;
+use Filament\Actions\EditAction;
 use Filament\Resources\Pages\ViewRecord;
 
 class ViewGiftExchange extends ViewRecord
@@ -13,8 +14,8 @@ class ViewGiftExchange extends ViewRecord
     protected function getHeaderActions(): array
     {
         return [
-            Actions\EditAction::make(),
-            Actions\Action::make('mark_processed')
+            EditAction::make(),
+            Action::make('mark_processed')
                 ->label('Mark as Processed')
                 ->icon('heroicon-m-check-circle')
                 ->color('success')
@@ -27,8 +28,8 @@ class ViewGiftExchange extends ViewRecord
 
                     $this->redirect($this->getResource()::getUrl('view', ['record' => $this->record]));
                 })
-                ->visible(fn() => $this->record->status === 'pending'),
-            Actions\Action::make('mark_shipped')
+                ->visible(fn () => $this->record->status === 'pending'),
+            Action::make('mark_shipped')
                 ->label('Mark as Shipped')
                 ->icon('heroicon-m-truck')
                 ->color('warning')
@@ -41,8 +42,8 @@ class ViewGiftExchange extends ViewRecord
 
                     $this->redirect($this->getResource()::getUrl('view', ['record' => $this->record]));
                 })
-                ->visible(fn() => in_array($this->record->status, ['processing', 'pending'])),
-            Actions\Action::make('mark_delivered')
+                ->visible(fn () => in_array($this->record->status, ['processing', 'pending'])),
+            Action::make('mark_delivered')
                 ->label('Mark as Delivered')
                 ->icon('heroicon-m-check-badge')
                 ->color('success')
@@ -55,7 +56,7 @@ class ViewGiftExchange extends ViewRecord
 
                     $this->redirect($this->getResource()::getUrl('view', ['record' => $this->record]));
                 })
-                ->visible(fn() => $this->record->status === 'shipped'),
+                ->visible(fn () => $this->record->status === 'shipped'),
         ];
     }
 }

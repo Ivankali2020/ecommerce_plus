@@ -2,12 +2,24 @@
 
 namespace App\Filament\Seller\Resources;
 
-use App\Filament\Seller\Resources\PointTransactionResource\Pages;
+use App\Filament\Seller\Resources\PointTransactionResource\Pages\CreatePointTransaction;
+use App\Filament\Seller\Resources\PointTransactionResource\Pages\EditPointTransaction;
+use App\Filament\Seller\Resources\PointTransactionResource\Pages\ListPointTransactions;
 use App\Models\PointTransaction;
-use Filament\Forms;
-use Filament\Forms\Form;
+use Filament\Actions\BulkActionGroup;
+use Filament\Actions\DeleteBulkAction;
+use Filament\Actions\EditAction;
+use Filament\Actions\ViewAction;
+use Filament\Forms\Components\DatePicker;
+use Filament\Forms\Components\DateTimePicker;
+use Filament\Forms\Components\Select;
+use Filament\Forms\Components\Textarea;
+use Filament\Forms\Components\TextInput;
 use Filament\Resources\Resource;
-use Filament\Tables;
+use Filament\Schemas\Schema;
+use Filament\Tables\Columns\TextColumn;
+use Filament\Tables\Filters\Filter;
+use Filament\Tables\Filters\SelectFilter;
 use Filament\Tables\Table;
 use Illuminate\Database\Eloquent\Builder;
 
@@ -15,9 +27,9 @@ class PointTransactionResource extends Resource
 {
     protected static ?string $model = PointTransaction::class;
 
-    protected static ?string $navigationIcon = 'heroicon-o-bars-arrow-up';
+    protected static string|\BackedEnum|null $navigationIcon = 'heroicon-o-bars-arrow-up';
 
-    protected static ?string $navigationGroup = 'Loyalty Program';
+    protected static string|\UnitEnum|null $navigationGroup = 'Loyalty Program';
 
     public static function getNavigationLabel(): string
     {
@@ -34,38 +46,38 @@ class PointTransactionResource extends Resource
         return __('filament/resources/point-transaction-resource.navigation.plural');
     }
 
-    public static function form(Form $form): Form
+    public static function form(Schema $schema): Schema
     {
-        return $form
-            ->schema([
-                Forms\Components\Select::make('user_id')
+        return $schema
+            ->components([
+                Select::make('user_id')
                     ->label(__('filament/resources/point-transaction-resource.form.fields.user'))
                     ->relationship('user', 'name')
                     ->required(),
 
-                Forms\Components\TextInput::make('type')
+                TextInput::make('type')
                     ->label(__('filament/resources/point-transaction-resource.form.fields.type'))
                     ->required(),
-                Forms\Components\TextInput::make('points')
+                TextInput::make('points')
                     ->label(__('filament/resources/point-transaction-resource.form.fields.points'))
                     ->required()
                     ->numeric(),
-                Forms\Components\TextInput::make('balance_after')
+                TextInput::make('balance_after')
                     ->label(__('filament/resources/point-transaction-resource.form.fields.balance_after'))
                     ->required()
                     ->numeric(),
-                Forms\Components\TextInput::make('reference_type')
+                TextInput::make('reference_type')
                     ->label(__('filament/resources/point-transaction-resource.form.fields.reference_type'))
                     ->maxLength(255),
-                Forms\Components\TextInput::make('reference_id')
+                TextInput::make('reference_id')
                     ->label(__('filament/resources/point-transaction-resource.form.fields.reference_id'))
                     ->numeric(),
-                Forms\Components\Textarea::make('description')
+                Textarea::make('description')
                     ->label(__('filament/resources/point-transaction-resource.form.fields.description'))
                     ->columnSpanFull(),
-                Forms\Components\TextInput::make('metadata')
+                TextInput::make('metadata')
                     ->label(__('filament/resources/point-transaction-resource.form.fields.metadata')),
-                Forms\Components\DateTimePicker::make('expires_at')
+                DateTimePicker::make('expires_at')
                     ->label(__('filament/resources/point-transaction-resource.form.fields.expires_at')),
             ]);
     }
@@ -74,7 +86,7 @@ class PointTransactionResource extends Resource
     {
         return $table
             ->columns([
-                Tables\Columns\TextColumn::make('user.name')
+                TextColumn::make('user.name')
                     ->label(__('filament/resources/point-transaction-resource.table.columns.user'))
                     ->searchable()
                     ->sortable()
@@ -82,7 +94,7 @@ class PointTransactionResource extends Resource
                     ->icon('heroicon-m-user')
                     ->iconColor('gray'),
 
-                Tables\Columns\TextColumn::make('type')
+                TextColumn::make('type')
                     ->label(__('filament/resources/point-transaction-resource.table.columns.type'))
                     ->badge()
                     ->color(fn (string $state): string => match ($state) {
@@ -101,7 +113,7 @@ class PointTransactionResource extends Resource
                     })
                     ->formatStateUsing(fn (string $state): string => ucfirst($state)),
 
-                Tables\Columns\TextColumn::make('points')
+                TextColumn::make('points')
                     ->label(__('filament/resources/point-transaction-resource.table.columns.points'))
                     ->numeric()
                     ->sortable()
@@ -113,7 +125,7 @@ class PointTransactionResource extends Resource
                             number_format(abs($record->points))
                     ),
 
-                Tables\Columns\TextColumn::make('balance_after')
+                TextColumn::make('balance_after')
                     ->label(__('filament/resources/point-transaction-resource.table.columns.balance_after'))
                     ->numeric()
                     ->sortable()
@@ -122,7 +134,7 @@ class PointTransactionResource extends Resource
                     ->weight('medium')
                     ->formatStateUsing(fn ($state): string => number_format($state)),
 
-                Tables\Columns\TextColumn::make('reference_type')
+                TextColumn::make('reference_type')
                     ->label(__('filament/resources/point-transaction-resource.table.columns.reference_type'))
                     ->searchable()
                     ->badge()
@@ -132,7 +144,7 @@ class PointTransactionResource extends Resource
                     )
                     ->toggleable(),
 
-                Tables\Columns\TextColumn::make('reference_id')
+                TextColumn::make('reference_id')
                     ->label(__('filament/resources/point-transaction-resource.table.columns.reference_id'))
                     ->numeric()
                     ->sortable()
@@ -141,10 +153,10 @@ class PointTransactionResource extends Resource
                     ->formatStateUsing(fn (?int $state): string => $state ? '#'.$state : 'N/A')
                     ->toggleable(),
 
-                Tables\Columns\TextColumn::make('description')
+                TextColumn::make('description')
                     ->label(__('filament/resources/point-transaction-resource.table.columns.description'))
                     ->limit(50)
-                    ->tooltip(function (Tables\Columns\TextColumn $column): ?string {
+                    ->tooltip(function (TextColumn $column): ?string {
                         $state = $column->getState();
 
                         return strlen($state) > 50 ? $state : null;
@@ -152,7 +164,7 @@ class PointTransactionResource extends Resource
                     ->color('gray')
                     ->toggleable(),
 
-                Tables\Columns\TextColumn::make('expires_at')
+                TextColumn::make('expires_at')
                     ->label(__('filament/resources/point-transaction-resource.table.columns.expires_at'))
                     ->dateTime('M j, Y g:i A')
                     ->sortable()
@@ -166,7 +178,7 @@ class PointTransactionResource extends Resource
                     ->placeholder('Never')
                     ->toggleable(),
 
-                Tables\Columns\TextColumn::make('created_at')
+                TextColumn::make('created_at')
                     ->label(__('filament/resources/point-transaction-resource.table.columns.created_at'))
                     ->dateTime('M j, Y g:i A')
                     ->sortable()
@@ -174,7 +186,7 @@ class PointTransactionResource extends Resource
                     ->size('sm')
                     ->toggleable(isToggledHiddenByDefault: true),
 
-                Tables\Columns\TextColumn::make('updated_at')
+                TextColumn::make('updated_at')
                     ->label(__('filament/resources/point-transaction-resource.table.columns.updated_at'))
                     ->dateTime('M j, Y g:i A')
                     ->sortable()
@@ -184,7 +196,7 @@ class PointTransactionResource extends Resource
             ])
             ->defaultSort('created_at', 'desc')
             ->filters([
-                Tables\Filters\SelectFilter::make('type')
+                SelectFilter::make('type')
                     ->label(__('filament/resources/point-transaction-resource.table.filters.type.label'))
                     ->options([
                         'earned' => 'Earned',
@@ -194,45 +206,45 @@ class PointTransactionResource extends Resource
                     ])
                     ->multiple(),
 
-                Tables\Filters\Filter::make('has_expiry')
+                Filter::make('has_expiry')
                     ->label(__('filament/resources/point-transaction-resource.table.filters.has_expiry.label'))
-                    ->query(fn(Builder $query): Builder => $query->whereNotNull('expires_at')),
+                    ->query(fn (Builder $query): Builder => $query->whereNotNull('expires_at')),
 
-                Tables\Filters\Filter::make('expired')
+                Filter::make('expired')
                     ->label(__('filament/resources/point-transaction-resource.table.filters.expired.label'))
-                    ->query(fn(Builder $query): Builder => $query->where('expires_at', '<', now())),
+                    ->query(fn (Builder $query): Builder => $query->where('expires_at', '<', now())),
 
-                Tables\Filters\Filter::make('created_at')
+                Filter::make('created_at')
                     ->label(__('filament/resources/point-transaction-resource.table.filters.date_range.label'))
-                    ->form([
-                        Forms\Components\DatePicker::make('created_from')
+                    ->schema([
+                        DatePicker::make('created_from')
                             ->label(__('filament/resources/point-transaction-resource.table.filters.date_range.from')),
-                        Forms\Components\DatePicker::make('created_until')
+                        DatePicker::make('created_until')
                             ->label(__('filament/resources/point-transaction-resource.table.filters.date_range.until')),
                     ])
                     ->query(function (Builder $query, array $data): Builder {
                         return $query
                             ->when(
                                 $data['created_from'],
-                                fn(Builder $query, $date): Builder => $query->whereDate('created_at', '>=', $date),
+                                fn (Builder $query, $date): Builder => $query->whereDate('created_at', '>=', $date),
                             )
                             ->when(
                                 $data['created_until'],
-                                fn(Builder $query, $date): Builder => $query->whereDate('created_at', '<=', $date),
+                                fn (Builder $query, $date): Builder => $query->whereDate('created_at', '<=', $date),
                             );
                     }),
             ])
-            ->actions([
-                Tables\Actions\ViewAction::make()
+            ->recordActions([
+                ViewAction::make()
                     ->label(__('filament/resources/point-transaction-resource.actions.view'))
                     ->color('info'),
-                Tables\Actions\EditAction::make()
+                EditAction::make()
                     ->label(__('filament/resources/point-transaction-resource.actions.edit'))
                     ->color('warning'),
             ])
-            ->bulkActions([
-                Tables\Actions\BulkActionGroup::make([
-                    Tables\Actions\DeleteBulkAction::make()
+            ->toolbarActions([
+                BulkActionGroup::make([
+                    DeleteBulkAction::make()
                         ->label(__('filament/resources/point-transaction-resource.actions.delete')),
                 ]),
             ])
@@ -253,9 +265,9 @@ class PointTransactionResource extends Resource
     public static function getPages(): array
     {
         return [
-            'index' => Pages\ListPointTransactions::route('/'),
-            'create' => Pages\CreatePointTransaction::route('/create'),
-            'edit' => Pages\EditPointTransaction::route('/{record}/edit'),
+            'index' => ListPointTransactions::route('/'),
+            'create' => CreatePointTransaction::route('/create'),
+            'edit' => EditPointTransaction::route('/{record}/edit'),
         ];
     }
 }

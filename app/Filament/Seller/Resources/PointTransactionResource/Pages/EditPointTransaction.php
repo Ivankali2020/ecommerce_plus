@@ -3,7 +3,7 @@
 namespace App\Filament\Seller\Resources\PointTransactionResource\Pages;
 
 use App\Filament\Seller\Resources\PointTransactionResource;
-use Filament\Actions;
+use Filament\Actions\DeleteAction;
 use Filament\Resources\Pages\EditRecord;
 
 class EditPointTransaction extends EditRecord
@@ -13,7 +13,7 @@ class EditPointTransaction extends EditRecord
     protected function getHeaderActions(): array
     {
         return [
-            Actions\DeleteAction::make(),
+            DeleteAction::make(),
         ];
     }
 }

@@ -2,13 +2,27 @@
 
 namespace App\Filament\Admin\Resources;
 
-use App\Filament\Admin\Resources\BrandResource\Pages;
+use App\Filament\Admin\Resources\BrandResource\Pages\CreateBrand;
+use App\Filament\Admin\Resources\BrandResource\Pages\EditBrand;
+use App\Filament\Admin\Resources\BrandResource\Pages\ListBrands;
 use App\Models\Brand;
+use Filament\Actions\BulkActionGroup;
+use Filament\Actions\DeleteBulkAction;
+use Filament\Actions\EditAction;
+use Filament\Actions\ForceDeleteBulkAction;
+use Filament\Actions\RestoreBulkAction;
 use Filament\Facades\Filament;
-use Filament\Forms;
-use Filament\Forms\Form;
+use Filament\Forms\Components\Select;
+use Filament\Forms\Components\SpatieMediaLibraryFileUpload;
+use Filament\Forms\Components\Textarea;
+use Filament\Forms\Components\TextInput;
 use Filament\Resources\Resource;
-use Filament\Tables;
+use Filament\Schemas\Components\Group;
+use Filament\Schemas\Components\Section;
+use Filament\Schemas\Schema;
+use Filament\Tables\Columns\SpatieMediaLibraryImageColumn;
+use Filament\Tables\Columns\TextColumn;
+use Filament\Tables\Filters\TrashedFilter;
 use Filament\Tables\Table;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\SoftDeletingScope;
@@ -19,7 +33,7 @@ class BrandResource extends Resource
 
     //    protected static ?string $navigationIcon = 'heroicon-o-rectangle-stack';
 
-    protected static ?string $navigationGroup = 'Business Section';
+    protected static string|\UnitEnum|null $navigationGroup = 'Business Section';
 
     public static function getModelLabel(): string
     {
@@ -31,29 +45,29 @@ class BrandResource extends Resource
         return __('filament/resources/brand-resource.model.plural_label');
     }
 
-    public static function form(Form $form): Form
+    public static function form(Schema $schema): Schema
     {
-        return $form
-            ->schema([
-                Forms\Components\Group::make()->schema([
-                    Forms\Components\Section::make()->schema([
-                        Forms\Components\Select::make('seller_id')
+        return $schema
+            ->components([
+                Group::make()->schema([
+                    Section::make()->schema([
+                        Select::make('seller_id')
                             ->searchable()->preload()->hidden(Filament::getAuthGuard() == 'seller')
                             ->required()->relationship('seller', 'name')
                             ->label(__('filament/resources/brand-resource.form.seller')),
 
-                        Forms\Components\TextInput::make('name')
+                        TextInput::make('name')
                             ->helperText(__('filament/resources/brand-resource.form.name_helper'))
                             ->required()
                             ->maxLength(255)
                             ->label(__('filament/resources/brand-resource.form.name')),
 
-                        Forms\Components\SpatieMediaLibraryFileUpload::make('logo')
+                        SpatieMediaLibraryFileUpload::make('logo')
                             ->collection('logos')->imageEditor()
                             ->image()->rules('required')
                             ->label(__('filament/resources/brand-resource.form.logo')),
 
-                        Forms\Components\Textarea::make('description')
+                        Textarea::make('description')
                             ->maxLength(16777215)
                             ->columnSpanFull()
                             ->label(__('filament/resources/brand-resource.form.description')),
@@ -66,45 +80,45 @@ class BrandResource extends Resource
     {
         return $table
             ->columns([
-                Tables\Columns\SpatieMediaLibraryImageColumn::make('thumb')->collection('logos'),
-                Tables\Columns\TextColumn::make('seller.name')
+                SpatieMediaLibraryImageColumn::make('thumb')->collection('logos'),
+                TextColumn::make('seller.name')
                     ->numeric()->hidden(Filament::getAuthGuard() == 'seller')
                     ->sortable()
                     ->label(__('filament/resources/brand-resource.table.columns.seller')),
-                Tables\Columns\TextColumn::make('name')
+                TextColumn::make('name')
                     ->searchable()
                     ->label(__('filament/resources/brand-resource.table.columns.name')),
-                Tables\Columns\TextColumn::make('description')
+                TextColumn::make('description')
                     ->searchable()
                     ->label(__('filament/resources/brand-resource.table.columns.description')),
-                Tables\Columns\TextColumn::make('deleted_at')
+                TextColumn::make('deleted_at')
                     ->dateTime()
                     ->sortable()
                     ->toggleable(isToggledHiddenByDefault: true)
                     ->label(__('filament/resources/brand-resource.table.columns.deleted_at')),
-                Tables\Columns\TextColumn::make('created_at')
+                TextColumn::make('created_at')
                     ->dateTime()
                     ->sortable()
                     ->toggleable(isToggledHiddenByDefault: true)
                     ->label(__('filament/resources/brand-resource.table.columns.created_at')),
-                Tables\Columns\TextColumn::make('updated_at')
+                TextColumn::make('updated_at')
                     ->dateTime()
                     ->sortable()
                     ->toggleable(isToggledHiddenByDefault: true)
                     ->label(__('filament/resources/brand-resource.table.columns.updated_at')),
             ])
             ->filters([
-                Tables\Filters\TrashedFilter::make(),
+                TrashedFilter::make(),
             ])
-            ->actions([
-                Tables\Actions\EditAction::make(),
+            ->recordActions([
+                EditAction::make(),
             ])
             ->defaultSort('id', 'desc')
-            ->bulkActions([
-                Tables\Actions\BulkActionGroup::make([
-                    Tables\Actions\DeleteBulkAction::make(),
-                    Tables\Actions\ForceDeleteBulkAction::make(),
-                    Tables\Actions\RestoreBulkAction::make(),
+            ->toolbarActions([
+                BulkActionGroup::make([
+                    DeleteBulkAction::make(),
+                    ForceDeleteBulkAction::make(),
+                    RestoreBulkAction::make(),
                 ]),
             ]);
     }
@@ -119,9 +133,9 @@ class BrandResource extends Resource
     public static function getPages(): array
     {
         return [
-            'index' => Pages\ListBrands::route('/'),
-            'create' => Pages\CreateBrand::route('/create'),
-            'edit' => Pages\EditBrand::route('/{record}/edit'),
+            'index' => ListBrands::route('/'),
+            'create' => CreateBrand::route('/create'),
+            'edit' => EditBrand::route('/{record}/edit'),
         ];
     }
 

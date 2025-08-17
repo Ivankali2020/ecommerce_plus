@@ -2,13 +2,21 @@
 
 namespace App\Filament\Seller\Resources;
 
-use App\Filament\Seller\Resources\SupplierResource\Pages;
+use App\Filament\Seller\Resources\SupplierResource\Pages\CreateSupplier;
+use App\Filament\Seller\Resources\SupplierResource\Pages\EditSupplier;
+use App\Filament\Seller\Resources\SupplierResource\Pages\ListSuppliers;
 use App\Helper\CheckFilamentSellerUser;
 use App\Models\Supplier;
-use Filament\Forms;
-use Filament\Forms\Form;
+use Filament\Actions\BulkActionGroup;
+use Filament\Actions\DeleteBulkAction;
+use Filament\Actions\EditAction;
+use Filament\Forms\Components\Select;
+use Filament\Forms\Components\Textarea;
+use Filament\Forms\Components\TextInput;
 use Filament\Resources\Resource;
-use Filament\Tables;
+use Filament\Schemas\Components\Section;
+use Filament\Schemas\Schema;
+use Filament\Tables\Columns\TextColumn;
 use Filament\Tables\Table;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\SoftDeletingScope;
@@ -17,7 +25,7 @@ class SupplierResource extends Resource
 {
     protected static ?string $model = Supplier::class;
 
-    protected static ?string $navigationIcon = 'heroicon-o-link';
+    protected static string|\BackedEnum|null $navigationIcon = 'heroicon-o-link';
 
     // protected static ?string $navigationGroup = 'Management';
 
@@ -31,30 +39,30 @@ class SupplierResource extends Resource
         return __('filament/resources/supplier-resource.navigation.label');
     }
 
-    public static function form(Form $form): Form
+    public static function form(Schema $schema): Schema
     {
-        return $form
-            ->schema([
-                Forms\Components\Section::make()->schema([
+        return $schema
+            ->components([
+                Section::make()->schema([
 
-                    Forms\Components\TextInput::make('name')
+                    TextInput::make('name')
                         ->label(__('filament/resources/supplier-resource.form.name'))
                         ->required()
                         ->maxLength(255),
-                    Forms\Components\TextInput::make('email')
+                    TextInput::make('email')
                         ->label(__('filament/resources/supplier-resource.form.email'))
                         ->email()
                         ->maxLength(255),
-                    Forms\Components\TextInput::make('phone')
+                    TextInput::make('phone')
                         ->label(__('filament/resources/supplier-resource.form.phone'))
                         ->tel()
                         ->required()
                         ->maxLength(255),
-                    Forms\Components\Textarea::make('about')
+                    Textarea::make('about')
                         ->label(__('filament/resources/supplier-resource.form.about'))
                         ->required()
                         ->columnSpanFull(),
-                    Forms\Components\Select::make('township_id')
+                    Select::make('township_id')
                         ->label(__('filament/resources/supplier-resource.form.township_id'))
                         ->searchable()->preload()
                         ->relationship('township', 'mm_name')
@@ -68,29 +76,29 @@ class SupplierResource extends Resource
     {
         return $table
             ->columns([
-                Tables\Columns\TextColumn::make('seller.name')
+                TextColumn::make('seller.name')
                     ->label(__('filament/resources/supplier-resource.table.columns.seller.name'))
                     ->numeric()
                     ->sortable(),
-                Tables\Columns\TextColumn::make('name')
+                TextColumn::make('name')
                     ->label(__('filament/resources/supplier-resource.table.columns.name'))
                     ->searchable(),
-                Tables\Columns\TextColumn::make('email')
+                TextColumn::make('email')
                     ->label(__('filament/resources/supplier-resource.table.columns.email'))
                     ->searchable(),
-                Tables\Columns\TextColumn::make('phone')
+                TextColumn::make('phone')
                     ->label(__('filament/resources/supplier-resource.table.columns.phone'))
                     ->searchable(),
-                Tables\Columns\TextColumn::make('township.mm_name')
+                TextColumn::make('township.mm_name')
                     ->label(__('filament/resources/supplier-resource.table.columns.township.mm_name'))
                     ->numeric()
                     ->sortable(),
-                Tables\Columns\TextColumn::make('created_at')
+                TextColumn::make('created_at')
                     ->label(__('filament/resources/supplier-resource.table.columns.created_at'))
                     ->dateTime()
                     ->sortable()
                     ->toggleable(isToggledHiddenByDefault: true),
-                Tables\Columns\TextColumn::make('updated_at')
+                TextColumn::make('updated_at')
                     ->label(__('filament/resources/supplier-resource.table.columns.updated_at'))
                     ->dateTime()
                     ->sortable()
@@ -99,12 +107,12 @@ class SupplierResource extends Resource
             ->filters([
                 //
             ])
-            ->actions([
-                Tables\Actions\EditAction::make(),
+            ->recordActions([
+                EditAction::make(),
             ])
-            ->bulkActions([
-                Tables\Actions\BulkActionGroup::make([
-                    Tables\Actions\DeleteBulkAction::make(),
+            ->toolbarActions([
+                BulkActionGroup::make([
+                    DeleteBulkAction::make(),
                 ]),
             ]);
     }
@@ -119,9 +127,9 @@ class SupplierResource extends Resource
     public static function getPages(): array
     {
         return [
-            'index' => Pages\ListSuppliers::route('/'),
-            'create' => Pages\CreateSupplier::route('/create'),
-            'edit' => Pages\EditSupplier::route('/{record}/edit'),
+            'index' => ListSuppliers::route('/'),
+            'create' => CreateSupplier::route('/create'),
+            'edit' => EditSupplier::route('/{record}/edit'),
         ];
     }
 

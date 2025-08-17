@@ -14,17 +14,17 @@ class EnsureSellerBelongsToTenant
     /**
      * Handle an incoming request.
      *
-     * @param  \Closure(\Illuminate\Http\Request): (\Symfony\Component\HttpFoundation\Response)  $next
+     * @param  Closure(Request):Response  $next
      */
     public function handle(Request $request, Closure $next): Response
     {
         // Skip if no tenant context
-        if (!tenant()) {
+        if (! tenant()) {
             return $next($request);
         }
 
         // Skip if no authenticated seller
-        if (!Auth::guard('seller')->check()) {
+        if (! Auth::guard('seller')->check()) {
             return $next($request);
         }
 
@@ -32,9 +32,9 @@ class EnsureSellerBelongsToTenant
         $currentTenantId = tenant('id');
 
         // Check if the seller belongs to the current tenant using the many-to-many relationship
-        if (!$seller->tenants()->where('tenant_id', $currentTenantId)->exists()) {
+        if (! $seller->tenants()->where('tenant_id', $currentTenantId)->exists()) {
             // Log the unauthorized access attempt
-            Log::warning('Seller access denied: Seller ID ' . $seller->id . ' attempted to access tenant ' . $currentTenantId . ' but is not associated with this tenant', [
+            Log::warning('Seller access denied: Seller ID '.$seller->id.' attempted to access tenant '.$currentTenantId.' but is not associated with this tenant', [
                 'seller_id' => $seller->id,
                 'seller_email' => $seller->email,
                 'current_tenant' => $currentTenantId,
@@ -54,14 +54,14 @@ class EnsureSellerBelongsToTenant
             if ($request->expectsJson()) {
                 return response()->json([
                     'message' => 'Unauthorized access to this tenant.',
-                    'error' => 'TENANT_ACCESS_DENIED'
+                    'error' => 'TENANT_ACCESS_DENIED',
                 ], 403);
             }
 
             // For web requests, redirect to login with error message
             return redirect()->route('filament.seller.auth.login')
                 ->withErrors([
-                    'email' => 'You are not authorized to access this tenant. Please login with the correct account for this domain.'
+                    'email' => 'You are not authorized to access this tenant. Please login with the correct account for this domain.',
                 ])
                 ->with('warning', 'Security Alert: Unauthorized tenant access attempt detected.');
         }

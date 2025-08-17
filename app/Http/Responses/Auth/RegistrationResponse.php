@@ -2,10 +2,7 @@
 
 namespace App\Http\Responses\Auth;
 
-use Filament\Http\Responses\Auth\Contracts\RegistrationResponse as RegistrationResponseContract;
-use Illuminate\Http\RedirectResponse;
-
-class RegistrationResponse implements RegistrationResponseContract
+class RegistrationResponse implements \Filament\Auth\Http\Responses\Contracts\RegistrationResponse
 {
     public function toResponse($request)
     {
@@ -17,9 +14,9 @@ class RegistrationResponse implements RegistrationResponseContract
             session()->forget('registration_domain');
 
             // Using secure protocol and correct path format
-            $subdomain = $domain . '.'.config('tenancy.central_domains')[0].'/seller';
-            
-            return redirect()->to('http://' . $subdomain);
+            $subdomain = $domain.'.'.config('tenancy.central_domains')[0].'/seller';
+
+            return redirect()->to('http://'.$subdomain);
         }
 
         // Fallback to default redirect if no domain

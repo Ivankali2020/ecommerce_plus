@@ -4,9 +4,9 @@ namespace App\Filament\Seller\Resources\OrderResource\Pages;
 
 use App\Filament\Seller\Resources\OrderResource;
 use App\Helper\OrderStatus;
-use Filament\Actions;
-use Filament\Resources\Components\Tab;
+use Filament\Actions\CreateAction;
 use Filament\Resources\Pages\ListRecords;
+use Filament\Schemas\Components\Tabs\Tab;
 use Illuminate\Database\Eloquent\Builder;
 
 class ListOrders extends ListRecords
@@ -16,7 +16,7 @@ class ListOrders extends ListRecords
     protected function getHeaderActions(): array
     {
         return [
-            Actions\CreateAction::make(),
+            CreateAction::make(),
         ];
     }
 
@@ -28,23 +28,23 @@ class ListOrders extends ListRecords
 
             'new' => Tab::make()
                 ->icon('heroicon-o-bolt')
-                ->modifyQueryUsing(fn(Builder $query) => $query->where('status', OrderStatus::New)),
+                ->modifyQueryUsing(fn (Builder $query) => $query->where('status', OrderStatus::New)),
 
             'processing' => Tab::make()
                 ->icon('heroicon-o-ellipsis-horizontal-circle')
-                ->modifyQueryUsing(fn(Builder $query) => $query->where('status', OrderStatus::Processing)),
+                ->modifyQueryUsing(fn (Builder $query) => $query->where('status', OrderStatus::Processing)),
 
             'delivered' => Tab::make()
                 ->icon('heroicon-o-check-circle')
-                ->modifyQueryUsing(fn(Builder $query) => $query->where('status', OrderStatus::Delivered)),
+                ->modifyQueryUsing(fn (Builder $query) => $query->where('status', OrderStatus::Delivered)),
 
             'cancel' => Tab::make()
                 ->icon('heroicon-o-x-circle')
-                ->modifyQueryUsing(fn(Builder $query) => $query->where('status', OrderStatus::Cancelled)),
+                ->modifyQueryUsing(fn (Builder $query) => $query->where('status', OrderStatus::Cancelled)),
 
             'refund' => Tab::make()
                 ->icon('heroicon-o-shield-exclamation')
-                ->modifyQueryUsing(fn(Builder $query) => $query->where('status', OrderStatus::Refunded)),
+                ->modifyQueryUsing(fn (Builder $query) => $query->where('status', OrderStatus::Refunded)),
         ];
     }
 

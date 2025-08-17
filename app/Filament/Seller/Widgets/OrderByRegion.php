@@ -11,7 +11,7 @@ use Livewire\Attributes\On;
 
 class OrderByRegion extends ChartWidget
 {
-    protected static ?string $heading = null;
+    protected ?string $heading = null;
 
     protected static ?int $sort = 2;
 
@@ -24,7 +24,7 @@ class OrderByRegion extends ChartWidget
 
     public $month = null;
 
-    protected static ?string $pollingInterval = null;
+    protected ?string $pollingInterval = null;
 
     public function getHeading(): string
     {

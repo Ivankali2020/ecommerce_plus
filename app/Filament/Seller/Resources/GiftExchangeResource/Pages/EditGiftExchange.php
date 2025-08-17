@@ -3,7 +3,7 @@
 namespace App\Filament\Seller\Resources\GiftExchangeResource\Pages;
 
 use App\Filament\Seller\Resources\GiftExchangeResource;
-use Filament\Actions;
+use Filament\Actions\DeleteAction;
 use Filament\Resources\Pages\EditRecord;
 
 class EditGiftExchange extends EditRecord
@@ -13,7 +13,7 @@ class EditGiftExchange extends EditRecord
     protected function getHeaderActions(): array
     {
         return [
-            Actions\DeleteAction::make(),
+            DeleteAction::make(),
         ];
     }
 }

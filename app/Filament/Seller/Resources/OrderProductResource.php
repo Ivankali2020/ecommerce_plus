@@ -3,14 +3,22 @@
 namespace App\Filament\Seller\Resources;
 
 use App\Filament\Seller\Resources\OrderProductResource\Pages;
+use App\Filament\Seller\Resources\OrderProductResource\Pages\ListOrderProducts;
 use App\Helper\CheckFilamentSellerUser;
 use App\Models\OrderProduct;
-use Filament\Forms;
-use Filament\Forms\Form;
+use Filament\Actions\BulkActionGroup;
+use Filament\Actions\DeleteBulkAction;
+use Filament\Actions\EditAction;
+use Filament\Forms\Components\DatePicker;
 use Filament\Resources\Resource;
+use Filament\Schemas\Schema;
 use Filament\Support\Enums\MaxWidth;
-use Filament\Tables;
+use Filament\Tables\Columns\Summarizers\Sum;
+use Filament\Tables\Columns\TextColumn;
 use Filament\Tables\Enums\FiltersLayout;
+use Filament\Tables\Filters\Filter;
+use Filament\Tables\Filters\SelectFilter;
+use Filament\Tables\Grouping\Group;
 use Filament\Tables\Table;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Model;
@@ -20,7 +28,7 @@ class OrderProductResource extends Resource
 {
     protected static ?string $model = OrderProduct::class;
 
-    protected static ?string $navigationGroup = 'Order Section';
+    protected static string|\UnitEnum|null $navigationGroup = 'Order Section';
 
     public static function getNavigationLabel(): string
     {
@@ -54,10 +62,10 @@ class OrderProductResource extends Resource
 
     //    protected static ?string $navigationIcon = 'heroicon-o-rectangle-stack';
 
-    public static function form(Form $form): Form
+    public static function form(Schema $schema): Schema
     {
-        return $form
-            ->schema([
+        return $schema
+            ->components([
                 //
             ]);
     }
@@ -68,18 +76,18 @@ class OrderProductResource extends Resource
             ->groups([
                 'order.invoice_number',
                 'product.name',
-                Tables\Grouping\Group::make('created_at')
+                Group::make('created_at')
                     ->label(__('filament/resources/order-product-resource.columns.created_at'))
                     ->date(),
             ])
             ->groupingSettingsInDropdownOnDesktop()
             ->columns([
-                Tables\Columns\TextColumn::make('product.name')
+                TextColumn::make('product.name')
                     ->label(__('filament/resources/order-product-resource.columns.product.name'))
                     ->searchable()
                     ->description(fn (OrderProduct $orderProduct) => $orderProduct->product->category->name),
 
-                Tables\Columns\TextColumn::make('attributes')
+                TextColumn::make('attributes')
                     ->label(__('filament/resources/order-product-resource.columns.attributes'))
                     ->getStateUsing(function ($record) {
                         $data = '';
@@ -93,50 +101,50 @@ class OrderProductResource extends Resource
                     ->html()
                     ->formatStateUsing(fn ($state) => $state),
 
-                Tables\Columns\TextColumn::make('original_buy_price')
+                TextColumn::make('original_buy_price')
                     ->label(__('filament/resources/order-product-resource.columns.original_buy_price'))
                     ->alignEnd(),
                 // ->description(fn(OrderProduct $orderProduct) => $orderProduct->original_price),
 
-                Tables\Columns\TextColumn::make('price')
+                TextColumn::make('price')
                     ->label(__('filament/resources/order-product-resource.columns.selling_price'))
                     ->alignEnd(),
 
-                Tables\Columns\TextColumn::make('discount_price')
+                TextColumn::make('discount_price')
                     ->label(__('filament/resources/order-product-resource.columns.discount_price'))
                     ->alignEnd()
                     ->description(fn (OrderProduct $orderProduct) => $orderProduct->discount.' %'),
 
-                Tables\Columns\TextColumn::make('quantity')
+                TextColumn::make('quantity')
                     ->label(__('filament/resources/order-product-resource.columns.quantity'))
                     ->alignCenter(),
 
-                Tables\Columns\TextColumn::make('sub_price')
+                TextColumn::make('sub_price')
                     ->label(__('filament/resources/order-product-resource.columns.sub_price'))
                     ->alignEnd()
                     ->summarize(
-                        Tables\Columns\Summarizers\Sum::make('sub_price')
+                        Sum::make('sub_price')
                             ->money('mmk')
                             ->label(__('filament/resources/order-product-resource.columns.total_amount'))
                     ),
 
-                Tables\Columns\TextColumn::make('profit')
+                TextColumn::make('profit')
                     ->label(__('filament/resources/order-product-resource.columns.profit_loss'))
                     ->alignEnd()
                     ->summarize(
-                        Tables\Columns\Summarizers\Sum::make('profit')
+                        Sum::make('profit')
                             ->money('mmk')
                             ->label(__('filament/resources/order-product-resource.columns.profit_loss'))
                     ),
-                ])
-            ->defaultSort('id','desc')
+            ])
+            ->defaultSort('id', 'desc')
             ->filters([
 
-                Tables\Filters\Filter::make('created_at')
-                    ->form([
-                        Forms\Components\DatePicker::make('created_from')
+                Filter::make('created_at')
+                    ->schema([
+                        DatePicker::make('created_from')
                             ->label(__('filament/resources/order-product-resource.filters.created_from')),
-                        Forms\Components\DatePicker::make('created_until')
+                        DatePicker::make('created_until')
                             ->label(__('filament/resources/order-product-resource.filters.created_until')),
                     ])
                     ->query(function (Builder $query, array $data): Builder {
@@ -151,27 +159,27 @@ class OrderProductResource extends Resource
                             );
                     })->columnSpan(2),
 
-                Tables\Filters\SelectFilter::make('product_id')
+                SelectFilter::make('product_id')
                     ->label(__('filament/resources/order-product-resource.filters.product'))
                     ->relationship('product', 'name')
                     ->searchable()
                     ->preload()
                     ->multiple(),
 
-                    Tables\Filters\Filter::make('today')
+                Filter::make('today')
                     ->label('Today')
                     ->query(fn (Builder $query) => $query->whereDate('created_at', today()))
                     ->toggle(),
 
-                ],layout: FiltersLayout::AboveContent)
-            ->actions([
-                Tables\Actions\EditAction::make()
+            ], layout: FiltersLayout::AboveContent)
+            ->recordActions([
+                EditAction::make()
                     ->label(__('filament/resources/order-product-resource.actions.edit')),
             ])
             // ->filtersFormWidth(MaxWidth::Full)
-            ->bulkActions([
-                Tables\Actions\BulkActionGroup::make([
-                    Tables\Actions\DeleteBulkAction::make()
+            ->toolbarActions([
+                BulkActionGroup::make([
+                    DeleteBulkAction::make()
                         ->label(__('filament/resources/order-product-resource.actions.delete')),
                 ]),
             ]);
@@ -187,7 +195,7 @@ class OrderProductResource extends Resource
     public static function getPages(): array
     {
         return [
-            'index' => Pages\ListOrderProducts::route('/'),
+            'index' => ListOrderProducts::route('/'),
             //            'create' => Pages\CreateOrderProduct::route('/create'),
             //            'edit' => Pages\EditOrderProduct::route('/{record}/edit'),
         ];

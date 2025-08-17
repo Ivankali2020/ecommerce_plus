@@ -2,41 +2,51 @@
 
 namespace App\Filament\Admin\Resources;
 
-use App\Filament\Admin\Resources\SellerSubscriptionResource\Pages;
+use App\Filament\Admin\Resources\SellerSubscriptionResource\Pages\CreateSellerSubscription;
+use App\Filament\Admin\Resources\SellerSubscriptionResource\Pages\EditSellerSubscription;
+use App\Filament\Admin\Resources\SellerSubscriptionResource\Pages\ListSellerSubscriptions;
 use App\Models\SellerSubscription;
-use Filament\Forms;
+use Filament\Actions\Action;
+use Filament\Actions\BulkActionGroup;
+use Filament\Actions\DeleteBulkAction;
+use Filament\Forms\Components\DateTimePicker;
+use Filament\Forms\Components\Select;
 use Filament\Forms\Components\SpatieMediaLibraryFileUpload;
-use Filament\Forms\Form;
+use Filament\Forms\Components\Textarea;
+use Filament\Forms\Components\TextInput;
+use Filament\Forms\Components\ToggleButtons;
 use Filament\Notifications\Notification;
 use Filament\Resources\Resource;
-use Filament\Tables;
+use Filament\Schemas\Schema;
+use Filament\Tables\Columns\IconColumn;
+use Filament\Tables\Columns\TextColumn;
 use Filament\Tables\Table;
 
 class SellerSubscriptionResource extends Resource
 {
     protected static ?string $model = SellerSubscription::class;
 
-    protected static ?string $navigationIcon = 'heroicon-o-rectangle-stack';
+    protected static string|\BackedEnum|null $navigationIcon = 'heroicon-o-rectangle-stack';
 
-    public static function form(Form $form): Form
+    public static function form(Schema $schema): Schema
     {
-        return $form
-            ->schema([
-                Forms\Components\Select::make('seller_id')
+        return $schema
+            ->components([
+                Select::make('seller_id')
                     ->required()
                     ->relationship('seller', 'name'),
-                Forms\Components\Select::make('subscription_plan_id')
+                Select::make('subscription_plan_id')
                     ->required()
                     ->relationship('subscriptionPlan', 'name'),
-                Forms\Components\DateTimePicker::make('started_at')
+                DateTimePicker::make('started_at')
                     ->required(),
-                Forms\Components\DateTimePicker::make('expired_at')
+                DateTimePicker::make('expired_at')
                     ->required(),
-                Forms\Components\TextInput::make('price_paid')
+                TextInput::make('price_paid')
                     ->required()
                     ->numeric(),
 
-                Forms\Components\ToggleButtons::make('payment_status')
+                ToggleButtons::make('payment_status')
                     ->required()
                     ->options([
                         'pending' => 'Pending',
@@ -44,7 +54,7 @@ class SellerSubscriptionResource extends Resource
                         'rejected' => 'Rejected',
                     ]),
 
-                Forms\Components\TextInput::make('payment_method')
+                TextInput::make('payment_method')
                     ->maxLength(255),
 
                 SpatieMediaLibraryFileUpload::make('payment_slips')
@@ -54,7 +64,7 @@ class SellerSubscriptionResource extends Resource
                     ->maxSize(5120) // 5MB
                     ->directory('subscription-payments'),
 
-                Forms\Components\Textarea::make('notes')
+                Textarea::make('notes')
                     ->columnSpanFull(),
             ]);
     }
@@ -63,45 +73,44 @@ class SellerSubscriptionResource extends Resource
     {
         return $table
             ->columns([
-                Tables\Columns\TextColumn::make('seller.name')
-                    ->description(fn(SellerSubscription $record) => $record->subscriptionPlan->name)
+                TextColumn::make('seller.name')
+                    ->description(fn (SellerSubscription $record) => $record->subscriptionPlan->name)
                     ->sortable(),
 
-                Tables\Columns\TextColumn::make('started_at')
+                TextColumn::make('started_at')
                     ->dateTime()
                     ->sortable(),
-                Tables\Columns\TextColumn::make('expired_at')
+                TextColumn::make('expired_at')
                     ->dateTime()
                     ->sortable(),
-                Tables\Columns\TextColumn::make('price_paid')
+                TextColumn::make('price_paid')
                     ->numeric()
                     ->sortable(),
-                Tables\Columns\TextColumn::make('payment_status')
+                TextColumn::make('payment_status')
                     ->badge()
-                    ->color(fn(string $state): string => match ($state) {
+                    ->color(fn (string $state): string => match ($state) {
                         'pending' => 'warning',
                         'approved' => 'success',
                         'rejected' => 'danger',
                         default => 'gray',
                     })
                     ->searchable(),
-                Tables\Columns\IconColumn::make('has_payment_slip')
+                IconColumn::make('has_payment_slip')
                     ->label(__('subscription.payment_slip'))
                     ->boolean()
-                    ->getStateUsing(fn(SellerSubscription $record): bool => $record->getMedia('payment_slips')->isNotEmpty())
+                    ->getStateUsing(fn (SellerSubscription $record): bool => $record->getMedia('payment_slips')->isNotEmpty())
                     ->tooltip(
-                        fn(SellerSubscription $record): string =>
-                        $record->getMedia('payment_slips')->isNotEmpty()
+                        fn (SellerSubscription $record): string => $record->getMedia('payment_slips')->isNotEmpty()
                             ? __('subscription.payment_slip_uploaded')
                             : __('subscription.no_payment_slip')
                     ),
-                Tables\Columns\TextColumn::make('payment_method')
+                TextColumn::make('payment_method')
                     ->searchable(),
-                Tables\Columns\TextColumn::make('created_at')
+                TextColumn::make('created_at')
                     ->dateTime()
                     ->sortable()
                     ->toggleable(isToggledHiddenByDefault: true),
-                Tables\Columns\TextColumn::make('updated_at')
+                TextColumn::make('updated_at')
                     ->dateTime()
                     ->sortable()
                     ->toggleable(isToggledHiddenByDefault: true),
@@ -109,8 +118,8 @@ class SellerSubscriptionResource extends Resource
             ->filters([
                 //
             ])
-            ->actions([
-                Tables\Actions\Action::make('view_payment_slip')
+            ->recordActions([
+                Action::make('view_payment_slip')
                     ->label(__('subscription.view_payment_slip'))
                     ->icon('heroicon-o-photo')
                     ->color('info')
@@ -123,14 +132,14 @@ class SellerSubscriptionResource extends Resource
                         }
 
                         return view('filament.components.payment-slip-viewer', [
-                            'mediaItems' => $mediaItems
+                            'mediaItems' => $mediaItems,
                         ]);
                     })
                     ->modalWidth('4xl')
                 // ->visible(fn (SellerSubscription $record) => $record->getMedia('payment_slips')->isNotEmpty())
                 ,
 
-                Tables\Actions\Action::make('confirm')->button()
+                Action::make('confirm')->button()
                     ->label('Confirm')
                     ->icon('heroicon-o-check-circle')
                     ->color('success')
@@ -155,11 +164,11 @@ class SellerSubscriptionResource extends Resource
                             ->success()
                             ->send();
                     })
-                    ->visible(fn(SellerSubscription $record) => $record->payment_status === 'pending'),
+                    ->visible(fn (SellerSubscription $record) => $record->payment_status === 'pending'),
             ])
-            ->bulkActions([
-                Tables\Actions\BulkActionGroup::make([
-                    Tables\Actions\DeleteBulkAction::make(),
+            ->toolbarActions([
+                BulkActionGroup::make([
+                    DeleteBulkAction::make(),
                 ]),
             ]);
     }
@@ -174,9 +183,9 @@ class SellerSubscriptionResource extends Resource
     public static function getPages(): array
     {
         return [
-            'index' => Pages\ListSellerSubscriptions::route('/'),
-            'create' => Pages\CreateSellerSubscription::route('/create'),
-            'edit' => Pages\EditSellerSubscription::route('/{record}/edit'),
+            'index' => ListSellerSubscriptions::route('/'),
+            'create' => CreateSellerSubscription::route('/create'),
+            'edit' => EditSellerSubscription::route('/{record}/edit'),
         ];
     }
 }

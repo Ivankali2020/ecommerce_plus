@@ -3,7 +3,7 @@
 namespace App\Filament\Seller\Resources\PurchaseResource\Pages;
 
 use App\Filament\Seller\Resources\PurchaseResource;
-use Filament\Actions;
+use Filament\Actions\CreateAction;
 use Filament\Resources\Pages\ListRecords;
 
 class ListPurchases extends ListRecords
@@ -13,7 +13,7 @@ class ListPurchases extends ListRecords
     protected function getHeaderActions(): array
     {
         return [
-            Actions\CreateAction::make(),
+            CreateAction::make(),
         ];
     }
 }

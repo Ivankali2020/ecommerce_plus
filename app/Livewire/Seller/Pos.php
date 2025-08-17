@@ -2,6 +2,7 @@
 
 namespace App\Livewire\Seller;
 
+use App\Helper\OrderStatus;
 use App\Livewire\Order;
 use App\Models\Category;
 use App\Models\Order as ModelsOrder;
@@ -96,8 +97,9 @@ class Pos extends Component implements HasActions, HasForms
         try {
             // Check if user is authenticated
             $user = Auth::guard('seller')->user();
-            if (!$user) {
+            if (! $user) {
                 logger()->error('POS: No authenticated seller user found');
+
                 return;
             }
 
@@ -115,8 +117,8 @@ class Pos extends Component implements HasActions, HasForms
             // Apply search filter if provided
             if ($this->search) {
                 $query->where(function ($subQuery) {
-                    $subQuery->where('name', 'like', '%' . $this->search . '%')
-                        ->orWhere('sku', 'like', '%' . $this->search . '%');
+                    $subQuery->where('name', 'like', '%'.$this->search.'%')
+                        ->orWhere('sku', 'like', '%'.$this->search.'%');
                 });
             }
 
@@ -140,11 +142,11 @@ class Pos extends Component implements HasActions, HasForms
                 // Replace products collection (for fresh load)
                 $this->products = $newProducts;
             }
-        } catch (\Exception $e) {
+        } catch (Exception $e) {
             $this->products = new Collection;
             $this->hasMorePages = false;
 
-            logger()->error('Error loading products: ' . $e->getMessage());
+            logger()->error('Error loading products: '.$e->getMessage());
         }
     }
 
@@ -175,8 +177,8 @@ class Pos extends Component implements HasActions, HasForms
 
             // Load more products and append to existing collection
             $this->getProductData(true);
-        } catch (\Exception $e) {
-            logger()->error('Error loading more products: ' . $e->getMessage());
+        } catch (Exception $e) {
+            logger()->error('Error loading more products: '.$e->getMessage());
             $this->hasMorePages = false;
         }
     }
@@ -200,7 +202,7 @@ class Pos extends Component implements HasActions, HasForms
     {
         // Check if user is authenticated
         $user = auth('seller')->user();
-        if (!$user) {
+        if (! $user) {
             return collect(); // Return empty collection if not authenticated
         }
 
@@ -226,8 +228,9 @@ class Pos extends Component implements HasActions, HasForms
         try {
             // Check if user is authenticated
             $user = Auth::guard('seller')->user();
-            if (!$user) {
+            if (! $user) {
                 logger()->error('POS: No authenticated seller user found');
+
                 return;
             }
 
@@ -266,7 +269,7 @@ class Pos extends Component implements HasActions, HasForms
             if ($newQuantity < ($variant?->MOQ ?? $product->MOQ)) {
                 Notification::make()
                     ->title('Minimum order quantity not met')
-                    ->body('Minimum order quantity is ' . ($variant?->MOQ ?? $product->MOQ))
+                    ->body('Minimum order quantity is '.($variant?->MOQ ?? $product->MOQ))
                     ->warning()
                     ->send();
 
@@ -277,7 +280,7 @@ class Pos extends Component implements HasActions, HasForms
             if ($newQuantity > ($variant?->quantity ?? $product->quantity)) {
                 Notification::make()
                     ->title('Out of stock')
-                    ->body('Only ' . ($variant?->quantity ?? $product->quantity) . ' items available')
+                    ->body('Only '.($variant?->quantity ?? $product->quantity).' items available')
                     ->warning()
                     ->send();
 
@@ -306,8 +309,8 @@ class Pos extends Component implements HasActions, HasForms
             }
 
             $this->calculateTotal();
-        } catch (\Exception $e) {
-            logger()->error('Error adding to cart: ' . $e->getMessage());
+        } catch (Exception $e) {
+            logger()->error('Error adding to cart: '.$e->getMessage());
 
             Notification::make()
                 ->title('Failed to add product to cart')
@@ -382,6 +385,7 @@ class Pos extends Component implements HasActions, HasForms
                 ->title('Cart is empty')
                 ->warning()
                 ->send();
+
             return;
         }
 
@@ -414,11 +418,12 @@ class Pos extends Component implements HasActions, HasForms
         try {
             // Check if user is authenticated
             $user = auth('seller')->user();
-            if (!$user) {
+            if (! $user) {
                 Notification::make()
                     ->title('Authentication required')
                     ->danger()
                     ->send();
+
                 return;
             }
 
@@ -427,6 +432,7 @@ class Pos extends Component implements HasActions, HasForms
                     ->title('Cart is empty')
                     ->warning()
                     ->send();
+
                 return;
             }
 
@@ -437,6 +443,7 @@ class Pos extends Component implements HasActions, HasForms
                     ->body('Given amount is less than the total amount')
                     ->warning()
                     ->send();
+
                 return;
             }
 
@@ -448,12 +455,12 @@ class Pos extends Component implements HasActions, HasForms
 
             // Create the order
             $order = \App\Models\Order::create([
-                'invoice_number' => 'INV-' . time() . '-' . $staffId,
+                'invoice_number' => 'INV-'.time().'-'.$staffId,
                 'seller_id' => $sellerId,
                 'staff_id' => $staffId, // Current logged in seller as staff
                 'walk_in_customer' => true, // Default to walk-in customer for POS
                 'is_cod' => true, // Cash on delivery for POS
-                'status' => \App\Helper\OrderStatus::Delivered, // Assuming POS sales are completed immediately
+                'status' => OrderStatus::Delivered, // Assuming POS sales are completed immediately
                 'sub_total' => collect($this->cart)->sum('subtotal'),
                 'delivery_fees' => 0, // No delivery for POS
                 'total_price' => $this->total,
@@ -470,11 +477,11 @@ class Pos extends Component implements HasActions, HasForms
 
                 if ($variant) {
                     if ($item['quantity'] > $variant->quantity) {
-                        throw new Exception($product->name . ' stock is not enough');
+                        throw new Exception($product->name.' stock is not enough');
                     }
                 } else {
                     if ($item['quantity'] > $product->quantity) {
-                        throw new Exception($product->name . ' stock is not enough');
+                        throw new Exception($product->name.' stock is not enough');
                     }
                 }
 
@@ -519,14 +526,14 @@ class Pos extends Component implements HasActions, HasForms
 
             Notification::make()
                 ->title('Order placed successfully!')
-                ->body('Invoice #: ' . $order->invoice_number)
+                ->body('Invoice #: '.$order->invoice_number)
                 ->success()
                 ->send();
-        } catch (\Exception $e) {
+        } catch (Exception $e) {
             // Rollback the transaction in case of error
             DB::rollBack();
 
-            logger()->error('Error creating order: ' . $e->getMessage());
+            logger()->error('Error creating order: '.$e->getMessage());
 
             Notification::make()
                 ->title('Failed to place order')
@@ -545,7 +552,7 @@ class Pos extends Component implements HasActions, HasForms
 
             // Check if we have enough stock
             $user = Auth::guard('seller')->user();
-            if (!$user) {
+            if (! $user) {
                 return;
             }
 
@@ -570,7 +577,7 @@ class Pos extends Component implements HasActions, HasForms
             if ($newQuantity > $availableStock) {
                 Notification::make()
                     ->title('Stock limit reached')
-                    ->body('Only ' . $availableStock . ' items available')
+                    ->body('Only '.$availableStock.' items available')
                     ->warning()
                     ->send();
 
@@ -593,7 +600,7 @@ class Pos extends Component implements HasActions, HasForms
             $newQuantity = $this->cart[$index]['quantity'] - 1;
 
             $user = Auth::guard('seller')->user();
-            if (!$user) {
+            if (! $user) {
                 return;
             }
 
@@ -614,7 +621,7 @@ class Pos extends Component implements HasActions, HasForms
             if ($newQuantity < $moq) {
                 Notification::make()
                     ->title('Minimum order quantity')
-                    ->body('Minimum order quantity is ' . $moq)
+                    ->body('Minimum order quantity is '.$moq)
                     ->warning()
                     ->send();
 
@@ -634,9 +641,9 @@ class Pos extends Component implements HasActions, HasForms
             ->size('sm')->outlined()->color('gray')
             ->modalSubmitAction(false)
             ->modalCancelAction(false)
-            ->modalContent(fn(array $arguments) => View(
+            ->modalContent(fn (array $arguments) => View(
                 'livewire.seller.product-detail-modal',
-                ['selectedProduct' => \App\Models\Product::with('variants')->find($arguments['record'])],
+                ['selectedProduct' => Product::with('variants')->find($arguments['record'])],
             ));
     }
 
@@ -658,8 +665,9 @@ class Pos extends Component implements HasActions, HasForms
     {
         // Check if user is authenticated
         $user = Auth::guard('seller')->user();
-        if (!$user) {
+        if (! $user) {
             logger()->error('POS: No authenticated seller user found');
+
             return;
         }
 

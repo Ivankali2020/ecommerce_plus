@@ -2,12 +2,30 @@
 
 namespace App\Filament\Seller\Resources;
 
-use App\Filament\Seller\Resources\GiftExchangeResource\Pages;
+use App\Filament\Seller\Resources\GiftExchangeResource\Pages\CreateGiftExchange;
+use App\Filament\Seller\Resources\GiftExchangeResource\Pages\EditGiftExchange;
+use App\Filament\Seller\Resources\GiftExchangeResource\Pages\ListGiftExchanges;
+use App\Filament\Seller\Resources\GiftExchangeResource\Pages\ViewGiftExchange;
 use App\Models\GiftExchange;
-use Filament\Forms;
-use Filament\Forms\Form;
+use Filament\Actions\Action;
+use Filament\Actions\BulkAction;
+use Filament\Actions\BulkActionGroup;
+use Filament\Actions\CreateAction;
+use Filament\Actions\DeleteBulkAction;
+use Filament\Actions\EditAction;
+use Filament\Actions\ViewAction;
+use Filament\Forms\Components\DatePicker;
+use Filament\Forms\Components\DateTimePicker;
+use Filament\Forms\Components\Select;
+use Filament\Forms\Components\Textarea;
+use Filament\Forms\Components\TextInput;
 use Filament\Resources\Resource;
-use Filament\Tables;
+use Filament\Schemas\Components\Section;
+use Filament\Schemas\Schema;
+use Filament\Tables\Columns\SelectColumn;
+use Filament\Tables\Columns\TextColumn;
+use Filament\Tables\Filters\Filter;
+use Filament\Tables\Filters\SelectFilter;
 use Filament\Tables\Table;
 use Illuminate\Database\Eloquent\Builder;
 
@@ -15,9 +33,9 @@ class GiftExchangeResource extends Resource
 {
     protected static ?string $model = GiftExchange::class;
 
-    protected static ?string $navigationIcon = 'heroicon-o-gift-top';
+    protected static string|\BackedEnum|null $navigationIcon = 'heroicon-o-gift-top';
 
-    protected static ?string $navigationGroup = 'Loyalty Program';
+    protected static string|\UnitEnum|null $navigationGroup = 'Loyalty Program';
 
     protected static ?string $navigationLabel = 'Gift Exchanges';
 
@@ -40,27 +58,27 @@ class GiftExchangeResource extends Resource
         return __('filament/resources/gift-exchange-resource.navigation.plural');
     }
 
-    public static function form(Form $form): Form
+    public static function form(Schema $schema): Schema
     {
-        return $form
-            ->schema([
-                Forms\Components\Section::make(__('filament/resources/gift-exchange-resource.form.sections.exchange_details'))
+        return $schema
+            ->components([
+                Section::make(__('filament/resources/gift-exchange-resource.form.sections.exchange_details'))
                     ->schema([
-                        Forms\Components\Select::make('user_id')
+                        Select::make('user_id')
                             ->label(__('filament/resources/gift-exchange-resource.form.fields.user'))
                             ->relationship('user', 'name')
                             ->searchable()
                             ->preload()
                             ->required()
                             ->disabled(),
-                        Forms\Components\Select::make('gift_id')
+                        Select::make('gift_id')
                             ->label(__('filament/resources/gift-exchange-resource.form.fields.gift'))
                             ->relationship('gift', 'name')
                             ->searchable()
                             ->preload()
                             ->required()
                             ->disabled(),
-                        Forms\Components\TextInput::make('points_spent')
+                        TextInput::make('points_spent')
                             ->label(__('filament/resources/gift-exchange-resource.form.fields.points_spent'))
                             ->required()
                             ->numeric()
@@ -68,9 +86,9 @@ class GiftExchangeResource extends Resource
                             ->suffix(__('filament/resources/gift-exchange-resource.form.fields.points_suffix')),
                     ])->columns(3),
 
-                Forms\Components\Section::make(__('filament/resources/gift-exchange-resource.form.sections.status_tracking'))
+                Section::make(__('filament/resources/gift-exchange-resource.form.sections.status_tracking'))
                     ->schema([
-                        Forms\Components\Select::make('status')
+                        Select::make('status')
                             ->label(__('filament/resources/gift-exchange-resource.form.fields.status.label'))
                             ->options([
                                 'pending' => __('filament/resources/gift-exchange-resource.form.fields.status.options.pending'),
@@ -81,40 +99,40 @@ class GiftExchangeResource extends Resource
                             ])
                             ->required()
                             ->native(false),
-                        Forms\Components\DateTimePicker::make('processed_at')
+                        DateTimePicker::make('processed_at')
                             ->label(__('filament/resources/gift-exchange-resource.form.fields.processed_at')),
-                        Forms\Components\DateTimePicker::make('shipped_at')
+                        DateTimePicker::make('shipped_at')
                             ->label(__('filament/resources/gift-exchange-resource.form.fields.shipped_at')),
-                        Forms\Components\DateTimePicker::make('delivered_at')
+                        DateTimePicker::make('delivered_at')
                             ->label(__('filament/resources/gift-exchange-resource.form.fields.delivered_at')),
                     ])->columns(2),
 
-                Forms\Components\Section::make(__('filament/resources/gift-exchange-resource.form.sections.delivery_information'))
+                Section::make(__('filament/resources/gift-exchange-resource.form.sections.delivery_information'))
                     ->schema([
-                        Forms\Components\Textarea::make('delivery_address')
+                        Textarea::make('delivery_address')
                             ->label(__('filament/resources/gift-exchange-resource.form.fields.delivery_address'))
                             ->rows(3)
                             ->disabled(),
-                        Forms\Components\Textarea::make('notes')
+                        Textarea::make('notes')
                             ->label(__('filament/resources/gift-exchange-resource.form.fields.notes'))
                             ->rows(3),
                     ])->columns(1),
 
-                Forms\Components\Section::make(__('filament/resources/gift-exchange-resource.form.sections.system_information'))
+                Section::make(__('filament/resources/gift-exchange-resource.form.sections.system_information'))
                     ->schema([
-                        Forms\Components\Select::make('seller_id')
+                        Select::make('seller_id')
                             ->label(__('filament/resources/gift-exchange-resource.form.fields.seller'))
                             ->relationship('seller', 'name')
                             ->disabled(),
-                        Forms\Components\Select::make('tenant_id')
+                        Select::make('tenant_id')
                             ->label(__('filament/resources/gift-exchange-resource.form.fields.tenant'))
                             ->relationship('tenant', 'id')
                             ->disabled(),
-                        Forms\Components\Select::make('point_transaction_id')
+                        Select::make('point_transaction_id')
                             ->label(__('filament/resources/gift-exchange-resource.form.fields.point_transaction'))
                             ->relationship('pointTransaction', 'id')
                             ->disabled(),
-                        Forms\Components\Textarea::make('gift_snapshot')
+                        Textarea::make('gift_snapshot')
                             ->label(__('filament/resources/gift-exchange-resource.form.fields.gift_snapshot'))
                             ->rows(4)
                             ->disabled(),
@@ -128,26 +146,26 @@ class GiftExchangeResource extends Resource
     {
         return $table
             ->columns([
-                Tables\Columns\TextColumn::make('id')
+                TextColumn::make('id')
                     ->label('ID')
                     ->sortable()
                     ->searchable(),
-                Tables\Columns\TextColumn::make('user.name')
+                TextColumn::make('user.name')
                     ->label('Customer')
                     ->sortable()
                     ->searchable(),
-                Tables\Columns\TextColumn::make('gift.name')
+                TextColumn::make('gift.name')
                     ->label(__('filament/resources/gift-exchange-resource.table.columns.gift'))
                     ->sortable()
                     ->searchable()
                     ->wrap(),
-                Tables\Columns\TextColumn::make('points_spent')
+                TextColumn::make('points_spent')
                     ->label(__('filament/resources/gift-exchange-resource.table.columns.points_spent'))
                     ->numeric()
                     ->sortable()
                     ->suffix(__('filament/resources/gift-exchange-resource.table.columns.points_suffix'))
                     ->alignEnd(),
-                Tables\Columns\SelectColumn::make('status')
+                SelectColumn::make('status')
                     ->label(__('filament/resources/gift-exchange-resource.table.columns.status.label'))
                     ->options([
                         'pending' => __('filament/resources/gift-exchange-resource.table.columns.status.options.pending'),
@@ -158,28 +176,28 @@ class GiftExchangeResource extends Resource
                     ])
                     ->selectablePlaceholder(false)
                     ->rules(['required']),
-                Tables\Columns\TextColumn::make('created_at')
+                TextColumn::make('created_at')
                     ->label(__('filament/resources/gift-exchange-resource.table.columns.created_at'))
                     ->dateTime('M d, Y')
                     ->sortable(),
-                Tables\Columns\TextColumn::make('processed_at')
+                TextColumn::make('processed_at')
                     ->label(__('filament/resources/gift-exchange-resource.table.columns.processed_at'))
                     ->dateTime('M d, Y')
                     ->sortable()
                     ->placeholder('—'),
-                Tables\Columns\TextColumn::make('shipped_at')
+                TextColumn::make('shipped_at')
                     ->label(__('filament/resources/gift-exchange-resource.table.columns.shipped_at'))
                     ->dateTime('M d, Y')
                     ->sortable()
                     ->placeholder('—')
                     ->toggleable(isToggledHiddenByDefault: true),
-                Tables\Columns\TextColumn::make('delivered_at')
+                TextColumn::make('delivered_at')
                     ->label(__('filament/resources/gift-exchange-resource.table.columns.delivered_at'))
                     ->dateTime('M d, Y')
                     ->sortable()
                     ->placeholder('—')
                     ->toggleable(isToggledHiddenByDefault: true),
-                Tables\Columns\TextColumn::make('updated_at')
+                TextColumn::make('updated_at')
                     ->label(__('filament/resources/gift-exchange-resource.table.columns.updated_at'))
                     ->dateTime('M d, Y H:i')
                     ->sortable()
@@ -187,7 +205,7 @@ class GiftExchangeResource extends Resource
             ])
             ->defaultSort('created_at', 'desc')
             ->filters([
-                Tables\Filters\SelectFilter::make('status')
+                SelectFilter::make('status')
                     ->label(__('filament/resources/gift-exchange-resource.table.filters.status.label'))
                     ->options([
                         'pending' => __('filament/resources/gift-exchange-resource.table.filters.status.options.pending'),
@@ -197,12 +215,12 @@ class GiftExchangeResource extends Resource
                         'cancelled' => __('filament/resources/gift-exchange-resource.table.filters.status.options.cancelled'),
                     ])
                     ->multiple(),
-                Tables\Filters\Filter::make('created_at')
+                Filter::make('created_at')
                     ->label(__('filament/resources/gift-exchange-resource.table.filters.date_range.label'))
-                    ->form([
-                        Forms\Components\DatePicker::make('created_from')
+                    ->schema([
+                        DatePicker::make('created_from')
                             ->label(__('filament/resources/gift-exchange-resource.table.filters.date_range.from')),
-                        Forms\Components\DatePicker::make('created_until')
+                        DatePicker::make('created_until')
                             ->label(__('filament/resources/gift-exchange-resource.table.filters.date_range.until')),
                     ])
                     ->query(function (Builder $query, array $data): Builder {
@@ -216,21 +234,21 @@ class GiftExchangeResource extends Resource
                                 fn (Builder $query, $date): Builder => $query->whereDate('created_at', '<=', $date),
                             );
                     }),
-                Tables\Filters\SelectFilter::make('gift')
+                SelectFilter::make('gift')
                     ->label(__('filament/resources/gift-exchange-resource.table.filters.gift.label'))
                     ->relationship('gift', 'name')
                     ->searchable()
                     ->preload()
                     ->multiple(),
             ])
-            ->actions([
-                Tables\Actions\ViewAction::make()
+            ->recordActions([
+                ViewAction::make()
                     ->label(__('filament/resources/gift-exchange-resource.actions.view'))
                     ->color('info'),
-                Tables\Actions\EditAction::make()
+                EditAction::make()
                     ->label(__('filament/resources/gift-exchange-resource.actions.edit'))
                     ->color('warning'),
-                Tables\Actions\Action::make('mark_processed')
+                Action::make('mark_processed')
                     ->label(__('filament/resources/gift-exchange-resource.actions.mark_processed.label'))
                     ->icon('heroicon-m-check-circle')
                     ->color('success')
@@ -242,7 +260,7 @@ class GiftExchangeResource extends Resource
                         ]);
                     })
                     ->visible(fn (GiftExchange $record) => $record->status === 'pending'),
-                Tables\Actions\Action::make('mark_shipped')
+                Action::make('mark_shipped')
                     ->label(__('filament/resources/gift-exchange-resource.actions.mark_shipped.label'))
                     ->icon('heroicon-m-truck')
                     ->color('warning')
@@ -254,7 +272,7 @@ class GiftExchangeResource extends Resource
                         ]);
                     })
                     ->visible(fn (GiftExchange $record) => in_array($record->status, ['processing', 'pending'])),
-                Tables\Actions\Action::make('mark_delivered')
+                Action::make('mark_delivered')
                     ->label(__('filament/resources/gift-exchange-resource.actions.mark_delivered.label'))
                     ->icon('heroicon-m-check-badge')
                     ->color('success')
@@ -268,14 +286,14 @@ class GiftExchangeResource extends Resource
                     ->visible(fn (GiftExchange $record) => $record->status === 'shipped'),
             ])
             ->headerActions([
-                Tables\Actions\Action::make('export')
+                Action::make('export')
                     ->label(__('filament/resources/gift-exchange-resource.actions.export.label'))
                     ->icon('heroicon-m-arrow-down-tray')
                     ->color('gray'),
             ])
-            ->bulkActions([
-                Tables\Actions\BulkActionGroup::make([
-                    Tables\Actions\BulkAction::make('mark_processing')
+            ->toolbarActions([
+                BulkActionGroup::make([
+                    BulkAction::make('mark_processing')
                         ->label(__('filament/resources/gift-exchange-resource.actions.bulk_mark_processing'))
                         ->icon('heroicon-m-clock')
                         ->color('warning')
@@ -288,12 +306,12 @@ class GiftExchangeResource extends Resource
                                 ]);
                             });
                         }),
-                    Tables\Actions\DeleteBulkAction::make()
+                    DeleteBulkAction::make()
                         ->label(__('filament/resources/gift-exchange-resource.actions.delete')),
                 ]),
             ])
             ->emptyStateActions([
-                Tables\Actions\CreateAction::make()
+                CreateAction::make()
                     ->label(__('filament/resources/gift-exchange-resource.actions.create_first'))
                     ->icon('heroicon-m-plus'),
             ]);
@@ -309,10 +327,10 @@ class GiftExchangeResource extends Resource
     public static function getPages(): array
     {
         return [
-            'index' => Pages\ListGiftExchanges::route('/'),
-            'create' => Pages\CreateGiftExchange::route('/create'),
-            'view' => Pages\ViewGiftExchange::route('/{record}'),
-            'edit' => Pages\EditGiftExchange::route('/{record}/edit'),
+            'index' => ListGiftExchanges::route('/'),
+            'create' => CreateGiftExchange::route('/create'),
+            'view' => ViewGiftExchange::route('/{record}'),
+            'edit' => EditGiftExchange::route('/{record}/edit'),
         ];
     }
 

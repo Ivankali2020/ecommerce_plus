@@ -6,16 +6,19 @@ use App\Exports\ProductExport;
 use App\Exports\ProductTemplateExport;
 use App\Exports\VariantExport;
 use App\Exports\VariantTemplateExport;
+use App\Filament\Seller\Resources\ProductResource;
 use App\Imports\ProductImport;
 use App\Imports\VariantImport;
-use App\Filament\Seller\Resources\ProductResource;
+use Exception;
 use Filament\Actions;
+use Filament\Actions\Action;
 use Filament\Actions\ActionGroup;
-use Filament\Forms;
-use Filament\Resources\Pages\ListRecords;
-use Maatwebsite\Excel\Facades\Excel;
+use Filament\Actions\CreateAction;
+use Filament\Forms\Components\FileUpload;
 use Filament\Notifications\Notification;
+use Filament\Resources\Pages\ListRecords;
 use Illuminate\Support\Facades\Storage;
+use Maatwebsite\Excel\Facades\Excel;
 
 class ListProducts extends ListRecords
 {
@@ -27,7 +30,7 @@ class ListProducts extends ListRecords
         return [
 
             // Template Download Actions
-            Actions\Action::make('download_product_template')
+            Action::make('download_product_template')
                 ->label(__('import_export.actions.download_product_template'))
                 ->icon('heroicon-o-document-arrow-down')
                 ->color('primary')->outlined()
@@ -35,7 +38,7 @@ class ListProducts extends ListRecords
                     return Excel::download(new ProductTemplateExport, __('import_export.file_names.product_template'));
                 }),
 
-            Actions\Action::make('download_variant_template')
+            Action::make('download_variant_template')
                 ->label(__('import_export.actions.download_variant_template'))
                 ->icon('heroicon-o-document-arrow-down')
                 ->color('gray')->outlined()
@@ -45,36 +48,36 @@ class ListProducts extends ListRecords
 
             ActionGroup::make([
 
-
-
                 // Export Actions
-                Actions\Action::make('export_products')
+                Action::make('export_products')
                     ->label(__('import_export.actions.export_products'))
                     ->icon('heroicon-o-arrow-down-tray')
                     ->color('success')
                     ->action(function () {
                         $timestamp = now()->format('Y-m-d_H-i-s');
                         $filename = str_replace(':timestamp', $timestamp, __('import_export.file_names.products_export'));
+
                         return Excel::download(new ProductExport, $filename);
                     }),
 
-                Actions\Action::make('export_variants')
+                Action::make('export_variants')
                     ->label(__('import_export.actions.export_variants'))
                     ->icon('heroicon-o-arrow-down-tray')
                     ->color('info')
                     ->action(function () {
                         $timestamp = now()->format('Y-m-d_H-i-s');
                         $filename = str_replace(':timestamp', $timestamp, __('import_export.file_names.variants_export'));
+
                         return Excel::download(new VariantExport, $filename);
                     }),
 
                 // Import Actions
-                Actions\Action::make('import_products')
+                Action::make('import_products')
                     ->label(__('import_export.actions.import_products'))
                     ->icon('heroicon-o-arrow-up-tray')
                     ->color('warning')
-                    ->form([
-                        Forms\Components\FileUpload::make('file')
+                    ->schema([
+                        FileUpload::make('file')
                             ->label(__('import_export.form.select_excel_file'))
                             ->acceptedFileTypes(['application/vnd.openxmlformats-officedocument.spreadsheetml.sheet', 'application/vnd.ms-excel', 'text/csv'])
                             ->helperText(__('import_export.form.download_template_first'))
@@ -96,7 +99,7 @@ class ListProducts extends ListRecords
                                 ->title(__('import_export.notifications.products_imported_success'))
                                 ->success()
                                 ->send();
-                        } catch (\Exception $e) {
+                        } catch (Exception $e) {
                             Notification::make()
                                 ->title(__('import_export.notifications.error_importing_products'))
                                 ->body($e->getMessage())
@@ -105,12 +108,12 @@ class ListProducts extends ListRecords
                         }
                     }),
 
-                Actions\Action::make('import_variants')
+                Action::make('import_variants')
                     ->label(__('import_export.actions.import_variants'))
                     ->icon('heroicon-o-arrow-up-tray')
                     ->color('gray')
-                    ->form([
-                        Forms\Components\FileUpload::make('file')
+                    ->schema([
+                        FileUpload::make('file')
                             ->label(__('import_export.form.select_excel_file'))
                             ->acceptedFileTypes(['application/vnd.openxmlformats-officedocument.spreadsheetml.sheet', 'application/vnd.ms-excel', 'text/csv'])
                             ->helperText(__('import_export.form.ensure_products_exist'))
@@ -132,7 +135,7 @@ class ListProducts extends ListRecords
                                 ->title(__('import_export.notifications.variants_imported_success'))
                                 ->success()
                                 ->send();
-                        } catch (\Exception $e) {
+                        } catch (Exception $e) {
                             Notification::make()
                                 ->title(__('import_export.notifications.error_importing_variants'))
                                 ->body($e->getMessage())
@@ -146,8 +149,7 @@ class ListProducts extends ListRecords
                 ->icon('heroicon-o-cog')
                 ->color('primary'),
 
-
-            Actions\CreateAction::make(),
+            CreateAction::make(),
         ];
     }
 }

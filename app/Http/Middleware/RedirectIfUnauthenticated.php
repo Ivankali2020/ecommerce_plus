@@ -3,6 +3,7 @@
 namespace App\Http\Middleware;
 
 use Closure;
+use Exception;
 use Filament\Facades\Filament;
 use Filament\Models\Contracts\FilamentUser;
 use Illuminate\Http\Request;
@@ -25,7 +26,7 @@ class RedirectIfUnauthenticated
                 'tenant_data' => tenant()?->data,
                 'host' => request()->getHost(),
                 'full_url' => request()->fullUrl(),
-                'session_has_seller_login' => session()->has('login_seller_' . sha1('seller')),
+                'session_has_seller_login' => session()->has('login_seller_'.sha1('seller')),
                 'all_sessions' => array_keys(session()->all()),
                 'central_domains' => config('tenancy.central_domains'),
             ]);
@@ -35,9 +36,10 @@ class RedirectIfUnauthenticated
             if ($isCentralDomain) {
                 Log::error('Accessing seller routes from central domain', [
                     'host' => request()->getHost(),
-                    'should_be_tenant_domain' => true
+                    'should_be_tenant_domain' => true,
                 ]);
-                return redirect('https://your-tenant-subdomain.' . request()->getHost() . $request->getRequestUri());
+
+                return redirect('https://your-tenant-subdomain.'.request()->getHost().$request->getRequestUri());
             }
 
             // Temporarily allow access for debugging
@@ -60,16 +62,16 @@ class RedirectIfUnauthenticated
         $filamentUser = null;
 
         // If we have a Filament panel, try to get user from there too
-        if (Filament::getCurrentPanel()) {
+        if (Filament::getCurrentOrDefaultPanel()) {
             try {
                 $filamentUser = Filament::auth()->user();
-            } catch (\Exception $e) {
+            } catch (Exception $e) {
                 Log::info('Filament auth error', ['error' => $e->getMessage()]);
             }
         }
 
         // Check if user is authenticated via either method
-        if (!$guardUser && !$filamentUser) {
+        if (! $guardUser && ! $filamentUser) {
             if ($request->expectsJson()) {
                 return response()->json([
                     'status' => 'error',
@@ -86,11 +88,11 @@ class RedirectIfUnauthenticated
         $user = $guardUser ?: $filamentUser;
 
         // If we have a current Filament panel, check panel access
-        if (Filament::getCurrentPanel()) {
-            $panel = Filament::getCurrentPanel();
+        if (Filament::getCurrentOrDefaultPanel()) {
+            $panel = Filament::getCurrentOrDefaultPanel();
 
             // Check if user can access the current panel
-            if ($user instanceof FilamentUser && !$user->canAccessPanel($panel)) {
+            if ($user instanceof FilamentUser && ! $user->canAccessPanel($panel)) {
                 abort(403, 'Access denied to this panel.');
             }
         }

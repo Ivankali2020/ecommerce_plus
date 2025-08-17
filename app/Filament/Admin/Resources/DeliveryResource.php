@@ -2,13 +2,28 @@
 
 namespace App\Filament\Admin\Resources;
 
-use App\Filament\Admin\Resources\DeliveryResource\Pages;
+use App\Filament\Admin\Resources\DeliveryResource\Pages\CreateDelivery;
+use App\Filament\Admin\Resources\DeliveryResource\Pages\EditDelivery;
+use App\Filament\Admin\Resources\DeliveryResource\Pages\ListDeliveries;
 use App\Models\Delivery;
+use Filament\Actions\BulkActionGroup;
+use Filament\Actions\DeleteBulkAction;
+use Filament\Actions\EditAction;
+use Filament\Actions\ForceDeleteBulkAction;
+use Filament\Actions\RestoreBulkAction;
 use Filament\Facades\Filament;
-use Filament\Forms;
-use Filament\Forms\Form;
+use Filament\Forms\Components\Select;
+use Filament\Forms\Components\TextInput;
+use Filament\Forms\Components\Toggle;
 use Filament\Resources\Resource;
-use Filament\Tables;
+use Filament\Schemas\Components\Group;
+use Filament\Schemas\Components\Section;
+use Filament\Schemas\Components\Utilities\Get;
+use Filament\Schemas\Components\Utilities\Set;
+use Filament\Schemas\Schema;
+use Filament\Tables\Columns\IconColumn;
+use Filament\Tables\Columns\TextColumn;
+use Filament\Tables\Filters\TrashedFilter;
 use Filament\Tables\Table;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\SoftDeletingScope;
@@ -17,7 +32,7 @@ class DeliveryResource extends Resource
 {
     protected static ?string $model = Delivery::class;
 
-    protected static ?string $navigationGroup = 'Order Section';
+    protected static string|\UnitEnum|null $navigationGroup = 'Order Section';
 
     public static function getNavigationLabel(): string
     {
@@ -34,31 +49,31 @@ class DeliveryResource extends Resource
         return __('filament/resources/delivery-resource.model.plural_label');
     }
 
-    public static function form(Form $form): Form
+    public static function form(Schema $schema): Schema
     {
-        return $form
-            ->schema([
-                Forms\Components\Group::make()->schema([
-                    Forms\Components\Section::make()->schema([
-                        Forms\Components\Select::make('seller_id')
+        return $schema
+            ->components([
+                Group::make()->schema([
+                    Section::make()->schema([
+                        Select::make('seller_id')
                             ->required()->searchable()->preload()
                             ->hidden(Filament::getAuthGuard() == 'seller')
                             ->relationship('seller', 'name')
                             ->label(__('filament/resources/delivery-resource.form.fields.name')),
 
-                        Forms\Components\Select::make('region_id')->live()
+                        Select::make('region_id')->live()
                             ->required()->searchable()->preload()
-                            ->afterStateUpdated(fn (Forms\Set $set) => $set('township_id', null))
+                            ->afterStateUpdated(fn (Set $set) => $set('township_id', null))
                             ->relationship('region', 'mm_name')
                             ->label(__('filament/resources/delivery-resource.form.fields.region')),
 
-                        Forms\Components\Select::make('township_id')
-                            ->hidden(fn (Forms\Get $get) => blank($get('region_id')))
+                        Select::make('township_id')
+                            ->hidden(fn (Get $get) => blank($get('region_id')))
                             ->required()->searchable()->preload()
-                            ->relationship('township', 'mm_name', modifyQueryUsing: fn ($query, Forms\Get $get) => $query->where('region_id', $get('region_id')))
+                            ->relationship('township', 'mm_name', modifyQueryUsing: fn ($query, Get $get) => $query->where('region_id', $get('region_id')))
                             ->label(__('filament/resources/delivery-resource.form.fields.township')),
 
-                        Forms\Components\TextInput::make('fees')
+                        TextInput::make('fees')
                             ->required()
                             ->numeric()
                             ->default(0.00)
@@ -66,21 +81,21 @@ class DeliveryResource extends Resource
                     ]),
                 ]),
 
-                Forms\Components\Group::make()->schema([
-                    Forms\Components\Section::make(__('filament/resources/delivery-resource.form.fields.shipping_information'))->schema([
-                        Forms\Components\Toggle::make('is_cod')
+                Group::make()->schema([
+                    Section::make(__('filament/resources/delivery-resource.form.fields.shipping_information'))->schema([
+                        Toggle::make('is_cod')
                             ->label(__('filament/resources/delivery-resource.form.fields.cash_on_delivery'))
                             ->offIcon('heroicon-m-squares-2x2')
                             ->onIcon('heroicon-m-bolt')
                             ->required(),
 
-                        Forms\Components\Toggle::make('is_pick_up')
+                        Toggle::make('is_pick_up')
                             ->label(__('filament/resources/delivery-resource.form.fields.self_pickup'))
                             ->offIcon('heroicon-m-squares-2x2')
                             ->onIcon('heroicon-m-shield-exclamation')
                             ->required(),
 
-                        Forms\Components\TextInput::make('remark')
+                        TextInput::make('remark')
                             ->label(__('filament/resources/delivery-resource.form.fields.remark'))
                             ->maxLength(255),
                     ]),
@@ -92,54 +107,54 @@ class DeliveryResource extends Resource
     {
         return $table
             ->columns([
-                Tables\Columns\TextColumn::make('seller.name')
+                TextColumn::make('seller.name')
                     ->label(__('filament/resources/delivery-resource.table.columns.name'))
                     ->sortable(),
-                Tables\Columns\TextColumn::make('region.mm_name')
+                TextColumn::make('region.mm_name')
                     ->label(__('filament/resources/delivery-resource.table.columns.region'))
                     ->description(fn (Delivery $delivery) => $delivery->region->en_name)
                     ->sortable(),
-                Tables\Columns\TextColumn::make('township.mm_name')
+                TextColumn::make('township.mm_name')
                     ->label(__('filament/resources/delivery-resource.table.columns.township'))
                     ->description(fn (Delivery $delivery) => $delivery->region->en_name)
                     ->sortable(),
-                Tables\Columns\TextColumn::make('fees')
+                TextColumn::make('fees')
                     ->label(__('filament/resources/delivery-resource.table.columns.delivery_fee'))
                     ->numeric()
                     ->sortable(),
-                Tables\Columns\IconColumn::make('is_cod')
+                IconColumn::make('is_cod')
                     ->label(__('filament/resources/delivery-resource.table.columns.cod'))
                     ->boolean(),
-                Tables\Columns\IconColumn::make('is_pick_up')
+                IconColumn::make('is_pick_up')
                     ->label(__('filament/resources/delivery-resource.table.columns.self_pickup'))
                     ->boolean(),
-                Tables\Columns\TextColumn::make('remark')
+                TextColumn::make('remark')
                     ->label(__('filament/resources/delivery-resource.table.columns.remark'))
                     ->searchable(),
-                Tables\Columns\TextColumn::make('deleted_at')
+                TextColumn::make('deleted_at')
                     ->dateTime()
                     ->sortable()
                     ->toggleable(isToggledHiddenByDefault: true),
-                Tables\Columns\TextColumn::make('created_at')
+                TextColumn::make('created_at')
                     ->dateTime()
                     ->sortable()
                     ->toggleable(isToggledHiddenByDefault: true),
-                Tables\Columns\TextColumn::make('updated_at')
+                TextColumn::make('updated_at')
                     ->dateTime()
                     ->sortable()
                     ->toggleable(isToggledHiddenByDefault: true),
             ])
             ->filters([
-                Tables\Filters\TrashedFilter::make(),
+                TrashedFilter::make(),
             ])
-            ->actions([
-                Tables\Actions\EditAction::make(),
+            ->recordActions([
+                EditAction::make(),
             ])
-            ->bulkActions([
-                Tables\Actions\BulkActionGroup::make([
-                    Tables\Actions\DeleteBulkAction::make(),
-                    Tables\Actions\ForceDeleteBulkAction::make(),
-                    Tables\Actions\RestoreBulkAction::make(),
+            ->toolbarActions([
+                BulkActionGroup::make([
+                    DeleteBulkAction::make(),
+                    ForceDeleteBulkAction::make(),
+                    RestoreBulkAction::make(),
                 ]),
             ]);
     }
@@ -154,9 +169,9 @@ class DeliveryResource extends Resource
     public static function getPages(): array
     {
         return [
-            'index' => Pages\ListDeliveries::route('/'),
-            'create' => Pages\CreateDelivery::route('/create'),
-            'edit' => Pages\EditDelivery::route('/{record}/edit'),
+            'index' => ListDeliveries::route('/'),
+            'create' => CreateDelivery::route('/create'),
+            'edit' => EditDelivery::route('/{record}/edit'),
         ];
     }
 

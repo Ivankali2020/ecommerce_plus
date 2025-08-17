@@ -2,12 +2,20 @@
 
 namespace App\Filament\Admin\Resources;
 
-use App\Filament\Admin\Resources\RegionResource\Pages;
+use App\Filament\Admin\Resources\RegionResource\Pages\CreateRegion;
+use App\Filament\Admin\Resources\RegionResource\Pages\EditRegion;
+use App\Filament\Admin\Resources\RegionResource\Pages\ListRegions;
 use App\Models\Region;
-use Filament\Forms;
-use Filament\Forms\Form;
+use Filament\Actions\BulkActionGroup;
+use Filament\Actions\DeleteBulkAction;
+use Filament\Actions\EditAction;
+use Filament\Actions\ForceDeleteBulkAction;
+use Filament\Actions\RestoreBulkAction;
+use Filament\Forms\Components\TextInput;
 use Filament\Resources\Resource;
-use Filament\Tables;
+use Filament\Schemas\Schema;
+use Filament\Tables\Columns\TextColumn;
+use Filament\Tables\Filters\TrashedFilter;
 use Filament\Tables\Table;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\SoftDeletingScope;
@@ -18,17 +26,17 @@ class RegionResource extends Resource
 
     //    protected static ?string $navigationIcon = 'heroicon-o-rectangle-stack';
 
-    protected static ?string $navigationGroup = 'Delivery Section';
+    protected static string|\UnitEnum|null $navigationGroup = 'Delivery Section';
 
-    public static function form(Form $form): Form
+    public static function form(Schema $schema): Schema
     {
-        return $form
-            ->schema([
-                Forms\Components\TextInput::make('mm_name')
+        return $schema
+            ->components([
+                TextInput::make('mm_name')
                     ->required()
                     ->maxLength(255),
 
-                Forms\Components\TextInput::make('en_name')
+                TextInput::make('en_name')
                     ->required()
                     ->maxLength(255),
             ]);
@@ -38,35 +46,35 @@ class RegionResource extends Resource
     {
         return $table
             ->columns([
-                Tables\Columns\TextColumn::make('mm_name')
+                TextColumn::make('mm_name')
                     ->searchable(),
 
-                Tables\Columns\TextColumn::make('en_name')
+                TextColumn::make('en_name')
                     ->searchable(),
-                Tables\Columns\TextColumn::make('deleted_at')
+                TextColumn::make('deleted_at')
                     ->dateTime()
                     ->sortable()
                     ->toggleable(isToggledHiddenByDefault: true),
-                Tables\Columns\TextColumn::make('created_at')
+                TextColumn::make('created_at')
                     ->dateTime()
                     ->sortable()
                     ->toggleable(isToggledHiddenByDefault: true),
-                Tables\Columns\TextColumn::make('updated_at')
+                TextColumn::make('updated_at')
                     ->dateTime()
                     ->sortable()
                     ->toggleable(isToggledHiddenByDefault: true),
             ])
             ->filters([
-                Tables\Filters\TrashedFilter::make(),
+                TrashedFilter::make(),
             ])
-            ->actions([
-                Tables\Actions\EditAction::make(),
+            ->recordActions([
+                EditAction::make(),
             ])
-            ->bulkActions([
-                Tables\Actions\BulkActionGroup::make([
-                    Tables\Actions\DeleteBulkAction::make(),
-                    Tables\Actions\ForceDeleteBulkAction::make(),
-                    Tables\Actions\RestoreBulkAction::make(),
+            ->toolbarActions([
+                BulkActionGroup::make([
+                    DeleteBulkAction::make(),
+                    ForceDeleteBulkAction::make(),
+                    RestoreBulkAction::make(),
                 ]),
             ]);
     }
@@ -81,9 +89,9 @@ class RegionResource extends Resource
     public static function getPages(): array
     {
         return [
-            'index' => Pages\ListRegions::route('/'),
-            'create' => Pages\CreateRegion::route('/create'),
-            'edit' => Pages\EditRegion::route('/{record}/edit'),
+            'index' => ListRegions::route('/'),
+            'create' => CreateRegion::route('/create'),
+            'edit' => EditRegion::route('/{record}/edit'),
         ];
     }
 

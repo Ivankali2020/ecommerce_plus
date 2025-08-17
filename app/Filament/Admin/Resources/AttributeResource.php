@@ -2,14 +2,32 @@
 
 namespace App\Filament\Admin\Resources;
 
-use App\Filament\Admin\Resources\AttributeResource\Pages;
+use App\Filament\Admin\Resources\AttributeResource\Pages\CreateAttribute;
+use App\Filament\Admin\Resources\AttributeResource\Pages\EditAttribute;
+use App\Filament\Admin\Resources\AttributeResource\Pages\ListAttributes;
 use App\Helper\AttributeType;
 use App\Models\Attribute;
+use Filament\Actions\BulkActionGroup;
+use Filament\Actions\DeleteBulkAction;
+use Filament\Actions\EditAction;
+use Filament\Actions\ForceDeleteBulkAction;
+use Filament\Actions\RestoreBulkAction;
+use Filament\Actions\ViewAction;
 use Filament\Facades\Filament;
-use Filament\Forms;
-use Filament\Forms\Form;
+use Filament\Forms\Components\ColorPicker;
+use Filament\Forms\Components\Repeater;
+use Filament\Forms\Components\Select;
+use Filament\Forms\Components\TextInput;
 use Filament\Resources\Resource;
-use Filament\Tables;
+use Filament\Schemas\Components\Grid;
+use Filament\Schemas\Components\Group;
+use Filament\Schemas\Components\Section;
+use Filament\Schemas\Components\Utilities\Get;
+use Filament\Schemas\Components\Utilities\Set;
+use Filament\Schemas\Schema;
+use Filament\Tables\Columns\ColorColumn;
+use Filament\Tables\Columns\TextColumn;
+use Filament\Tables\Filters\TrashedFilter;
 use Filament\Tables\Table;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\SoftDeletingScope;
@@ -20,7 +38,7 @@ class AttributeResource extends Resource
 {
     protected static ?string $model = Attribute::class;
 
-    protected static ?string $navigationGroup = 'Business Section';
+    protected static string|\UnitEnum|null $navigationGroup = 'Business Section';
 
     public static function getNavigationLabel(): string
     {
@@ -37,28 +55,28 @@ class AttributeResource extends Resource
         return __(static::$navigationGroup);
     }
 
-    public static function form(Form $form): Form
+    public static function form(Schema $schema): Schema
     {
         $loading = false;
 
-        return $form
-            ->schema([
-                Forms\Components\Grid::make()->schema([
-                    Forms\Components\Group::make()->schema([
-                        Forms\Components\Section::make()->schema([
-                            Forms\Components\Select::make('seller_id')
+        return $schema
+            ->components([
+                Grid::make()->schema([
+                    Group::make()->schema([
+                        Section::make()->schema([
+                            Select::make('seller_id')
                                 ->hidden(Filament::getAuthGuard() == 'seller')
                                 ->searchable()->preload()
                                 ->required()->relationship('seller', 'name')
                                 ->label(__('filament/resources/attribute-resource.form.seller_id')),
 
-                            Forms\Components\TextInput::make('name')
+                            TextInput::make('name')
                                 ->required()
                                 ->helperText('ဉပမာ - Sizes, Colors, Unit, Weight, Type, ...')
                                 ->maxLength(255)
                                 ->label(__('filament/resources/attribute-resource.form.name')),
 
-                            Forms\Components\Select::make('type')
+                            Select::make('type')
                                 ->options(AttributeType::class)
                                 ->live(onBlur: true)
                                 ->native(false)
@@ -67,34 +85,34 @@ class AttributeResource extends Resource
 
                         ]),
                     ])->columnSpan(1),
-                    Forms\Components\Group::make()->schema([
-                        Forms\Components\Repeater::make('values')
+                    Group::make()->schema([
+                        Repeater::make('values')
                             ->relationship('values')->reorderable()
                             ->label(__('filament/resources/attribute-resource.form.values'))
                             ->schema([
 
-                                Forms\Components\ColorPicker::make('color_code')
+                                ColorPicker::make('color_code')
                                     ->live()->label(__('filament/resources/attribute-resource.form.color_code'))
-                                    ->afterStateUpdated(function ($state, Forms\Set $set) {
+                                    ->afterStateUpdated(function ($state, Set $set) {
                                         //  $response = Http::get('https://api.color.pizza/v1/?values='.Str::remove('#',$state)); will be update in v2
                                     })
-                                    ->visible(fn (Forms\Get $get) => $get('../../type') == 'color')
+                                    ->visible(fn (Get $get) => $get('../../type') == 'color')
                                     ->required(),
 
-                                Forms\Components\TextInput::make('value')
+                                TextInput::make('value')
                                     ->live()->label(__('filament/resources/attribute-resource.form.value'))
                                     ->placeholder(fn () => $loading ? 'Searching Color Name' : '')
-                                    ->visible(fn (Forms\Get $get) => $get('../../type') == 'color')
+                                    ->visible(fn (Get $get) => $get('../../type') == 'color')
                                     ->required(),
 
-                                Forms\Components\TextInput::make('value')
-                                    ->visible(fn (Forms\Get $get) => $get('../../type') == 'text')
+                                TextInput::make('value')
+                                    ->visible(fn (Get $get) => $get('../../type') == 'text')
                                     ->helperText('ဉပမာ - Sizes ဆိုရင် (xl,l,md), Colors ဆိုရင် (red,green,...), ...')
                                     ->required()
                                     ->maxLength(255)
                                     ->label(__('filament/resources/attribute-resource.form.value')),
 
-                            ])->columns(2)->hidden(fn (Forms\Get $get) => blank($get('type'))),
+                            ])->columns(2)->hidden(fn (Get $get) => blank($get('type'))),
                     ]),
                 ])->columns(2),
             ]);
@@ -104,55 +122,55 @@ class AttributeResource extends Resource
     {
         return $table
             ->columns([
-                Tables\Columns\TextColumn::make('seller.name')
+                TextColumn::make('seller.name')
                     ->numeric()->hidden(Filament::getAuthGuard() == 'seller')
                     ->sortable()
                     ->label(__('filament/resources/attribute-resource.table.seller_name')),
 
-                Tables\Columns\TextColumn::make('name')
+                TextColumn::make('name')
                     ->searchable()
                     ->label(__('filament/resources/attribute-resource.table.name')),
 
-                Tables\Columns\TextColumn::make('type')->badge()
+                TextColumn::make('type')->badge()
                     ->searchable()
                     ->label(__('filament/resources/attribute-resource.table.type')),
 
-                Tables\Columns\ColorColumn::make('values.color_code')
+                ColorColumn::make('values.color_code')
                     ->label(__('filament/resources/attribute-resource.table.values_color_code'))
                     ->searchable(),
 
-                Tables\Columns\TextColumn::make('values.value')->badge()->color('gray')
+                TextColumn::make('values.value')->badge()->color('gray')
                     ->label(__('filament/resources/attribute-resource.table.values_value')),
 
-                Tables\Columns\TextColumn::make('deleted_at')
+                TextColumn::make('deleted_at')
                     ->dateTime()
                     ->sortable()
                     ->toggleable(isToggledHiddenByDefault: true)
                     ->label(__('filament/resources/attribute-resource.table.deleted_at')),
 
-                Tables\Columns\TextColumn::make('created_at')
+                TextColumn::make('created_at')
                     ->dateTime()
                     ->sortable()
                     ->toggleable(isToggledHiddenByDefault: true)
                     ->label(__('filament/resources/attribute-resource.table.created_at')),
-                Tables\Columns\TextColumn::make('updated_at')
+                TextColumn::make('updated_at')
                     ->dateTime()
                     ->sortable()
                     ->toggleable(isToggledHiddenByDefault: true)
                     ->label(__('filament/resources/attribute-resource.table.updated_at')),
             ])
             ->filters([
-                Tables\Filters\TrashedFilter::make(),
+                TrashedFilter::make(),
             ])
-            ->actions([
-                Tables\Actions\ViewAction::make(),
-                Tables\Actions\EditAction::make(),
+            ->recordActions([
+                ViewAction::make(),
+                EditAction::make(),
             ])
-            ->bulkActions([
-                Tables\Actions\BulkActionGroup::make([
-                    Tables\Actions\DeleteBulkAction::make(),
-                    Tables\Actions\ForceDeleteBulkAction::make(),
-                    Tables\Actions\RestoreBulkAction::make(),
+            ->toolbarActions([
+                BulkActionGroup::make([
+                    DeleteBulkAction::make(),
+                    ForceDeleteBulkAction::make(),
+                    RestoreBulkAction::make(),
                 ]),
             ]);
     }
@@ -167,9 +185,9 @@ class AttributeResource extends Resource
     public static function getPages(): array
     {
         return [
-            'index' => Pages\ListAttributes::route('/'),
-            'create' => Pages\CreateAttribute::route('/create'),
-            'edit' => Pages\EditAttribute::route('/{record}/edit'),
+            'index' => ListAttributes::route('/'),
+            'create' => CreateAttribute::route('/create'),
+            'edit' => EditAttribute::route('/{record}/edit'),
         ];
     }
 

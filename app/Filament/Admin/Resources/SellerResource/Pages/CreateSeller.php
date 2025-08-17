@@ -3,7 +3,7 @@
 namespace App\Filament\Admin\Resources\SellerResource\Pages;
 
 use App\Filament\Admin\Resources\SellerResource;
-use Filament\Notifications\Auth\VerifyEmail;
+use Filament\Auth\Notifications\VerifyEmail;
 use Filament\Resources\Pages\CreateRecord;
 
 class CreateSeller extends CreateRecord

@@ -2,44 +2,53 @@
 
 namespace App\Filament\Admin\Resources;
 
-use App\Filament\Admin\Resources\SubscriptionPlanResource\Pages;
+use App\Filament\Admin\Resources\SubscriptionPlanResource\Pages\CreateSubscriptionPlan;
+use App\Filament\Admin\Resources\SubscriptionPlanResource\Pages\EditSubscriptionPlan;
+use App\Filament\Admin\Resources\SubscriptionPlanResource\Pages\ListSubscriptionPlans;
 use App\Models\SubscriptionPlan;
-use Filament\Forms;
-use Filament\Forms\Form;
+use Filament\Actions\BulkActionGroup;
+use Filament\Actions\DeleteBulkAction;
+use Filament\Actions\EditAction;
+use Filament\Forms\Components\TagsInput;
+use Filament\Forms\Components\Textarea;
+use Filament\Forms\Components\TextInput;
+use Filament\Forms\Components\Toggle;
 use Filament\Resources\Resource;
-use Filament\Tables;
+use Filament\Schemas\Schema;
+use Filament\Tables\Columns\IconColumn;
+use Filament\Tables\Columns\TextColumn;
 use Filament\Tables\Table;
 
 class SubscriptionPlanResource extends Resource
 {
     protected static ?string $model = SubscriptionPlan::class;
 
-    protected static ?string $navigationIcon = 'heroicon-o-rectangle-stack';
+    protected static string|\BackedEnum|null $navigationIcon = 'heroicon-o-rectangle-stack';
 
-    public static function form(Form $form): Form
+    public static function form(Schema $schema): Schema
     {
-        return $form
-            ->schema([
-                Forms\Components\TextInput::make('name')
+        return $schema
+            ->components([
+                TextInput::make('name')
                     ->required()
                     ->maxLength(255),
 
-                Forms\Components\Textarea::make('description')
+                Textarea::make('description')
                     ->columnSpanFull(),
 
-                Forms\Components\TextInput::make('price')
+                TextInput::make('price')
                     ->required()
                     ->numeric()
                     ->prefix('$'),
 
-                Forms\Components\TextInput::make('duration_months')
+                TextInput::make('duration_months')
                     ->required()
                     ->numeric(),
 
-                Forms\Components\TagsInput::make('features')
+                TagsInput::make('features')
                     ->separator(','),
 
-                Forms\Components\Toggle::make('is_active')
+                Toggle::make('is_active')
                     ->required(),
             ]);
     }
@@ -48,25 +57,25 @@ class SubscriptionPlanResource extends Resource
     {
         return $table
             ->columns([
-                Tables\Columns\TextColumn::make('name')
+                TextColumn::make('name')
                     ->searchable(),
-                Tables\Columns\TextColumn::make('price')
+                TextColumn::make('price')
                     ->money()
                     ->sortable(),
-                Tables\Columns\TextColumn::make('duration_months')
+                TextColumn::make('duration_months')
                     ->numeric()
                     ->sortable(),
-                Tables\Columns\IconColumn::make('is_active')
+                IconColumn::make('is_active')
                     ->boolean(),
-                Tables\Columns\TextColumn::make('created_at')
+                TextColumn::make('created_at')
                     ->dateTime()
                     ->sortable()
                     ->toggleable(isToggledHiddenByDefault: true),
-                Tables\Columns\TextColumn::make('updated_at')
+                TextColumn::make('updated_at')
                     ->dateTime()
                     ->sortable()
                     ->toggleable(isToggledHiddenByDefault: true),
-                Tables\Columns\TextColumn::make('deleted_at')
+                TextColumn::make('deleted_at')
                     ->dateTime()
                     ->sortable()
                     ->toggleable(isToggledHiddenByDefault: true),
@@ -74,12 +83,12 @@ class SubscriptionPlanResource extends Resource
             ->filters([
                 //
             ])
-            ->actions([
-                Tables\Actions\EditAction::make(),
+            ->recordActions([
+                EditAction::make(),
             ])
-            ->bulkActions([
-                Tables\Actions\BulkActionGroup::make([
-                    Tables\Actions\DeleteBulkAction::make(),
+            ->toolbarActions([
+                BulkActionGroup::make([
+                    DeleteBulkAction::make(),
                 ]),
             ]);
     }
@@ -94,9 +103,9 @@ class SubscriptionPlanResource extends Resource
     public static function getPages(): array
     {
         return [
-            'index' => Pages\ListSubscriptionPlans::route('/'),
-            'create' => Pages\CreateSubscriptionPlan::route('/create'),
-            'edit' => Pages\EditSubscriptionPlan::route('/{record}/edit'),
+            'index' => ListSubscriptionPlans::route('/'),
+            'create' => CreateSubscriptionPlan::route('/create'),
+            'edit' => EditSubscriptionPlan::route('/{record}/edit'),
         ];
     }
 }

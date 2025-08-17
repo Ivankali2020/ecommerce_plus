@@ -2,22 +2,28 @@
 
 namespace App\Filament\Seller\Resources;
 
-use App\Filament\Seller\Resources\SettingResource\Pages;
+use App\Filament\Seller\Resources\SettingResource\Pages\CreateSetting;
+use App\Filament\Seller\Resources\SettingResource\Pages\EditSetting;
+use App\Filament\Seller\Resources\SettingResource\Pages\ListSettings;
 use App\Models\Setting;
-use Filament\Forms;
+use Filament\Actions\BulkActionGroup;
+use Filament\Actions\DeleteBulkAction;
+use Filament\Actions\EditAction;
 use Filament\Forms\Components\Repeater;
 use Filament\Forms\Components\RichEditor;
-use Filament\Forms\Components\Tabs;
-use Filament\Forms\Form;
+use Filament\Forms\Components\TextInput;
 use Filament\Resources\Resource;
-use Filament\Tables;
+use Filament\Schemas\Components\Tabs;
+use Filament\Schemas\Components\Tabs\Tab;
+use Filament\Schemas\Schema;
+use Filament\Tables\Columns\TextColumn;
 use Filament\Tables\Table;
 
 class SettingResource extends Resource
 {
     protected static ?string $model = Setting::class;
 
-    protected static ?string $navigationIcon = 'heroicon-o-cog-6-tooth';
+    protected static string|\BackedEnum|null $navigationIcon = 'heroicon-o-cog-6-tooth';
 
     public static function getNavigationLabel(): string
     {
@@ -39,56 +45,56 @@ class SettingResource extends Resource
         return false; // Disable creation of settings through the Filament interface
     }
 
-    public static function form(Form $form): Form
+    public static function form(Schema $schema): Schema
     {
-        return $form
-            ->schema([
+        return $schema
+            ->components([
                 Tabs::make(__('filament/resources/setting-resource.form.tabs.general'))
                     ->tabs([
-                        Tabs\Tab::make(__('filament/resources/setting-resource.form.tabs.general'))
+                        Tab::make(__('filament/resources/setting-resource.form.tabs.general'))
                             ->schema([
-                                Forms\Components\TextInput::make('data.point_percentage')
+                                TextInput::make('data.point_percentage')
                                     ->label(__('filament/resources/setting-resource.form.general.point_percentage.label'))
                                     ->helperText(__('filament/resources/setting-resource.form.general.point_percentage.helper_text'))
                                     ->numeric()
                                     ->required(),
-                                Forms\Components\TextInput::make('data.tax_percentage')
+                                TextInput::make('data.tax_percentage')
                                     ->label(__('filament/resources/setting-resource.form.general.tax_percentage.label'))
                                     ->helperText(__('filament/resources/setting-resource.form.general.tax_percentage.helper_text'))
                                     ->numeric()
                                     ->required(),
-                                Forms\Components\TextInput::make('data.referral_points')
+                                TextInput::make('data.referral_points')
                                     ->label(__('filament/resources/setting-resource.form.general.referral_points.label'))
                                     ->helperText(__('filament/resources/setting-resource.form.general.referral_points.helper_text'))
                                     ->numeric()
                                     ->required(),
                             ]),
 
-                        Tabs\Tab::make(__('filament/resources/setting-resource.form.tabs.social_media'))
+                        Tab::make(__('filament/resources/setting-resource.form.tabs.social_media'))
                             ->schema([
-                                Forms\Components\TextInput::make('data.facebook')
+                                TextInput::make('data.facebook')
                                     ->label(__('filament/resources/setting-resource.form.social_media.facebook.label'))
                                     ->placeholder(__('filament/resources/setting-resource.form.social_media.facebook.placeholder'))
                                     ->url()
                                     ->maxLength(255),
-                                Forms\Components\TextInput::make('data.twitter')
+                                TextInput::make('data.twitter')
                                     ->label(__('filament/resources/setting-resource.form.social_media.twitter.label'))
                                     ->placeholder(__('filament/resources/setting-resource.form.social_media.twitter.placeholder'))
                                     ->url()
                                     ->maxLength(255),
-                                Forms\Components\TextInput::make('data.youtube')
+                                TextInput::make('data.youtube')
                                     ->label(__('filament/resources/setting-resource.form.social_media.youtube.label'))
                                     ->placeholder(__('filament/resources/setting-resource.form.social_media.youtube.placeholder'))
                                     ->url()
                                     ->maxLength(255),
-                                Forms\Components\TextInput::make('data.instagram')
+                                TextInput::make('data.instagram')
                                     ->label(__('filament/resources/setting-resource.form.social_media.instagram.label'))
                                     ->placeholder(__('filament/resources/setting-resource.form.social_media.instagram.placeholder'))
                                     ->url()
                                     ->maxLength(255),
                             ]),
 
-                        Tabs\Tab::make(__('filament/resources/setting-resource.form.tabs.content_pages'))
+                        Tab::make(__('filament/resources/setting-resource.form.tabs.content_pages'))
                             ->schema([
                                 RichEditor::make('data.privacy_policy')
                                     ->label(__('filament/resources/setting-resource.form.content_pages.privacy_policy.label'))
@@ -155,12 +161,12 @@ class SettingResource extends Resource
                                     ->columnSpanFull(),
                             ]),
 
-                        Tabs\Tab::make(__('filament/resources/setting-resource.form.tabs.faq'))
+                        Tab::make(__('filament/resources/setting-resource.form.tabs.faq'))
                             ->schema([
                                 Repeater::make('data.faq')
                                     ->label(__('filament/resources/setting-resource.form.faq.label'))
                                     ->schema([
-                                        Forms\Components\TextInput::make('question')
+                                        TextInput::make('question')
                                             ->label(__('filament/resources/setting-resource.form.faq.question.label'))
                                             ->placeholder(__('filament/resources/setting-resource.form.faq.question.placeholder'))
                                             ->required()
@@ -197,17 +203,17 @@ class SettingResource extends Resource
         return $table
             ->columns([
 
-                Tables\Columns\TextColumn::make('data.point_percentage')
+                TextColumn::make('data.point_percentage')
                     ->label(__('filament/resources/setting-resource.table.columns.point_percentage'))
                     ->suffix(' % ')
                     ->sortable(),
 
-                Tables\Columns\TextColumn::make('data.referral_points')
+                TextColumn::make('data.referral_points')
                     ->label(__('filament/resources/setting-resource.table.columns.referral_points'))
                     ->suffix(' PT ')
                     ->sortable(),
 
-                Tables\Columns\TextColumn::make('data.tax_percentage')
+                TextColumn::make('data.tax_percentage')
                     ->label(__('filament/resources/setting-resource.table.columns.tax_percentage'))
                     ->suffix(' % ')
                     ->sortable(),
@@ -217,12 +223,12 @@ class SettingResource extends Resource
             ->filters([
                 //
             ])
-            ->actions([
-                Tables\Actions\EditAction::make(),
+            ->recordActions([
+                EditAction::make(),
             ])
-            ->bulkActions([
-                Tables\Actions\BulkActionGroup::make([
-                    Tables\Actions\DeleteBulkAction::make(),
+            ->toolbarActions([
+                BulkActionGroup::make([
+                    DeleteBulkAction::make(),
                 ]),
             ]);
     }
@@ -237,9 +243,9 @@ class SettingResource extends Resource
     public static function getPages(): array
     {
         return [
-            'index' => Pages\ListSettings::route('/'),
-            'create' => Pages\CreateSetting::route('/create'),
-            'edit' => Pages\EditSetting::route('/{record}/edit'),
+            'index' => ListSettings::route('/'),
+            'create' => CreateSetting::route('/create'),
+            'edit' => EditSetting::route('/{record}/edit'),
         ];
     }
 }

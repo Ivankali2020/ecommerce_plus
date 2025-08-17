@@ -9,9 +9,9 @@ use Filament\Forms\Components\Select;
 use Filament\Forms\Components\TextInput;
 use Filament\Forms\Concerns\InteractsWithForms;
 use Filament\Forms\Contracts\HasForms;
-use Filament\Forms\Form;
-use Filament\Forms\Get;
-use Filament\Forms\Set;
+use Filament\Schemas\Components\Utilities\Get;
+use Filament\Schemas\Components\Utilities\Set;
+use Filament\Schemas\Schema;
 use Livewire\Component;
 
 class Barcode extends Component implements HasForms
@@ -42,10 +42,10 @@ class Barcode extends Component implements HasForms
         'QRCODE' => 'QRCODE',
     ];
 
-    public function form(Form $form): Form
+    public function form(Schema $schema): Schema
     {
-        return $form->statePath('data')
-            ->schema([
+        return $schema->statePath('data')
+            ->components([
                 Select::make('product_id')
                     ->label(__('filament/resources/barcode-resource.labels.product_name'))
                     ->searchable()
@@ -61,7 +61,7 @@ class Barcode extends Component implements HasForms
 
                 Select::make('variant_id')->required()
                     ->label(__('filament/resources/barcode-resource.labels.variant'))
-                    ->hidden(fn(Get $get) => blank($get('product_id')) || ! Product::where('id', $get('product_id'))->select('has_variant')->first()->has_variant)
+                    ->hidden(fn (Get $get) => blank($get('product_id')) || ! Product::where('id', $get('product_id'))->select('has_variant')->first()->has_variant)
                     ->searchable()->preload()->live()
                     ->afterStateUpdated(function ($state, Get $get, Set $set) {
                         if ($state) {

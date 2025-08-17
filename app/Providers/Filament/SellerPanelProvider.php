@@ -8,13 +8,14 @@ use App\Filament\Seller\Widgets\Filters;
 use App\Http\Middleware\AssignGlobeScope;
 use App\Http\Middleware\EnsureSellerBelongsToTenant;
 use App\Http\Middleware\RedirectIfSubscriptionExpired;
+use App\Http\Middleware\SetLocale;
 use App\Models\Tenant;
 use BezhanSalleh\FilamentShield\FilamentShieldPlugin;
 use Filament\Http\Middleware\Authenticate;
 use Filament\Http\Middleware\DisableBladeIconComponents;
 use Filament\Http\Middleware\DispatchServingFilamentEvent;
 use Filament\Navigation\NavigationItem;
-use Filament\Pages;
+use Filament\Pages\Dashboard;
 use Filament\Panel;
 use Filament\PanelProvider;
 use Filament\Support\Colors\Color;
@@ -34,11 +35,12 @@ class SellerPanelProvider extends PanelProvider
     protected function getSeller()
     {
         $seller = Tenant::where('id', tenant('id'))->with('sellers')->first()->sellers->first();
-        if (!$seller) {
+        if (! $seller) {
             // Handle case where no seller is found, e.g., throw an exception or return a default value
             Auth::logout();
             abort(404, 'Seller not found for the current tenant.');
         }
+
         return Tenant::where('id', tenant('id'))->with('sellers')->first()->sellers->first();
     }
 
@@ -62,7 +64,7 @@ class SellerPanelProvider extends PanelProvider
             ->discoverResources(in: app_path('Filament/Seller/Resources'), for: 'App\\Filament\\Seller\\Resources')
             ->discoverPages(in: app_path('Filament/Seller/Pages'), for: 'App\\Filament\\Seller\\Pages')
             ->pages([
-                Pages\Dashboard::class,
+                Dashboard::class,
             ])
             ->discoverWidgets(in: app_path('Filament/Seller/Widgets'), for: 'App\\Filament\\Seller\\Widgets')
             ->widgets([
@@ -86,13 +88,13 @@ class SellerPanelProvider extends PanelProvider
                 PreventAccessFromCentralDomains::class,
                 EnsureSellerBelongsToTenant::class,
                 RedirectIfSubscriptionExpired::class,
-                \App\Http\Middleware\SetLocale::class,
+                SetLocale::class,
             ], true)
             //            ->spa(fn()=>  Str::contains(request()->userAgent(),'Chrome'))
             ->sidebarWidth('17rem')
-            ->brandLogoHeight(fn() => Auth::guard('seller')->check() ? '3rem' : '5rem')
-            ->brandLogo(fn() => self::getSeller()->getFirstMediaUrl('logos')) // ->getFirstMediaUrl('logos')
-            ->brandName(fn() => self::getSeller()->name ?? 'EMPTY')
+            ->brandLogoHeight(fn () => Auth::guard('seller')->check() ? '3rem' : '5rem')
+            ->brandLogo(fn () => self::getSeller()->getFirstMediaUrl('logos')) // ->getFirstMediaUrl('logos')
+            ->brandName(fn () => self::getSeller()->name ?? 'EMPTY')
             ->sidebarCollapsibleOnDesktop()
             ->databaseNotifications()
             ->databaseNotificationsPolling(null) // this is testing purpose
@@ -102,18 +104,18 @@ class SellerPanelProvider extends PanelProvider
             ])
             ->navigationItems([
                 NavigationItem::make('dashboard')
-                    ->label(fn(): string => 'Go to Website')
-                    ->url(fn(): string => route('welcome'))
+                    ->label(fn (): string => 'Go to Website')
+                    ->url(fn (): string => route('welcome'))
                     ->sort(sort: 10)
                     ->icon('heroicon-o-link'),
                 NavigationItem::make('Simple POS')
-                    ->label(fn(): string => 'Simple POS')
-                    ->url(fn(): string => route('seller.pos'))
+                    ->label(fn (): string => 'Simple POS')
+                    ->url(fn (): string => route('seller.pos'))
                     ->sort(sort: -1)
                     ->icon('heroicon-o-computer-desktop'),
                 NavigationItem::make('Advance POS PRO')
-                    ->label(fn(): string => 'Advance POS PRO')
-                    ->url(fn(): string => route('filament.seller.resources.orders.create'))
+                    ->label(fn (): string => 'Advance POS PRO')
+                    ->url(fn (): string => route('filament.seller.resources.orders.create'))
                     ->sort(sort: -1)
                     ->icon('heroicon-o-computer-desktop'),
             ])

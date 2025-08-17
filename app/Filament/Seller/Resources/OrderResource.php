@@ -2,7 +2,10 @@
 
 namespace App\Filament\Seller\Resources;
 
-use App\Filament\Seller\Resources\OrderResource\Pages;
+use App\Filament\Seller\Resources\OrderResource\Pages\CreateOrder;
+use App\Filament\Seller\Resources\OrderResource\Pages\EditOrder;
+use App\Filament\Seller\Resources\OrderResource\Pages\ListOrders;
+use App\Filament\Seller\Resources\OrderResource\Widgets\OrderChart;
 use App\Helper\CheckFilamentSellerUser;
 use App\Helper\OrderStatus;
 use App\Models\Attribute;
@@ -12,26 +15,27 @@ use App\Models\Order;
 use App\Models\Payment;
 use App\Models\Product;
 use App\Models\Variant;
+use Closure;
+use Filament\Actions\Action;
 use Filament\Facades\Filament;
-use Filament\Forms\Components\Actions\Action;
 use Filament\Forms\Components\DateTimePicker;
-use Filament\Forms\Components\Grid;
-use Filament\Forms\Components\Group;
 use Filament\Forms\Components\Hidden;
 use Filament\Forms\Components\Repeater;
-use Filament\Forms\Components\Section;
 use Filament\Forms\Components\Select;
 use Filament\Forms\Components\SpatieMediaLibraryFileUpload;
 use Filament\Forms\Components\TextInput;
 use Filament\Forms\Components\Toggle;
 use Filament\Forms\Components\ToggleButtons;
-use Filament\Forms\Form;
-use Filament\Forms\Get;
-use Filament\Forms\Set;
 use Filament\Pages\Page;
 use Filament\Resources\Pages\CreateRecord;
 use Filament\Resources\Pages\EditRecord;
 use Filament\Resources\Resource;
+use Filament\Schemas\Components\Grid;
+use Filament\Schemas\Components\Group;
+use Filament\Schemas\Components\Section;
+use Filament\Schemas\Components\Utilities\Get;
+use Filament\Schemas\Components\Utilities\Set;
+use Filament\Schemas\Schema;
 use Filament\Tables\Table;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Model;
@@ -46,7 +50,7 @@ class OrderResource extends Resource
 
     //  protected static ?string $navigationIcon = 'heroicon-o-rectangle-stack';
 
-    protected static ?string $navigationGroup = 'Order Section';
+    protected static string|\UnitEnum|null $navigationGroup = 'Order Section';
 
     public static function getNavigationLabel(): string
     {
@@ -68,10 +72,10 @@ class OrderResource extends Resource
         return static::getModel()::where('seller_id', CheckFilamentSellerUser::getSellerId())->where('status', OrderStatus::New)->count();
     }
 
-    public static function form(Form $form): Form
+    public static function form(Schema $schema): Schema
     {
-        return $form
-            ->schema([
+        return $schema
+            ->components([
                 Grid::make()->schema([
                     Group::make()->schema([
 
@@ -121,7 +125,7 @@ class OrderResource extends Resource
                                                             ->orWhereHas('brand', function ($q) use ($search) {
                                                                 $q->where('name', 'like', "%$search%");
                                                             });
-                                                        })
+                                                    })
                                                         ->whereNull('deleted_at')
                                                         ->limit(20)
                                                         ->with('brand:name,id')
@@ -150,7 +154,7 @@ class OrderResource extends Resource
                                                 ->required()->default(1)->minValue(1)
                                                 ->label(__('filament/resources/order-resource.form.products.selection.quantity'))
                                                 ->rules(['required', function (Get $get) {
-                                                    return function (string $attribute, $value, \Closure $fail) use ($get) {
+                                                    return function (string $attribute, $value, Closure $fail) use ($get) {
                                                         if (! blank($get('product_id'))) {
                                                             $product = Product::where('id', $get('product_id'))->first();
                                                             if ($product->has_variant && ! blank($get('variant_id'))) {
@@ -383,16 +387,16 @@ class OrderResource extends Resource
     public static function getPages(): array
     {
         return [
-            'index' => Pages\ListOrders::route('/'),
-            'create' => Pages\CreateOrder::route('/create'),
-            'edit' => Pages\EditOrder::route('/{record}/edit'),
+            'index' => ListOrders::route('/'),
+            'create' => CreateOrder::route('/create'),
+            'edit' => EditOrder::route('/{record}/edit'),
         ];
     }
 
     public static function getWidgets(): array
     {
         return [
-            OrderResource\Widgets\OrderChart::class,
+            OrderChart::class,
         ];
     }
 
@@ -558,7 +562,7 @@ class OrderResource extends Resource
         ];
     }
 
-    protected static function vartiantSectionCalculate(): \Closure
+    protected static function vartiantSectionCalculate(): Closure
     {
         return function (Get $get, Set $set) {
             if (! blank($get('variant_id'))) { // check if variant id is have

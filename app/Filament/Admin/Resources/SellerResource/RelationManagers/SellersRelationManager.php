@@ -2,10 +2,18 @@
 
 namespace App\Filament\Admin\Resources\SellerResource\RelationManagers;
 
-use Filament\Forms;
-use Filament\Forms\Form;
+use Filament\Actions\BulkActionGroup;
+use Filament\Actions\CreateAction;
+use Filament\Actions\DeleteAction;
+use Filament\Actions\DeleteBulkAction;
+use Filament\Actions\EditAction;
+use Filament\Forms\Components\Select;
+use Filament\Forms\Components\SpatieMediaLibraryFileUpload;
+use Filament\Forms\Components\TextInput;
 use Filament\Resources\RelationManagers\RelationManager;
-use Filament\Tables;
+use Filament\Schemas\Schema;
+use Filament\Tables\Columns\SpatieMediaLibraryImageColumn;
+use Filament\Tables\Columns\TextColumn;
 use Filament\Tables\Table;
 use Illuminate\Support\Facades\Hash;
 
@@ -13,35 +21,35 @@ class SellersRelationManager extends RelationManager
 {
     protected static string $relationship = 'staffs';
 
-    public function form(Form $form): Form
+    public function form(Schema $schema): Schema
     {
-        return $form
-            ->schema([
+        return $schema
+            ->components([
 
-                Forms\Components\TextInput::make('name')
+                TextInput::make('name')
                     ->required()
                     ->maxLength(255),
 
-                Forms\Components\TextInput::make('email')
+                TextInput::make('email')
                     ->email()
                     ->required()
                     ->maxLength(255),
 
-                Forms\Components\TextInput::make('phone')
+                TextInput::make('phone')
                     ->maxLength(255),
 
-                Forms\Components\TextInput::make('password')
+                TextInput::make('password')
                     ->password()
                     ->dehydrateStateUsing(fn ($state) => Hash::make($state))
                     ->dehydrated(fn ($state) => filled($state))
                     ->maxLength(255),
 
-                Forms\Components\SpatieMediaLibraryFileUpload::make('logo')
+                SpatieMediaLibraryFileUpload::make('logo')
                     ->label('avatar')
                     ->collection('logos')->imageEditor()
                     ->image()->rules('required'),
 
-                Forms\Components\Select::make('roles')
+                Select::make('roles')
                     ->relationship('roles', 'name', modifyQueryUsing: fn ($query) => $query->where('guard_name', 'seller'))
                     ->multiple()
                     ->preload()
@@ -54,15 +62,15 @@ class SellersRelationManager extends RelationManager
         return $table
             ->recordTitleAttribute('name')
             ->columns([
-                Tables\Columns\SpatieMediaLibraryImageColumn::make('logo')->collection('logos'),
+                SpatieMediaLibraryImageColumn::make('logo')->collection('logos'),
 
-                Tables\Columns\TextColumn::make('name')
+                TextColumn::make('name')
                     ->searchable(),
-                Tables\Columns\TextColumn::make('roles.name')->badge(),
+                TextColumn::make('roles.name')->badge(),
 
-                Tables\Columns\TextColumn::make('email')
+                TextColumn::make('email')
                     ->searchable(),
-                Tables\Columns\TextColumn::make('phone')
+                TextColumn::make('phone')
                     ->searchable(),
 
             ])
@@ -70,15 +78,15 @@ class SellersRelationManager extends RelationManager
                 //
             ])
             ->headerActions([
-                Tables\Actions\CreateAction::make(),
+                CreateAction::make(),
             ])
-            ->actions([
-                Tables\Actions\EditAction::make(),
-                Tables\Actions\DeleteAction::make(),
+            ->recordActions([
+                EditAction::make(),
+                DeleteAction::make(),
             ])
-            ->bulkActions([
-                Tables\Actions\BulkActionGroup::make([
-                    Tables\Actions\DeleteBulkAction::make(),
+            ->toolbarActions([
+                BulkActionGroup::make([
+                    DeleteBulkAction::make(),
                 ]),
             ]);
     }

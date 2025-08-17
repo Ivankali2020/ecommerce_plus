@@ -2,7 +2,9 @@
 
 namespace App\Filament\Seller\Resources;
 
-use App\Filament\Seller\Resources\PurchaseResource\Pages;
+use App\Filament\Seller\Resources\PurchaseResource\Pages\CreatePurchase;
+use App\Filament\Seller\Resources\PurchaseResource\Pages\EditPurchase;
+use App\Filament\Seller\Resources\PurchaseResource\Pages\ListPurchases;
 use App\Helper\CheckFilamentSellerUser;
 use App\Helper\PurchaseStatus;
 use App\Models\Attribute;
@@ -11,15 +13,27 @@ use App\Models\Exchange;
 use App\Models\Product;
 use App\Models\Purchase;
 use App\Models\PurchaseProduct;
+use Filament\Actions\Action;
+use Filament\Actions\BulkActionGroup;
+use Filament\Actions\DeleteBulkAction;
+use Filament\Actions\EditAction;
 use Filament\Forms;
-use Filament\Forms\Components\Grid;
-use Filament\Forms\Components\Group;
-use Filament\Forms\Form;
+use Filament\Forms\Components\Hidden;
+use Filament\Forms\Components\Repeater;
+use Filament\Forms\Components\Select;
+use Filament\Forms\Components\TextInput;
+use Filament\Forms\Components\ToggleButtons;
 use Filament\Notifications\Notification;
 use Filament\Resources\Pages\CreateRecord;
 use Filament\Resources\Pages\Page;
 use Filament\Resources\Resource;
-use Filament\Tables;
+use Filament\Schemas\Components\Grid;
+use Filament\Schemas\Components\Group;
+use Filament\Schemas\Components\Section;
+use Filament\Schemas\Components\Utilities\Get;
+use Filament\Schemas\Components\Utilities\Set;
+use Filament\Schemas\Schema;
+use Filament\Tables\Columns\TextColumn;
 use Filament\Tables\Table;
 use Illuminate\Database\Eloquent\Builder;
 
@@ -33,7 +47,7 @@ class PurchaseResource extends Resource
 
     protected static ?string $navigationLabel = null;
 
-    protected static ?string $navigationIcon = 'heroicon-o-arrow-path-rounded-square';
+    protected static string|\BackedEnum|null $navigationIcon = 'heroicon-o-arrow-path-rounded-square';
 
     public static function getModelLabel(): string
     {
@@ -55,15 +69,15 @@ class PurchaseResource extends Resource
         return parent::getEloquentQuery()->where('seller_id', CheckFilamentSellerUser::getSellerId());
     }
 
-    public static function form(Form $form): Form
+    public static function form(Schema $schema): Schema
     {
-        return $form
-            ->schema([
-                Forms\Components\Grid::make()->schema([
+        return $schema
+            ->components([
+                Grid::make()->schema([
 
-                    Forms\Components\Group::make()->schema([
+                    Group::make()->schema([
 
-                        Forms\Components\Repeater::make('products')
+                        Repeater::make('products')
                             ->relationship('products')
                             ->collapsible()->reorderable(true)->reorderableWithButtons()
                             ->itemLabel(function (array $state): ?string {
@@ -80,7 +94,7 @@ class PurchaseResource extends Resource
 
                                     Group::make()->schema([
 
-                                        Forms\Components\Select::make('product_id')
+                                        Select::make('product_id')
                                             ->label(__('filament/resources/purchase-resource.form.products.item.product'))
                                             ->autofocus(fn (Page $livewire) => $livewire instanceof CreateRecord)
                                             ->relationship(
@@ -90,7 +104,7 @@ class PurchaseResource extends Resource
                                                     $q->where('seller_id', CheckFilamentSellerUser::getSellerId());
                                                 })->whereNull('deleted_at')
                                             )
-                                            ->afterStateUpdated(function ($state, Forms\Get $get, Forms\Set $set) {
+                                            ->afterStateUpdated(function ($state, Get $get, Set $set) {
                                                 if ($state) {
                                                     $product = Product::where('id', $state)->with('exchange')->first();
                                                     $data = [];
@@ -121,12 +135,12 @@ class PurchaseResource extends Resource
                                             })->live()->columnSpan(2)
                                             ->searchable()->preload()->required(),
 
-                                        Forms\Components\Select::make('variant_id')
+                                        Select::make('variant_id')
                                             ->label(__('filament/resources/purchase-resource.form.products.item.variant'))
                                             ->required()
-                                            ->hidden(fn (Forms\Get $get) => blank($get('product_id')) || ! Product::where('id', $get('product_id'))->select('has_variant')->first()->has_variant)
+                                            ->hidden(fn (Get $get) => blank($get('product_id')) || ! Product::where('id', $get('product_id'))->select('has_variant')->first()->has_variant)
                                             ->searchable()->preload()->live()
-                                            ->afterStateUpdated(function ($state, Forms\Get $get, Forms\Set $set) {
+                                            ->afterStateUpdated(function ($state, Get $get, Set $set) {
                                                 if ($state) {
                                                     $variant = Product::where('id', $get('product_id'))->first()->variants()->where('id', $state)->first();
                                                     $set('buy_price', $variant->buy_price);
@@ -145,56 +159,56 @@ class PurchaseResource extends Resource
                                                     $set('attributes', $data);
                                                 }
                                             })
-                                            ->relationship('variant', 'sku', modifyQueryUsing: function (Forms\Get $get, $query) {
+                                            ->relationship('variant', 'sku', modifyQueryUsing: function (Get $get, $query) {
                                                 return $query->where('product_id', $get('product_id'));
                                             })->columnSpan(2),
 
-                                        Forms\Components\TextInput::make('stocks')
+                                        TextInput::make('stocks')
                                             ->label(__('filament/resources/purchase-resource.form.products.item.stocks'))
                                             ->live(onBlur: true)
                                             ->integer()->required(),
 
-                                        Forms\Components\TextInput::make('buy_price')
+                                        TextInput::make('buy_price')
                                             ->label(__('filament/resources/purchase-resource.form.products.item.buy_price'))
                                             ->live(onBlur: true)
                                             ->numeric()->required(),
 
-                                        Forms\Components\TextInput::make('sell_price')
+                                        TextInput::make('sell_price')
                                             ->label(__('filament/resources/purchase-resource.form.products.item.sell_price'))
                                             ->live(onBlur: true)
-                                            ->placeholder(function (Forms\Get $get, Forms\Set $set) {
+                                            ->placeholder(function (Get $get, Set $set) {
                                                 if (! blank($get('stocks')) && ! blank($get('buy_price'))) {
                                                     $set('total', $get('stocks') * $get('buy_price'));
                                                 }
                                             })
                                             ->numeric()->required(),
 
-                                        Forms\Components\TextInput::make('total')->live(onBlur: true)->required()
-                                            ->suffix(fn (Forms\Get $get) => blank($get('product_id')) ? '' : Product::where('id', $get('product_id'))->with('exchange.currency')->first()->exchange->currency->symbol_native),
+                                        TextInput::make('total')->live(onBlur: true)->required()
+                                            ->suffix(fn (Get $get) => blank($get('product_id')) ? '' : Product::where('id', $get('product_id'))->with('exchange.currency')->first()->exchange->currency->symbol_native),
 
                                     ])->columnSpan(4)->columns(columns: 4),
 
                                     Group::make()->schema([
 
-                                        Forms\Components\Repeater::make('attributes')
+                                        Repeater::make('attributes')
                                             ->collapsible(false)->reorderable(false)
                                             ->addable(false)->deletable(false)
                                             ->schema([
 
-                                                Forms\Components\Group::make()->schema([
-                                                    Forms\Components\Hidden::make('attribute')
+                                                Group::make()->schema([
+                                                    Hidden::make('attribute')
                                                         ->label(__('filament/resources/purchase-resource.form.products.item.attributes.attribute'))
                                                         ->required()
                                                         ->label('Attribute'),
 
-                                                    Forms\Components\Select::make('value')
+                                                    Select::make('value')
                                                         ->label(__('filament/resources/purchase-resource.form.products.item.attributes.value'))
                                                         ->placeholder(__('filament/resources/purchase-resource.form.products.item.attributes.select'))
                                                         ->multiple()
-                                                        ->hidden(fn (Forms\Get $get) => blank($get('attribute')))
+                                                        ->hidden(fn (Get $get) => blank($get('attribute')))
                                                         ->required()->searchable()->preload()->label('Value')->placeholder('Select')
                                                         //                                                           ->default(fn(Forms\Get $get) => AttributeValue::pluck('value','id'))
-                                                        ->options(fn (Forms\Get $get) => AttributeValue::pluck('value', 'id')),
+                                                        ->options(fn (Get $get) => AttributeValue::pluck('value', 'id')),
 
                                                 ])->columns(columns: 1),
 
@@ -208,10 +222,10 @@ class PurchaseResource extends Resource
 
                     ])->columnSpan(3)->columns(2),
 
-                    Forms\Components\Group::make()->schema([
-                        Forms\Components\Section::make()->schema([
+                    Group::make()->schema([
+                        Section::make()->schema([
 
-                            Forms\Components\Select::make('supplier_id')
+                            Select::make('supplier_id')
                                 ->searchable()->preload()
                                 ->relationship('supplier', 'name', modifyQueryUsing: fn ($query) => $query->when(CheckFilamentSellerUser::getSellerId() != null, function ($q) {
                                     $q->where('seller_id', CheckFilamentSellerUser::getSellerId());
@@ -219,27 +233,27 @@ class PurchaseResource extends Resource
                                 ->label(__('filament/resources/purchase-resource.form.supplier_id'))
                                 ->required(),
 
-                            Forms\Components\ToggleButtons::make('status')
+                            ToggleButtons::make('status')
                                 ->inline()
                                 ->required()->options(PurchaseStatus::class)
                                 ->label(__('filament/resources/purchase-resource.form.status'))
                                 ->default('processing'),
 
-                            Forms\Components\TextInput::make('total_amount')
-                                ->placeholder(function (Forms\Get $get, Forms\Set $set) {
+                            TextInput::make('total_amount')
+                                ->placeholder(function (Get $get, Set $set) {
                                     self::getTotalPrice($get, $set);
                                 })
                                 ->label(__('filament/resources/purchase-resource.form.total_amount'))
                                 ->required()
                                 ->numeric(),
 
-                            Forms\Components\TextInput::make('paid_amount')
+                            TextInput::make('paid_amount')
                                 ->label(__('filament/resources/purchase-resource.form.paid_amount'))
                                 ->required()
                                 ->numeric()
                                 ->default(0.00),
 
-                            Forms\Components\TextInput::make('remaining_amount')
+                            TextInput::make('remaining_amount')
                                 ->label(__('filament/resources/purchase-resource.form.remaining_amount'))
                                 ->required()
                                 ->numeric()
@@ -252,7 +266,7 @@ class PurchaseResource extends Resource
             ]);
     }
 
-    public static function getTotalPrice(Forms\Get $get, Forms\Set $set): void
+    public static function getTotalPrice(Get $get, Set $set): void
     {
         $total = 0;
         if (! blank($get('products'))) {
@@ -270,31 +284,31 @@ class PurchaseResource extends Resource
     {
         return $table
             ->columns([
-                Tables\Columns\TextColumn::make('seller.name')
+                TextColumn::make('seller.name')
                     ->label(__('filament/resources/purchase-resource.table.columns.seller'))
                     ->numeric()
                     ->sortable(),
-                Tables\Columns\TextColumn::make('supplier.name')
+                TextColumn::make('supplier.name')
                     ->label(__('filament/resources/purchase-resource.table.columns.supplier'))
                     ->numeric()
                     ->sortable(),
-                Tables\Columns\TextColumn::make('status')
+                TextColumn::make('status')
                     ->label(__('filament/resources/purchase-resource.table.columns.status'))
                     ->searchable(),
-                Tables\Columns\TextColumn::make('total_amount')
+                TextColumn::make('total_amount')
                     ->numeric()
                     ->sortable(),
-                Tables\Columns\TextColumn::make('paid_amount')
+                TextColumn::make('paid_amount')
                     ->numeric()
                     ->sortable(),
-                Tables\Columns\TextColumn::make('remaining_amount')
+                TextColumn::make('remaining_amount')
                     ->numeric()
                     ->sortable(),
-                Tables\Columns\TextColumn::make('created_at')
+                TextColumn::make('created_at')
                     ->dateTime()
                     ->sortable()
                     ->toggleable(isToggledHiddenByDefault: true),
-                Tables\Columns\TextColumn::make('updated_at')
+                TextColumn::make('updated_at')
                     ->dateTime()
                     ->sortable()
                     ->toggleable(isToggledHiddenByDefault: true),
@@ -302,8 +316,8 @@ class PurchaseResource extends Resource
             ->filters([
                 //
             ])
-            ->actions([
-                Tables\Actions\Action::make('Invoice')
+            ->recordActions([
+                Action::make('Invoice')
                     ->label(__('filament/resources/purchase-resource.table.actions.invoice'))
                     ->modalContent(fn (Purchase $record) => view(
                         'livewire.purchase_invoice',
@@ -315,7 +329,7 @@ class PurchaseResource extends Resource
                     ->modalCancelAction(false)
                     ->icon('heroicon-o-viewfinder-circle'),
 
-                Tables\Actions\Action::make('importStock')
+                Action::make('importStock')
                     ->label(__('filament/resources/purchase-resource.table.actions.import_stock'))
                     ->icon('heroicon-o-arrow-path-rounded-square')
                     ->color('warning')
@@ -391,12 +405,12 @@ class PurchaseResource extends Resource
                     })
                     ->visible(fn (Purchase $record): bool => $record->status !== PurchaseStatus::Complete),
 
-                Tables\Actions\EditAction::make()
+                EditAction::make()
                     ->label(__('filament/resources/purchase-resource.table.actions.edit')),
             ])
-            ->bulkActions([
-                Tables\Actions\BulkActionGroup::make([
-                    Tables\Actions\DeleteBulkAction::make()
+            ->toolbarActions([
+                BulkActionGroup::make([
+                    DeleteBulkAction::make()
                         ->label(__('filament/resources/purchase-resource.table.actions.delete')),
                 ]),
             ]);
@@ -412,9 +426,9 @@ class PurchaseResource extends Resource
     public static function getPages(): array
     {
         return [
-            'index' => Pages\ListPurchases::route('/'),
-            'create' => Pages\CreatePurchase::route('/create'),
-            'edit' => Pages\EditPurchase::route('/{record}/edit'),
+            'index' => ListPurchases::route('/'),
+            'create' => CreatePurchase::route('/create'),
+            'edit' => EditPurchase::route('/{record}/edit'),
         ];
     }
 }

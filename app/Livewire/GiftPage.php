@@ -5,11 +5,12 @@ namespace App\Livewire;
 use App\Models\Gift;
 use App\Models\User;
 use App\Services\PointService;
+use Exception;
 use Filament\Notifications\Notification;
 use Illuminate\Support\Facades\Auth;
+use Livewire\Attributes\Title;
 use Livewire\Component;
 use Livewire\WithPagination;
-use Livewire\Attributes\Title;
 
 #[Title('Gift Exchange')]
 class GiftPage extends Component
@@ -17,10 +18,15 @@ class GiftPage extends Component
     use WithPagination;
 
     public $selectedGift = null;
+
     public $showExchangeModal = false;
+
     public $deliveryAddress = '';
+
     public $exchangeNotes = '';
+
     public $search = '';
+
     public $sortBy = 'points_asc'; // points_asc, points_desc, name_asc, name_desc
 
     protected $pointService;
@@ -45,12 +51,13 @@ class GiftPage extends Component
 
     public function openExchangeModal($giftId)
     {
-        if (!Auth::check()) {
+        if (! Auth::check()) {
             Notification::make()
                 ->title('Login Required')
                 ->body(__('gifts.messages.login_required_exchange'))
                 ->warning()
                 ->send();
+
             return;
         }
 
@@ -73,12 +80,13 @@ class GiftPage extends Component
 
         $user = Auth::user();
 
-        if (!$this->selectedGift) {
+        if (! $this->selectedGift) {
             Notification::make()
                 ->title('Error')
                 ->body(__('gifts.messages.gift_not_found'))
                 ->danger()
                 ->send();
+
             return;
         }
 
@@ -99,7 +107,7 @@ class GiftPage extends Component
                 ->title('Gift Exchange Successful')
                 ->body(__('gifts.messages.exchange_success', [
                     'points' => number_format($this->selectedGift->points_required),
-                    'gift_name' => $this->selectedGift->name
+                    'gift_name' => $this->selectedGift->name,
                 ]))
                 ->success()
                 ->send();
@@ -108,7 +116,7 @@ class GiftPage extends Component
 
             // Refresh user data to show updated points
             $this->dispatch('user-points-updated');
-        } catch (\Exception $e) {
+        } catch (Exception $e) {
             session()->flash('error', $e->getMessage());
         }
     }
@@ -139,7 +147,7 @@ class GiftPage extends Component
         return view('livewire.gift-page', [
             'gifts' => $gifts,
             'userPoints' => $this->getUserPoints(),
-            'pointsSummary' => $this->getPointsSummary()
+            'pointsSummary' => $this->getPointsSummary(),
         ]);
     }
 }

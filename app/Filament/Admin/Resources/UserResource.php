@@ -2,16 +2,26 @@
 
 namespace App\Filament\Admin\Resources;
 
-use App\Filament\Admin\Resources\UserResource\Pages;
-use App\Filament\Admin\Resources\UserResource\RelationManagers;
+use App\Filament\Admin\Resources\UserResource\Pages\CreateUser;
+use App\Filament\Admin\Resources\UserResource\Pages\EditUser;
+use App\Filament\Admin\Resources\UserResource\Pages\ListUsers;
+use App\Filament\Admin\Resources\UserResource\RelationManagers\UserAddressesRelationManager;
 use App\Models\User;
+use Filament\Actions\BulkActionGroup;
+use Filament\Actions\DeleteBulkAction;
+use Filament\Actions\EditAction;
+use Filament\Actions\ViewAction;
 use Filament\Facades\Filament;
-use Filament\Forms;
-use Filament\Forms\Form;
+use Filament\Forms\Components\DateTimePicker;
+use Filament\Forms\Components\Select;
+use Filament\Forms\Components\SpatieMediaLibraryFileUpload;
+use Filament\Forms\Components\TextInput;
 use Filament\Pages\Page;
 use Filament\Resources\Pages\CreateRecord;
 use Filament\Resources\Resource;
-use Filament\Tables;
+use Filament\Schemas\Schema;
+use Filament\Tables\Columns\SpatieMediaLibraryImageColumn;
+use Filament\Tables\Columns\TextColumn;
 use Filament\Tables\Table;
 use Illuminate\Support\Facades\Hash;
 
@@ -20,47 +30,47 @@ class UserResource extends Resource
     protected static ?string $model = User::class;
 
     //    protected static ?string $navigationIcon = 'heroicon-o-rectangle-stack';
-    protected static ?string $navigationGroup = 'User Section';
+    protected static string|\UnitEnum|null $navigationGroup = 'User Section';
 
-    public static function form(Form $form): Form
+    public static function form(Schema $schema): Schema
     {
-        return $form
-            ->schema([
+        return $schema
+            ->components([
 
-                Forms\Components\Select::make('seller_id')
+                Select::make('seller_id')
                     ->relationship('seller', 'name')
                     ->required()->hidden(Filament::getAuthGuard() == 'seller')
                     ->searchable()->preload(),
 
-                Forms\Components\TextInput::make('firebase_uid')
+                TextInput::make('firebase_uid')
                     ->hidden(fn (Page $livewire) => $livewire instanceof CreateRecord)
                     ->maxLength(255),
-                Forms\Components\TextInput::make('google_id')
+                TextInput::make('google_id')
                     ->hidden(fn (Page $livewire) => $livewire instanceof CreateRecord)
                     ->maxLength(255),
-                Forms\Components\TextInput::make('name')
+                TextInput::make('name')
                     ->label(__('filament/resources/user-resource.form.name.label'))
                     ->placeholder(__('filament/resources/user-resource.form.name.placeholder'))
                     ->maxLength(255)->required(),
-                Forms\Components\TextInput::make('email')
+                TextInput::make('email')
                     ->label(__('filament/resources/user-resource.form.email.label'))
                     ->placeholder(__('filament/resources/user-resource.form.email.placeholder'))
                     ->email()
                     ->maxLength(255)->required(),
-                Forms\Components\TextInput::make('phone')
+                TextInput::make('phone')
                     ->label(__('filament/resources/user-resource.form.phone.label'))
                     ->placeholder(__('filament/resources/user-resource.form.phone.placeholder'))
                     ->maxLength(255)->required(),
 
-                Forms\Components\SpatieMediaLibraryFileUpload::make('profile_photo')
+                SpatieMediaLibraryFileUpload::make('profile_photo')
                     ->collection('profile_photos')->imageEditor()
                     ->image()->rules('required'),
 
-                Forms\Components\DateTimePicker::make('email_verified_at'),
+                DateTimePicker::make('email_verified_at'),
 
-                Forms\Components\TextInput::make('points')->default(0)->numeric(),
+                TextInput::make('points')->default(0)->numeric(),
 
-                Forms\Components\TextInput::make('password')
+                TextInput::make('password')
                     ->label(__('filament/resources/user-resource.form.password.label'))
                     ->placeholder(__('filament/resources/user-resource.form.password.placeholder'))
                     ->password()
@@ -75,25 +85,25 @@ class UserResource extends Resource
     {
         return $table
             ->columns([
-                Tables\Columns\SpatieMediaLibraryImageColumn::make('thumb')->collection('profile_photos'),
-                Tables\Columns\TextColumn::make('name')
+                SpatieMediaLibraryImageColumn::make('thumb')->collection('profile_photos'),
+                TextColumn::make('name')
                     ->label(__('filament/resources/user-resource.table.columns.name'))
                     ->searchable(),
-                Tables\Columns\TextColumn::make('email')
+                TextColumn::make('email')
                     ->label(__('filament/resources/user-resource.table.columns.email'))
                     ->searchable(),
-                Tables\Columns\TextColumn::make('phone')
+                TextColumn::make('phone')
                     ->label(__('filament/resources/user-resource.table.columns.phone'))
                     ->searchable(),
 
-                Tables\Columns\TextColumn::make('email_verified_at')
+                TextColumn::make('email_verified_at')
                     ->dateTime()
                     ->sortable(),
-                Tables\Columns\TextColumn::make('created_at')
+                TextColumn::make('created_at')
                     ->dateTime()
                     ->sortable()
                     ->toggleable(isToggledHiddenByDefault: true),
-                Tables\Columns\TextColumn::make('updated_at')
+                TextColumn::make('updated_at')
                     ->dateTime()
                     ->sortable()
                     ->toggleable(isToggledHiddenByDefault: true),
@@ -101,13 +111,13 @@ class UserResource extends Resource
             ->filters([
                 //
             ])
-            ->actions([
-                Tables\Actions\ViewAction::make(),
-                Tables\Actions\EditAction::make(),
+            ->recordActions([
+                ViewAction::make(),
+                EditAction::make(),
             ])
-            ->bulkActions([
-                Tables\Actions\BulkActionGroup::make([
-                    Tables\Actions\DeleteBulkAction::make(),
+            ->toolbarActions([
+                BulkActionGroup::make([
+                    DeleteBulkAction::make(),
                 ]),
             ]);
     }
@@ -115,16 +125,16 @@ class UserResource extends Resource
     public static function getRelations(): array
     {
         return [
-            RelationManagers\UserAddressesRelationManager::class,
+            UserAddressesRelationManager::class,
         ];
     }
 
     public static function getPages(): array
     {
         return [
-            'index' => Pages\ListUsers::route('/'),
-            'create' => Pages\CreateUser::route('/create'),
-            'edit' => Pages\EditUser::route('/{record}/edit'),
+            'index' => ListUsers::route('/'),
+            'create' => CreateUser::route('/create'),
+            'edit' => EditUser::route('/{record}/edit'),
         ];
     }
 }

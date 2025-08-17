@@ -2,16 +2,24 @@
 
 namespace App\Filament\Seller\Resources;
 
-use App\Filament\Seller\Resources\ExpanseResource\Pages;
+use App\Filament\Seller\Resources\ExpanseResource\Pages\CreateExpanse;
+use App\Filament\Seller\Resources\ExpanseResource\Pages\EditExpanse;
+use App\Filament\Seller\Resources\ExpanseResource\Pages\ListExpanses;
 use App\Helper\CheckFilamentSellerUser;
 use App\Helper\PaymentMethodExpanse;
 use App\Models\Expanse;
+use Filament\Actions\BulkActionGroup;
+use Filament\Actions\DeleteBulkAction;
+use Filament\Actions\EditAction;
 use Filament\Forms;
-use Filament\Forms\Components\Group;
+use Filament\Forms\Components\Hidden;
+use Filament\Forms\Components\Select;
+use Filament\Forms\Components\Textarea;
+use Filament\Forms\Components\TextInput;
 use Filament\Forms\Components\ToggleButtons;
-use Filament\Forms\Form;
 use Filament\Resources\Resource;
-use Filament\Tables;
+use Filament\Schemas\Components\Group;
+use Filament\Schemas\Schema;
 use Filament\Tables\Columns\TextColumn;
 use Filament\Tables\Table;
 use Illuminate\Database\Eloquent\Builder;
@@ -20,7 +28,7 @@ class ExpanseResource extends Resource
 {
     protected static ?string $model = Expanse::class;
 
-    protected static ?string $navigationIcon = 'heroicon-o-banknotes';
+    protected static string|\BackedEnum|null $navigationIcon = 'heroicon-o-banknotes';
 
     // protected static ?string $navigationGroup = 'Finance';
 
@@ -49,31 +57,31 @@ class ExpanseResource extends Resource
         return parent::getEloquentQuery()->where('seller_id', CheckFilamentSellerUser::getSellerId());
     }
 
-    public static function form(Form $form): Form
+    public static function form(Schema $schema): Schema
     {
-        return $form
-            ->schema([
+        return $schema
+            ->components([
                 Group::make()->schema([
-                    Forms\Components\Select::make('expanse_category_id')
+                    Select::make('expanse_category_id')
                         ->required()->searchable()->preload()
                         ->label(__('filament/resources/expanse-resource.form.expanse_category_id.label'))
                         ->relationship('category', 'name', modifyQueryUsing: function (Builder $query) {
                             $query->where('seller_id', CheckFilamentSellerUser::getSellerId());
                         })
                         ->createOptionForm([
-                            Forms\Components\TextInput::make('name')
+                            TextInput::make('name')
                                 ->required()
                                 ->maxLength(255),
                             // Forms\Components\TextInput::make('icon')
                             //     ->maxLength(255),
-                            Forms\Components\Hidden::make('seller_id')
+                            Hidden::make('seller_id')
                                 ->required()->default(CheckFilamentSellerUser::getSellerId()),
                         ])->editOptionForm([
-                        Forms\Components\TextInput::make('name')
-                            ->required()
-                            ->maxLength(255),
-                    ]),
-                    Forms\Components\TextInput::make('amount')
+                            TextInput::make('name')
+                                ->required()
+                                ->maxLength(255),
+                        ]),
+                    TextInput::make('amount')
                         ->required()
                         ->numeric()
                         ->label(__('filament/resources/expanse-resource.form.amount.label')),
@@ -86,10 +94,10 @@ class ExpanseResource extends Resource
                     // Forms\Components\Select::make('payment_method')
                     //     ->required()->options(PaymentMethodExpanse::class),
 
-                    Forms\Components\Hidden::make('seller_id')
+                    Hidden::make('seller_id')
                         ->required()->default(CheckFilamentSellerUser::getSellerId()),
 
-                    Forms\Components\Textarea::make('description')
+                    Textarea::make('description')
                         ->label(__('filament/resources/expanse-resource.form.description.label'))
                         ->columnSpanFull(),
 
@@ -101,12 +109,12 @@ class ExpanseResource extends Resource
     {
         return $table
             ->columns([
-                Tables\Columns\TextColumn::make('category.name')
+                TextColumn::make('category.name')
                     ->label(__('filament/resources/expanse-resource.table.columns.category_name'))
                     ->numeric()
                     ->sortable(),
 
-                Tables\Columns\TextColumn::make('payment_method')
+                TextColumn::make('payment_method')
                     ->label(__('filament/resources/expanse-resource.table.columns.payment_method'))
                     ->badge()
                     ->searchable(),
@@ -115,17 +123,17 @@ class ExpanseResource extends Resource
                     ->label(__('filament/resources/expanse-resource.table.columns.description'))
                     ->searchable(),
 
-                Tables\Columns\TextColumn::make('amount')
+                TextColumn::make('amount')
                     ->label(__('filament/resources/expanse-resource.table.columns.amount'))
                     ->numeric()
                     ->sortable(),
 
-                Tables\Columns\TextColumn::make('created_at')
+                TextColumn::make('created_at')
                     ->label(__('filament/resources/expanse-resource.table.columns.created_at'))
                     ->dateTime()
                     ->sortable()
                     ->toggleable(isToggledHiddenByDefault: true),
-                Tables\Columns\TextColumn::make('updated_at')
+                TextColumn::make('updated_at')
                     ->label(__('filament/resources/expanse-resource.table.columns.updated_at'))
                     ->dateTime()
                     ->sortable()
@@ -134,12 +142,12 @@ class ExpanseResource extends Resource
             ->filters([
                 //
             ])
-            ->actions([
-                Tables\Actions\EditAction::make(),
+            ->recordActions([
+                EditAction::make(),
             ])
-            ->bulkActions([
-                Tables\Actions\BulkActionGroup::make([
-                    Tables\Actions\DeleteBulkAction::make(),
+            ->toolbarActions([
+                BulkActionGroup::make([
+                    DeleteBulkAction::make(),
                 ]),
             ]);
     }
@@ -154,9 +162,9 @@ class ExpanseResource extends Resource
     public static function getPages(): array
     {
         return [
-            'index' => Pages\ListExpanses::route('/'),
-            'create' => Pages\CreateExpanse::route('/create'),
-            'edit' => Pages\EditExpanse::route('/{record}/edit'),
+            'index' => ListExpanses::route('/'),
+            'create' => CreateExpanse::route('/create'),
+            'edit' => EditExpanse::route('/{record}/edit'),
         ];
     }
 }

@@ -5,6 +5,7 @@ namespace App\Services;
 use App\Exceptions\DeleteDataFailException;
 use App\Models\User;
 use Illuminate\Support\Facades\Auth;
+use Throwable;
 
 class UserAccountService
 {
@@ -26,12 +27,12 @@ class UserAccountService
     public function deleteAccount(): bool
     {
         try {
-            /** @var \App\Models\User $user */
+            /** @var User $user */
             $user = Auth::guard('user')->user();
             $user->delete();
 
             return true;
-        } catch (\Throwable $th) {
+        } catch (Throwable $th) {
             throw new DeleteDataFailException($th->getMessage());
         }
     }

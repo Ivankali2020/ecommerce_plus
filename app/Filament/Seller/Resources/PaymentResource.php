@@ -2,11 +2,13 @@
 
 namespace App\Filament\Seller\Resources;
 
-use App\Filament\Seller\Resources\PaymentResource\Pages;
+use App\Filament\Seller\Resources\PaymentResource\Pages\CreatePayment;
+use App\Filament\Seller\Resources\PaymentResource\Pages\EditPayment;
+use App\Filament\Seller\Resources\PaymentResource\Pages\ListPayments;
 use App\Models\Payment;
 use Filament\Facades\Filament;
-use Filament\Forms\Form;
 use Filament\Resources\Resource;
+use Filament\Schemas\Schema;
 use Filament\Tables\Table;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\SoftDeletingScope;
@@ -15,7 +17,7 @@ class PaymentResource extends Resource
 {
     protected static ?string $model = Payment::class;
 
-    protected static ?string $navigationIcon = 'heroicon-o-credit-card';
+    protected static string|\BackedEnum|null $navigationIcon = 'heroicon-o-credit-card';
 
     public static function getNavigationGroup(): string
     {
@@ -37,9 +39,9 @@ class PaymentResource extends Resource
         return __('filament/resources/payment-resource.navigation.label');
     }
 
-    public static function form(Form $form): Form
+    public static function form(Schema $schema): Schema
     {
-        return \App\Filament\Admin\Resources\PaymentResource::form($form);
+        return \App\Filament\Admin\Resources\PaymentResource::form($schema);
     }
 
     public static function table(Table $table): Table
@@ -57,9 +59,9 @@ class PaymentResource extends Resource
     public static function getPages(): array
     {
         return [
-            'index' => Pages\ListPayments::route('/'),
-            'create' => Pages\CreatePayment::route('/create'),
-            'edit' => Pages\EditPayment::route('/{record}/edit'),
+            'index' => ListPayments::route('/'),
+            'create' => CreatePayment::route('/create'),
+            'edit' => EditPayment::route('/{record}/edit'),
         ];
     }
 

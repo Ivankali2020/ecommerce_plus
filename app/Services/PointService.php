@@ -2,11 +2,12 @@
 
 namespace App\Services;
 
-use App\Models\User;
 use App\Models\Gift;
+use App\Models\GiftExchange;
 use App\Models\PointTransaction;
-use Illuminate\Support\Facades\DB;
+use App\Models\User;
 use Exception;
+use Illuminate\Support\Facades\DB;
 
 class PointService
 {
@@ -16,9 +17,9 @@ class PointService
     public function addPoints(
         User $user,
         int $points,
-         $referenceType = null,
-         $referenceId = null,
-         $description = null,
+        $referenceType = null,
+        $referenceId = null,
+        $description = null,
         array $metadata = []
     ): PointTransaction {
         return DB::transaction(function () use ($user, $points, $referenceType, $referenceId, $description, $metadata) {
@@ -117,9 +118,9 @@ class PointService
     /**
      * Exchange points for a gift
      */
-    public function exchangeForGift(User $user, Gift $gift, string $deliveryAddress = null): array
+    public function exchangeForGift(User $user, Gift $gift, ?string $deliveryAddress = null): array
     {
-        if (!$gift->is_active) {
+        if (! $gift->is_active) {
             throw new Exception('Gift is not available');
         }
 
@@ -150,7 +151,7 @@ class PointService
             );
 
             // Create gift exchange record
-            $giftExchange = \App\Models\GiftExchange::create([
+            $giftExchange = GiftExchange::create([
                 'user_id' => $user->id,
                 'gift_id' => $gift->id,
                 'seller_id' => $gift->seller_id,

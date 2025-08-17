@@ -10,6 +10,7 @@ use Illuminate\Auth\AuthenticationException;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Hash;
+use Throwable;
 
 class AuthService
 {
@@ -29,7 +30,7 @@ class AuthService
             DB::commit();
 
             return $token;
-        } catch (\Throwable $th) {
+        } catch (Throwable $th) {
             DB::rollBack();
             throw new RegistrationFailException($th->getMessage());
         }
@@ -66,7 +67,7 @@ class AuthService
      */
     public function logout()
     {
-        /** @var \App\Models\User $user * */
+        /** @var User $user * */
         $user = Auth::guard('user')->user();
         $user->tokens()->delete();
     }

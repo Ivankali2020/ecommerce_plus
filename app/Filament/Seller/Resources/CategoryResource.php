@@ -3,11 +3,13 @@
 namespace App\Filament\Seller\Resources;
 
 use App\Filament\Admin\Resources\CategoryResource\RelationManagers\CategoriesRelationManager;
-use App\Filament\Seller\Resources\CategoryResource\Pages;
+use App\Filament\Seller\Resources\CategoryResource\Pages\CreateCategory;
+use App\Filament\Seller\Resources\CategoryResource\Pages\EditCategory;
+use App\Filament\Seller\Resources\CategoryResource\Pages\ListCategories;
 use App\Models\Category;
 use Filament\Facades\Filament;
-use Filament\Forms\Form;
 use Filament\Resources\Resource;
+use Filament\Schemas\Schema;
 use Filament\Tables\Table;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\SoftDeletingScope;
@@ -26,11 +28,11 @@ class CategoryResource extends Resource
         return __('filament/resources/category-resource.navigation.label');
     }
 
-    protected static ?string $navigationGroup = 'Business Section';
+    protected static string|\UnitEnum|null $navigationGroup = 'Business Section';
 
-    public static function form(Form $form): Form
+    public static function form(Schema $schema): Schema
     {
-        return \App\Filament\Admin\Resources\CategoryResource::form($form);
+        return \App\Filament\Admin\Resources\CategoryResource::form($schema);
     }
 
     public static function table(Table $table): Table
@@ -48,9 +50,9 @@ class CategoryResource extends Resource
     public static function getPages(): array
     {
         return [
-            'index' => Pages\ListCategories::route('/'),
-            'create' => Pages\CreateCategory::route('/create'),
-            'edit' => Pages\EditCategory::route('/{record}/edit'),
+            'index' => ListCategories::route('/'),
+            'create' => CreateCategory::route('/create'),
+            'edit' => EditCategory::route('/{record}/edit'),
         ];
     }
 

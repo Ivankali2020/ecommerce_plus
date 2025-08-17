@@ -2,27 +2,23 @@
 
 namespace App\Filament\Seller\Widgets;
 
-use App\Models\User;
-use App\Models\Order;
-use App\Models\Product;
-use App\Helper\UserHelper;
-use App\Helper\OrderStatus;
-use Livewire\Attributes\On;
-use Illuminate\Support\Carbon;
 use App\Helper\CheckFilamentSellerUser;
-use Filament\Widgets\StatsOverviewWidget\Stat;
-use BezhanSalleh\FilamentShield\Traits\HasWidgetShield;
-use Filament\Widgets\StatsOverviewWidget as BaseWidget;
-use App\Filament\Seller\Resources\OrderResource\Widgets\OrderChart;
-use App\Models\Variant;
+use App\Helper\OrderStatus;
 use App\Models\Expanse;
+use App\Models\Order;
+use App\Models\OrderProduct;
+use App\Models\Product;
+use App\Models\Variant;
+use Filament\Widgets\StatsOverviewWidget as BaseWidget;
+use Filament\Widgets\StatsOverviewWidget\Stat;
+use Illuminate\Support\Carbon;
+use Livewire\Attributes\On;
 
 class StatsOverview extends BaseWidget
 {
     // protected int | string | array $columnSpan = 3;
 
-    protected static ?string $pollingInterval = null;
-
+    protected ?string $pollingInterval = null;
 
     // Add filter properties
     public $admin_id = null;
@@ -74,8 +70,8 @@ class StatsOverview extends BaseWidget
         $filteredOrderIds = $orderQuery->pluck('id');
 
         // Calculate profits and capital
-        $totalProfit = \App\Models\OrderProduct::whereIn('order_id', $filteredOrderIds)->sum('profit');
-        $soldProductsCapital = \App\Models\OrderProduct::whereIn('order_id', $filteredOrderIds)
+        $totalProfit = OrderProduct::whereIn('order_id', $filteredOrderIds)->sum('profit');
+        $soldProductsCapital = OrderProduct::whereIn('order_id', $filteredOrderIds)
             ->selectRaw('SUM(original_buy_price * quantity) as total')
             ->value('total');
 
@@ -86,7 +82,7 @@ class StatsOverview extends BaseWidget
         $finalProfit = $totalProfit - $totalExpenses;
 
         return [
-            Stat::make(__('filament/widgets/stats-overview.unique_products'), Product::where('seller_id', $sellerId)->count() . ' ' . __('filament/widgets/stats-overview.pcs'))
+            Stat::make(__('filament/widgets/stats-overview.unique_products'), Product::where('seller_id', $sellerId)->count().' '.__('filament/widgets/stats-overview.pcs'))
                 ->description(__('filament/widgets/stats-overview.total_products'))
                 ->icon('heroicon-o-cube'),
 
@@ -111,7 +107,7 @@ class StatsOverview extends BaseWidget
             Stat::make(__('filament/widgets/stats-overview.final_profit'), number_format($finalProfit, 0))
                 ->description($dateDescription)
                 ->icon($finalProfit >= 0 ? 'heroicon-o-check-circle' : 'heroicon-o-x-circle')
-                ->color($finalProfit >= 0 ? 'success' : 'danger')
+                ->color($finalProfit >= 0 ? 'success' : 'danger'),
         ];
     }
 

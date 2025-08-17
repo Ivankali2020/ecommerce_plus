@@ -6,6 +6,7 @@ use App\Helper\UserHelper;
 use App\Models\Seller;
 use Filament\Notifications\Notification;
 use Illuminate\Support\Facades\Validator;
+use Illuminate\Validation\ValidationException;
 use Livewire\Component;
 
 class Store extends Component
@@ -28,7 +29,7 @@ class Store extends Component
             UserHelper::updateSellerId($id);
             $this->seller = Seller::find($id);
 
-        } catch (\Illuminate\Validation\ValidationException $e) {
+        } catch (ValidationException $e) {
             // Handle validation error
             Notification::make()
                 ->title('Invalid store ID')

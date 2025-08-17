@@ -2,12 +2,21 @@
 
 namespace App\Filament\Admin\Resources;
 
-use App\Filament\Admin\Resources\TownshipResource\Pages;
+use App\Filament\Admin\Resources\TownshipResource\Pages\CreateTownship;
+use App\Filament\Admin\Resources\TownshipResource\Pages\EditTownship;
+use App\Filament\Admin\Resources\TownshipResource\Pages\ListTownships;
 use App\Models\Township;
-use Filament\Forms;
-use Filament\Forms\Form;
+use Filament\Actions\BulkActionGroup;
+use Filament\Actions\DeleteBulkAction;
+use Filament\Actions\EditAction;
+use Filament\Actions\ForceDeleteBulkAction;
+use Filament\Actions\RestoreBulkAction;
+use Filament\Forms\Components\Select;
+use Filament\Forms\Components\TextInput;
 use Filament\Resources\Resource;
-use Filament\Tables;
+use Filament\Schemas\Schema;
+use Filament\Tables\Columns\TextColumn;
+use Filament\Tables\Filters\TrashedFilter;
 use Filament\Tables\Table;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\SoftDeletingScope;
@@ -18,20 +27,20 @@ class TownshipResource extends Resource
 
     //    protected static ?string $navigationIcon = 'heroicon-o-rectangle-stack';
 
-    protected static ?string $navigationGroup = 'Delivery Section';
+    protected static string|\UnitEnum|null $navigationGroup = 'Delivery Section';
 
-    public static function form(Form $form): Form
+    public static function form(Schema $schema): Schema
     {
-        return $form
-            ->schema([
-                Forms\Components\Select::make('region_id')
+        return $schema
+            ->components([
+                Select::make('region_id')
                     ->required()->relationship('region', 'mm_name'),
 
-                Forms\Components\TextInput::make('mm_name')
+                TextInput::make('mm_name')
                     ->required()
                     ->maxLength(255),
 
-                Forms\Components\TextInput::make('en_name')
+                TextInput::make('en_name')
                     ->required()
                     ->maxLength(255),
             ]);
@@ -41,37 +50,37 @@ class TownshipResource extends Resource
     {
         return $table
             ->columns([
-                Tables\Columns\TextColumn::make('region.mm_name')
+                TextColumn::make('region.mm_name')
                     ->sortable(),
-                Tables\Columns\TextColumn::make('mm_name')
+                TextColumn::make('mm_name')
                     ->searchable(),
 
-                Tables\Columns\TextColumn::make('en_name')
+                TextColumn::make('en_name')
                     ->searchable(),
-                Tables\Columns\TextColumn::make('deleted_at')
+                TextColumn::make('deleted_at')
                     ->dateTime()
                     ->sortable()
                     ->toggleable(isToggledHiddenByDefault: true),
-                Tables\Columns\TextColumn::make('created_at')
+                TextColumn::make('created_at')
                     ->dateTime()
                     ->sortable()
                     ->toggleable(isToggledHiddenByDefault: true),
-                Tables\Columns\TextColumn::make('updated_at')
+                TextColumn::make('updated_at')
                     ->dateTime()
                     ->sortable()
                     ->toggleable(isToggledHiddenByDefault: true),
             ])
             ->filters([
-                Tables\Filters\TrashedFilter::make(),
+                TrashedFilter::make(),
             ])
-            ->actions([
-                Tables\Actions\EditAction::make(),
+            ->recordActions([
+                EditAction::make(),
             ])
-            ->bulkActions([
-                Tables\Actions\BulkActionGroup::make([
-                    Tables\Actions\DeleteBulkAction::make(),
-                    Tables\Actions\ForceDeleteBulkAction::make(),
-                    Tables\Actions\RestoreBulkAction::make(),
+            ->toolbarActions([
+                BulkActionGroup::make([
+                    DeleteBulkAction::make(),
+                    ForceDeleteBulkAction::make(),
+                    RestoreBulkAction::make(),
                 ]),
             ]);
     }
@@ -86,9 +95,9 @@ class TownshipResource extends Resource
     public static function getPages(): array
     {
         return [
-            'index' => Pages\ListTownships::route('/'),
-            'create' => Pages\CreateTownship::route('/create'),
-            'edit' => Pages\EditTownship::route('/{record}/edit'),
+            'index' => ListTownships::route('/'),
+            'create' => CreateTownship::route('/create'),
+            'edit' => EditTownship::route('/{record}/edit'),
         ];
     }
 

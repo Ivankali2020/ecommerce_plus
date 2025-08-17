@@ -2,12 +2,14 @@
 
 namespace App\Filament\Seller\Resources;
 
-use App\Filament\Seller\Resources\ExchangeResource\Pages;
-use App\Filament\Seller\Resources\ExchangeResource\RelationManagers;
+use App\Filament\Seller\Resources\ExchangeResource\Pages\CreateExchange;
+use App\Filament\Seller\Resources\ExchangeResource\Pages\EditExchange;
+use App\Filament\Seller\Resources\ExchangeResource\Pages\ListExchanges;
+use App\Filament\Seller\Resources\ExchangeResource\RelationManagers\ExchangeHistoriesRelationManager;
 use App\Models\Exchange;
 use Filament\Facades\Filament;
-use Filament\Forms\Form;
 use Filament\Resources\Resource;
+use Filament\Schemas\Schema;
 use Filament\Tables\Table;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Model;
@@ -50,9 +52,9 @@ class ExchangeResource extends Resource
         return __('filament/resources/payment-resource.navigation.group');
     }
 
-    public static function form(Form $form): Form
+    public static function form(Schema $schema): Schema
     {
-        return \App\Filament\Admin\Resources\ExchangeResource::form($form);
+        return \App\Filament\Admin\Resources\ExchangeResource::form($schema);
     }
 
     public static function table(Table $table): Table
@@ -63,16 +65,16 @@ class ExchangeResource extends Resource
     public static function getRelations(): array
     {
         return [
-            RelationManagers\ExchangeHistoriesRelationManager::class,
+            ExchangeHistoriesRelationManager::class,
         ];
     }
 
     public static function getPages(): array
     {
         return [
-            'index' => Pages\ListExchanges::route('/'),
-            'create' => Pages\CreateExchange::route('/create'),
-            'edit' => Pages\EditExchange::route('/{record}/edit'),
+            'index' => ListExchanges::route('/'),
+            'create' => CreateExchange::route('/create'),
+            'edit' => EditExchange::route('/{record}/edit'),
         ];
     }
 
