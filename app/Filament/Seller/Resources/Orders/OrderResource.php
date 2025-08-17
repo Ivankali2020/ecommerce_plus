@@ -1,11 +1,11 @@
 <?php
 
-namespace App\Filament\Seller\Resources;
+namespace App\Filament\Seller\Resources\Orders;
 
-use App\Filament\Seller\Resources\OrderResource\Pages\CreateOrder;
-use App\Filament\Seller\Resources\OrderResource\Pages\EditOrder;
-use App\Filament\Seller\Resources\OrderResource\Pages\ListOrders;
-use App\Filament\Seller\Resources\OrderResource\Widgets\OrderChart;
+use App\Filament\Seller\Resources\Orders\Pages\CreateOrder;
+use App\Filament\Seller\Resources\Orders\Pages\EditOrder;
+use App\Filament\Seller\Resources\Orders\Pages\ListOrders;
+use App\Filament\Seller\Resources\Orders\Widgets\OrderChart;
 use App\Helper\CheckFilamentSellerUser;
 use App\Helper\OrderStatus;
 use App\Models\Attribute;
@@ -76,238 +76,244 @@ class OrderResource extends Resource
     {
         return $schema
             ->components([
-                Grid::make()->schema([
-                    Group::make()->schema([
+                Grid::make(3)->schema([
 
-                        Repeater::make('products')
-                            ->label(__('filament/resources/order-resource.form.products.label'))
-                            ->relationship('products')->reorderable()
-                            ->reorderableWithButtons()
-                            ->helperText(__('filament/resources/order-resource.form.products.helper_text'))
-                            ->collapsible()->collapsed(fn (Page $livewire) => $livewire instanceof EditRecord)
-                            ->itemLabel(function (array $state): ?string {
-                                $product = Product::where('id', $state['product_id'])->with('brand:name,id')->first();
-                                if ($product) {
-                                    return $product->name.' - '.$state['quantity'].' qty - '.$state['sub_price'];
-                                }
+                    Repeater::make('products')
+                        ->label(__('filament/resources/order-resource.form.products.label'))
+                        ->relationship('products')->reorderable()
+                        ->reorderableWithButtons()
+                        ->helperText(__('filament/resources/order-resource.form.products.helper_text'))
+                        ->collapsible()->collapsed(fn(Page $livewire) => $livewire instanceof EditRecord)
+                        ->itemLabel(function (array $state): ?string {
+                            $product = Product::where('id', $state['product_id'])->with('brand:name,id')->first();
+                            if ($product) {
+                                return $product->name . ' - ' . $state['quantity'] . ' qty - ' . $state['sub_price'];
+                            }
 
-                                return '';
-                            })
-                            ->schema([
-                                Section::make()
-                                    ->compact()->collapsed()->description(__('filament/resources/order-resource.form.products.details.label'))
-                                    ->schema([
-                                        Group::make()->schema([
-                                            TextInput::make('original_buy_price')->label(__('filament/resources/order-resource.form.products.details.buy_price'))->readOnly(),
-                                            TextInput::make('original_price')->label(__('filament/resources/order-resource.form.products.details.old_price'))->readOnly(),
-                                            TextInput::make('original_discount_price')->label(__('filament/resources/order-resource.form.products.details.old_discount_price'))->readOnly(),
-                                            TextInput::make('exchange_rate')->readOnly(),
-                                            Select::make('currency_id')
-                                                ->disabled()
-                                                ->relationship('currency', 'name'),
-                                        ])->columns(5),
-                                    ]),
-                                Grid::make()->schema([
+                            return '';
+                        })
+                        ->schema([
+                            Section::make()
+                                ->compact()->collapsed()->description(__('filament/resources/order-resource.form.products.details.label'))
+                                ->schema([
+                                    Group::make()->schema([
+                                        TextInput::make('original_buy_price')->label(__('filament/resources/order-resource.form.products.details.buy_price'))->readOnly(),
+                                        TextInput::make('original_price')->label(__('filament/resources/order-resource.form.products.details.old_price'))->readOnly(),
+                                        TextInput::make('original_discount_price')->label(__('filament/resources/order-resource.form.products.details.old_discount_price'))->readOnly(),
+                                        TextInput::make('exchange_rate')->readOnly(),
+                                        Select::make('currency_id')
+                                            ->disabled()
+                                            ->relationship('currency', 'name'),
+                                    ])->columns(5),
+                                ]),
+                            Grid::make()->schema([
+
+                                Group::make()->schema([
 
                                     Group::make()->schema([
-
-                                        Group::make()->schema([
-                                            Select::make('product_id')->required()
-                                                ->label(__('filament/resources/order-resource.form.products.selection.product'))
-                                                ->searchable()->preload()->autofocus(fn (Page $livewire) => $livewire instanceof CreateRecord)
-                                                ->afterStateUpdated(function (Get $get, Set $set) {
-                                                    self::updateAttributes($get, $set);
+                                        Select::make('product_id')->required()
+                                            ->label(__('filament/resources/order-resource.form.products.selection.product'))
+                                            ->searchable()->preload()->autofocus(fn(Page $livewire) => $livewire instanceof CreateRecord)
+                                            ->afterStateUpdated(function (Get $get, Set $set) {
+                                                self::updateAttributes($get, $set);
+                                            })
+                                            ->getSearchResultsUsing(function (string $search) {
+                                                $products = Product::where(function ($query) use ($search) {
+                                                    $query->where('name', 'like', "%$search%")
+                                                        ->orWhere('sku', $search)
+                                                        ->orWhereHas('brand', function ($q) use ($search) {
+                                                            $q->where('name', 'like', "%$search%");
+                                                        });
                                                 })
-                                                ->getSearchResultsUsing(function (string $search) {
-                                                    $products = Product::where(function ($query) use ($search) {
-                                                        $query->where('name', 'like', "%$search%")
-                                                            ->orWhere('sku', $search)
-                                                            ->orWhereHas('brand', function ($q) use ($search) {
-                                                                $q->where('name', 'like', "%$search%");
-                                                            });
-                                                    })
-                                                        ->whereNull('deleted_at')
-                                                        ->limit(20)
-                                                        ->with('brand:name,id')
-                                                        ->get();
+                                                    ->whereNull('deleted_at')
+                                                    ->limit(20)
+                                                    ->with('brand:name,id')
+                                                    ->get();
+                                                $data = $products->mapWithKeys(function ($product) {
+                                                    return [$product->getKey() => static::getCleanOptionString($product)];
+                                                })->toArray();
 
-                                                    return $products->mapWithKeys(function ($product) {
-                                                        return [$product->getKey() => static::getCleanOptionString($product)];
-                                                    })->toArray();
-                                                })
-                                                ->allowHtml()
-                                                ->disableOptionsWhenSelectedInSiblingRepeaterItems()
-                                                ->live(true, 500)
-                                                ->options(function ($state) {
-                                                    $datas = [];
-                                                    $products = Product::with('brand:name,id')
-                                                        ->whereNull('deleted_at')
-                                                        ->when($state, fn ($query) => $query->orWhere('id', $state))->limit(10)->get();
+                                                return $data;
+                                            })
+                                            ->allowHtml()
+                                            ->disableOptionsWhenSelectedInSiblingRepeaterItems()
+                                            ->live(true, 500)
+                                            ->options(function ($state) {
+                                                $datas = [];
+                                                $products = Product::with('brand:name,id')
+                                                    ->whereNull('deleted_at')
+                                                    ->when($state, fn($query) => $query->orWhere('id', $state))->limit(10)->get();
 
-                                                    return $products->mapWithKeys(function ($product) {
-                                                        return [$product->getKey() => static::getCleanOptionString($product)];
-                                                    })->toArray();
-                                                })
-                                                ->columnSpan(2),
+                                                return $products->mapWithKeys(function ($product) {
+                                                    return [$product->getKey() => static::getCleanOptionString($product)];
+                                                })->toArray();
+                                            })
+                                            ->columnSpan(2),
 
-                                            TextInput::make('quantity')
-                                                ->required()->default(1)->minValue(1)
-                                                ->label(__('filament/resources/order-resource.form.products.selection.quantity'))
-                                                ->rules(['required', function (Get $get) {
-                                                    return function (string $attribute, $value, Closure $fail) use ($get) {
-                                                        if (! blank($get('product_id'))) {
-                                                            $product = Product::where('id', $get('product_id'))->first();
-                                                            if ($product->has_variant && ! blank($get('variant_id'))) {
-                                                                $variant = Variant::where('id', $get('variant_id'))->first();
-                                                                if ($variant->quantity < $value) {
-                                                                    $fail($variant->quantity.' သာကျန်ရှိပါတော့သည်');
-                                                                }
-                                                            } else {
-                                                                if ($product->quantity < $value) {
-                                                                    $fail($product->quantity.' သာကျန်ရှိပါတော့သည်');
-                                                                }
+                                        TextInput::make('quantity')
+                                            ->required()->default(1)->minValue(1)
+                                            ->label(__('filament/resources/order-resource.form.products.selection.quantity'))
+                                            ->rules(['required', function (Get $get) {
+                                                return function (string $attribute, $value, Closure $fail) use ($get) {
+                                                    if (! blank($get('product_id'))) {
+                                                        $product = Product::where('id', $get('product_id'))->first();
+                                                        if ($product->has_variant && ! blank($get('variant_id'))) {
+                                                            $variant = Variant::where('id', $get('variant_id'))->first();
+                                                            if ($variant->quantity < $value) {
+                                                                $fail($variant->quantity . ' သာကျန်ရှိပါတော့သည်');
                                                             }
-
-                                                            return true;
+                                                        } else {
+                                                            if ($product->quantity < $value) {
+                                                                $fail($product->quantity . ' သာကျန်ရှိပါတော့သည်');
+                                                            }
                                                         }
 
-                                                        return $fail('ထည့်ပေးပါရန်');
-                                                    };
-                                                }])
-                                                ->live(true, 500)
-                                                ->afterStateUpdated(function (Get $get, Set $set) {
-                                                    // this is auto change discount price
-                                                    if (! blank($get('quantity'))) {
-                                                        self::thisIsAutoChangeDiscountPrice($get, $set);
+                                                        return true;
                                                     }
-                                                })
-                                                ->numeric(),
 
-                                            Select::make('variant_id')->required()
-                                                ->hidden(fn (Get $get) => blank($get('product_id')) || ! Product::where('id', $get('product_id'))->select('has_variant')->first()->has_variant)
-                                                ->label(__('filament/resources/order-resource.form.products.selection.variant'))
-                                                ->searchable()->preload()->live(true, 500)
-                                                ->afterStateUpdated(self::vartiantSectionCalculate())->columnSpan(2)
-                                                ->relationship('variant', 'sku', modifyQueryUsing: function (Get $get, $query) {
-                                                    return $query->where('product_id', $get('product_id'));
-                                                }),
-
-                                            TextInput::make('price')
-                                                ->numeric()->live(true, 500)
-                                                ->label(__('filament/resources/order-resource.form.products.selection.price'))
-                                                ->afterStateUpdated(function (Get $get, Set $set) {
-                                                    // this is auto change discount price
+                                                    return $fail('ထည့်ပေးပါရန်');
+                                                };
+                                            }])
+                                            ->live(true, 500)
+                                            ->afterStateUpdated(function (Get $get, Set $set) {
+                                                // this is auto change discount price
+                                                if (! blank($get('quantity'))) {
                                                     self::thisIsAutoChangeDiscountPrice($get, $set);
-                                                })
-                                                ->required()
-                                                ->prefix(fn (Get $get) => blank($get('exchange_id')) ? '' : Exchange::where('id', $get('exchange_id'))->with('currency')->first()->currency->symbol_native),
-
-                                            TextInput::make('discount')
-                                                ->numeric()->prefix('%')->minValue(0)->integer()->maxValue(100)
-                                                ->label(__('filament/resources/order-resource.form.products.selection.discount'))
-                                                ->live(true, 500)->integer()
-                                                ->afterStateUpdated(function (Get $get, Set $set) {
-                                                    // this is auto change discount price
-                                                    self::thisIsAutoChangeDiscountPrice($get, $set);
-                                                })
-                                                ->default(0),
-
-                                            TextInput::make('discount_price')
-                                                ->numeric()->label(__('filament/resources/order-resource.form.products.selection.discount_price'))->readOnly()
-                                                ->columnSpan(fn (Get $get) => blank($get('variant_id')) ? 1 : 2)
-                                                ->default(0.0000),
-
-                                            TextInput::make('sub_price')
-                                                ->required()->suffix('ကျပ်')
-                                                ->label(__('filament/resources/order-resource.form.products.selection.sub_price'))
-                                                ->hint(self::getHtmlString())
-                                                ->columnSpan(2)
-                                                ->numeric(),
-
-                                        ])->columns(3),
-
-                                    ])->columnSpan(2),
-
-                                    Group::make()->schema([
-
-                                        Repeater::make('attributes')
-                                            ->collapsible(false)->reorderable(false)
-                                            ->addable(false)
-                                            ->dehydrateStateUsing(function ($state) {
-                                                // dd($state);
-                                                return json_encode($state);
+                                                }
                                             })
-                                            ->schema([
+                                            ->numeric(),
 
-                                                Group::make()->schema([
-                                                    Hidden::make('attribute')
-                                                        ->required()
-                                                        ->label('Attribute'),
+                                        Select::make('variant_id')->required()
+                                            ->hidden(fn(Get $get) => blank($get('product_id')) || ! Product::where('id', $get('product_id'))->select('has_variant')->first()->has_variant)
+                                            ->label(__('filament/resources/order-resource.form.products.selection.variant'))
+                                            ->searchable()->preload()->live(true, 500)
+                                            ->afterStateUpdated(self::vartiantSectionCalculate())->columnSpan(2)
+                                            ->relationship('variant', 'sku', modifyQueryUsing: function (Get $get, $query) {
+                                                return $query->where('product_id', $get('product_id'));
+                                            }),
 
-                                                    Select::make('value')
-                                                        ->multiple()
-                                                        ->hidden(fn (Get $get) => blank($get('attribute')))
-                                                        ->required()->searchable()->preload()->label('Value')->placeholder('Select')
-                                                        ->options(fn (Get $get) => AttributeValue::pluck('value', 'id')),
+                                        TextInput::make('price')
+                                            ->numeric()->live(true, 500)
+                                            ->label(__('filament/resources/order-resource.form.products.selection.price'))
+                                            ->afterStateUpdated(function (Get $get, Set $set) {
+                                                // this is auto change discount price
+                                                self::thisIsAutoChangeDiscountPrice($get, $set);
+                                            })
+                                            ->required()
+                                            ->prefix(fn(Get $get) => blank($get('exchange_id')) ? '' : Exchange::where('id', $get('exchange_id'))->with('currency')->first()->currency->symbol_native),
 
-                                                ])->columns(1),
+                                        TextInput::make('discount')
+                                            ->numeric()->prefix('%')->minValue(0)->integer()->maxValue(100)
+                                            ->label(__('filament/resources/order-resource.form.products.selection.discount'))
+                                            ->live(true, 500)->integer()
+                                            ->afterStateUpdated(function (Get $get, Set $set) {
+                                                // this is auto change discount price
+                                                self::thisIsAutoChangeDiscountPrice($get, $set);
+                                            })
+                                            ->default(0),
 
-                                            ]),
-                                    ]),
-                                ])->columns(3),
-                            ]),
+                                        TextInput::make('discount_price')
+                                            ->numeric()->label(__('filament/resources/order-resource.form.products.selection.discount_price'))->readOnly()
+                                            ->columnSpan(fn(Get $get) => blank($get('variant_id')) ? 1 : 2)
+                                            ->default(0.0000),
 
-                    ])->columnSpan(2),
+                                        TextInput::make('sub_price')
+                                            ->required()->suffix('ကျပ်')
+                                            ->label(__('filament/resources/order-resource.form.products.selection.sub_price'))
+                                            ->hint(self::getHtmlString())
+                                            ->columnSpan(2)
+                                            ->numeric(),
 
-                    Group::make()->schema([
+                                    ])->columns(3),
 
-                        Section::make()->schema([
+                                ])->columnSpan(2),
 
-                            TextInput::make('invoice_number')->default(Str::upper('INV-'.uniqid()))->columnSpanFull()
-                                ->label(__('filament/resources/order-resource.form.order_info.invoice_number')),
+                                Group::make()->schema([
 
-                            Select::make('seller_id')
-                                ->searchable()->hidden(fn () => Filament::getAuthGuard() == 'seller')
-                                ->label(__('filament/resources/order-resource.form.order_info.seller'))
-                                ->required()->relationship('seller', 'name')->preload(),
+                                    Repeater::make('attributes')
+                                        ->collapsible(false)->reorderable(false)
+                                        ->addable(false)
+                                        ->schema([
 
-                            Toggle::make('walk_in_customer')
-                                ->live(onBlur: true)->columnSpanFull()
-                                ->label(__('filament/resources/order-resource.form.order_info.walk_in.label'))
-                                ->helperText(__('filament/resources/order-resource.form.order_info.walk_in.helper_text')),
+                                            Group::make()->schema([
+                                                Hidden::make('attribute')
+                                                    ->required()
+                                                    ->label('Attribute'),
 
-                            Group::make()->schema([
-                                Select::make('user_id')
-                                    ->searchable()->createOptionForm(self::customerFormFields())->label(__('filament/resources/order-resource.form.order_info.customer.name'))
-                                    ->required()->relationship('user', 'name')->preload()->columnSpanFull(),
+                                                Select::make('value')
+                                                    ->multiple()
+                                                    ->hidden(fn(Get $get) => blank($get('attribute')))
+                                                    ->required()->searchable()->preload()->label('Value')->placeholder('Select')
+                                                    ->options(function (Get $get) {
+                                                        if (blank($get('attribute'))) {
+                                                            return [];
+                                                        }
 
-                                Select::make('user_address_id')
-                                    ->searchable()->columnSpanFull()
-                                    ->label(__('filament/resources/order-resource.form.order_info.customer.address'))
-                                    ->required()->relationship('address', 'address')->preload(),
-                            ])->columnSpanFull()->hidden(fn (Get $get) => $get('walk_in_customer')),
+                                                        // If attribute contains the actual attribute name (from updateAttributes)
+                                                        if (is_array($get('attribute')) && ! empty($get('attribute'))) {
+                                                            $attributeName = $get('attribute')[0] ?? '';
+                                                            $attribute = Attribute::where('name', $attributeName)->first();
+                                                            if ($attribute) {
+                                                                return AttributeValue::where('attribute_id', $attribute->id)
+                                                                    ->pluck('value', 'value'); // Use value as both key and display
+                                                            }
+                                                        }
 
-                            ToggleButtons::make('payment_id')
-                                ->columnSpanFull()->inline()
-                                ->label(__('filament/resources/order-resource.form.order_info.payment'))
-                                // ->disabled(fn (Page $livewire) => $livewire instanceof EditRecord)
-                                ->required()->options(Payment::where('seller_id', CheckFilamentSellerUser::getSellerId())->pluck('name', 'id')),
+                                                        return [];
+                                                    }),
 
-                            ToggleButtons::make('status')
-                                ->default(OrderStatus::New->value)
-                                ->columnSpanFull()->inline()
-                                ->label(__('filament/resources/order-resource.form.order_info.status.label'))
-                                ->options([
-                                    'new' => __('filament/resources/order-resource.form.order_info.status.options.new'),
-                                    'processing' => __('filament/resources/order-resource.form.order_info.status.options.processing'),
-                                ])->required(),
+                                            ])->columns(1),
 
-                            DateTimePicker::make('created_at')
-                                ->native(false)->label(__('filament/resources/order-resource.form.order_info.purchase_date'))
-                                ->maxDate(now())->default(now())
-                                ->minDate(now()->subMonth())->columnSpanFull(),
+                                        ]),
+                                ]),
+                            ])->columns(3),
+                        ])->columnSpan(2),
 
-                        ])->columns(2),
+                    Section::make()->schema([
+
+                        TextInput::make('invoice_number')->default(Str::upper('INV-' . uniqid()))->columnSpanFull()
+                            ->label(__('filament/resources/order-resource.form.order_info.invoice_number')),
+
+                        Select::make('seller_id')
+                            ->searchable()->hidden(fn() => Filament::getAuthGuard() == 'seller')
+                            ->label(__('filament/resources/order-resource.form.order_info.seller'))
+                            ->required()->relationship('seller', 'name')->preload(),
+
+                        Toggle::make('walk_in_customer')
+                            ->live(onBlur: true)->columnSpanFull()
+                            ->label(__('filament/resources/order-resource.form.order_info.walk_in.label'))
+                            ->helperText(__('filament/resources/order-resource.form.order_info.walk_in.helper_text')),
+
+                        Group::make()->schema([
+                            Select::make('user_id')
+                                ->searchable()->createOptionForm(self::customerFormFields())->label(__('filament/resources/order-resource.form.order_info.customer.name'))
+                                ->required()->relationship('user', 'name')->preload()->columnSpanFull(),
+
+                            Select::make('user_address_id')
+                                ->searchable()->columnSpanFull()
+                                ->label(__('filament/resources/order-resource.form.order_info.customer.address'))
+                                ->required()->relationship('address', 'address')->preload(),
+                        ])->columnSpanFull()->hidden(fn(Get $get) => $get('walk_in_customer')),
+
+                        ToggleButtons::make('payment_id')
+                            ->columnSpanFull()->inline()
+                            ->label(__('filament/resources/order-resource.form.order_info.payment'))
+                            // ->disabled(fn (Page $livewire) => $livewire instanceof EditRecord)
+                            ->required()->options(Payment::where('seller_id', CheckFilamentSellerUser::getSellerId())->pluck('name', 'id')),
+
+                        ToggleButtons::make('status')
+                            ->default(OrderStatus::New->value)
+                            ->columnSpanFull()->inline()
+                            ->label(__('filament/resources/order-resource.form.order_info.status.label'))
+                            ->options([
+                                'new' => __('filament/resources/order-resource.form.order_info.status.options.new'),
+                                'processing' => __('filament/resources/order-resource.form.order_info.status.options.processing'),
+                            ])->required(),
+
+                        DateTimePicker::make('created_at')
+                            ->native(false)->label(__('filament/resources/order-resource.form.order_info.purchase_date'))
+                            ->maxDate(now())->default(now())
+                            ->minDate(now()->subMonth())->columnSpanFull(),
 
                         Section::make(__('filament/resources/order-resource.form.price_info.label'))
                             ->headerActions([
@@ -365,16 +371,16 @@ class OrderResource extends Resource
                             ->imagePreviewHeight('700px')
                             ->image()->imageEditor(),
 
-                    ])->columnSpan(1),
+                    ]),
 
-                ])->columns(3),
+                ])->columnSpanFull(),
 
             ]);
     }
 
     public static function table(Table $table): Table
     {
-        return \App\Filament\Admin\Resources\OrderResource::table($table);
+        return \App\Filament\Admin\Resources\Orders\OrderResource::table($table);
     }
 
     public static function getRelations(): array
@@ -419,7 +425,6 @@ class OrderResource extends Resource
                 self::getTotalPrice($get, $set);
             }
         }
-
     }
 
     protected static function getHtmlString(): HtmlString
@@ -469,7 +474,6 @@ class OrderResource extends Resource
                     $set('original_buy_price', $product->buy_price);
                     $set('original_price', $product->price);
                     $set('original_discount_price', $product->discount_price);
-
                 } else {
                     $set('price', $product->mmk_price);
                     $set('discount', $product->discount);
@@ -487,12 +491,11 @@ class OrderResource extends Resource
                 foreach ($product->attributes as $att) {
 
                     $data[] = [
-                        'attribute' => Attribute::where('id', $att['attribute_id'])->pluck('name') ?? '',
-                        //                        'value' => implode(',', AttributeValue::whereIn('id', $att['attribute_value_id'])->pluck('value')->toArray()) ??  '',
+                        'attribute' => Attribute::where('id', $att['attribute_id'])->pluck('name')->toArray() ?? '',
                         'value' => AttributeValue::whereIn('id', $att['attribute_value_id'])->pluck('value')->toArray() ?? '',
                     ];
-
                 }
+                // dd($data);
                 $set('attributes', $data);
                 if ($get('discount') > 0) {
                     // has discount
@@ -503,7 +506,6 @@ class OrderResource extends Resource
             } else {
                 $set('variant_id', null);
             }
-
         }
     }
 
@@ -536,7 +538,7 @@ class OrderResource extends Resource
                         ->default(CheckFilamentSellerUser::getSellerId()),
 
                     Hidden::make('password')
-                        ->default(fn (Get $get) => Hash::make($get('name'))),
+                        ->default(fn(Get $get) => Hash::make($get('name'))),
                 ]),
 
                 Group::make()->schema([
@@ -545,13 +547,13 @@ class OrderResource extends Resource
                         ->schema([
                             Select::make('region_id')->live()
                                 ->required()->searchable()->preload()
-                                ->afterStateUpdated(fn (Set $set) => $set('township_id', null))
+                                ->afterStateUpdated(fn(Set $set) => $set('township_id', null))
                                 ->relationship('region', 'mm_name'),
 
                             Select::make('township_id')
-                                ->hidden(fn (Get $get) => blank($get('region_id')))
+                                ->hidden(fn(Get $get) => blank($get('region_id')))
                                 ->required()->searchable()->preload()
-                                ->relationship('township', 'mm_name', modifyQueryUsing: fn ($query, Get $get) => $query->where('region_id', $get('region_id'))),
+                                ->relationship('township', 'mm_name', modifyQueryUsing: fn($query, Get $get) => $query->where('region_id', $get('region_id'))),
 
                             TextInput::make('address')
                                 ->required(),
@@ -598,7 +600,6 @@ class OrderResource extends Resource
                         //                        'value' => implode(',', AttributeValue::whereIn('id', $att['attribute_value_id'])->pluck('value')->toArray()) ??  '',
                         'value' => AttributeValue::whereIn('id', $att['attribute_value_id'])->pluck('value')->toArray() ?? '',
                     ];
-
                 }
                 self::thisIsAutoChangeDiscountPrice($get, $set);
 

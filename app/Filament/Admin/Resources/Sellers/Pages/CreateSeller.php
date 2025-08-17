@@ -1,8 +1,8 @@
 <?php
 
-namespace App\Filament\Admin\Resources\SellerResource\Pages;
+namespace App\Filament\Admin\Resources\Sellers\Pages;
 
-use App\Filament\Admin\Resources\SellerResource;
+use App\Filament\Admin\Resources\Sellers\SellerResource;
 use Filament\Auth\Notifications\VerifyEmail;
 use Filament\Resources\Pages\CreateRecord;
 

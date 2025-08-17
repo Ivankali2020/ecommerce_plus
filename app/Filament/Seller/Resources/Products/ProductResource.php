@@ -1,10 +1,10 @@
 <?php
 
-namespace App\Filament\Seller\Resources;
+namespace App\Filament\Seller\Resources\Products;
 
-use App\Filament\Seller\Resources\ProductResource\Pages\CreateProduct;
-use App\Filament\Seller\Resources\ProductResource\Pages\EditProduct;
-use App\Filament\Seller\Resources\ProductResource\Pages\ListProducts;
+use App\Filament\Seller\Resources\Products\Pages\CreateProduct;
+use App\Filament\Seller\Resources\Products\Pages\EditProduct;
+use App\Filament\Seller\Resources\Products\Pages\ListProducts;
 use App\Helper\CheckFilamentSellerUser;
 use App\Models\Attribute;
 use App\Models\AttributeValue;
@@ -77,7 +77,7 @@ class ProductResource extends Resource
     {
         return $schema
             ->components([
-                Grid::make()->schema([
+                Grid::make(2)->schema([
                     Group::make()->schema([
 
                         Select::make('supplier_id')
@@ -182,9 +182,9 @@ class ProductResource extends Resource
                                     ->label('Shipping Product')->default(true)
                                     ->helperText(__('filament/resources/product-resource.form.shipping.shipped.helper_text'))
                                     ->required(),
-                            ])->compact(),
+                            ])->compact()->columnSpanFull(),
 
-                    ])->columns(2),
+                    ])->columns(2)->columnSpan(1),
 
                     Group::make()->schema([
 
@@ -332,7 +332,6 @@ class ProductResource extends Resource
                     Group::make()->schema([
                         RichEditor::make('description')
                             ->required()
-                            ->maxLength(16777215)
                             ->columnSpanFull(),
                     ])->hidden(fn (Get $get) => ! $get('has_variant') || blank($get('exchange_id'))),
 
@@ -505,7 +504,7 @@ class ProductResource extends Resource
                             ->visible(fn (Get $get) => $get('has_variant') && ! blank($get('exchange_id'))),
                     ])->columnSpanFull(),
 
-                ]),
+                ])->columnSpanFull(),
 
             ]);
     }

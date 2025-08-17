@@ -1,8 +1,8 @@
 <?php
 
-namespace App\Filament\Admin\Resources\ExchangeResource\Pages;
+namespace App\Filament\Admin\Resources\Exchanges\Pages;
 
-use App\Filament\Admin\Resources\ExchangeResource;
+use App\Filament\Admin\Resources\Exchanges\ExchangeResource;
 use Filament\Resources\Pages\CreateRecord;
 
 class CreateExchange extends CreateRecord

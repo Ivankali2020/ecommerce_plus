@@ -1,10 +1,10 @@
 <?php
 
-namespace App\Filament\Admin\Resources;
+namespace App\Filament\Admin\Resources\Attributes;
 
-use App\Filament\Admin\Resources\AttributeResource\Pages\CreateAttribute;
-use App\Filament\Admin\Resources\AttributeResource\Pages\EditAttribute;
-use App\Filament\Admin\Resources\AttributeResource\Pages\ListAttributes;
+use App\Filament\Admin\Resources\Attributes\Pages\CreateAttribute;
+use App\Filament\Admin\Resources\Attributes\Pages\EditAttribute;
+use App\Filament\Admin\Resources\Attributes\Pages\ListAttributes;
 use App\Helper\AttributeType;
 use App\Models\Attribute;
 use Filament\Actions\BulkActionGroup;
@@ -20,7 +20,6 @@ use Filament\Forms\Components\Select;
 use Filament\Forms\Components\TextInput;
 use Filament\Resources\Resource;
 use Filament\Schemas\Components\Grid;
-use Filament\Schemas\Components\Group;
 use Filament\Schemas\Components\Section;
 use Filament\Schemas\Components\Utilities\Get;
 use Filament\Schemas\Components\Utilities\Set;
@@ -61,9 +60,9 @@ class AttributeResource extends Resource
 
         return $schema
             ->components([
-                Grid::make()->schema([
-                    Group::make()->schema([
-                        Section::make()->schema([
+                Grid::make(['default' => 1, 'lg' => 2])
+                    ->schema([
+                        Section::make([
                             Select::make('seller_id')
                                 ->hidden(Filament::getAuthGuard() == 'seller')
                                 ->searchable()->preload()
@@ -83,38 +82,57 @@ class AttributeResource extends Resource
                                 ->required()
                                 ->label(__('filament/resources/attribute-resource.form.type')),
 
-                        ]),
-                    ])->columnSpan(1),
-                    Group::make()->schema([
-                        Repeater::make('values')
-                            ->relationship('values')->reorderable()
-                            ->label(__('filament/resources/attribute-resource.form.values'))
-                            ->schema([
+                        ])->columnSpan(['default' => 1, 'lg' => 1]),
 
-                                ColorPicker::make('color_code')
-                                    ->live()->label(__('filament/resources/attribute-resource.form.color_code'))
-                                    ->afterStateUpdated(function ($state, Set $set) {
-                                        //  $response = Http::get('https://api.color.pizza/v1/?values='.Str::remove('#',$state)); will be update in v2
-                                    })
-                                    ->visible(fn (Get $get) => $get('../../type') == 'color')
-                                    ->required(),
+                        Section::make([
+                            Repeater::make('values')
+                                ->relationship('values')->reorderable()
+                                ->label(__('filament/resources/attribute-resource.form.values'))
+                                ->schema([
 
-                                TextInput::make('value')
-                                    ->live()->label(__('filament/resources/attribute-resource.form.value'))
-                                    ->placeholder(fn () => $loading ? 'Searching Color Name' : '')
-                                    ->visible(fn (Get $get) => $get('../../type') == 'color')
-                                    ->required(),
+                                    ColorPicker::make('color_code')
+                                        ->live()->label(__('filament/resources/attribute-resource.form.color_code'))
+                                        ->afterStateUpdated(function ($state, Set $set) {
+                                            //  $response = Http::get('https://api.color.pizza/v1/?values='.Str::remove('#',$state)); will be update in v2
+                                        })
+                                        ->visible(function (Get $get) {
+                                            // Try multiple approaches to access parent state
+                                            $type = $get('../../type') ?? $get('../type') ?? $get('type');
 
-                                TextInput::make('value')
-                                    ->visible(fn (Get $get) => $get('../../type') == 'text')
-                                    ->helperText('ဉပမာ - Sizes ဆိုရင် (xl,l,md), Colors ဆိုရင် (red,green,...), ...')
-                                    ->required()
-                                    ->maxLength(255)
-                                    ->label(__('filament/resources/attribute-resource.form.value')),
+                                            return $type === AttributeType::Text;
+                                        })
+                                        ->required(),
 
-                            ])->columns(2)->hidden(fn (Get $get) => blank($get('type'))),
-                    ]),
-                ])->columns(2),
+                                    TextInput::make('value')
+                                        ->live()->label(__('filament/resources/attribute-resource.form.value'))
+                                        ->placeholder(fn() => $loading ? 'Searching Color Name' : '')
+                                        ->visible(function (Get $get) {
+                                            // Try multiple approaches to access parent state
+                                            $type = $get('../../type') ?? $get('../type') ?? $get('type');
+
+                                            return $type === AttributeType::Color;
+                                        })
+                                        ->required(),
+
+                                    TextInput::make('value')
+                                        ->visible(function (Get $get) {
+                                            // Try multiple approaches to access parent state
+                                            $type = $get('../../type') ?? $get('../type') ?? $get('type');
+
+                                            return $type === AttributeType::Text;
+                                        })
+                                        ->helperText('ဉပမာ - Sizes ဆိုရင် (xl,l,md), Colors ဆိုရင် (red,green,...), ...')
+                                        ->required()
+                                        ->maxLength(255)
+                                        ->label(__('filament/resources/attribute-resource.form.value')),
+
+                                ])
+                                ->columns(2),
+                        ])
+                            ->columnSpan(['default' => 1, 'lg' => 1])
+                            ->hidden(fn(Get $get) => blank($get('type'))),
+                            
+                    ])->columnSpanFull()                ,
             ]);
     }
 

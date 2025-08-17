@@ -1,11 +1,11 @@
 <?php
 
-namespace App\Filament\Admin\Resources;
+namespace App\Filament\Admin\Resources\Categories;
 
-use App\Filament\Admin\Resources\CategoryResource\Pages\CreateCategory;
-use App\Filament\Admin\Resources\CategoryResource\Pages\EditCategory;
-use App\Filament\Admin\Resources\CategoryResource\Pages\ListCategories;
-use App\Filament\Admin\Resources\CategoryResource\RelationManagers\CategoriesRelationManager;
+use App\Filament\Admin\Resources\Categories\Pages\CreateCategory;
+use App\Filament\Admin\Resources\Categories\Pages\EditCategory;
+use App\Filament\Admin\Resources\Categories\Pages\ListCategories;
+use App\Filament\Admin\Resources\Categories\RelationManagers\CategoriesRelationManager;
 use App\Helper\CheckFilamentSellerUser;
 use App\Models\Category;
 use Filament\Actions\BulkActionGroup;
@@ -78,7 +78,7 @@ class CategoryResource extends Resource
                         ]),
                     ])->columnSpan(1),
 
-                ])->columns(2),
+                ])->columnSpanFull(),
             ]);
     }
 

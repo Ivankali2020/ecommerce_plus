@@ -1,11 +1,11 @@
 <?php
 
-namespace App\Filament\Seller\Resources;
+namespace App\Filament\Seller\Resources\GiftExchanges;
 
-use App\Filament\Seller\Resources\GiftExchangeResource\Pages\CreateGiftExchange;
-use App\Filament\Seller\Resources\GiftExchangeResource\Pages\EditGiftExchange;
-use App\Filament\Seller\Resources\GiftExchangeResource\Pages\ListGiftExchanges;
-use App\Filament\Seller\Resources\GiftExchangeResource\Pages\ViewGiftExchange;
+use App\Filament\Seller\Resources\GiftExchanges\Pages\CreateGiftExchange;
+use App\Filament\Seller\Resources\GiftExchanges\Pages\EditGiftExchange;
+use App\Filament\Seller\Resources\GiftExchanges\Pages\ListGiftExchanges;
+use App\Filament\Seller\Resources\GiftExchanges\Pages\ViewGiftExchange;
 use App\Models\GiftExchange;
 use Filament\Actions\Action;
 use Filament\Actions\BulkAction;
@@ -160,13 +160,13 @@ class GiftExchangeResource extends Resource
                     ->searchable()
                     ->wrap(),
                 TextColumn::make('points_spent')
-                    ->label(__('filament/resources/gift-exchange-resource.table.columns.points_spent'))
+                    ->label(__('filament/resources/gift-exchange-resource.table.columns.points'))
                     ->numeric()
                     ->sortable()
                     ->suffix(__('filament/resources/gift-exchange-resource.table.columns.points_suffix'))
                     ->alignEnd(),
                 SelectColumn::make('status')
-                    ->label(__('filament/resources/gift-exchange-resource.table.columns.status.label'))
+                    ->label(__('filament/resources/gift-exchange-resource.table.columns.status'))
                     ->options([
                         'pending' => __('filament/resources/gift-exchange-resource.table.columns.status.options.pending'),
                         'processing' => __('filament/resources/gift-exchange-resource.table.columns.status.options.processing'),
@@ -286,10 +286,10 @@ class GiftExchangeResource extends Resource
                     ->visible(fn (GiftExchange $record) => $record->status === 'shipped'),
             ])
             ->headerActions([
-                Action::make('export')
-                    ->label(__('filament/resources/gift-exchange-resource.actions.export.label'))
-                    ->icon('heroicon-m-arrow-down-tray')
-                    ->color('gray'),
+                // Action::make('export')
+                //     ->label(__('filament/resources/gift-exchange-resource.actions.export.label'))
+                //     ->icon('heroicon-m-arrow-down-tray')
+                //     ->color('gray'),
             ])
             ->toolbarActions([
                 BulkActionGroup::make([

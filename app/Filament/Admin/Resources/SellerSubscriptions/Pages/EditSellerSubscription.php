@@ -1,8 +1,8 @@
 <?php
 
-namespace App\Filament\Admin\Resources\SellerSubscriptionResource\Pages;
+namespace App\Filament\Admin\Resources\SellerSubscriptions\Pages;
 
-use App\Filament\Admin\Resources\SellerSubscriptionResource;
+use App\Filament\Admin\Resources\SellerSubscriptions\SellerSubscriptionResource;
 use Filament\Actions;
 use Filament\Resources\Pages\EditRecord;
 

@@ -1,11 +1,11 @@
 <?php
 
-namespace App\Filament\Seller\Resources;
+namespace App\Filament\Seller\Resources\Categories;
 
-use App\Filament\Admin\Resources\CategoryResource\RelationManagers\CategoriesRelationManager;
-use App\Filament\Seller\Resources\CategoryResource\Pages\CreateCategory;
-use App\Filament\Seller\Resources\CategoryResource\Pages\EditCategory;
-use App\Filament\Seller\Resources\CategoryResource\Pages\ListCategories;
+use App\Filament\Admin\Resources\Categories\RelationManagers\CategoriesRelationManager;
+use App\Filament\Seller\Resources\Categories\Pages\CreateCategory;
+use App\Filament\Seller\Resources\Categories\Pages\EditCategory;
+use App\Filament\Seller\Resources\Categories\Pages\ListCategories;
 use App\Models\Category;
 use Filament\Facades\Filament;
 use Filament\Resources\Resource;
@@ -32,12 +32,12 @@ class CategoryResource extends Resource
 
     public static function form(Schema $schema): Schema
     {
-        return \App\Filament\Admin\Resources\CategoryResource::form($schema);
+        return \App\Filament\Admin\Resources\Categories\CategoryResource::form($schema);
     }
 
     public static function table(Table $table): Table
     {
-        return \App\Filament\Admin\Resources\CategoryResource::table($table);
+        return \App\Filament\Admin\Resources\Categories\CategoryResource::table($table);
     }
 
     public static function getRelations(): array

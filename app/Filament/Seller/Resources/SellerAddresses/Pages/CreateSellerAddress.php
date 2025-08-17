@@ -1,8 +1,8 @@
 <?php
 
-namespace App\Filament\Seller\Resources\SellerAddressResource\Pages;
+namespace App\Filament\Seller\Resources\SellerAddresses\Pages;
 
-use App\Filament\Seller\Resources\SellerAddressResource;
+use App\Filament\Seller\Resources\SellerAddresses\SellerAddressResource;
 use App\Helper\CheckFilamentSellerUser;
 use Filament\Resources\Pages\CreateRecord;
 

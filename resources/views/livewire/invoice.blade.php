@@ -35,7 +35,7 @@
                 <tbody class="">
                 @foreach($record->products as $detail)
                     <tr>
-                        <td class="py-2 dark:text-slat-100 text-[8px] header_invoice">{{ $detail->product->name }}</td>
+                        <td class="py-2 dark:text-slat-100 text-sm header_invoice">{{ $detail->product->name }}</td>
                         <td class="py-2 dark:text-slat-100">{{ $detail->quantity }}</td>
                         <td class="py-2 dark:text-slat-100">{{ $detail->price }}</td>
                         <td class="py-2 dark:text-slat-100">{{ $detail->discount }} %</td>
@@ -92,120 +92,112 @@
 
     </div>
 
-    <div id="small" class=" rounded-lg " x-show="isSmall" style="font-size: 12px !important" >
-        <div id="invoice" class="m-5 shadow-sm mx-auto p-3 rounded  lg:m-10"  style="max-width: 320px;">
-            <div class="mx-auto p-sm-2 w-md " >
+    <div id="small" class="rounded-lg flex justify-center" x-show="isSmall" style="font-size: 12px !important" >
+        <div id="invoice" class="m-5 shadow-sm mx-auto p-3 rounded lg:m-10 max-w-80 w-full overflow-hidden">
+            <div class="mx-auto p-2 w-full overflow-hidden">
 
-                <div class="flex justify-between items-center">
-                    <div class="flex items-center">
+                <div class="flex justify-between items-start gap-2">
+                    <div class="flex items-center min-w-0 flex-1">
                         @if($record->seller->getFirstMediaUrl('logos'))
-                         <img class="h-16 w-16 mr-2 rounded-full mb-4 " src="{{ $record->seller->getFirstMediaUrl('logos') }}" alt="{{ $record->seller->name}}" />
+                         <img class="h-12 w-12 mr-2 rounded-full mb-4 flex-shrink-0" src="{{ $record->seller->getFirstMediaUrl('logos') }}" alt="{{ $record->seller->name}}" />
                         @endif
                     </div>
-                    <div class="mb-6">
-                        {{-- <div  class="font-bold text-sm text-end my-5 header_invoice">ပြေစာအမှတ်</div> --}}
-                        <div class=" header_invoice flex justify-end  " id="" >
-
-                            <table class="mb-2 ">
+                    <div class="mb-6 flex-shrink-0">
+                        <div class="header_invoice flex justify-end">
+                            <table class="mb-2">
                                 <tr>
-                                    <td class="pb-2 px-1 text-start ">ရက်စွဲ</td>
-                                    <td class="pb-2 px-4  text-start "> : </td>
-                                    <td class="pb-2 text-end ">
+                                    <td class="pb-2 px-1 text-start text-xs">ရက်စွဲ</td>
+                                    <td class="pb-2 px-2 text-start text-xs">:</td>
+                                    <td class="pb-2 text-end text-xs whitespace-nowrap">
                                         {{ $record->created_at->format('d M Y') }}
                                     </td>
                                 </tr>
                                 <tr class="mt-2">
-                                    <td class="pb-2 px-1 text-start ">အမှတ်စဉ်</td>
-                                    <td class="pb-2 px-4  text-start ">: </td>
-                                    <td class="pb-2 text-end ">{{ $record->invoice_number }}</td>
+                                    <td class="pb-2 px-1 text-start text-xs">အမှတ်စဉ်</td>
+                                    <td class="pb-2 px-2 text-start text-xs">:</td>
+                                    <td class="pb-2 text-end text-xs break-all">{{ $record->invoice_number }}</td>
                                 </tr>
                             </table>
                         </div>
                     </div>
                 </div>
 
-                <table class="w-full    text-left mb-8 mt-6  ">
-                    <thead >
+                <table class="w-full text-left mb-8 table-fixed">
+                    <thead>
                         <tr>
-                            <th class=" header_invoice  pb-3">Name</th>
-                            <th class=" header_invoice print:hidden pb-3 text-right ">Qty</th>
-                            <th class=" header_invoice  pb-3 text-right ">Price</th>
-                            <th class=" header_invoice  pb-3 text-right ">Total</th>
+                            <th class="header_invoice pb-3 w-2/5">Name</th>
+                            <th class="header_invoice print:hidden pb-3 text-right w-1/5">Qty</th>
+                            <th class="header_invoice pb-3 text-right w-1/5">Price</th>
+                            <th class="header_invoice pb-3 text-right w-1/5">Total</th>
                         </tr>
                     </thead>
                     <tbody class="">
                     @foreach($record->products as $detail)
                         <tr class="">
-                            <td class="pb-3 text-xs  header_invoice" style="line-height: 1.3rem">{{ $detail->product->name }}</td>
-                            <td class="pb-3 text-right ">{{ $detail->quantity }}</td>
-                            <td class="pb-3 text-right ">
+                            <td class="pb-3 text-xs header_invoice break-words" style="line-height: 1.3rem">{{ $detail->product->name }}</td>
+                            <td class="pb-3 text-right text-xs">{{ $detail->quantity }}</td>
+                            <td class="pb-3 text-right text-xs">
                                 @if($detail->discount > 0)
-                                <sup style="font-size:8px">{{ number_format($detail->discount,0) }} %</sup> <span>  {{ number_format($detail->discount_price,0) }}</span> 
+                                <sup style="font-size:8px">{{ number_format($detail->discount,0) }}%</sup> <span>{{ number_format($detail->discount_price,0) }}</span> 
                                 @else
                                     {{ number_format($detail->price,0) }}
                                 @endif
                             </td>
-                            <td class="pb-3  text-right "> {{ number_format($detail->sub_price,0) }}</td>
+                            <td class="pb-3 text-right text-xs">{{ number_format($detail->sub_price,0) }}</td>
                         </tr>
                     @endforeach
 
                     <tr class="">
-                        {{-- <td colspan="1" class="pb-3 text-right px-6 font-bold   "></td> --}}
-                        <td colspan="3" class="pb-3 text-right">Sub Total:</td>
-                        <td  class="pb-3  text-right header_invoice font-bold ">{{ $record->sub_total }} </td>
+                        <td colspan="2" class="pb-3 text-right text-xs">Sub Total:</td>
+                        <td colspan="2" class="pb-3 text-right header_invoice font-bold text-xs">{{ $record->sub_total }}</td>
                     </tr>
 
-                    <tr >
-                        {{-- <td colspan="1" class="pb-3 text-right px-6 font-bold   "></td> --}}
-                        <td colspan="3" class="pb-3 text-right  text-nowrap ">Tax Fees ({{ number_format($record->tax ,0)}} %):</td>
-                        <td  class="pb-3  text-right header_invoice font-bold   ">{{ $record->tax_price ?? 0 }} </td>
+                    <tr>
+                        <td colspan="2" class="pb-3 text-right text-xs whitespace-nowrap">Tax Fees ({{ number_format($record->tax ,0)}}%):</td>
+                        <td colspan="2" class="pb-3 text-right header_invoice font-bold text-xs">{{ $record->tax_price ?? 0 }}</td>
                     </tr>
-                    <tr >
-                        {{-- <td colspan="1" class="pb-3 text-right px-6 font-bold   "></td> --}}
-                        <td colspan="3" class="pb-3 text-right    "> Delivery Fees:</td>
-                        <td  class="pb-3  text-right header_invoice font-bold   ">{{ $record->delivery_fees ?? 0 }} </td>
+                    <tr>
+                        <td colspan="2" class="pb-3 text-right text-xs">Delivery Fees:</td>
+                        <td colspan="2" class="pb-3 text-right header_invoice font-bold text-xs">{{ $record->delivery_fees ?? 0 }}</td>
                     </tr>
-                    <tr >
-                        {{-- <td colspan="1" class="pb-3 text-right px-6 font-bold   "></td> --}}
-                        <td colspan="3" class="pb-3 text-right    ">Grand Total:</td>
-                        <td  class="pb-3  text-right  font-bold header_invoice"> ကျပ် <span class=" header_invoice">{{ number_format($record->total_price,0) }} </span> </td>
+                    <tr>
+                        <td colspan="2" class="pb-3 text-right text-xs">Grand Total:</td>
+                        <td colspan="2" class="pb-3 text-right font-bold header_invoice text-xs">ကျပ် <span class="header_invoice">{{ number_format($record->total_price,0) }}</span></td>
                     </tr>
                     </tbody>
                 </table>
 
                 @if($record->user)
-                <div class=" border-gray-300 pb-8 mb-8 mt-2 ">
-                    <table class="w-full " >
+                <div class="border-gray-300 pb-8 mb-8 mt-2">
+                    <table class="w-full table-fixed">
                         <tr>
-                            <td class="px-1 pb-2 text-light  ">နာမည်</td>
-                            <td class="px-1 pb-2 ">:</td>
-                            <td class="px-1 pb-2 ">{{ $record->user?->name }}</td>
+                            <td class="px-1 pb-1 text-light w-1/4 text-xs">နာမည်</td>
+                            <td class="px-1 pb-1 w-1/12 text-xs">:</td>
+                            <td class="px-1 pb-1 break-words text-xs">{{ $record->user?->name }}</td>
                         </tr>
                         <tr>
-                            <td class="px-1 pb-2 text-light  ">လိပ်စာ</td>
-                            <td class="px-1 pb-2 ">:</td>
-                            <td class="px-1 pb-2 ">{{ $record->user?->address }}</td>
+                            <td class="px-1 pb-1 text-light w-1/4 text-xs">လိပ်စာ</td>
+                            <td class="px-1 pb-1 w-1/12 text-xs">:</td>
+                            <td class="px-1 pb-1 break-words text-xs" >{{ $record->address?->modAddress }}</td>
                         </tr>
                         <tr>
-                            <td class="px-1 pb-2 text-light  ">ဖုန်း</td>
-                            <td class="px-1 pb-2 ">:</td>
-                            <td class="px-1 pb-2 ">{{ $record->user?->phone }}</td>
+                            <td class="px-1 pb-1 text-light w-1/4 text-xs">ဖုန်း</td>
+                            <td class="px-1 pb-1 w-1/12 text-xs">:</td>
+                            <td class="px-1 pb-1 break-words text-xs">{{ $record->user?->phone }}</td>
                         </tr>
-
                     </table>
                 </div>
                 @endif
 
                 @if($record->seller->addresses->count() > 0)
-                <div class=" border-gray-300 pb-8  mt-2">
-                    <h2 class=" font-bold mb-2 header_invoice">Seller Address:</h2>
+                <div class="border-gray-300 pb-8 mt-2">
+                    <h2 class="font-bold mb-2 header_invoice text-xs">Seller Address:</h2>
                     @forelse ($record->seller->addresses as $index=>$address)
-                    <div class="mb-2 text-xs">
-                        <p class=" text-xs">{{ $address->address }}</p>
+                    <div class="mb-2">
+                        <p class="text-xs break-words">{{ $address->address }}</p>
                     </div>
-                 @empty
-
-                 @endforelse
+                    @empty
+                    @endforelse
                 </div>
                 @endif
 

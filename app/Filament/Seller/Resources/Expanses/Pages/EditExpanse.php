@@ -1,8 +1,8 @@
 <?php
 
-namespace App\Filament\Seller\Resources\ExpanseResource\Pages;
+namespace App\Filament\Seller\Resources\Expanses\Pages;
 
-use App\Filament\Seller\Resources\ExpanseResource;
+use App\Filament\Seller\Resources\Expanses\ExpanseResource;
 use Filament\Actions\DeleteAction;
 use Filament\Resources\Pages\EditRecord;
 

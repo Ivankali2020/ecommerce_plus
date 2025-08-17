@@ -1,8 +1,8 @@
 <?php
 
-namespace App\Filament\Admin\Resources\PaymentResource\Pages;
+namespace App\Filament\Admin\Resources\Payments\Pages;
 
-use App\Filament\Admin\Resources\PaymentResource;
+use App\Filament\Admin\Resources\Payments\PaymentResource;
 use Filament\Resources\Pages\CreateRecord;
 
 class CreatePayment extends CreateRecord

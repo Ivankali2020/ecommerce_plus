@@ -1,11 +1,11 @@
 <?php
 
-namespace App\Filament\Seller\Resources;
+namespace App\Filament\Seller\Resources\Exchanges;
 
-use App\Filament\Seller\Resources\ExchangeResource\Pages\CreateExchange;
-use App\Filament\Seller\Resources\ExchangeResource\Pages\EditExchange;
-use App\Filament\Seller\Resources\ExchangeResource\Pages\ListExchanges;
-use App\Filament\Seller\Resources\ExchangeResource\RelationManagers\ExchangeHistoriesRelationManager;
+use App\Filament\Seller\Resources\Exchanges\Pages\CreateExchange;
+use App\Filament\Seller\Resources\Exchanges\Pages\EditExchange;
+use App\Filament\Seller\Resources\Exchanges\Pages\ListExchanges;
+use App\Filament\Seller\Resources\Exchanges\RelationManagers\ExchangeHistoriesRelationManager;
 use App\Models\Exchange;
 use Filament\Facades\Filament;
 use Filament\Resources\Resource;
@@ -54,12 +54,12 @@ class ExchangeResource extends Resource
 
     public static function form(Schema $schema): Schema
     {
-        return \App\Filament\Admin\Resources\ExchangeResource::form($schema);
+        return \App\Filament\Admin\Resources\Exchanges\ExchangeResource::form($schema);
     }
 
     public static function table(Table $table): Table
     {
-        return \App\Filament\Admin\Resources\ExchangeResource::table($table);
+        return \App\Filament\Admin\Resources\Exchanges\ExchangeResource::table($table);
     }
 
     public static function getRelations(): array

@@ -1,8 +1,8 @@
 <?php
 
-namespace App\Filament\Seller\Resources\PurchaseResource\Pages;
+namespace App\Filament\Seller\Resources\Purchases\Pages;
 
-use App\Filament\Seller\Resources\PurchaseResource;
+use App\Filament\Seller\Resources\Purchases\PurchaseResource;
 use Filament\Actions\CreateAction;
 use Filament\Resources\Pages\ListRecords;
 

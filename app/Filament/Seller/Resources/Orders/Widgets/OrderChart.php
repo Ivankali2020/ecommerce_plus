@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Filament\Seller\Resources\OrderResource\Widgets;
+namespace App\Filament\Seller\Resources\Orders\Widgets;
 
 use App\Helper\CheckFilamentSellerUser;
 use App\Helper\OrderStatus;

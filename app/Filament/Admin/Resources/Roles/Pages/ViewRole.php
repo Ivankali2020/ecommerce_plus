@@ -1,8 +1,8 @@
 <?php
 
-namespace App\Filament\Admin\Resources\RoleResource\Pages;
+namespace App\Filament\Admin\Resources\Roles\Pages;
 
-use App\Filament\Admin\Resources\RoleResource;
+use App\Filament\Admin\Resources\Roles\RoleResource;
 use Filament\Actions\EditAction;
 use Filament\Resources\Pages\ViewRecord;
 

@@ -1,12 +1,12 @@
 <?php
 
-namespace App\Filament\Admin\Resources;
+namespace App\Filament\Admin\Resources\Sellers;
 
-use App\Filament\Admin\Resources\SellerResource\Pages\CreateSeller;
-use App\Filament\Admin\Resources\SellerResource\Pages\EditSeller;
-use App\Filament\Admin\Resources\SellerResource\Pages\ListSellers;
-use App\Filament\Admin\Resources\SellerResource\RelationManagers\SellerAddressesRelationManager;
-use App\Filament\Admin\Resources\SellerResource\RelationManagers\SellersRelationManager;
+use App\Filament\Admin\Resources\Sellers\Pages\CreateSeller;
+use App\Filament\Admin\Resources\Sellers\Pages\EditSeller;
+use App\Filament\Admin\Resources\Sellers\Pages\ListSellers;
+use App\Filament\Admin\Resources\Sellers\RelationManagers\SellerAddressesRelationManager;
+use App\Filament\Admin\Resources\Sellers\RelationManagers\SellersRelationManager;
 use App\Models\Seller;
 use Filament\Actions\Action;
 use Filament\Actions\BulkActionGroup;

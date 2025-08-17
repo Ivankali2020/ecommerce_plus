@@ -1,5 +1,6 @@
 <?php
 
+use App\Models\Region;
 use App\Models\Seller;
 use App\Models\Tenant;
 use App\Models\Township;
@@ -18,6 +19,7 @@ return new class extends Migration
             $table->id();
             $table->foreignIdFor(Seller::class)->constrained()->cascadeOnDelete()->cascadeOnUpdate();
             $table->foreignIdFor(Tenant::class)->constrained()->cascadeOnDelete()->cascadeOnUpdate();
+            $table->foreignIdFor(Region::class)->constrained()->cascadeOnUpdate()->cascadeOnDelete();
             $table->foreignIdFor(Township::class)->constrained()->cascadeOnUpdate()->cascadeOnDelete();
             $table->string('name');
             $table->string('email')->nullable();

@@ -1,9 +1,9 @@
 <?php
 
-namespace App\Filament\Seller\Resources;
+namespace App\Filament\Seller\Resources\OrderProducts;
 
 use App\Filament\Seller\Resources\OrderProductResource\Pages;
-use App\Filament\Seller\Resources\OrderProductResource\Pages\ListOrderProducts;
+use App\Filament\Seller\Resources\OrderProducts\Pages\ListOrderProducts;
 use App\Helper\CheckFilamentSellerUser;
 use App\Models\OrderProduct;
 use Filament\Actions\BulkActionGroup;

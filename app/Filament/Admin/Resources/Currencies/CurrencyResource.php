@@ -1,10 +1,10 @@
 <?php
 
-namespace App\Filament\Admin\Resources;
+namespace App\Filament\Admin\Resources\Currencies;
 
-use App\Filament\Admin\Resources\CurrencyResource\Pages\CreateCurrency;
-use App\Filament\Admin\Resources\CurrencyResource\Pages\EditCurrency;
-use App\Filament\Admin\Resources\CurrencyResource\Pages\ListCurrencies;
+use App\Filament\Admin\Resources\Currencies\Pages\CreateCurrency;
+use App\Filament\Admin\Resources\Currencies\Pages\EditCurrency;
+use App\Filament\Admin\Resources\Currencies\Pages\ListCurrencies;
 use App\Models\Currency;
 use Filament\Actions\BulkActionGroup;
 use Filament\Actions\DeleteBulkAction;

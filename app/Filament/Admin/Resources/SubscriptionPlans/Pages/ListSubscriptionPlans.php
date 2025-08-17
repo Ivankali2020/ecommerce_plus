@@ -1,8 +1,8 @@
 <?php
 
-namespace App\Filament\Admin\Resources\SubscriptionPlanResource\Pages;
+namespace App\Filament\Admin\Resources\SubscriptionPlans\Pages;
 
-use App\Filament\Admin\Resources\SubscriptionPlanResource;
+use App\Filament\Admin\Resources\SubscriptionPlans\SubscriptionPlanResource;
 use Filament\Actions\CreateAction;
 use Filament\Resources\Pages\ListRecords;
 

@@ -1,9 +1,9 @@
 <?php
 
-namespace App\Filament\Seller\Resources\ExpanseResource\Pages;
+namespace App\Filament\Seller\Resources\Expanses\Pages;
 
-use App\Filament\Seller\Resources\ExpanseResource;
-use App\Filament\Seller\Resources\ExpanseResource\Widgets\ExpanseChart;
+use App\Filament\Seller\Resources\Expanses\ExpanseResource;
+use App\Filament\Seller\Resources\Expanses\Widgets\ExpanseChart;
 use Filament\Actions\CreateAction;
 use Filament\Resources\Pages\ListRecords;
 

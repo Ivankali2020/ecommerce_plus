@@ -1,10 +1,10 @@
 <?php
 
-namespace App\Filament\Seller\Resources;
+namespace App\Filament\Seller\Resources\Deliveries;
 
-use App\Filament\Seller\Resources\DeliveryResource\Pages\CreateDelivery;
-use App\Filament\Seller\Resources\DeliveryResource\Pages\EditDelivery;
-use App\Filament\Seller\Resources\DeliveryResource\Pages\ListDeliveries;
+use App\Filament\Seller\Resources\Deliveries\Pages\CreateDelivery;
+use App\Filament\Seller\Resources\Deliveries\Pages\EditDelivery;
+use App\Filament\Seller\Resources\Deliveries\Pages\ListDeliveries;
 use App\Models\Delivery;
 use Filament\Facades\Filament;
 use Filament\Resources\Resource;
@@ -40,12 +40,12 @@ class DeliveryResource extends Resource
 
     public static function form(Schema $schema): Schema
     {
-        return \App\Filament\Admin\Resources\DeliveryResource::form($schema);
+        return \App\Filament\Admin\Resources\Deliveries\DeliveryResource::form($schema);
     }
 
     public static function table(Table $table): Table
     {
-        return \App\Filament\Admin\Resources\DeliveryResource::table($table);
+        return \App\Filament\Admin\Resources\Deliveries\DeliveryResource::table($table);
     }
 
     public static function getRelations(): array

@@ -1,10 +1,10 @@
 <?php
 
-namespace App\Filament\Admin\Resources;
+namespace App\Filament\Admin\Resources\Exchanges;
 
-use App\Filament\Admin\Resources\ExchangeResource\Pages\CreateExchange;
-use App\Filament\Admin\Resources\ExchangeResource\Pages\EditExchange;
-use App\Filament\Admin\Resources\ExchangeResource\Pages\ListExchanges;
+use App\Filament\Admin\Resources\Exchanges\Pages\CreateExchange;
+use App\Filament\Admin\Resources\Exchanges\Pages\EditExchange;
+use App\Filament\Admin\Resources\Exchanges\Pages\ListExchanges;
 use App\Models\Exchange;
 use Filament\Actions\BulkActionGroup;
 use Filament\Actions\DeleteBulkAction;

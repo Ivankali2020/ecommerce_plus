@@ -1,8 +1,8 @@
 <?php
 
-namespace App\Filament\Seller\Resources\BrandResource\Pages;
+namespace App\Filament\Seller\Resources\Brands\Pages;
 
-use App\Filament\Seller\Resources\BrandResource;
+use App\Filament\Seller\Resources\Brands\BrandResource;
 use App\Helper\CheckFilamentSellerUser;
 use Filament\Resources\Pages\CreateRecord;
 

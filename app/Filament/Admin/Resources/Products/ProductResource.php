@@ -1,10 +1,10 @@
 <?php
 
-namespace App\Filament\Admin\Resources;
+namespace App\Filament\Admin\Resources\Products;
 
-use App\Filament\Admin\Resources\ProductResource\Pages\CreateProduct;
-use App\Filament\Admin\Resources\ProductResource\Pages\EditProduct;
-use App\Filament\Admin\Resources\ProductResource\Pages\ListProducts;
+use App\Filament\Admin\Resources\Products\Pages\CreateProduct;
+use App\Filament\Admin\Resources\Products\Pages\EditProduct;
+use App\Filament\Admin\Resources\Products\Pages\ListProducts;
 use App\Helper\CheckFilamentSellerUser;
 use App\Models\Attribute;
 use App\Models\AttributeValue;

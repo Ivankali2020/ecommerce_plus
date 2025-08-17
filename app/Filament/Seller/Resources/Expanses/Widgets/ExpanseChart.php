@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Filament\Seller\Resources\ExpanseResource\Widgets;
+namespace App\Filament\Seller\Resources\Expanses\Widgets;
 
 use App\Models\Expanse;
 use Filament\Widgets\ChartWidget;

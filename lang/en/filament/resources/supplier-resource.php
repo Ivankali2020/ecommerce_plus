@@ -7,11 +7,12 @@ return [
     ],
     'table' => [
         'columns' => [
-            'seller.name' => 'Seller',
+            'seller' => 'Seller',
             'name' => 'Name',
             'email' => 'Email',
             'phone' => 'Phone',
-            'township.mm_name' => 'Township',
+            'township' => 'Township',
+            'region' => 'Region',
             'created_at' => 'Created At',
             'updated_at' => 'Updated At',
         ],
@@ -22,5 +23,6 @@ return [
         'phone' => 'Phone',
         'about' => 'About',
         'township_id' => 'Township',
+        'region_id' => 'Region',
     ],
 ];

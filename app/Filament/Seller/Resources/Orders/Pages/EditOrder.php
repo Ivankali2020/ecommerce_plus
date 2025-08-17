@@ -1,8 +1,8 @@
 <?php
 
-namespace App\Filament\Seller\Resources\OrderResource\Pages;
+namespace App\Filament\Seller\Resources\Orders\Pages;
 
-use App\Filament\Seller\Resources\OrderResource;
+use App\Filament\Seller\Resources\Orders\OrderResource;
 use Filament\Actions\DeleteAction;
 use Filament\Actions\ForceDeleteAction;
 use Filament\Actions\RestoreAction;

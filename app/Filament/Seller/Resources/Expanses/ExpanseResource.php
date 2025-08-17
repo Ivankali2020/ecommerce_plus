@@ -1,10 +1,10 @@
 <?php
 
-namespace App\Filament\Seller\Resources;
+namespace App\Filament\Seller\Resources\Expanses;
 
-use App\Filament\Seller\Resources\ExpanseResource\Pages\CreateExpanse;
-use App\Filament\Seller\Resources\ExpanseResource\Pages\EditExpanse;
-use App\Filament\Seller\Resources\ExpanseResource\Pages\ListExpanses;
+use App\Filament\Seller\Resources\Expanses\Pages\CreateExpanse;
+use App\Filament\Seller\Resources\Expanses\Pages\EditExpanse;
+use App\Filament\Seller\Resources\Expanses\Pages\ListExpanses;
 use App\Helper\CheckFilamentSellerUser;
 use App\Helper\PaymentMethodExpanse;
 use App\Models\Expanse;

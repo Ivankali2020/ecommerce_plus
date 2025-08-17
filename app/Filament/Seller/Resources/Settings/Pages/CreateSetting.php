@@ -1,8 +1,8 @@
 <?php
 
-namespace App\Filament\Seller\Resources\SettingResource\Pages;
+namespace App\Filament\Seller\Resources\Settings\Pages;
 
-use App\Filament\Seller\Resources\SettingResource;
+use App\Filament\Seller\Resources\Settings\SettingResource;
 use App\Helper\CheckFilamentSellerUser;
 use Filament\Actions;
 use Filament\Resources\Pages\CreateRecord;

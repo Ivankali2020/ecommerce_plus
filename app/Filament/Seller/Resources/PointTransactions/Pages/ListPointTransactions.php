@@ -1,8 +1,8 @@
 <?php
 
-namespace App\Filament\Seller\Resources\PointTransactionResource\Pages;
+namespace App\Filament\Seller\Resources\PointTransactions\Pages;
 
-use App\Filament\Seller\Resources\PointTransactionResource;
+use App\Filament\Seller\Resources\PointTransactions\PointTransactionResource;
 use Filament\Actions\CreateAction;
 use Filament\Resources\Pages\ListRecords;
 

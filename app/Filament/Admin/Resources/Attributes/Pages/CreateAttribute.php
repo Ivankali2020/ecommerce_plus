@@ -1,8 +1,8 @@
 <?php
 
-namespace App\Filament\Admin\Resources\AttributeResource\Pages;
+namespace App\Filament\Admin\Resources\Attributes\Pages;
 
-use App\Filament\Admin\Resources\AttributeResource;
+use App\Filament\Admin\Resources\Attributes\AttributeResource;
 use Filament\Resources\Pages\CreateRecord;
 
 class CreateAttribute extends CreateRecord

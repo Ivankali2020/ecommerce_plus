@@ -55,6 +55,12 @@ return [
             'shipped' => 'ပို့ဆောင်သည့်ရက်',
             'delivered' => 'ပေးပို့သည့်ရက်',
             'last_updated' => 'နောက်ဆုံး အပ်ဒိတ်',
+            'created_at' => 'ဖန်တီးသည့်ရက်',
+            'updated_at' => 'နောက်ဆုံး အပ်ဒိတ်',
+            'points_suffix' => 'ပွိုင့်',
+            'processed_at' => 'လုပ်ဆောင်သည့်ရက်',
+            'shipped_at' => 'ပို့ဆောင်သည့်ရက်',
+            'delivered_at' => 'ပေးပို့သည့်ရက်',
         ],
 
         'filters' => [

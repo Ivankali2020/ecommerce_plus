@@ -1,8 +1,8 @@
 <?php
 
-namespace App\Filament\Admin\Resources\RoleResource\Pages;
+namespace App\Filament\Admin\Resources\Roles\Pages;
 
-use App\Filament\Admin\Resources\RoleResource;
+use App\Filament\Admin\Resources\Roles\RoleResource;
 use BezhanSalleh\FilamentShield\Support\Utils;
 use Filament\Resources\Pages\CreateRecord;
 use Illuminate\Support\Arr;

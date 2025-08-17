@@ -1,10 +1,10 @@
 <?php
 
-namespace App\Filament\Seller\Resources;
+namespace App\Filament\Seller\Resources\Suppliers;
 
-use App\Filament\Seller\Resources\SupplierResource\Pages\CreateSupplier;
-use App\Filament\Seller\Resources\SupplierResource\Pages\EditSupplier;
-use App\Filament\Seller\Resources\SupplierResource\Pages\ListSuppliers;
+use App\Filament\Seller\Resources\Suppliers\Pages\CreateSupplier;
+use App\Filament\Seller\Resources\Suppliers\Pages\EditSupplier;
+use App\Filament\Seller\Resources\Suppliers\Pages\ListSuppliers;
 use App\Helper\CheckFilamentSellerUser;
 use App\Models\Supplier;
 use Filament\Actions\BulkActionGroup;
@@ -62,13 +62,23 @@ class SupplierResource extends Resource
                         ->label(__('filament/resources/supplier-resource.form.about'))
                         ->required()
                         ->columnSpanFull(),
+
+                    Select::make('region_id')
+                        ->label(__('filament/resources/supplier-resource.form.region_id'))
+                        ->searchable()->preload()
+                        ->relationship('region', 'mm_name')
+                        ->required()
+                        ->reactive()
+                        ->afterStateUpdated(fn($set) => $set('township_id', null)),
+
                     Select::make('township_id')
                         ->label(__('filament/resources/supplier-resource.form.township_id'))
                         ->searchable()->preload()
-                        ->relationship('township', 'mm_name')
+                        ->hidden(fn($get) => blank($get('region_id')))
+                        ->relationship('township', 'mm_name', modifyQueryUsing: fn($query, $get) => $query->where('region_id', $get('region_id')))
                         ->required(),
 
-                ])->columns(3),
+                ])->columnSpanFull(),
             ]);
     }
 
@@ -77,7 +87,7 @@ class SupplierResource extends Resource
         return $table
             ->columns([
                 TextColumn::make('seller.name')
-                    ->label(__('filament/resources/supplier-resource.table.columns.seller.name'))
+                    ->label(__('filament/resources/supplier-resource.table.columns.seller'))
                     ->numeric()
                     ->sortable(),
                 TextColumn::make('name')
@@ -90,7 +100,11 @@ class SupplierResource extends Resource
                     ->label(__('filament/resources/supplier-resource.table.columns.phone'))
                     ->searchable(),
                 TextColumn::make('township.mm_name')
-                    ->label(__('filament/resources/supplier-resource.table.columns.township.mm_name'))
+                    ->label(__('filament/resources/supplier-resource.table.columns.township'))
+                    ->numeric()
+                    ->sortable(),
+                TextColumn::make('region.mm_name')
+                    ->label(__('filament/resources/supplier-resource.table.columns.region'))
                     ->numeric()
                     ->sortable(),
                 TextColumn::make('created_at')

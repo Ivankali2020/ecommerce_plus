@@ -58,6 +58,7 @@ return [
             'transaction_type' => 'ကူးသန်းမှု အမျိုးအစား',
             'points' => 'ပွိုင့်များ',
             'balance_after' => 'နောက်ပိုင်း လက်ကျန်',
+            'type' => 'အမျိုးအစား',
             'reference' => 'ကိုးကား',
             'ref_id' => 'ကိုးကား ID',
             'description' => 'ဖော်ပြချက်',

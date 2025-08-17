@@ -1,8 +1,8 @@
 <?php
 
-namespace App\Filament\Seller\Resources\ExchangeResource\Pages;
+namespace App\Filament\Seller\Resources\Exchanges\Pages;
 
-use App\Filament\Seller\Resources\ExchangeResource;
+use App\Filament\Seller\Resources\Exchanges\ExchangeResource;
 use App\Models\Exchange;
 use Filament\Actions\DeleteAction;
 use Filament\Actions\ForceDeleteAction;

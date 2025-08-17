@@ -1,10 +1,10 @@
 <?php
 
-namespace App\Filament\Admin\Resources;
+namespace App\Filament\Admin\Resources\Admins;
 
-use App\Filament\Admin\Resources\AdminResource\Pages\CreateAdmin;
-use App\Filament\Admin\Resources\AdminResource\Pages\EditAdmin;
-use App\Filament\Admin\Resources\AdminResource\Pages\ListAdmins;
+use App\Filament\Admin\Resources\Admins\Pages\CreateAdmin;
+use App\Filament\Admin\Resources\Admins\Pages\EditAdmin;
+use App\Filament\Admin\Resources\Admins\Pages\ListAdmins;
 use App\Models\Admin;
 use Filament\Actions\BulkActionGroup;
 use Filament\Actions\DeleteBulkAction;

@@ -1,8 +1,8 @@
 <?php
 
-namespace App\Filament\Seller\Resources\ExchangeResource\Pages;
+namespace App\Filament\Seller\Resources\Exchanges\Pages;
 
-use App\Filament\Seller\Resources\ExchangeResource;
+use App\Filament\Seller\Resources\Exchanges\ExchangeResource;
 use App\Helper\CheckFilamentSellerUser;
 use Filament\Resources\Pages\CreateRecord;
 

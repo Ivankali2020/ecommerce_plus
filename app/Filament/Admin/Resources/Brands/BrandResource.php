@@ -1,10 +1,10 @@
 <?php
 
-namespace App\Filament\Admin\Resources;
+namespace App\Filament\Admin\Resources\Brands;
 
-use App\Filament\Admin\Resources\BrandResource\Pages\CreateBrand;
-use App\Filament\Admin\Resources\BrandResource\Pages\EditBrand;
-use App\Filament\Admin\Resources\BrandResource\Pages\ListBrands;
+use App\Filament\Admin\Resources\Brands\Pages\CreateBrand;
+use App\Filament\Admin\Resources\Brands\Pages\EditBrand;
+use App\Filament\Admin\Resources\Brands\Pages\ListBrands;
 use App\Models\Brand;
 use Filament\Actions\BulkActionGroup;
 use Filament\Actions\DeleteBulkAction;

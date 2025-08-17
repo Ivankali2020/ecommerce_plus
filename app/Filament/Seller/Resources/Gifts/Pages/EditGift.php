@@ -1,8 +1,8 @@
 <?php
 
-namespace App\Filament\Seller\Resources\GiftResource\Pages;
+namespace App\Filament\Seller\Resources\Gifts\Pages;
 
-use App\Filament\Seller\Resources\GiftResource;
+use App\Filament\Seller\Resources\Gifts\GiftResource;
 use Filament\Actions\DeleteAction;
 use Filament\Resources\Pages\EditRecord;
 

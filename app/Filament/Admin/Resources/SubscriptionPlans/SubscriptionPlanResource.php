@@ -1,10 +1,10 @@
 <?php
 
-namespace App\Filament\Admin\Resources;
+namespace App\Filament\Admin\Resources\SubscriptionPlans;
 
-use App\Filament\Admin\Resources\SubscriptionPlanResource\Pages\CreateSubscriptionPlan;
-use App\Filament\Admin\Resources\SubscriptionPlanResource\Pages\EditSubscriptionPlan;
-use App\Filament\Admin\Resources\SubscriptionPlanResource\Pages\ListSubscriptionPlans;
+use App\Filament\Admin\Resources\SubscriptionPlans\Pages\CreateSubscriptionPlan;
+use App\Filament\Admin\Resources\SubscriptionPlans\Pages\EditSubscriptionPlan;
+use App\Filament\Admin\Resources\SubscriptionPlans\Pages\ListSubscriptionPlans;
 use App\Models\SubscriptionPlan;
 use Filament\Actions\BulkActionGroup;
 use Filament\Actions\DeleteBulkAction;

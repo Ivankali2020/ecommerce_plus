@@ -1,10 +1,10 @@
 <?php
 
-namespace App\Filament\Seller\Resources;
+namespace App\Filament\Seller\Resources\Brands;
 
-use App\Filament\Seller\Resources\BrandResource\Pages\CreateBrand;
-use App\Filament\Seller\Resources\BrandResource\Pages\EditBrand;
-use App\Filament\Seller\Resources\BrandResource\Pages\ListBrands;
+use App\Filament\Seller\Resources\Brands\Pages\CreateBrand;
+use App\Filament\Seller\Resources\Brands\Pages\EditBrand;
+use App\Filament\Seller\Resources\Brands\Pages\ListBrands;
 use App\Models\Brand;
 use Filament\Facades\Filament;
 use Filament\Forms\Components\SpatieMediaLibraryFileUpload;
@@ -40,7 +40,7 @@ class BrandResource extends Resource
     {
         return $schema
             ->components([
-                Group::make()->schema([
+               
                     Section::make()->schema([
 
                         TextInput::make('name')
@@ -59,13 +59,13 @@ class BrandResource extends Resource
                             ->columnSpanFull()
                             ->label(__('filament/resources/brand-resource.form.description')),
                     ]),
-                ]),
+               
             ]);
     }
 
     public static function table(Table $table): Table
     {
-        return \App\Filament\Admin\Resources\BrandResource::table($table);
+        return \App\Filament\Admin\Resources\Brands\BrandResource::table($table);
     }
 
     public static function getRelations(): array

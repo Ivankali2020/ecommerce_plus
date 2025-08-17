@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Filament\Admin\Resources\CategoryResource\RelationManagers;
+namespace App\Filament\Admin\Resources\Categories\RelationManagers;
 
 use App\Models\Category;
 use Filament\Actions\BulkActionGroup;

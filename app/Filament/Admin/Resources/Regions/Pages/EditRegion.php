@@ -1,8 +1,8 @@
 <?php
 
-namespace App\Filament\Admin\Resources\RegionResource\Pages;
+namespace App\Filament\Admin\Resources\Regions\Pages;
 
-use App\Filament\Admin\Resources\RegionResource;
+use App\Filament\Admin\Resources\Regions\RegionResource;
 use Filament\Actions\DeleteAction;
 use Filament\Actions\ForceDeleteAction;
 use Filament\Actions\RestoreAction;

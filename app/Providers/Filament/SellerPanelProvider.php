@@ -3,7 +3,7 @@
 namespace App\Providers\Filament;
 
 use App\Filament\Seller\Pages\EditProfile;
-use App\Filament\Seller\Resources\OrderResource\Widgets\OrderChart;
+use App\Filament\Seller\Resources\Orders\Widgets\OrderChart;
 use App\Filament\Seller\Widgets\Filters;
 use App\Http\Middleware\AssignGlobeScope;
 use App\Http\Middleware\EnsureSellerBelongsToTenant;
@@ -98,7 +98,7 @@ class SellerPanelProvider extends PanelProvider
             ->sidebarCollapsibleOnDesktop()
             ->databaseNotifications()
             ->databaseNotificationsPolling(null) // this is testing purpose
-            ->maxContentWidth('full')
+            // ->maxContentWidth('full')
             ->plugins([
                 FilamentShieldPlugin::make(),
             ])

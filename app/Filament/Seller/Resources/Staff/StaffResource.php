@@ -1,11 +1,11 @@
 <?php
 
-namespace App\Filament\Seller\Resources;
+namespace App\Filament\Seller\Resources\Staff;
 
-use App\Filament\Admin\Resources\SellerResource;
-use App\Filament\Seller\Resources\StaffResource\Pages\CreateStaff;
-use App\Filament\Seller\Resources\StaffResource\Pages\EditStaff;
-use App\Filament\Seller\Resources\StaffResource\Pages\ListStaff;
+use App\Filament\Admin\Resources\Sellers\SellerResource;
+use App\Filament\Seller\Resources\Staff\Pages\CreateStaff;
+use App\Filament\Seller\Resources\Staff\Pages\EditStaff;
+use App\Filament\Seller\Resources\Staff\Pages\ListStaff;
 use App\Helper\CheckFilamentSellerUser;
 use App\Models\Seller;
 use App\Models\Staff;

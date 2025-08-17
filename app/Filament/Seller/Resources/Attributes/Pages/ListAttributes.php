@@ -1,8 +1,8 @@
 <?php
 
-namespace App\Filament\Seller\Resources\AttributeResource\Pages;
+namespace App\Filament\Seller\Resources\Attributes\Pages;
 
-use App\Filament\Seller\Resources\AttributeResource;
+use App\Filament\Seller\Resources\Attributes\AttributeResource;
 use Filament\Actions\CreateAction;
 use Filament\Resources\Pages\ListRecords;
 

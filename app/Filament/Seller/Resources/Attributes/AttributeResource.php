@@ -1,10 +1,10 @@
 <?php
 
-namespace App\Filament\Seller\Resources;
+namespace App\Filament\Seller\Resources\Attributes;
 
-use App\Filament\Seller\Resources\AttributeResource\Pages\CreateAttribute;
-use App\Filament\Seller\Resources\AttributeResource\Pages\EditAttribute;
-use App\Filament\Seller\Resources\AttributeResource\Pages\ListAttributes;
+use App\Filament\Seller\Resources\Attributes\Pages\CreateAttribute;
+use App\Filament\Seller\Resources\Attributes\Pages\EditAttribute;
+use App\Filament\Seller\Resources\Attributes\Pages\ListAttributes;
 use App\Helper\CheckFilamentSellerUser;
 use App\Models\Attribute;
 use Filament\Resources\Resource;
@@ -33,12 +33,12 @@ class AttributeResource extends Resource
 
     public static function form(Schema $schema): Schema
     {
-        return \App\Filament\Admin\Resources\AttributeResource::form($schema);
+        return \App\Filament\Admin\Resources\Attributes\AttributeResource::form($schema);
     }
 
     public static function table(Table $table): Table
     {
-        return \App\Filament\Admin\Resources\AttributeResource::table($table);
+        return \App\Filament\Admin\Resources\Attributes\AttributeResource::table($table);
     }
 
     public static function getRelations(): array

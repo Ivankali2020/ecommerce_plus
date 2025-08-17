@@ -1,10 +1,10 @@
 <?php
 
-namespace App\Filament\Seller\Resources;
+namespace App\Filament\Seller\Resources\SellerAddresses;
 
-use App\Filament\Seller\Resources\SellerAddressResource\Pages\CreateSellerAddress;
-use App\Filament\Seller\Resources\SellerAddressResource\Pages\EditSellerAddress;
-use App\Filament\Seller\Resources\SellerAddressResource\Pages\ListSellerAddresses;
+use App\Filament\Seller\Resources\SellerAddresses\Pages\CreateSellerAddress;
+use App\Filament\Seller\Resources\SellerAddresses\Pages\EditSellerAddress;
+use App\Filament\Seller\Resources\SellerAddresses\Pages\ListSellerAddresses;
 use App\Helper\CheckFilamentSellerUser;
 use App\Models\SellerAddress;
 use Filament\Actions\BulkActionGroup;

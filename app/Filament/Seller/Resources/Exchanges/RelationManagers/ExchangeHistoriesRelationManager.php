@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Filament\Seller\Resources\ExchangeResource\RelationManagers;
+namespace App\Filament\Seller\Resources\Exchanges\RelationManagers;
 
 use Filament\Actions\BulkActionGroup;
 use Filament\Actions\DeleteAction;

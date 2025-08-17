@@ -1,10 +1,10 @@
 <?php
 
-namespace App\Filament\Seller\Resources;
+namespace App\Filament\Seller\Resources\Purchases;
 
-use App\Filament\Seller\Resources\PurchaseResource\Pages\CreatePurchase;
-use App\Filament\Seller\Resources\PurchaseResource\Pages\EditPurchase;
-use App\Filament\Seller\Resources\PurchaseResource\Pages\ListPurchases;
+use App\Filament\Seller\Resources\Purchases\Pages\CreatePurchase;
+use App\Filament\Seller\Resources\Purchases\Pages\EditPurchase;
+use App\Filament\Seller\Resources\Purchases\Pages\ListPurchases;
 use App\Helper\CheckFilamentSellerUser;
 use App\Helper\PurchaseStatus;
 use App\Models\Attribute;

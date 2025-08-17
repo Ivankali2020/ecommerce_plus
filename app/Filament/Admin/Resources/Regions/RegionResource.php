@@ -1,10 +1,10 @@
 <?php
 
-namespace App\Filament\Admin\Resources;
+namespace App\Filament\Admin\Resources\Regions;
 
-use App\Filament\Admin\Resources\RegionResource\Pages\CreateRegion;
-use App\Filament\Admin\Resources\RegionResource\Pages\EditRegion;
-use App\Filament\Admin\Resources\RegionResource\Pages\ListRegions;
+use App\Filament\Admin\Resources\Regions\Pages\CreateRegion;
+use App\Filament\Admin\Resources\Regions\Pages\EditRegion;
+use App\Filament\Admin\Resources\Regions\Pages\ListRegions;
 use App\Models\Region;
 use Filament\Actions\BulkActionGroup;
 use Filament\Actions\DeleteBulkAction;

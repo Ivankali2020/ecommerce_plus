@@ -1,10 +1,10 @@
 <?php
 
-namespace App\Filament\Seller\Resources;
+namespace App\Filament\Seller\Resources\Settings;
 
-use App\Filament\Seller\Resources\SettingResource\Pages\CreateSetting;
-use App\Filament\Seller\Resources\SettingResource\Pages\EditSetting;
-use App\Filament\Seller\Resources\SettingResource\Pages\ListSettings;
+use App\Filament\Seller\Resources\Settings\Pages\CreateSetting;
+use App\Filament\Seller\Resources\Settings\Pages\EditSetting;
+use App\Filament\Seller\Resources\Settings\Pages\ListSettings;
 use App\Models\Setting;
 use Filament\Actions\BulkActionGroup;
 use Filament\Actions\DeleteBulkAction;

@@ -1,8 +1,8 @@
 <?php
 
-namespace App\Filament\Seller\Resources\PaymentResource\Pages;
+namespace App\Filament\Seller\Resources\Payments\Pages;
 
-use App\Filament\Seller\Resources\PaymentResource;
+use App\Filament\Seller\Resources\Payments\PaymentResource;
 use App\Helper\CheckFilamentSellerUser;
 use Filament\Resources\Pages\CreateRecord;
 

@@ -1,8 +1,8 @@
 <?php
 
-namespace App\Filament\Seller\Resources\GiftExchangeResource\Pages;
+namespace App\Filament\Seller\Resources\GiftExchanges\Pages;
 
-use App\Filament\Seller\Resources\GiftExchangeResource;
+use App\Filament\Seller\Resources\GiftExchanges\GiftExchangeResource;
 use Filament\Actions\Action;
 use Filament\Actions\EditAction;
 use Filament\Resources\Pages\ViewRecord;

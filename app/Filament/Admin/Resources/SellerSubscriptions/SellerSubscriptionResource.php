@@ -1,10 +1,10 @@
 <?php
 
-namespace App\Filament\Admin\Resources;
+namespace App\Filament\Admin\Resources\SellerSubscriptions;
 
-use App\Filament\Admin\Resources\SellerSubscriptionResource\Pages\CreateSellerSubscription;
-use App\Filament\Admin\Resources\SellerSubscriptionResource\Pages\EditSellerSubscription;
-use App\Filament\Admin\Resources\SellerSubscriptionResource\Pages\ListSellerSubscriptions;
+use App\Filament\Admin\Resources\SellerSubscriptions\Pages\CreateSellerSubscription;
+use App\Filament\Admin\Resources\SellerSubscriptions\Pages\EditSellerSubscription;
+use App\Filament\Admin\Resources\SellerSubscriptions\Pages\ListSellerSubscriptions;
 use App\Models\SellerSubscription;
 use Filament\Actions\Action;
 use Filament\Actions\BulkActionGroup;

@@ -1,8 +1,8 @@
 <?php
 
-namespace App\Filament\Admin\Resources\TownshipResource\Pages;
+namespace App\Filament\Admin\Resources\Townships\Pages;
 
-use App\Filament\Admin\Resources\TownshipResource;
+use App\Filament\Admin\Resources\Townships\TownshipResource;
 use Filament\Actions\CreateAction;
 use Filament\Resources\Pages\ListRecords;
 

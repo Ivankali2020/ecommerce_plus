@@ -1,8 +1,8 @@
 <?php
 
-namespace App\Filament\Seller\Resources\CategoryResource\Pages;
+namespace App\Filament\Seller\Resources\Categories\Pages;
 
-use App\Filament\Seller\Resources\CategoryResource;
+use App\Filament\Seller\Resources\Categories\CategoryResource;
 use App\Helper\CheckFilamentSellerUser;
 use Filament\Resources\Pages\CreateRecord;
 

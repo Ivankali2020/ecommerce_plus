@@ -1,11 +1,11 @@
 <?php
 
-namespace App\Filament\Admin\Resources;
+namespace App\Filament\Admin\Resources\Users;
 
-use App\Filament\Admin\Resources\UserResource\Pages\CreateUser;
-use App\Filament\Admin\Resources\UserResource\Pages\EditUser;
-use App\Filament\Admin\Resources\UserResource\Pages\ListUsers;
-use App\Filament\Admin\Resources\UserResource\RelationManagers\UserAddressesRelationManager;
+use App\Filament\Admin\Resources\Users\Pages\CreateUser;
+use App\Filament\Admin\Resources\Users\Pages\EditUser;
+use App\Filament\Admin\Resources\Users\Pages\ListUsers;
+use App\Filament\Admin\Resources\Users\RelationManagers\UserAddressesRelationManager;
 use App\Models\User;
 use Filament\Actions\BulkActionGroup;
 use Filament\Actions\DeleteBulkAction;

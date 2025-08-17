@@ -1,10 +1,10 @@
 <?php
 
-namespace App\Filament\Admin\Resources;
+namespace App\Filament\Admin\Resources\Deliveries;
 
-use App\Filament\Admin\Resources\DeliveryResource\Pages\CreateDelivery;
-use App\Filament\Admin\Resources\DeliveryResource\Pages\EditDelivery;
-use App\Filament\Admin\Resources\DeliveryResource\Pages\ListDeliveries;
+use App\Filament\Admin\Resources\Deliveries\Pages\CreateDelivery;
+use App\Filament\Admin\Resources\Deliveries\Pages\EditDelivery;
+use App\Filament\Admin\Resources\Deliveries\Pages\ListDeliveries;
 use App\Models\Delivery;
 use Filament\Actions\BulkActionGroup;
 use Filament\Actions\DeleteBulkAction;

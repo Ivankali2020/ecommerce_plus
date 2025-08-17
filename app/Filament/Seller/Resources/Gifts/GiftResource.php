@@ -1,10 +1,10 @@
 <?php
 
-namespace App\Filament\Seller\Resources;
+namespace App\Filament\Seller\Resources\Gifts;
 
-use App\Filament\Seller\Resources\GiftResource\Pages\CreateGift;
-use App\Filament\Seller\Resources\GiftResource\Pages\EditGift;
-use App\Filament\Seller\Resources\GiftResource\Pages\ListGifts;
+use App\Filament\Seller\Resources\Gifts\Pages\CreateGift;
+use App\Filament\Seller\Resources\Gifts\Pages\EditGift;
+use App\Filament\Seller\Resources\Gifts\Pages\ListGifts;
 use App\Helper\CheckFilamentSellerUser;
 use App\Models\Gift;
 use Filament\Actions\BulkActionGroup;

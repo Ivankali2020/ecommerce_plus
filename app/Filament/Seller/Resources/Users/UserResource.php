@@ -1,10 +1,10 @@
 <?php
 
-namespace App\Filament\Seller\Resources;
+namespace App\Filament\Seller\Resources\Users;
 
-use App\Filament\Seller\Resources\UserResource\Pages\CreateUser;
-use App\Filament\Seller\Resources\UserResource\Pages\EditUser;
-use App\Filament\Seller\Resources\UserResource\Pages\ListUsers;
+use App\Filament\Seller\Resources\Users\Pages\CreateUser;
+use App\Filament\Seller\Resources\Users\Pages\EditUser;
+use App\Filament\Seller\Resources\Users\Pages\ListUsers;
 use App\Models\User;
 use Filament\Resources\Resource;
 use Filament\Schemas\Schema;
@@ -33,12 +33,12 @@ class UserResource extends Resource
 
     public static function form(Schema $schema): Schema
     {
-        return \App\Filament\Admin\Resources\UserResource::form($schema);
+        return \App\Filament\Admin\Resources\Users\UserResource::form($schema);
     }
 
     public static function table(Table $table): Table
     {
-        return \App\Filament\Admin\Resources\UserResource::table($table);
+        return \App\Filament\Admin\Resources\Users\UserResource::table($table);
     }
 
     public static function getRelations(): array

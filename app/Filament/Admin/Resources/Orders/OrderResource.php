@@ -1,10 +1,10 @@
 <?php
 
-namespace App\Filament\Admin\Resources;
+namespace App\Filament\Admin\Resources\Orders;
 
-use App\Filament\Admin\Resources\OrderResource\Pages\CreateOrder;
-use App\Filament\Admin\Resources\OrderResource\Pages\EditOrder;
-use App\Filament\Admin\Resources\OrderResource\Pages\ListOrders;
+use App\Filament\Admin\Resources\Orders\Pages\CreateOrder;
+use App\Filament\Admin\Resources\Orders\Pages\EditOrder;
+use App\Filament\Admin\Resources\Orders\Pages\ListOrders;
 use App\Helper\CheckFilamentSellerUser;
 use App\Helper\OrderStatus;
 use App\Models\Attribute;
@@ -83,7 +83,6 @@ class OrderResource extends Resource
             ->components([
                 Grid::make()->schema([
                     Group::make()->schema([
-
                         Repeater::make('products')
                             ->label(__('filament/resources/order-resource.form.products.label'))
                             ->relationship('products')->reorderable()
@@ -377,7 +376,7 @@ class OrderResource extends Resource
 
                     ])->columnSpan(1),
 
-                ])->columns(3),
+                ])->columnSpanFull(),
 
             ]);
     }

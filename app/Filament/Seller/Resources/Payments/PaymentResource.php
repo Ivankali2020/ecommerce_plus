@@ -1,10 +1,10 @@
 <?php
 
-namespace App\Filament\Seller\Resources;
+namespace App\Filament\Seller\Resources\Payments;
 
-use App\Filament\Seller\Resources\PaymentResource\Pages\CreatePayment;
-use App\Filament\Seller\Resources\PaymentResource\Pages\EditPayment;
-use App\Filament\Seller\Resources\PaymentResource\Pages\ListPayments;
+use App\Filament\Seller\Resources\Payments\Pages\CreatePayment;
+use App\Filament\Seller\Resources\Payments\Pages\EditPayment;
+use App\Filament\Seller\Resources\Payments\Pages\ListPayments;
 use App\Models\Payment;
 use Filament\Facades\Filament;
 use Filament\Resources\Resource;
@@ -41,12 +41,12 @@ class PaymentResource extends Resource
 
     public static function form(Schema $schema): Schema
     {
-        return \App\Filament\Admin\Resources\PaymentResource::form($schema);
+        return \App\Filament\Admin\Resources\Payments\PaymentResource::form($schema);
     }
 
     public static function table(Table $table): Table
     {
-        return \App\Filament\Admin\Resources\PaymentResource::table($table);
+        return \App\Filament\Admin\Resources\Payments\PaymentResource::table($table);
     }
 
     public static function getRelations(): array

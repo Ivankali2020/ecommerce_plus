@@ -55,6 +55,12 @@ return [
             'shipped' => 'Shipped',
             'delivered' => 'Delivered',
             'last_updated' => 'Last Updated',
+            'created_at' => 'Created At',
+            'updated_at' => 'Updated At',
+            'points_suffix' => 'points',
+            'processed_at' => 'Processed At',
+            'shipped_at' => 'Shipped At',
+            'delivered_at' => 'Delivered At',
         ],
 
         'filters' => [

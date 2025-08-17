@@ -1,10 +1,10 @@
 <?php
 
-namespace App\Filament\Seller\Resources;
+namespace App\Filament\Seller\Resources\PointTransactions;
 
-use App\Filament\Seller\Resources\PointTransactionResource\Pages\CreatePointTransaction;
-use App\Filament\Seller\Resources\PointTransactionResource\Pages\EditPointTransaction;
-use App\Filament\Seller\Resources\PointTransactionResource\Pages\ListPointTransactions;
+use App\Filament\Seller\Resources\PointTransactions\Pages\CreatePointTransaction;
+use App\Filament\Seller\Resources\PointTransactions\Pages\EditPointTransaction;
+use App\Filament\Seller\Resources\PointTransactions\Pages\ListPointTransactions;
 use App\Models\PointTransaction;
 use Filament\Actions\BulkActionGroup;
 use Filament\Actions\DeleteBulkAction;
@@ -66,12 +66,7 @@ class PointTransactionResource extends Resource
                     ->label(__('filament/resources/point-transaction-resource.form.fields.balance_after'))
                     ->required()
                     ->numeric(),
-                TextInput::make('reference_type')
-                    ->label(__('filament/resources/point-transaction-resource.form.fields.reference_type'))
-                    ->maxLength(255),
-                TextInput::make('reference_id')
-                    ->label(__('filament/resources/point-transaction-resource.form.fields.reference_id'))
-                    ->numeric(),
+                
                 Textarea::make('description')
                     ->label(__('filament/resources/point-transaction-resource.form.fields.description'))
                     ->columnSpanFull(),
@@ -134,24 +129,7 @@ class PointTransactionResource extends Resource
                     ->weight('medium')
                     ->formatStateUsing(fn ($state): string => number_format($state)),
 
-                TextColumn::make('reference_type')
-                    ->label(__('filament/resources/point-transaction-resource.table.columns.reference_type'))
-                    ->searchable()
-                    ->badge()
-                    ->color('gray')
-                    ->formatStateUsing(
-                        fn (?string $state): string => $state ? str_replace('App\\Models\\', '', $state) : 'N/A'
-                    )
-                    ->toggleable(),
-
-                TextColumn::make('reference_id')
-                    ->label(__('filament/resources/point-transaction-resource.table.columns.reference_id'))
-                    ->numeric()
-                    ->sortable()
-                    ->alignCenter()
-                    ->color('gray')
-                    ->formatStateUsing(fn (?int $state): string => $state ? '#'.$state : 'N/A')
-                    ->toggleable(),
+                
 
                 TextColumn::make('description')
                     ->label(__('filament/resources/point-transaction-resource.table.columns.description'))
@@ -179,7 +157,7 @@ class PointTransactionResource extends Resource
                     ->toggleable(),
 
                 TextColumn::make('created_at')
-                    ->label(__('filament/resources/point-transaction-resource.table.columns.created_at'))
+                    ->label(__('filament/resources/point-transaction-resource.table.columns.created'))
                     ->dateTime('M j, Y g:i A')
                     ->sortable()
                     ->color('gray')
@@ -187,7 +165,7 @@ class PointTransactionResource extends Resource
                     ->toggleable(isToggledHiddenByDefault: true),
 
                 TextColumn::make('updated_at')
-                    ->label(__('filament/resources/point-transaction-resource.table.columns.updated_at'))
+                    ->label(__('filament/resources/point-transaction-resource.table.columns.updated'))
                     ->dateTime('M j, Y g:i A')
                     ->sortable()
                     ->color('gray')

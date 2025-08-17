@@ -1,10 +1,10 @@
 <?php
 
-namespace App\Filament\Admin\Resources;
+namespace App\Filament\Admin\Resources\Townships;
 
-use App\Filament\Admin\Resources\TownshipResource\Pages\CreateTownship;
-use App\Filament\Admin\Resources\TownshipResource\Pages\EditTownship;
-use App\Filament\Admin\Resources\TownshipResource\Pages\ListTownships;
+use App\Filament\Admin\Resources\Townships\Pages\CreateTownship;
+use App\Filament\Admin\Resources\Townships\Pages\EditTownship;
+use App\Filament\Admin\Resources\Townships\Pages\ListTownships;
 use App\Models\Township;
 use Filament\Actions\BulkActionGroup;
 use Filament\Actions\DeleteBulkAction;

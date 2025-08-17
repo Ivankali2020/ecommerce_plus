@@ -1,11 +1,11 @@
 <?php
 
-namespace App\Filament\Admin\Resources;
+namespace App\Filament\Admin\Resources\Payments;
 
-use App\Filament\Admin\Resources\PaymentResource\Pages\CreatePayment;
-use App\Filament\Admin\Resources\PaymentResource\Pages\EditPayment;
-use App\Filament\Admin\Resources\PaymentResource\Pages\ListPayments;
-use App\Filament\Admin\Resources\PaymentResource\RelationManagers\PaymentAccountsRelationManager;
+use App\Filament\Admin\Resources\Payments\Pages\CreatePayment;
+use App\Filament\Admin\Resources\Payments\Pages\EditPayment;
+use App\Filament\Admin\Resources\Payments\Pages\ListPayments;
+use App\Filament\Admin\Resources\Payments\RelationManagers\PaymentAccountsRelationManager;
 use App\Models\Currency;
 use App\Models\Payment;
 use Filament\Actions\BulkActionGroup;
@@ -44,7 +44,7 @@ class PaymentResource extends Resource
         return $schema
             ->components([
 
-                Grid::make()->schema([
+                Grid::make(2)->schema([
                     Group::make()->schema([
                         Section::make()->schema([
                             Select::make('seller_id')
@@ -102,7 +102,7 @@ class PaymentResource extends Resource
                                 ])->columns(2),
                         ]),
                     ]),
-                ]),
+                ])->columnSpanFull(),
             ]);
     }
 

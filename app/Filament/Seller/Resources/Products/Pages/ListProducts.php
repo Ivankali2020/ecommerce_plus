@@ -1,12 +1,12 @@
 <?php
 
-namespace App\Filament\Seller\Resources\ProductResource\Pages;
+namespace App\Filament\Seller\Resources\Products\Pages;
 
 use App\Exports\ProductExport;
 use App\Exports\ProductTemplateExport;
 use App\Exports\VariantExport;
 use App\Exports\VariantTemplateExport;
-use App\Filament\Seller\Resources\ProductResource;
+use App\Filament\Seller\Resources\Products\ProductResource;
 use App\Imports\ProductImport;
 use App\Imports\VariantImport;
 use Exception;

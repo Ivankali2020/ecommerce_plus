@@ -58,6 +58,7 @@ return [
             'transaction_type' => 'Transaction Type',
             'points' => 'Points',
             'balance_after' => 'Balance After',
+            'type' => 'Type',
             'reference' => 'Reference',
             'ref_id' => 'Ref ID',
             'description' => 'Description',
