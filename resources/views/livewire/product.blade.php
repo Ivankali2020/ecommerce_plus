@@ -75,7 +75,7 @@
                 @endforeach
             </div>
         </div>
-        <div class="absolute right-0 top-0 h-full w-8 bg-gradient-to-l from-white to-transparent pointer-events-none md:hidden"></div>
+        <div class="absolute right-0 top-0 h-full w-8 bg-linear-to-l from-white to-transparent pointer-events-none md:hidden"></div>
     </div>
 
     <div class="flex justify-between items-center ">

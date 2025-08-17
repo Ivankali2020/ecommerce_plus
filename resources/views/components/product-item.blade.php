@@ -17,7 +17,7 @@
 
             <!-- Out of Stock Indicator -->
             @if($product->quantity <= 0 && !$product->has_variant)
-                <div class="absolute z-10  inset-0 bg-black bg-opacity-40 flex items-center justify-center">
+                <div class="absolute z-10 inset-0 bg-black/30 backdrop-blur-xs flex items-center justify-center">
                     <div class="bg-red-500 text-white px-3 py-1 rounded-md font-medium transform -rotate-12 text-[10px] md:text-xs">
                         {{ __('messages.out_of_stock') }}
                     </div>
@@ -38,7 +38,7 @@
                  alt="{{ $product->name }}" />
         </a>
 
-        <div class="flex flex-col flex-grow justify-between lg:gap-3 gap-2 lg:p-4 p-3 relative">
+        <div class="flex flex-col grow justify-between lg:gap-3 gap-2 lg:p-4 p-3 relative">
 
             {{-- Wholesale Badge --}}
             @if($type === 'wholesale')

@@ -317,7 +317,7 @@
         <!-- Cart summary -->
         <div class="p-2 sm:p-4 border-t border-gray-200 dark:border-gray-700 bg-white dark:bg-gray-800">
             <!-- Total amount card with shadow and gradient -->
-            <div class="bg-gradient-to-r from-success-500 to-success-700 rounded-lg shadow-lg p-3 sm:p-4 mb-3 sm:mb-4">
+            <div class="bg-linear-to-r from-success-500 to-success-700 rounded-lg shadow-lg p-3 sm:p-4 mb-3 sm:mb-4">
                 <div class="flex justify-between items-center">
                     <div>
                         <span class="text-xs text-success-100 block mb-1">Cart Total</span>

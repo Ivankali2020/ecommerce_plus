@@ -88,7 +88,7 @@
                         class="w-full flex justify-between items-center text-sm font-medium text-gray-700 mb-3  hover:text-gray-900 transition-colors duration-200"
                     >
                         <span>{{ __('messages.categories') }}</span>
-                        <div class="flex-shrink-0 ml-2">
+                        <div class="shrink-0 ml-2">
                             <svg 
                                 class="w-4 h-4 text-gray-500 transform transition-transform duration-300 ease-in-out" 
                                 :class="showCategories ? 'rotate-180' : 'rotate-0'"
@@ -146,7 +146,7 @@
                         class="w-full flex justify-between items-center text-sm font-medium text-gray-700 mb-3  hover:text-gray-900 transition-colors duration-200"
                     >
                         <span>{{ __('messages.brands') }}</span>
-                        <div class="flex-shrink-0 ml-2">
+                        <div class="shrink-0 ml-2">
                             <svg 
                                 class="w-4 h-4 text-gray-500 transform transition-transform duration-300 ease-in-out" 
                                 :class="showBrands ? 'rotate-180' : 'rotate-0'"
@@ -293,7 +293,7 @@
                                     </span>
                                 </div>
                                 @if($product->quantity <= 0)
-                                <div class="absolute inset-0 bg-black bg-opacity-50 flex items-center justify-center">
+                                <div class="absolute inset-0 bg-black/30 backdrop-blur-xs flex items-center justify-center">
                                     <span class="text-white font-semibold ">
                                         {{ __('messages.out_of_stock') }}
                                     </span>
@@ -390,7 +390,7 @@
                                     </span>
                                 </div>
                                 @if($variant->quantity <= 0)
-                                <div class="absolute inset-0 bg-black bg-opacity-50 flex items-center justify-center">
+                                <div class="absolute inset-0 bg-black/30 backdrop-blur-xs flex items-center justify-center">
                                     <span class="text-white font-semibold ">
                                         {{ __('messages.out_of_stock') }}
                                     </span>
@@ -512,7 +512,7 @@
 
     <!-- Loading Overlay -->
     <div wire:loading.flex wire:target="search,setCategory,setBrand,setSortBy,clearAllFilters,clearPriceFilter,toggleAvailableOnly,toggleShowVariants" 
-         class="fixed inset-0 bg-black bg-opacity-25 flex items-center justify-center z-50">
+         class="fixed inset-0 bg-black opacity-55 flex items-center justify-center z-50">
         <div class="bg-white rounded-lg p-6 shadow-xl">
             <div class="flex items-center">
                 <svg class="animate-spin -ml-1 mr-3 h-5 w-5 text-slate-900" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24">

@@ -58,7 +58,7 @@ new #[Layout('layouts.guest')] class extends Component
                     <x-input-label for="email" :value="__('messages.auth.login_page.email')"
                         class="mb-2 " />
                     <x-text-input wire:model="form.email" id="email"
-                        class="appearance-none rounded-lg relative block w-full px-3 py-2 border border-gray-300 dark:border-gray-700 placeholder-gray-500 text-gray-900 dark:text-gray-100 focus:outline-none focus:ring-slate-500 focus:border-slate-500 focus:z-10 sm:text-sm "
+                        class="appearance-none rounded-lg relative block w-full  border border-gray-300 dark:border-gray-700 placeholder-gray-500 text-gray-900 dark:text-gray-100 focus:outline-none focus:ring-slate-500 focus:border-slate-500 focus:z-10 sm:text-sm "
                         type="email" name="email" required autofocus autocomplete="username" />
                     <x-input-error :messages="$errors->get('form.email')" class="mt-2" />
                 </div>
@@ -68,7 +68,7 @@ new #[Layout('layouts.guest')] class extends Component
                     <x-input-label for="password" :value="__('messages.auth.login_page.password')"
                         class="mb-2 " />
                     <x-text-input wire:model="form.password" id="password"
-                        class="appearance-none rounded-lg relative block w-full px-3 py-2 border border-gray-300 dark:border-gray-700 placeholder-gray-500 text-gray-900 dark:text-gray-100 focus:outline-none focus:ring-slate-500 focus:border-slate-500 focus:z-10 sm:text-sm"
+                        class="appearance-none rounded-lg relative block w-full  border border-gray-300 dark:border-gray-700 placeholder-gray-500 text-gray-900 dark:text-gray-100 focus:outline-none focus:ring-slate-500 focus:border-slate-500 focus:z-10 sm:text-sm"
                         type="password" name="password" required autocomplete="current-password" />
                     <x-input-error :messages="$errors->get('form.password')" class="mt-2" />
                 </div>

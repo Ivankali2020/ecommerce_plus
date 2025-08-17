@@ -4,9 +4,11 @@ namespace App\Livewire;
 
 use App\Models\Product;
 use App\Models\Review;
+use Filament\Notifications\Notification;
 use Illuminate\Support\Facades\Auth;
 use Livewire\Component;
 use Livewire\WithPagination;
+use Mockery\Matcher\Not;
 
 class ProductReviews extends Component
 {
@@ -65,8 +67,11 @@ class ProductReviews extends Component
             ->first();
 
         if ($existingReview) {
-            session()->flash('error', 'You have already reviewed this product.');
-
+            Notification::make()
+                ->title('Review Error')
+                ->body('You have already submitted a review for this product.')
+                ->danger()
+                ->send();
             return;
         }
 
@@ -82,7 +87,11 @@ class ProductReviews extends Component
         $this->resetForm();
         $this->showReviewForm = false;
 
-        session()->flash('success', 'Your review has been submitted successfully!');
+        Notification::make()
+            ->title('Review Submitted')
+            ->body('Thank you for your feedback!')
+            ->success()
+            ->send();
 
         // Reset pagination to show the latest review
         $this->resetPage();

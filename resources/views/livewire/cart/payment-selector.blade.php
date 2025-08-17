@@ -94,7 +94,7 @@
                             class="h-4 w-4 text-emerald-600 border-gray-300 focus:ring-0 focus:outline-none rounded ">
                         
                         <!-- Account Details -->
-                        <div class="ml-3 flex-grow">
+                        <div class="ml-3 grow">
                             <p class="text-sm font-medium text-gray-900 ">
                                 {{ $account->name }}
                             </p>

@@ -28,7 +28,7 @@
                             aria-expanded="{{ $openFaq === $index ? 'true' : 'false' }}"
                         >
                             <span class="text-lg">{{ $faqItem['question'] }}</span>
-                            <div class="flex-shrink-0 ml-4">
+                            <div class="shrink-0 ml-4">
                                 <svg 
                                     class="w-6 h-6 text-gray-500 transform transition-transform duration-300 ease-in-out {{ $openFaq === $index ? 'rotate-180' : 'rotate-0' }}" 
                                     fill="none" 

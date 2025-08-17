@@ -54,7 +54,7 @@
                 <header class="relative py-16 ">
                     <div class="absolute inset-x-0 -top-40 -z-10 transform-gpu overflow-hidden blur-3xl sm:-top-80"
                         aria-hidden="true">
-                        <div class="relative left-[calc(50%-11rem)] aspect-[1155/678] w-[36.125rem] -translate-x-1/2 rotate-[30deg] bg-gradient-to-tr from-[#80ceff] to-[#bdbcc9] dark:from-slate-400 dark:via-[#c29f37] dark:to-slate-400 opacity-30 sm:left-[calc(50%-30rem)] sm:w-[72.1875rem]"
+                        <div class="relative left-[calc(50%-11rem)] aspect-1155/678 w-144.5 -translate-x-1/2 rotate-30 bg-linear-to-tr from-[#80ceff] to-[#bdbcc9] dark:from-slate-400 dark:via-[#c29f37] dark:to-slate-400 opacity-30 sm:left-[calc(50%-30rem)] sm:w-288.75"
                             style="clip-path: polygon(74.1% 44.1%, 100% 61.6%, 97.5% 26.9%, 85.5% 0.1%, 80.7% 2%, 72.5% 32.5%, 60.2% 62.4%, 52.4% 68.1%, 47.5% 58.3%, 45.2% 34.5%, 27.5% 76.7%, 0.1% 64.9%, 17.9% 100%, 27.6% 76.8%, 76.1% 97.7%, 74.1% 44.1%)">
                         </div>
                     </div>
@@ -72,7 +72,7 @@
                             </div>
 
                             <!-- Main Heading -->
-                            <h1  class="text-5xl lg:text-8xl font-bebas mt-2 tracking-wider font-bold  text-gray-900 sm:text-6xl bg-gradient-to-r from-slate-500 via-[#c29f37] to-slate-500 bg-clip-text text-transparent dark:from-slate-400 dark:via-[#c29f37] dark:to-slate-400">
+                            <h1  class="text-5xl lg:text-8xl font-bebas mt-2 tracking-wider font-bold  text-gray-900 sm:text-6xl bg-linear-to-r from-slate-500 via-[#c29f37] to-slate-500 bg-clip-text text-transparent dark:from-slate-400 dark:via-[#c29f37] dark:to-slate-400">
                                 {{ __('messages.title') }}
                             </h1>
 
@@ -119,7 +119,7 @@
                     <!-- Bottom decorative element -->
                     <div class="absolute inset-x-0 top-[calc(100%-13rem)] -z-10 transform-gpu overflow-hidden blur-3xl sm:top-[calc(100%-30rem)]"
                         aria-hidden="true">
-                        <div class="relative left-[calc(50%+3rem)] aspect-[1155/678] w-[36.125rem] -translate-x-1/2 bg-gradient-to-tr  from-[#80ceff] to-[#bdbcc9] dark:from-slate-400 dark:via-[#c29f37] dark:to-slate-400 opacity-30 sm:left-[calc(50%+36rem)] sm:w-[72.1875rem]"
+                        <div class="relative left-[calc(50%+3rem)] aspect-1155/678 w-144.5 -translate-x-1/2 bg-linear-to-tr  from-[#80ceff] to-[#bdbcc9] dark:from-slate-400 dark:via-[#c29f37] dark:to-slate-400 opacity-30 sm:left-[calc(50%+36rem)] sm:w-288.75"
                             style="clip-path: polygon(74.1% 44.1%, 100% 61.6%, 97.5% 26.9%, 85.5% 0.1%, 80.7% 2%, 72.5% 32.5%, 60.2% 62.4%, 52.4% 68.1%, 47.5% 58.3%, 45.2% 34.5%, 27.5% 76.7%, 0.1% 64.9%, 17.9% 100%, 27.6% 76.8%, 76.1% 97.7%, 74.1% 44.1%)">
                         </div>
                     </div>
@@ -196,7 +196,7 @@
                         @foreach ($sellers as $seller)
                             {{-- their domain --}}
                             <a href="http://{{ $seller->tenants->first()->domain->domain ?? '#' }}" target="_blank"
-                                class="flex items-start gap-4 rounded-lg bg-white p-6 animate-fade-in  shadow-[0px_14px_34px_0px_rgba(0,0,0,0.08)] ring-1 ring-white/[0.05] transition duration-300 hover:text-black/70 hover:ring-black/20 focus:outline-none focus-visible:ring-[#FF2D20] lg:pb-10 dark:bg-zinc-900 dark:ring-zinc-800 dark:hover:text-white/70 dark:hover:ring-zinc-700 dark:focus-visible:ring-[#FF2D20]">
+                                class="flex items-start gap-4 rounded-lg bg-white p-6 animate-fade-in  shadow-[0px_14px_34px_0px_rgba(0,0,0,0.08)] ring-1 ring-white/5 transition duration-300 hover:text-black/70 hover:ring-black/20 focus:outline-none focus-visible:ring-[#FF2D20] lg:pb-10 dark:bg-zinc-900 dark:ring-zinc-800 dark:hover:text-white/70 dark:hover:ring-zinc-700 dark:focus-visible:ring-[#FF2D20]">
                                 <img src="{{ $seller->getFirstMediaUrl('logos') }}" alt="{{ $seller->name }}"
                                     class="w-16 h-16 rounded-full object-cover">
                                 <div>

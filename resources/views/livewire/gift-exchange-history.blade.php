@@ -80,7 +80,7 @@
                                             class="w-12 h-12 rounded-lg object-cover"
                                         >
                                     @else
-                                        <div class="w-12 h-12 bg-gradient-to-br from-gray-200 to-gray-300 rounded-lg flex items-center justify-center">
+                                        <div class="w-12 h-12 bg-linear-to-br from-gray-200 to-gray-300 rounded-lg flex items-center justify-center">
                                             <svg class="w-6 h-6 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                                                 <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8v13m0-13V6a2 2 0 112 2h-2zm0 0V5.5A2.5 2.5 0 109.5 8H12zm-7 4h14M5 12a2 2 0 110-4h14a2 2 0 110 4M5 12v7a2 2 0 002 2h10a2 2 0 002-2v-7"></path>
                                             </svg>
@@ -185,7 +185,7 @@
                                                 class="w-20 h-20 rounded-xl object-cover shadow-sm"
                                             >
                                         @else
-                                            <div class="w-20 h-20 bg-gradient-to-br from-gray-200 to-gray-300 rounded-xl flex items-center justify-center shadow-sm">
+                                            <div class="w-20 h-20 bg-linear-to-br from-gray-200 to-gray-300 rounded-xl flex items-center justify-center shadow-sm">
                                                 <svg class="w-10 h-10 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                                                     <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8v13m0-13V6a2 2 0 112 2h-2zm0 0V5.5A2.5 2.5 0 109.5 8H12zm-7 4h14M5 12a2 2 0 110-4h14a2 2 0 110 4M5 12v7a2 2 0 002 2h10a2 2 0 002-2v-7"></path>
                                                 </svg>
@@ -226,7 +226,7 @@
                                 </div>
 
                                 <!-- Status Badge Desktop -->
-                                <div class="ml-6 flex-shrink-0">
+                                <div class="ml-6 shrink-0">
                                     <span class="inline-flex items-center px-4 py-2 rounded-full text-sm font-medium border {{ $statusColors[$exchange->status] ?? 'bg-gray-100 text-gray-800 border-gray-200' }}">
                                         {{ __('messages.gift_exchange_history.status.' . $exchange->status) }}
                                     </span>
@@ -268,9 +268,9 @@
                             <div class="flex flex-col lg:flex-row items-center justify-start gap-4 ">
                                 <!-- Delivery Address Desktop -->
                                 @if($exchange->delivery_address)
-                                    <div class="mt-4 p-4 bg-gradient-to-r from-gray-50 to-gray-100 rounded-lg border border-gray-200">
+                                    <div class="mt-4 p-4 bg-linear-to-r from-gray-50 to-gray-100 rounded-lg border border-gray-200">
                                         <div class="flex items-start space-x-2">
-                                            <svg class="w-4 h-4 text-gray-500 mt-0.5 flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                            <svg class="w-4 h-4 text-gray-500 mt-0.5 shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                                                 <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17.657 16.657L13.414 20.9a1.998 1.998 0 01-2.827 0l-4.244-4.243a8 8 0 1111.314 0z"></path>
                                                 <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 11a3 3 0 11-6 0 3 3 0 016 0z"></path>
                                             </svg>
@@ -289,9 +289,9 @@
 
                                 <!-- Notes Desktop -->
                                 @if($exchange->notes)
-                                    <div class="mt-4 p-4 bg-gradient-to-r from-red-50 to-red-100 rounded-lg border border-red-200">
+                                    <div class="mt-4 p-4 bg-linear-to-r from-red-50 to-red-100 rounded-lg border border-red-200">
                                         <div class="flex items-start space-x-2">
-                                            <svg class="w-4 h-4 text-red-500 mt-0.5 flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                            <svg class="w-4 h-4 text-red-500 mt-0.5 shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                                                 <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M11 5H6a2 2 0 00-2 2v11a2 2 0 002 2h11a2 2 0 002-2v-5m-1.414-9.414a2 2 0 112.828 2.828L11.828 15H9v-2.828l8.586-8.586z"></path>
                                             </svg>
                                             <div class="flex justify-start items-center ">
@@ -321,7 +321,7 @@
             <!-- Empty State -->
             <div class="bg-white rounded-xl shadow-sm border border-gray-200 overflow-hidden">
                 <div class="p-12 text-center">
-                    <div class="w-20 h-20 mx-auto mb-6 bg-gradient-to-br from-gray-100 to-gray-200 rounded-full flex items-center justify-center">
+                    <div class="w-20 h-20 mx-auto mb-6 bg-linear-to-br from-gray-100 to-gray-200 rounded-full flex items-center justify-center">
                         <svg class="w-10 h-10 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8v13m0-13V6a2 2 0 112 2h-2zm0 0V5.5A2.5 2.5 0 109.5 8H12zm-7 4h14M5 12a2 2 0 110-4h14a2 2 0 110 4M5 12v7a2 2 0 002 2h10a2 2 0 002-2v-7"></path>
                         </svg>

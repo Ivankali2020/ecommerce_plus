@@ -52,7 +52,7 @@ class SellerPanelProvider extends PanelProvider
             ->authGuard('seller')
             ->login()
             ->colors([
-                'primary' => Color::Emerald,
+                // 'primary' => Color::Green,
                 'gray' => Color::Slate,
                 'orange' => Color::Orange,
                 'green' => Color::Green,

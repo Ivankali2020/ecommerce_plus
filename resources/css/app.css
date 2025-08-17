@@ -2,42 +2,61 @@
 
 @import "tailwindcss";
 
+@font-face {
+    font-family: "mm";
+    src: url("/public/fonts/mm.ttf") format("truetype");
+    /* src: url("/fonts/KT_03.ttf") format('truetype');  */
+    font-style: normal;
+    font-display: swap;
+    font-weight: normal;
+}
+
+@font-face {
+    font-family: "mm_lat";
+    /* src: url("/fonts/mm.ttf") format('truetype');  */
+    src: url("/fonts/KT_03.ttf") format("truetype");
+    font-style: normal;
+    font-display: swap;
+    font-weight: normal;
+}
+
+@theme {
+    --font-sans: ui-sans-serif, system-ui, sans-serif, "Apple Color Emoji",
+        "Segoe UI Emoji", "Segoe UI Symbol", "Noto Color Emoji";
+    --font-serif: ui-serif, Georgia, Cambria, "Times New Roman", Times, serif;
+    --font-mono: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas,
+        "Liberation Mono", "Courier New", monospace;
+    --font-bebas: "Bebas Neue", "mm", "Jost", sans-serif, "cursive";
+    --font-jost: "Jost", "mm", sans-serif;
+    --font-mm: "mm", "Jost", sans-serif;
+}
+
+/* Required by all components */
+@import "../../vendor/filament/support/resources/css/index.css";
+
+/* Required by notifications */
+@import "../../vendor/filament/notifications/resources/css/index.css";
+
+@variant dark (&:where(.dark, .dark *));
+
 /* Define keyframes for animations */
 @keyframes fadeIn {
-  0% { opacity: 0; }
-  100% { opacity: 1; }
-}
-
-@keyframes fadeInUp {
-  0% { 
-    opacity: 0;
-    transform: translateY(10px);
-  }
-  100% { 
-    opacity: 1;
-    transform: translateY(0);
-  }
-}
-
-@layer base {
-    @font-face {
-        font-family: "mm";
-        src: url("/fonts/mm.ttf") format("truetype");
-        /* src: url("/fonts/KT_03.ttf") format('truetype');  */
-        font-style: normal;
-        font-display: swap;
-        font-weight: normal;
+    0% {
+        opacity: 0;
+    }
+    100% {
+        opacity: 1;
     }
 }
 
-@layer base {
-    @font-face {
-        font-family: "mm_lat";
-        /* src: url("/fonts/mm.ttf") format('truetype');  */
-        src: url("/fonts/KT_03.ttf") format("truetype");
-        font-style: normal;
-        font-display: swap;
-        font-weight: normal;
+@keyframes fadeInUp {
+    0% {
+        opacity: 0;
+        transform: translateY(10px);
+    }
+    100% {
+        opacity: 1;
+        transform: translateY(0);
     }
 }
 
@@ -87,12 +106,12 @@ html:lang(my) select,
 html:lang(my) label,
 html:lang(my) th,
 html:lang(my) td {
-    font-family: "mm", sans-serif;
+    font-family: "mm", "Jost", sans-serif;
 }
 
 /* Automatic English font handling */
 html:lang(en) {
-    font-family: "mm", sans-serif;
+    font-family: "mm", "Jost", sans-serif;
 }
 
 html:lang(en) body,

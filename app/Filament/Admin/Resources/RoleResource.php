@@ -55,8 +55,6 @@ class RoleResource extends Resource implements HasShieldPermissions
             ->components([
                 Grid::make()
                     ->schema([
-                        Section::make()
-                            ->schema([
                                 TextInput::make('name')
                                     ->label(__('filament-shield::filament-shield.field.name'))
                                     ->unique(ignoreRecord: true)
@@ -68,18 +66,13 @@ class RoleResource extends Resource implements HasShieldPermissions
                                     // ->disabled()
                                     ->nullable()
                                     ->maxLength(255),
-                                ShieldSelectAllToggle::make('select_all')
-                                    ->onIcon('heroicon-s-shield-check')
-                                    ->offIcon('heroicon-s-shield-exclamation')
-                                    ->label(__('filament-shield::filament-shield.field.select_all.name'))
-                                    ->helperText(fn (): HtmlString => new HtmlString(__('filament-shield::filament-shield.field.select_all.message')))
-                                    ->dehydrated(fn ($state): bool => $state),
+                                // ShieldSelectAllToggle::make('select_all')
+                                //     ->onIcon('heroicon-s-shield-check')
+                                //     ->offIcon('heroicon-s-shield-exclamation')
+                                //     ->label(__('filament-shield::filament-shield.field.select_all.name'))
+                                //     ->helperText(fn (): HtmlString => new HtmlString(__('filament-shield::filament-shield.field.select_all.message')))
+                                //     ->dehydrated(fn ($state): bool => $state),
 
-                            ])
-                            ->columns([
-                                'sm' => 2,
-                                'lg' => 3,
-                            ]),
                     ]),
                 Tabs::make('Permissions')
                     ->contained()

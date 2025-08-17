@@ -82,72 +82,58 @@
 
             <div class="space-y-4">
                 <div>
-                    <label for="region" class="block text-sm font-medium text-gray-700 ">
-                        {{ __('messages.address.region') }}
-                    </label>
-                    <select id="region" wire:model.live="selectedRegion"
-                            class="mt-1 block w-full pl-3 pr-10 py-2 text-base border-gray-300 focus:outline-none focus:ring-slate-500 focus:border-slate-500 sm:text-sm rounded-md ">
+                    <x-input-label for="region" :value="__('messages.address.region')" />
+                    <x-select id="region" wire:model.live="selectedRegion" class="mt-1 block w-full">
                         <option value="">{{ __('messages.address.select_region') }}</option>
                         @foreach($regions as $region)
                             <option value="{{ $region->id }}">{{ $region->mm_name }}</option>
                         @endforeach
-                    </select>
-                    @error('selectedRegion')
-                        <p class="mt-1 text-sm text-red-600">{{ $message }}</p>
-                    @enderror
+                    </x-select>
+                    <x-input-error class="mt-2" :messages="$errors->get('selectedRegion')" />
                 </div>
 
                 <div>
-                    <label for="township" class="block text-sm font-medium text-gray-700 ">
-                        {{ __('messages.address.township') }}
-                    </label>
-                    <select id="township" wire:model.live="selectedTownship"
-                            class="mt-1 block w-full pl-3 pr-10 py-2 text-base border-gray-300 focus:outline-none focus:ring-slate-500 focus:border-slate-500 sm:text-sm rounded-md ">
+                    <x-input-label for="township" :value="__('messages.address.township')" />
+                    <x-select id="township" wire:model.live="selectedTownship" class="mt-1 block w-full  ">
                         <option value="">{{ __('messages.address.select_township') }}</option>
                         @foreach($townships as $township)
                             <option wire:key="{{ $township->id}}" value="{{ (string)$township->id }}">{{ $township->mm_name }}</option>
                         @endforeach
-                    </select>
-                    @error('selectedTownship')
-                        <p class="mt-1 text-sm text-red-600">{{ $selectedTownship }}</p>
-                    @enderror
+                    </x-select>
+                    <x-input-error class="mt-2" :messages="$errors->get('selectedTownship')" />
                 </div>
 
                 <div>
-                    <label for="address" class="block text-sm font-medium text-gray-700 ">
-                        {{ __('messages.address.address_label') }}
-                    </label>
-                    <textarea id="address" wire:model="address" rows="3"
-                              class="mt-1 block w-full border-gray-300 rounded-md shadow-sm focus:ring-slate-500 focus:border-slate-500 sm:text-sm "
-                              placeholder="{{ __('messages.address.address_placeholder') }}"></textarea>
-                    @error('address')
-                        <p class="mt-1 text-sm text-red-600">{{ $address }}</p>
-                    @enderror
+                    <x-input-label for="address" :value="__('messages.address.address_label')" />
+                    <x-textarea id="address" wire:model="address" rows="3" class="mt-1 block w-full"
+                              placeholder="{{ __('messages.address.address_placeholder') }}"></x-textarea>
+                    <x-input-error class="mt-2" :messages="$errors->get('address')" />
                 </div>
 
                 <div>
-                    <label for="phone" class="block text-sm font-medium text-gray-700 ">
-                        {{ __('messages.address.phone') }}
-                    </label>
-                    <input type="text" id="phone" wire:model="phone"
-                           class="mt-1 block w-full border-gray-300 rounded-md shadow-sm focus:ring-slate-500 focus:border-slate-500 sm:text-sm "
-                           placeholder="{{ __('messages.address.phone_placeholder') }}">
-                    @error('phone')
-                        <p class="mt-1 text-sm text-red-600">{{ $phone }}</p>
-                    @enderror
+                    <x-input-label for="phone" :value="__('messages.address.phone')" />
+                    <x-text-input type="text" id="phone" wire:model="phone" class="mt-1 block w-full"
+                           placeholder="{{ __('messages.address.phone_placeholder') }}" />
+                    <x-input-error class="mt-2" :messages="$errors->get('phone')" />
                 </div>
 
                 <div class="flex justify-end gap-3">
                     @if($editId)
-                        <button wire:click="cancelEdit" type="button"
-                                class="inline-flex items-center px-4 py-2 border border-gray-300 text-sm font-medium rounded-md text-gray-700 bg-white hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-slate-500 ">
+                        <x-secondary-button wire:click="cancelEdit" type="button" wire:loading.attr="disabled">
                             {{ __('messages.address.cancel') }}
-                        </button>
+                        </x-secondary-button>
                     @endif
-                    <button wire:click="save"
-                            class="inline-flex items-center px-4 py-2 border border-transparent text-sm font-medium rounded-md shadow-sm text-white bg-slate-900 hover:bg-slate-800 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-slate-500 ">
-                        {{ $editId ? __('messages.address.update') : __('messages.address.save') }}
-                    </button>
+
+                    <x-primary-button wire:click="save" wire:loading.attr="disabled" type="button" class="group relative">
+                        <span class="inset-y-0 flex items-center me-3">
+                            <svg wire:loading.remove class="h-5 w-5 text-slate-500 group-hover:text-slate-400" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="currentColor" aria-hidden="true">
+                                <path fill-rule="evenodd" d="M5 9V7a5 5 0 0110 0v2a2 2 0 012 2v5a2 2 0 01-2 2H5a2 2 0 01-2-2v-5a2 2 0 012-2zm8-2v2H7V7a3 3 0 016 0z" clip-rule="evenodd" />
+                            </svg>
+                            <x-filament::loading-indicator wire:loading class="h-5 w-5 text-slate-500" />
+                        </span>
+                        <span wire:loading.remove>{{ $editId ? __('messages.address.update') : __('messages.address.save') }}</span>
+                        <span wire:loading>{{ $editId ? __('messages.address.update') : __('messages.address.save') }}...</span>
+                    </x-primary-button>
                 </div>
             </div>
         </div>

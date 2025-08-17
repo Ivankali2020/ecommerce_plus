@@ -279,7 +279,7 @@
                 </button>
             </div>
 
-            <div class="mt-10 font-thin font-sans prose text-justify" > {!! $product->description !!} </div>
+            <div class="mt-10 font-thin font-sans text-xs md:text-sm  prose text-justify" style="line-height:2rem"> {!! $product->description !!} </div>
 
         </div>
     </div>

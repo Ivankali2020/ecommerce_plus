@@ -166,7 +166,7 @@
                                         'refunded' => '↩',
                                     ];
                                 @endphp
-                                <div class="flex-shrink-0">
+                                <div class="shrink-0">
                                     <span class="inline-flex items-center px-3 py-2 rounded-full text-sm font-medium {{ $typeColors[$transaction->type] ?? 'bg-gray-100 text-gray-800' }}">
                                         <span class="mr-2 text-base">{{ $typeIcons[$transaction->type] ?? '•' }}</span>
                                         {{ __('messages.point_transaction_history.type.' . $transaction->type) }}
@@ -187,7 +187,7 @@
                             </div>
                             
                             <!-- Points and Balance -->
-                            <div class="text-right flex-shrink-0 ml-4">
+                            <div class="text-right shrink-0 ml-4">
                                 <div class="mb-1">
                                     @if($transaction->type === 'earned')
                                         <span class="text-2xl font-bold text-green-600">+{{ number_format($transaction->points) }}</span>

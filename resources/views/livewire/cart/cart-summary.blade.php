@@ -31,7 +31,7 @@
 
         {{-- show user can earn points --}}
         @if($this->pointsToEarn > 0)
-        <div class="bg-gradient-to-r from-slate-50 to-emerald-50 border border-slate-200 rounded-lg p-4 animate-fade-in">
+        <div class="bg-linear-to-r from-slate-50 to-emerald-50 border border-slate-200 rounded-lg p-4 animate-fade-in">
             <div class="flex items-center space-x-3">
                 <div class="flex-1 min-w-0">
                     <div class="flex items-center justify-between">
