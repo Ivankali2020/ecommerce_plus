@@ -1,9 +1,9 @@
 <div class="container mx-auto px-4 py-8">
     <div class="max-w-4xl mx-auto">
-        <h1 class="text-3xl font-bold text-gray-900 mb-8 {{ app()->currentLocale() === 'my' ? 'font-mm' : '' }}">{{ __('messages.content.terms_conditions_title') }}</h1>
+        <h1 class="text-3xl font-bold text-gray-900 mb-8 ">{{ __('messages.content.terms_conditions_title') }}</h1>
         
         @if($content)
-            <div class="prose prose-lg max-w-none {{ app()->currentLocale() === 'my' ? 'font-mm' : '' }}">
+            <div class="prose prose-lg max-w-none ">
                 {!! $content !!}
             </div>
         @else
@@ -13,8 +13,8 @@
                         <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1" d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"></path>
                     </svg>
                 </div>
-                <h3 class="text-xl font-medium text-gray-900 mb-3 {{ app()->currentLocale() === 'my' ? 'font-mm' : '' }}">{{ __('messages.content.not_available_title', ['type' => __('messages.content.terms_conditions_title')]) }}</h3>
-                <p class="text-gray-600 max-w-md mx-auto {{ app()->currentLocale() === 'my' ? 'font-mm' : '' }}">
+                <h3 class="text-xl font-medium text-gray-900 mb-3 ">{{ __('messages.content.not_available_title', ['type' => __('messages.content.terms_conditions_title')]) }}</h3>
+                <p class="text-gray-600 max-w-md mx-auto ">
                     {{ __('messages.content.not_available_message', ['type' => strtolower(__('messages.content.terms_conditions_title'))]) }}
                 </p>
             </div>

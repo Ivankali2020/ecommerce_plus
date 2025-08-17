@@ -1,5 +1,5 @@
 <div class="container mb-20 lg:mb-0 mx-auto px-4 py-4 lg:p-8">
-    <x-locale-text class="text-xl mb-2  lg:mb-8 lg:text-4xl font-bold">
+    <x-locale-text class="text-xl mb-4 lg:mb-8 lg:text-4xl font-bold">
         {{ __('messages.recommended_products') }}
     </x-locale-text>
 
@@ -22,7 +22,7 @@
             <a 
                 href="{{ route('wholesale') }}" 
                 wire:navigate
-                class="text-sm text-slate-600 hover:text-slate-900 flex items-center gap-1 {{ app()->currentLocale() === 'my' ? 'font-mm' : '' }}"
+                class="text-sm text-slate-600 hover:text-slate-900 flex items-center gap-1 "
             >
                 {{ __('messages.view_all') }}
                 <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -49,7 +49,7 @@
                 <button wire:key="category-all" 
                         wire:loading.class="opacity-50"
                         wire:click="filterByCategory(null)"
-                        class="flex-none px-4 py-1.5 lg:py-2.5 text-sm font-medium rounded-full transition-all duration-200 shadow-sm {{ app()->currentLocale() === 'my' ? 'font-mm' : '' }}
+                        class="flex-none px-4 py-1.5 lg:py-2.5 text-sm font-medium rounded-full transition-all duration-200 shadow-sm 
                             {{ is_null($selectedCategory)
                                 ? 'bg-slate-900 text-white ring-2 ring-slate-900/20'
                                 : 'bg-white hover:bg-slate-50 text-slate-700 border border-slate-200' }}">
@@ -60,7 +60,7 @@
                 @foreach($this->categories as $category)
                     <button wire:key="category-{{ $category->id }}"
                             wire:click="filterByCategory({{ $category->id }})"
-                            class="flex-none px-4 py-1.5 lg:py-2.5 text-sm font-medium rounded-full transition-all duration-200 shadow-sm {{ app()->currentLocale() === 'my' ? 'font-mm' : '' }}
+                            class="flex-none px-4 py-1.5 lg:py-2.5 text-sm font-medium rounded-full transition-all duration-200 shadow-sm 
                                 {{ $selectedCategory == $category->id
                                     ? 'bg-slate-900 text-white ring-2 ring-slate-900/20'
                                     : 'bg-white hover:bg-slate-50 text-slate-700 border border-slate-200' }}">

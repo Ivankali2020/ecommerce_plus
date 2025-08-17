@@ -68,40 +68,40 @@ new class extends Component
 
 <section>
     <header>
-        <h2 class="text-lg font-medium text-gray-900 dark:text-gray-100 {{ app()->currentLocale() === 'my' ? 'font-mm' : '' }}">
+        <h2 class="text-lg font-medium text-gray-900 dark:text-gray-100 ">
             {{ __('messages.profile.title') }}
         </h2>
 
-        <p class="mt-1 text-sm text-gray-600 dark:text-gray-400 {{ app()->currentLocale() === 'my' ? 'font-mm' : '' }}">
+        <p class="mt-1 text-sm text-gray-600 dark:text-gray-400 ">
             {{ __('messages.profile.description') }}
         </p>
     </header>
 
     <form wire:submit="updateProfileInformation" class="mt-6 space-y-6">
         <div>
-            <x-input-label for="name" :value="__('messages.profile.name')" class="{{ app()->currentLocale() === 'my' ? 'font-mm' : '' }}" />
+            <x-input-label for="name" :value="__('messages.profile.name')" class="" />
             <x-text-input wire:model="name" id="name" name="name" type="text"
-                class="mt-1 block w-full {{ app()->currentLocale() === 'my' ? 'font-mm' : '' }}"
+                class="mt-1 block w-full "
                 required autofocus autocomplete="name" />
             <x-input-error class="mt-2" :messages="$errors->get('name')" />
         </div>
 
         <div>
-            <x-input-label for="email" :value="__('messages.profile.email')" class="{{ app()->currentLocale() === 'my' ? 'font-mm' : '' }}" />
+            <x-input-label for="email" :value="__('messages.profile.email')" class="" />
             <x-text-input wire:model="email" id="email" name="email" type="email"
-                class="mt-1 block w-full {{ app()->currentLocale() === 'my' ? 'font-mm' : '' }}"
+                class="mt-1 block w-full "
                 required autocomplete="username" />
             <x-input-error class="mt-2" :messages="$errors->get('email')" />
 
             @if (auth()->user() instanceof \Illuminate\Contracts\Auth\MustVerifyEmail && ! auth()->user()->hasVerifiedEmail())
                 <div>
-                    <p class="text-sm mt-2 text-gray-800 dark:text-gray-200 {{ app()->currentLocale() === 'my' ? 'font-mm' : '' }}">
+                    <p class="text-sm mt-2 text-gray-800 dark:text-gray-200 ">
                         {{ __('messages.profile.unverified_email') }}
 
                         <button wire:click.prevent="sendVerification"
                             wire:loading.attr="disabled"
                             {{-- wire:loading.class="opacity-70 cursor-wait" --}}
-                            class="underline text-sm text-gray-600 dark:text-gray-400 mx-3  hover:text-gray-900 dark:hover:text-gray-100 rounded-md focus:outline-none ring-0 focus:ring-offset-0 focus:ring-0 dark:focus:ring-offset-gray-800 {{ app()->currentLocale() === 'my' ? 'font-mm' : '' }}">
+                            class="underline text-sm text-gray-600 dark:text-gray-400 mx-3  hover:text-gray-900 dark:hover:text-gray-100 rounded-md focus:outline-none ring-0 focus:ring-offset-0 focus:ring-0 dark:focus:ring-offset-gray-800 ">
                             <span wire:loading.remove wire:target="sendVerification">
                                 {{ __('messages.profile.resend_verification') }}
                             </span>
@@ -119,7 +119,7 @@ new class extends Component
                     </p>
 
                     @if (session('status') === 'verification-link-sent')
-                        <p class="mt-2 font-medium text-sm text-green-600 dark:text-green-400 {{ app()->currentLocale() === 'my' ? 'font-mm' : '' }}">
+                        <p class="mt-2 font-medium text-sm text-green-600 dark:text-green-400 ">
                             {{ __('messages.profile.verification_sent') }}
                         </p>
                     @endif
@@ -128,11 +128,11 @@ new class extends Component
         </div>
 
         <div class="flex items-center gap-4">
-            <x-primary-button class="{{ app()->currentLocale() === 'my' ? 'font-mm' : '' }}">
+            <x-primary-button class="">
                 {{ __('messages.profile.save') }}
             </x-primary-button>
 
-            <x-action-message class="me-3 {{ app()->currentLocale() === 'my' ? 'font-mm' : '' }}" on="profile-updated">
+            <x-action-message class="me-3 " on="profile-updated">
                 {{ __('messages.profile.saved') }}
             </x-action-message>
         </div>

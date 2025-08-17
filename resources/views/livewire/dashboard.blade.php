@@ -9,7 +9,7 @@
                         </svg>
                     </div>
                     <div class="ml-4">
-                        <h2 class="text-gray-600 text-sm dark:text-gray-300 {{ app()->currentLocale() === 'my' ? 'font-mm' : '' }}">
+                        <h2 class="text-gray-600 text-sm dark:text-gray-300 ">
                             {{ __('messages.total_orders') }}
                         </h2>
                         <p class="text-2xl font-semibold text-gray-700 dark:text-gray-200">{{ $totalOrders ?? 0 }}</p>
@@ -22,23 +22,23 @@
         <div class="grid grid-cols-1 lg:grid-cols-2 gap-4 mb-8">
             <div class="bg-white rounded-lg shadow overflow-hidden dark:bg-gray-700">
                 <div class="p-6">
-                    <h3 class="text-lg font-medium text-gray-900 dark:text-gray-100 {{ app()->currentLocale() === 'my' ? 'font-mm' : '' }}">
+                    <h3 class="text-lg font-medium text-gray-900 dark:text-gray-100 ">
                         {{ __('messages.recent_orders') }}
                     </h3>
                     <div class="mt-6">
                         <table class="min-w-full divide-y divide-gray-200">
                             <thead class="bg-gray-50 dark:bg-gray-600">
                                 <tr>
-                                    <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider dark:text-gray-300 {{ app()->currentLocale() === 'my' ? 'font-mm' : '' }}">
+                                    <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider dark:text-gray-300 ">
                                         {{ __('messages.store') }}
                                     </th>
-                                    <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider dark:text-gray-300 {{ app()->currentLocale() === 'my' ? 'font-mm' : '' }}">
+                                    <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider dark:text-gray-300 ">
                                         {{ __('messages.amount') }}
                                     </th>
-                                    <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider dark:text-gray-300 {{ app()->currentLocale() === 'my' ? 'font-mm' : '' }}">
+                                    <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider dark:text-gray-300 ">
                                         {{ __('messages.status') }}
                                     </th>
-                                    <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider dark:text-gray-300 {{ app()->currentLocale() === 'my' ? 'font-mm' : '' }}">
+                                    <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider dark:text-gray-300 ">
                                         {{ __('messages.invoice') }}
                                     </th>
                                 </tr>
@@ -53,7 +53,7 @@
                                         {{ $order->total_price }} Ks
                                     </td>
                                     <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-900 dark:text-gray-100">
-                                        <p class="inline text-end w-full uppercase px-3 py-1 rounded-full text-xs font-medium {{ app()->currentLocale() === 'my' ? 'font-mm' : '' }}
+                                        <p class="inline text-end w-full uppercase px-3 py-1 rounded-full text-xs font-medium 
                                         @switch($order->status)
                                             @case(\App\Helper\OrderStatus::New)
                                                 bg-yellow-100 text-yellow-800
@@ -74,7 +74,7 @@
                                         </p>
                                     </td>
                                     <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-900 dark:text-gray-100">
-                                        <a href="{{ route('order.detail', $order) }}" class="text-sm text-slate-600 hover:text-slate-700 dark:text-slate-400 {{ app()->currentLocale() === 'my' ? 'font-mm' : '' }}">
+                                        <a href="{{ route('order.detail', $order) }}" class="text-sm text-slate-600 hover:text-slate-700 dark:text-slate-400 ">
                                             {{ __('messages.view_details') }}
                                         </a>
                                     </td>
@@ -86,7 +86,7 @@
                 </div>
             </div>
             <div class="bg-white rounded-lg shadow p-6 dark:bg-gray-700">
-                <h3 class="text-lg font-medium text-gray-900 dark:text-gray-100 {{ app()->currentLocale() === 'my' ? 'font-mm' : '' }}">
+                <h3 class="text-lg font-medium text-gray-900 dark:text-gray-100 ">
                     {{ __('messages.order_analytics') }}
                 </h3>
                 <div class="mt-4" style="height: 300px;">

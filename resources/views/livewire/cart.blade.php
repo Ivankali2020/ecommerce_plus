@@ -11,15 +11,15 @@
                         <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
                             d="M16 11V7a4 4 0 00-8 0v4M5 9h14l1 12H4L5 9z" />
                     </svg>
-                    <h3 class="mt-2 text-sm font-medium text-gray-900 {{ app()->currentLocale() === 'my' ? 'font-mm' : '' }}">
+                    <h3 class="mt-2 text-sm font-medium text-gray-900 ">
                         {{ __('messages.cart.empty_cart') }}
                     </h3>
-                    <p class="mt-1 text-sm text-gray-500 {{ app()->currentLocale() === 'my' ? 'font-mm' : '' }}">
+                    <p class="mt-1 text-sm text-gray-500 ">
                         {{ __('messages.cart.start_adding') }}
                     </p>
                     <div class="mt-6">
                         <a href="{{ route('welcome') }}"
-                            class="inline-flex items-center px-4 py-2 border border-transparent shadow-sm text-sm font-medium rounded-md text-white bg-slate-900 hover:bg-slate-800 focus:outline-none focus:ring-0 focus:ring-offset-0 {{ app()->currentLocale() === 'my' ? 'font-mm' : '' }}">
+                            class="inline-flex items-center px-4 py-2 border border-transparent shadow-sm text-sm font-medium rounded-md text-white bg-slate-900 hover:bg-slate-800 focus:outline-none focus:ring-0 focus:ring-offset-0 ">
                             {{ __('messages.cart.continue_shopping') }}
                         </a>
                     </div>
@@ -37,7 +37,7 @@
 
                     <!-- Checkout Process -->
                     <div class="bg-white p-4 lg:p-6  rounded-lg shadow-sm animate-fade-in ">
-                        <h2 class="text-2xl font-bebas mb-4 {{ app()->currentLocale() === 'my' ? 'font-mm' : '' }}">
+                        <h2 class="text-2xl font-bebas mb-4 ">
                             {{ __('messages.cart.checkout_process') }}
                         </h2>
 

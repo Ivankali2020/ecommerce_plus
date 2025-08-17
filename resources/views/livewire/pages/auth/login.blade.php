@@ -12,15 +12,6 @@ new #[Layout('layouts.guest')] class extends Component
 
     public string $cfTurnstileResponse;
 
-    public ?string $seller_log = null;
-    public ?string $seller_name = null;
-    
-    public function mount(): void
-    {
-        $seller = Tenant::where('id',tenant('id'))->first()->sellers->first();
-        $this->seller_log = $seller->getFirstMediaUrl('logos');
-        $this->seller_name = $seller->name;
-    }
     /**
      * Handle an incoming authentication request.
      */
@@ -43,17 +34,15 @@ new #[Layout('layouts.guest')] class extends Component
         <div class="text-center">
 
             {{-- check tenant logo  --}}
-            <a href="/">
-                @if ($this->seller_log)
-                    <img class="mx-auto h-20 w-auto" src="{{ $this->seller_log }}" alt="{{  $this->seller_name }}">
-                    @else
-                    <h1 class="text-6xl font-bold font-bebas text-center ">{{  $this->seller_name  }}</h1>
-                @endif
-            </a>
-            <h2 class="mt-6 text-3xl font-extrabold text-gray-900 dark:text-white {{ app()->currentLocale() === 'my' ? 'font-mm' : '' }}">
+             @if ($tenantSellerLogo)
+                    <img class="mx-auto h-20 w-auto" src="{{ $tenantSellerLogo }}" alt="{{  $tenantSellerName }}">
+                @else
+                    <h1 class="text-6xl font-bold font-bebas text-center ">{{  $tenantSellerName  }}</h1>
+            @endif
+            <h2 class="mt-6 text-3xl font-extrabold text-gray-900 dark:text-white ">
                 {{ __('messages.auth.login_page.title') }}
             </h2>
-            <p class="mt-2 text-sm text-gray-600 dark:text-gray-400 {{ app()->currentLocale() === 'my' ? 'font-mm' : '' }}">
+            <p class="mt-2 text-sm text-gray-600 dark:text-gray-400 ">
                 {{ __('messages.auth.login_page.subtitle') }}
             </p>
         </div>
@@ -67,9 +56,9 @@ new #[Layout('layouts.guest')] class extends Component
                 <!-- Email Address -->
                 <div>
                     <x-input-label for="email" :value="__('messages.auth.login_page.email')"
-                        class="mb-2 {{ app()->currentLocale() === 'my' ? 'font-mm' : '' }}" />
+                        class="mb-2 " />
                     <x-text-input wire:model="form.email" id="email"
-                        class="appearance-none rounded-lg relative block w-full px-3 py-2 border border-gray-300 dark:border-gray-700 placeholder-gray-500 text-gray-900 dark:text-gray-100 focus:outline-none focus:ring-slate-500 focus:border-slate-500 focus:z-10 sm:text-sm {{ app()->currentLocale() === 'my' ? 'font-mm' : '' }}"
+                        class="appearance-none rounded-lg relative block w-full px-3 py-2 border border-gray-300 dark:border-gray-700 placeholder-gray-500 text-gray-900 dark:text-gray-100 focus:outline-none focus:ring-slate-500 focus:border-slate-500 focus:z-10 sm:text-sm "
                         type="email" name="email" required autofocus autocomplete="username" />
                     <x-input-error :messages="$errors->get('form.email')" class="mt-2" />
                 </div>
@@ -77,7 +66,7 @@ new #[Layout('layouts.guest')] class extends Component
                 <!-- Password -->
                 <div>
                     <x-input-label for="password" :value="__('messages.auth.login_page.password')"
-                        class="mb-2 {{ app()->currentLocale() === 'my' ? 'font-mm' : '' }}" />
+                        class="mb-2 " />
                     <x-text-input wire:model="form.password" id="password"
                         class="appearance-none rounded-lg relative block w-full px-3 py-2 border border-gray-300 dark:border-gray-700 placeholder-gray-500 text-gray-900 dark:text-gray-100 focus:outline-none focus:ring-slate-500 focus:border-slate-500 focus:z-10 sm:text-sm"
                         type="password" name="password" required autocomplete="current-password" />
@@ -90,7 +79,7 @@ new #[Layout('layouts.guest')] class extends Component
                 <div class="flex items-center">
                     <input wire:model="form.remember" id="remember" type="checkbox"
                         class="h-4 w-4 text-slate-600 focus:ring-slate-500 border-gray-300 rounded">
-                    <label for="remember" class="ml-2 block text-sm text-gray-900 dark:text-gray-300 {{ app()->currentLocale() === 'my' ? 'font-mm' : '' }}">
+                    <label for="remember" class="ml-2 block text-sm text-gray-900 dark:text-gray-300 ">
                         {{ __('messages.auth.login_page.remember') }}
                     </label>
                 </div>
@@ -99,7 +88,7 @@ new #[Layout('layouts.guest')] class extends Component
                 @if (Route::has('password.request'))
                     <div class="text-sm">
                         <a href="{{ route('password.request') }}" wire:navigate
-                            class="font-medium text-slate-600 hover:text-slate-500 {{ app()->currentLocale() === 'my' ? 'font-mm' : '' }}">
+                            class="font-medium text-slate-600 hover:text-slate-500 ">
                             {{ __('messages.auth.login_page.forgot_password') }}
                         </a>
                     </div>
@@ -109,7 +98,7 @@ new #[Layout('layouts.guest')] class extends Component
             <div>
                
                 <div>
-                    <x-primary-button wire:loading.attr="disabled" class="group relative w-full flex justify-center py-2.5 px-4 border border-transparent text-sm font-medium rounded-md text-white bg-slate-600 hover:bg-slate-700 focus:outline-none focus:ring-0 ring-none outline-none focus:ring-offset-0 {{ app()->currentLocale() === 'my' ? 'font-mm' : '' }}">
+                    <x-primary-button wire:loading.attr="disabled" class="group relative w-full flex justify-center py-2.5 px-4 border border-transparent text-sm font-medium rounded-md text-white bg-slate-600 hover:bg-slate-700 focus:outline-none focus:ring-0 ring-none outline-none focus:ring-offset-0 ">
                         <span class="absolute left-0 inset-y-0 flex items-center pl-3">
                             <svg wire:loading.remove class="h-5 w-5 text-slate-500 group-hover:text-slate-400" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="currentColor" aria-hidden="true">
                                 <path fill-rule="evenodd" d="M5 9V7a5 5 0 0110 0v2a2 2 0 012 2v5a2 2 0 01-2 2H5a2 2 0 01-2-2v-5a2 2 0 012-2zm8-2v2H7V7a3 3 0 016 0z" clip-rule="evenodd" />
@@ -133,7 +122,7 @@ new #[Layout('layouts.guest')] class extends Component
             </div>
 
             <!-- Register Link -->
-            <p class="mt-2 text-end text-sm text-gray-600 dark:text-gray-400 {{ app()->currentLocale() === 'my' ? 'font-mm' : '' }}">
+            <p class="mt-2 text-end text-sm text-gray-600 dark:text-gray-400 ">
                 {{ __('messages.auth.login_page.no_account') }}
                 <a href="{{ route('register') }}"  class="font-medium text-slate-600 hover:text-slate-500">
                     {{ __('messages.auth.login_page.register') }}
@@ -148,7 +137,7 @@ new #[Layout('layouts.guest')] class extends Component
                     <div class="w-full border-t border-gray-300 dark:border-gray-700"></div>
                 </div>
                 <div class="relative flex justify-center text-sm">
-                    <span class="px-2 bg-gray-50 dark:bg-gray-900 text-gray-500 dark:text-gray-400 {{ app()->currentLocale() === 'my' ? 'font-mm' : '' }}">
+                    <span class="px-2 bg-gray-50 dark:bg-gray-900 text-gray-500 dark:text-gray-400 ">
                         {{ __('messages.auth.register_page.or_continue_with') }}
                     </span>
                 </div>

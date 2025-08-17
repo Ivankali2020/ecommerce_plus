@@ -2,14 +2,14 @@
     <!-- COD Option (if available) -->
     @if($codAvailable)
     <div class="space-y-2">
-        <h3 class="block text-sm font-medium text-gray-700 {{ app()->currentLocale() === 'my' ? 'font-mm' : '' }}">
+        <h3 class="block text-sm font-medium text-gray-700 ">
             {{ __('messages.cart.payment_options') }}
         </h3>
         
         <div class="flex items-center p-3 bg-blue-50 border border-blue-200 rounded-lg">
             <input id="cod_option" wire:model.live="isCod" type="checkbox"
                 class="h-4 w-4 text-blue-600 border-gray-300 rounded focus:ring-0 ring-0">
-            <label for="cod_option" class="ml-3 block text-sm font-medium text-blue-700 {{ app()->currentLocale() === 'my' ? 'font-mm' : '' }}">
+            <label for="cod_option" class="ml-3 block text-sm font-medium text-blue-700 ">
                 {{ __('messages.cart.cash_on_delivery') }}
             </label>
         </div>
@@ -20,13 +20,13 @@
     @if(!$isCod)
     <div class="space-y-4">
         <div class="space-y-3">
-            <h3 class="block text-sm font-medium text-gray-700 {{ app()->currentLocale() === 'my' ? 'font-mm' : '' }}">
+            <h3 class="block text-sm font-medium text-gray-700 ">
                 {{ __('messages.cart.payment_method') }}
             </h3>
             
             @if($this->payments->isEmpty())
                 <div class="text-center py-4 text-gray-500">
-                    <p class="text-sm {{ app()->currentLocale() === 'my' ? 'font-mm' : '' }}">
+                    <p class="text-sm ">
                         {{ __('messages.cart.no_payment_methods') }}
                     </p>
                 </div>
@@ -79,7 +79,7 @@
         <!-- Payment Account Information -->
         @if($selectedPayment && $this->paymentAccounts->isNotEmpty())
         <div class="mt-6 space-y-3">
-            <h4 class="text-sm font-medium text-gray-700 {{ app()->currentLocale() === 'my' ? 'font-mm' : '' }}">
+            <h4 class="text-sm font-medium text-gray-700 ">
                 {{ __('messages.cart.choose_account') }}
             </h4>
             <div class="space-y-2">
@@ -95,7 +95,7 @@
                         
                         <!-- Account Details -->
                         <div class="ml-3 flex-grow">
-                            <p class="text-sm font-medium text-gray-900 {{ app()->currentLocale() === 'my' ? 'font-mm' : '' }}">
+                            <p class="text-sm font-medium text-gray-900 ">
                                 {{ $account->name }}
                             </p>
                             <p class="text-sm text-gray-600">
@@ -150,7 +150,7 @@
         <!-- Payment Slip Upload -->
         @if($selectedPaymentAccount)
         <div class="mt-6 space-y-3">
-            <h4 class="text-sm font-medium text-gray-700 {{ app()->currentLocale() === 'my' ? 'font-mm' : '' }}">
+            <h4 class="text-sm font-medium text-gray-700 ">
                 {{ __('messages.cart.payment_slip') }}
             </h4>
             
@@ -174,14 +174,14 @@
                         <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="mx-auto h-8 w-8 text-green-500 mb-2">
                             <path stroke-linecap="round" stroke-linejoin="round" d="M9 12.75L11.25 15 15 9.75M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
                         </svg>
-                        <p class="text-sm text-green-600 font-medium {{ app()->currentLocale() === 'my' ? 'font-mm' : '' }}" x-text="fileName || 'File uploaded successfully'">
+                        <p class="text-sm text-green-600 font-medium " x-text="fileName || 'File uploaded successfully'">
                             File uploaded successfully
                         </p>
                     @else
                         <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="mx-auto h-8 w-8 text-gray-400 mb-2">
                             <path stroke-linecap="round" stroke-linejoin="round" d="M12 16.5V9.75m0 0l3 3m-3-3l-3 3M6.75 19.5a4.5 4.5 0 01-1.41-8.775 5.25 5.25 0 0110.233-2.33 3 3 0 013.758 3.848A3.752 3.752 0 0118 19.5H6.75z" />
                         </svg>
-                        <p class="text-sm text-gray-600 {{ app()->currentLocale() === 'my' ? 'font-mm' : '' }}">
+                        <p class="text-sm text-gray-600 ">
                             {{ __('messages.cart.upload_message') }}
                         </p>
                         <p class="text-xs text-gray-400 mt-1">PNG, JPG up to 1MB</p>
@@ -211,7 +211,7 @@
         <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="mx-auto h-12 w-12 text-gray-400 mb-2">
             <path stroke-linecap="round" stroke-linejoin="round" d="M2.25 18.75a60.07 60.07 0 0 1 15.797 2.101c.727.198 1.453-.342 1.453-1.096V18.75M3.75 4.5v.75A.75.75 0 0 1 3 6h-.75m0 0v-.375c0-.621.504-1.125 1.125-1.125H20.25M2.25 6v9m18-10.5v.75c0 .414.336.75.75.75h.75m-1.5-1.5h.375c.621 0 1.125.504 1.125 1.125v9.75c0 .621-.504 1.125-1.125 1.125h-.375m1.5-1.5H21a.75.75 0 0 0-.75.75v.75m0 0H3.75m0 0h-.375a1.125 1.125 0 0 1-1.125-1.125V15m1.5 1.5v-.75A.75.75 0 0 0 3 15h-.75M15 10.5a3 3 0 1 1-6 0 3 3 0 0 1 6 0Zm3 0h.008v.008H18V10.5Zm-12 0h.008v.008H6V10.5Z" />
         </svg>
-        <p class="text-sm {{ app()->currentLocale() === 'my' ? 'font-mm' : '' }}">
+        <p class="text-sm ">
             {{ __('messages.cart.select_address_for_payment') }}
         </p>
     </div>

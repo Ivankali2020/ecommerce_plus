@@ -1,4 +1,4 @@
-<div class="rounded-lg shadow-sm border border-gray-200 p-6 {{ app()->currentLocale() === 'my' ? 'font-mm' : '' }}">
+<div class="rounded-lg shadow-sm border border-gray-200 p-6 ">
     @if($user)
         <div class="flex items-center justify-between mb-4">
             <div class="flex items-center space-x-3">
@@ -106,18 +106,15 @@
         </div>
 
     @else
-        <div class="text-center py-8">
-            <div class="w-16 h-16 bg-gray-100 rounded-full flex items-center justify-center mx-auto mb-4">
-                <svg class="w-8 h-8 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z"></path>
-                </svg>
+        <div class="text-center py-3 lg:py-6">
+            <div class="w-20 h-20 bg-gray-100 rounded-full flex items-center justify-center mx-auto mb-4">
+                <img src="{{ asset('assets/profile.png') }}" alt="Points" class="w-12 h-12">
             </div>
-            <h3 class="text-lg font-medium text-gray-900 mb-2">{{ __('gifts.points_widget.login_required_title') }}</h3>
-            <p class="text-gray-600 mb-4">{{ __('gifts.points_widget.login_required_subtitle') }}</p>
-            <a href="{{ route('login') }}" 
-               class="inline-flex items-center px-4 py-2 bg-blue-600 hover:bg-blue-700 text-white font-medium rounded-lg transition-colors">
-                {{ __('gifts.login_now') }}
-            </a>
+            <h3 class="text-sm lg:text-2xl font-medium text-gray-900 mb-2">{{ __('gifts.points_widget.login_required_title') }}</h3>
+            <p class="text-gray-600 text-xs lg:text-lg mb-4">{{ __('gifts.points_widget.login_required_subtitle') }}</p>
+            <x-primary-link-button :href="route('register')" class="mt-2">
+                 {{ __('gifts.login_now') }}
+            </x-primary-link-button>
         </div>
     @endif
 </div>

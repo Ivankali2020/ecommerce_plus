@@ -82,10 +82,10 @@
                             @if(($product->has_variant && $product->variants()->first() && $product->variants()->first()->discount > 0) || (!$product->has_variant && $product->discount > 0))
                             <div class="absolute top-1 right-1 z-10">
                                 <div class="bg-red-500 text-white px-2 py-0.5 sm:px-3 sm:py-1 rounded-full shadow-md transform transition-transform duration-300 hover:scale-105 flex items-center gap-1">
-                                    <span class="font-bold text-xs {{ app()->currentLocale() === 'my' ? 'font-mm' : '' }}">
+                                    <span class="font-bold text-xs ">
                                         {{ $product->has_variant && $product->variants()->first() ? $product->variants()->first()->discount ?? 0 : $product->discount ?? '0' }}%
                                     </span>
-                                    <span class="text-xs {{ app()->currentLocale() === 'my' ? 'font-mm' : '' }}">
+                                    <span class="text-xs ">
                                         {{ __('messages.off') }}
                                     </span>
                                 </div>
@@ -168,7 +168,7 @@
                                         <x-filament::button
                                             size="sm"
                                             color="success"
-                                            class="{{ app()->currentLocale() === 'my' ? 'font-mm' : '' }} w-full sm:w-auto"
+                                            class=" w-full sm:w-auto"
                                             wire:loading.attr="disabled"
                                             wire:click="addToCart({{ $product->id }},null,{{ $product->MOQ }})"
                                             wire:target="addToCart({{ $product->id }},null,{{ $product->MOQ }})">

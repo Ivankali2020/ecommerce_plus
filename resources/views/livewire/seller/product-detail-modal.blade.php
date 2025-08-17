@@ -14,10 +14,10 @@
                     @if($variant->discount > 0)
                     <div class="absolute top-0 right-0 z-10">
                         <div class="bg-red-500 text-white px-3 py-1 rounded-full shadow-md transform transition-transform duration-300 hover:scale-105 flex items-center gap-1">
-                            <span class="font-bold text-xs  {{ app()->currentLocale() === 'my' ? 'font-mm' : '' }}">
+                            <span class="font-bold text-xs  ">
                                 {{ $variant->discount ?? '0'  }}%
                             </span>
-                            <span class="text-xs {{ app()->currentLocale() === 'my' ? 'font-mm' : '' }}">
+                            <span class="text-xs ">
                                 {{ __('messages.off') }}
                             </span>
                         </div>
@@ -58,7 +58,7 @@
                         <x-filament::button
                                 x-data size="sm"
                                 color="gray"
-                                class="{{ app()->currentLocale() === 'my' ? 'font-mm' : '' }}"
+                                class=""
                                 wire:loading.attr="disabled"
                                 wire:click="addToCart({{ $selectedProduct->id }}, {{ $variant->id }}, {{ $variant->MOQ}})"
                                 wire:target="addToCart({{ $selectedProduct->id }}, {{ $variant->id }}, {{ $variant->MOQ}})">

@@ -2,10 +2,10 @@
     <div class="max-w-6xl mx-auto">
         <!-- Header -->
         <div class="mb-8">
-            <h1 class="text-3xl font-bold text-gray-900 {{ app()->currentLocale() === 'my' ? 'font-mm' : '' }}">
+            <h1 class="text-3xl font-bold text-gray-900 ">
                 {{ __('messages.point_transaction_history.title') }}
             </h1>
-            <p class="text-gray-600 mt-2 {{ app()->currentLocale() === 'my' ? 'font-mm' : '' }}">
+            <p class="text-gray-600 mt-2 ">
                 {{ __('messages.point_transaction_history.description') }}
             </p>
         </div>
@@ -16,15 +16,15 @@
             <div class="grid grid-cols-2 lg:grid-cols-3 gap-4">
                 <div class="text-center">
                     <div class="text-2xl font-bold text-slate-600">{{ number_format($this->currentBalance) }}</div>
-                    <div class="text-sm text-gray-600 {{ app()->currentLocale() === 'my' ? 'font-mm' : '' }}">{{ __('messages.point_transaction_history.current_balance') }}</div>
+                    <div class="text-sm text-gray-600 ">{{ __('messages.point_transaction_history.current_balance') }}</div>
                 </div>
                 <div class="text-center">
                     <div class="text-2xl font-bold text-slate-600">{{ number_format($this->totalEarned) }}</div>
-                    <div class="text-sm text-gray-600 {{ app()->currentLocale() === 'my' ? 'font-mm' : '' }}">{{ __('messages.point_transaction_history.total_earned') }}</div>
+                    <div class="text-sm text-gray-600 ">{{ __('messages.point_transaction_history.total_earned') }}</div>
                 </div>
                 <div class="text-center">
                     <div class="text-2xl font-bold text-slate-600">{{ number_format($this->totalSpent) }}</div>
-                    <div class="text-sm text-gray-600 {{ app()->currentLocale() === 'my' ? 'font-mm' : '' }}">{{ __('messages.point_transaction_history.total_spent') }}</div>
+                    <div class="text-sm text-gray-600 ">{{ __('messages.point_transaction_history.total_spent') }}</div>
                 </div>
             </div>
         </div>
@@ -34,14 +34,14 @@
             <div class="grid grid-cols-1 md:grid-cols-3 gap-4">
                 <!-- Search -->
                 <div>
-                    <label class="block text-sm font-medium text-gray-700 mb-2 {{ app()->currentLocale() === 'my' ? 'font-mm' : '' }}">
+                    <label class="block text-sm font-medium text-gray-700 mb-2 ">
                         {{ __('messages.search') }}
                     </label>
                     <div class="relative">
                         <input 
                             type="text" 
                             wire:model.live.debounce.300ms="search"
-                            class="w-full pl-10 pr-4 py-2 border border-gray-300 rounded-lg focus:border-black  focus:ring-0 focus:outline-none {{ app()->currentLocale() === 'my' ? 'font-mm' : '' }}"
+                            class="w-full pl-10 pr-4 py-2 border border-gray-300 rounded-lg focus:border-black  focus:ring-0 focus:outline-none "
                             placeholder="{{ __('messages.point_transaction_history.search_placeholder') }}"
                         >
                         <svg class="absolute left-3 top-2.5 h-5 w-5 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -52,12 +52,12 @@
 
                 <!-- Type Filter -->
                 <div>
-                    <label class="block text-sm font-medium text-gray-700 mb-2 {{ app()->currentLocale() === 'my' ? 'font-mm' : '' }}">
+                    <label class="block text-sm font-medium text-gray-700 mb-2 ">
                         {{ __('messages.point_transaction_history.transaction_type') }}
                     </label>
                     <select 
                         wire:model.live="typeFilter"
-                        class="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-0 focus:border-black  focus:outline-none {{ app()->currentLocale() === 'my' ? 'font-mm' : '' }}"
+                        class="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-0 focus:border-black  focus:outline-none "
                     >
                         <option value="">{{ __('messages.all_types') }}</option>
                         <option value="earned">{{ __('messages.point_transaction_history.type.earned') }}</option>
@@ -72,7 +72,7 @@
                     @if($search || $typeFilter)
                         <button 
                             wire:click="clearFilters"
-                            class="w-full px-4 py-2 bg-gray-100 text-gray-700 rounded-lg hover:bg-gray-200 transition-colors duration-200 {{ app()->currentLocale() === 'my' ? 'font-mm' : '' }}"
+                            class="w-full px-4 py-2 bg-gray-100 text-gray-700 rounded-lg hover:bg-gray-200 transition-colors duration-200 "
                         >
                             {{ __('messages.clear_filters') }}
                         </button>
@@ -122,23 +122,23 @@
                             
                             <!-- Transaction Description -->
                             <div class="mb-2">
-                                <h4 class="text-base font-medium text-gray-900 {{ app()->currentLocale() === 'my' ? 'font-mm' : '' }} leading-tight">
+                                <h4 class="text-base font-medium text-gray-900  leading-tight">
                                     {{ $transaction->description ?: __('messages.point_transaction_history.no_description') }}
                                 </h4>
                             </div>
                             
                             <!-- Footer Info -->
                             <div class="flex items-center justify-between text-sm">
-                                <span class="text-gray-500 {{ app()->currentLocale() === 'my' ? 'font-mm' : '' }}">
+                                <span class="text-gray-500 ">
                                     {{ $transaction->created_at->format('M j, Y') }}
                                 </span>
-                                <span class="text-gray-500 {{ app()->currentLocale() === 'my' ? 'font-mm' : '' }}">
+                                <span class="text-gray-500 ">
                                     {{ __('messages.point_transaction_history.balance_after') }}: {{ number_format($transaction->balance_after) }}
                                 </span>
                             </div>
                             
                             @if($transaction->expires_at)
-                                <div class="mt-2 text-xs text-gray-400 {{ app()->currentLocale() === 'my' ? 'font-mm' : '' }}">
+                                <div class="mt-2 text-xs text-gray-400 ">
                                     @if($transaction->expires_at->isPast())
                                         <span class="text-red-600 font-medium">{{ __('messages.expired') }}</span>
                                     @else
@@ -176,11 +176,11 @@
                                 <!-- Transaction Info -->
                                 <div class="flex-1 min-w-0">
                                     <div class="mb-1">
-                                        <h4 class="text-lg font-medium text-gray-900 {{ app()->currentLocale() === 'my' ? 'font-mm' : '' }} truncate">
+                                        <h4 class="text-lg font-medium text-gray-900  truncate">
                                             {{ $transaction->description ?: __('messages.point_transaction_history.no_description') }}
                                         </h4>
                                     </div>
-                                    <p class="text-sm text-gray-500 {{ app()->currentLocale() === 'my' ? 'font-mm' : '' }}">
+                                    <p class="text-sm text-gray-500 ">
                                         {{ $transaction->created_at->format('M j, Y g:i A') }}
                                     </p>
                                 </div>
@@ -197,11 +197,11 @@
                                         <span class="text-2xl font-bold text-gray-600">{{ number_format($transaction->points) }}</span>
                                     @endif
                                 </div>
-                                <div class="text-sm text-gray-500 {{ app()->currentLocale() === 'my' ? 'font-mm' : '' }}">
+                                <div class="text-sm text-gray-500 ">
                                     {{ __('messages.point_transaction_history.balance_after') }}: {{ number_format($transaction->balance_after) }}
                                 </div>
                                 @if($transaction->expires_at)
-                                    <div class="text-xs text-gray-400 mt-1 {{ app()->currentLocale() === 'my' ? 'font-mm' : '' }}">
+                                    <div class="text-xs text-gray-400 mt-1 ">
                                         @if($transaction->expires_at->isPast())
                                             <span class="text-red-600 font-medium">{{ __('messages.expired') }}</span>
                                         @else
@@ -230,10 +230,10 @@
                         <path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm1-13a1 1 0 10-2 0v.092a4.535 4.535 0 00-1.676.662C6.602 6.234 6 7.009 6 8c0 .99.602 1.765 1.324 2.246.48.32 1.054.545 1.676.662v1.941c-.391-.127-.68-.317-.843-.504a1 1 0 10-1.51 1.31c.562.649 1.413 1.076 2.353 1.253V15a1 1 0 102 0v-.092a4.535 4.535 0 001.676-.662C13.398 13.766 14 12.991 14 12c0-.99-.602-1.765-1.324-2.246A4.535 4.535 0 0011 9.092V7.151c.391.127.68.317.843.504a1 1 0 101.51-1.31c-.562-.649-1.413-1.076-2.353-1.253V5z" clip-rule="evenodd"/>
                     </svg>
                 </div>
-                <h3 class="text-lg font-medium text-gray-900 mb-2 {{ app()->currentLocale() === 'my' ? 'font-mm' : '' }}">
+                <h3 class="text-lg font-medium text-gray-900 mb-2 ">
                     {{ __('messages.point_transaction_history.no_transactions') }}
                 </h3>
-                <p class="text-gray-600 {{ app()->currentLocale() === 'my' ? 'font-mm' : '' }}">
+                <p class="text-gray-600 ">
                     {{ __('messages.point_transaction_history.no_transactions_description') }}
                 </p>
             </div>

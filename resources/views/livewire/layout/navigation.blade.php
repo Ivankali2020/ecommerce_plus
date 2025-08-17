@@ -35,7 +35,7 @@ new class extends Component
                             @if ($tenantSellerLogo)
                                 <img src="{{ $tenantSellerLogo != null ? $tenantSellerLogo : asset('assets/logo.png') }}" alt="{{  $seller->name }}" class="block rounded h-12 w-auto fill-current text-slate-800 dark:text-slate-200" />
                                 @else
-                                <h1 class="text-2xl font-bold font-bebas text-center ">{{  $tenantSellerName  }}</h1>
+                                <h1 class="text-lg lg:text-2xl font-bold font-bebas text-center ">{{  $tenantSellerName  }}</h1>
                             @endif
                         </a>
                     </div>
@@ -103,7 +103,7 @@ new class extends Component
             <div class="hidden sm:flex sm:items-center sm:ms-6 ">
                 <x-dropdown align="right" width="48">
                     <x-slot name="trigger" >
-                        <button class="{{ app()->currentLocale() === 'my' ? 'font-mm' : '' }} hover:bg-gray-50 inline-flex items-center px-3 py-2 border border-transparent text-sm leading-4 font-medium rounded-md text-gray-500 dark:text-gray-400 bg-white dark:bg-gray-800 hover:text-gray-700 dark:hover:text-gray-300 focus:outline-none transition ease-in-out duration-150">
+                        <button class=" hover:bg-gray-50 inline-flex items-center px-3 py-2 border border-transparent text-sm leading-4 font-medium rounded-md text-gray-500 dark:text-gray-400 bg-white dark:bg-gray-800 hover:text-gray-700 dark:hover:text-gray-300 focus:outline-none transition ease-in-out duration-150">
                             <div x-data="{{ json_encode(['name' => auth()->user()->name]) }}" x-text="name" x-on:profile-updated.window="name = $event.detail.name"></div>
 
                             <div class="ms-1">
@@ -192,7 +192,7 @@ new class extends Component
 
 
             <!-- Hamburger -->  
-            <div class="-me-2 flex items-center sm:hidden  {{ app()->currentLocale() === 'my' ? 'font-mm' : '' }}">
+            <div class="-me-2 flex items-center sm:hidden  ">
 
 
                 @guest
@@ -240,11 +240,11 @@ new class extends Component
     <div :class="{'block': open, 'hidden': ! open}" class="hidden sm:hidden">
 
         <!-- Responsive Settings Options -->
-        <div class="pt-4 pb-1 border-t border-gray-200 dark:border-gray-600  {{ app()->currentLocale() === 'my' ? 'font-mm' : '' }}">
+        <div class="pt-4 pb-1 border-t border-gray-200 dark:border-gray-600  ">
             @auth
             <div class="px-4 ">
-                <div class="font-medium text-base text-gray-800 dark:text-gray-200 {{ app()->currentLocale() === 'my' ? 'font-mm' : '' }}" x-data="{{ json_encode(['name' => auth()->user()->name]) }}" x-text="name" x-on:profile-updated.window="name = $event.detail.name"></div>
-                <div class="font-medium text-sm text-gray-500 {{ app()->currentLocale() === 'my' ? 'font-mm' : '' }}">{{ auth()->user()->email }}</div>
+                <div class="font-medium text-base text-gray-800 dark:text-gray-200 " x-data="{{ json_encode(['name' => auth()->user()->name]) }}" x-text="name" x-on:profile-updated.window="name = $event.detail.name"></div>
+                <div class="font-medium text-sm text-gray-500 ">{{ auth()->user()->email }}</div>
             </div>
             <div class="mt-3 space-y-1">
                 <x-responsive-nav-link :href="route('profile',Auth::user()->id)" wire:navigate>
@@ -310,7 +310,7 @@ new class extends Component
 
 <!-- Mobile Bottom Navigation -->
 @auth
-<div class="fixed bottom-0 left-0 z-50 w-full h-16 bg-white border-t border-t-gray-200 sm:hidden {{ app()->currentLocale() === 'my' ? 'font-mm' : '' }}">
+<div class="fixed bottom-0 left-0 z-50 w-full h-16 bg-white border-t border-t-gray-200 sm:hidden ">
     <div class=" h-full flex justify-around items-center ">
         <a wire:navigate href="{{ route('welcome') }}"  class="inline-flex flex-col items-center justify-center px-1 hover:bg-gray-50 {{ request()->routeIs(['store', 'store.*']) ? 'text-[#c2a03d]' : 'text-gray-500' }}">
             <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="size-6 w-6 h-6 mb-1">

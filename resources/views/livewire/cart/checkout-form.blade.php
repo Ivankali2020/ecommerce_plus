@@ -1,7 +1,7 @@
 <div class="space-y-4">
     {{-- Note --}}
     <div class="space-y-2">
-        <label for="note" class="block text-sm font-medium text-gray-700 {{ app()->currentLocale() === 'my' ? 'font-mm' : '' }}">
+        <label for="note" class="block text-sm font-medium text-gray-700 ">
             {{ __('messages.cart.note') }}
         </label>
         <textarea id="note" wire:model="note" rows="3"
@@ -14,7 +14,7 @@
 
     {{-- Checkout Button --}}
     <button wire:click="checkout" wire:loading.attr="disabled"
-        class="w-full bg-slate-900 text-white py-3 rounded-lg hover:bg-slate-800 transition-colors disabled:opacity-50 disabled:cursor-not-allowed {{ app()->currentLocale() === 'my' ? 'font-mm' : '' }}">
+        class="w-full bg-slate-900 text-white py-3 rounded-lg hover:bg-slate-800 transition-colors disabled:opacity-50 disabled:cursor-not-allowed ">
         <span wire:loading.remove>{{ __('messages.cart.proceed_checkout') }}</span>
         <span wire:loading>{{ __('messages.cart.processing') }}...</span>
     </button>
@@ -29,7 +29,7 @@
                     </svg>
                 </div>
                 <div class="ml-3">
-                    <h3 class="text-sm font-medium text-red-800 {{ app()->currentLocale() === 'my' ? 'font-mm' : '' }}">
+                    <h3 class="text-sm font-medium text-red-800 ">
                         {{ __('messages.cart.validation_errors') }}
                     </h3>
                     <div class="mt-2 text-sm text-red-700">

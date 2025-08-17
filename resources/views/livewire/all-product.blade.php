@@ -1,5 +1,5 @@
 <div class="container mb-20 lg:mb-0 mx-auto px-4 py-4  lg:py-8">
-    <h2 class=" text-xl lg:text-3xl  mb-4 lg:mb-10 {{ app()->currentLocale() === 'my' ? 'font-mm' : '' }}">
+    <h2 class=" text-xl lg:text-3xl  mb-4 lg:mb-10 ">
         {{ __('messages.navigation.products') }}
     </h2>
     <!-- Search Box -->

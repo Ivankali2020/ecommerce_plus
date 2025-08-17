@@ -85,7 +85,7 @@
 
 
                             <!-- Call to Action Buttons -->
-                            <div class="mt-10 flex items-center justify-center gap-x-6 {{ app()->currentLocale() === 'my' ? 'font-mm' : '' }}">
+                            <div class="mt-10 flex items-center justify-center gap-x-6 ">
                                 <!-- Seller Registration CTA -->
                                 <x-primary-link-button :href="route('partner.register')" class="py-2.5">
                                      {{ __('messages.welcome.create_your_store') }}

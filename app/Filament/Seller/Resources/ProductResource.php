@@ -11,6 +11,7 @@ use App\Models\Product;
 use CodeWithDennis\FilamentSelectTree\SelectTree;
 use Filament\Facades\Filament;
 use Filament\Forms;
+use Filament\Forms\Components\Placeholder;
 use Filament\Forms\Components\TextInput;
 use Filament\Forms\Form;
 use Filament\Pages\Page;
@@ -213,6 +214,11 @@ class ProductResource extends Resource
                                 Forms\Components\TextInput::make('discount_price')
                                     ->label(__('filament/resources/product-resource.form.single_product.discount_price.label'))
                                     ->numeric()
+                                    ->live(onBlur: true, debounce: 200)
+                                    ->afterStateUpdated(function (Forms\Get $get, Forms\Set $set) {
+                                        // this is auto change discount percentage
+                                        self::getDiscountPercentage($get, $set);
+                                    })
                                     ->prefix(fn (Forms\Get $get) => blank($get('exchange_id')) ? '' : Exchange::where('id', $get('exchange_id'))->with('currency')->first()->currency->symbol_native)
                                     ->default(0.0000),
 
@@ -292,6 +298,7 @@ class ProductResource extends Resource
                                 Forms\Components\SpatieMediaLibraryFileUpload::make('images')
                                     ->collection('images')->imageEditor()->multiple()
                                     ->panelLayout('grid')
+                                    ->reorderable()
                                     ->label(__('filament/resources/product-resource.form.variants.images.label'))
                                     ->image()->rules('required')->columnSpanFull(),
 
@@ -357,6 +364,11 @@ class ProductResource extends Resource
                                             Forms\Components\TextInput::make('discount_price')
                                                 ->label(__('filament/resources/product-resource.form.variants.discount_price.label'))
                                                 ->numeric()
+                                                ->live(onBlur: true, debounce: 200)
+                                                ->afterStateUpdated(function (Forms\Get $get, Forms\Set $set) {
+                                                    // this is auto change discount percentage
+                                                    self::getDiscountPercentage($get, $set, true);
+                                                })
                                                 ->prefix(fn (Forms\Get $get) => blank($get('exchange_id')) ? '' : Exchange::where('id', $get('exchange_id'))->with('currency')->first()->currency->symbol_native)
                                                 ->default(0.0000),
 
@@ -462,7 +474,7 @@ class ProductResource extends Resource
                                     ->helperText(__('filament/resources/product-resource.form.variants.images.helper_text'))
                                     ->collection('images')->imageEditor()->multiple()
                                     ->panelLayout('grid')
-                                 //    ->helperText('Clone Action လုပ်ပါက images ကို နောက်ဆုံးမှ ထည့်ပေးပါရန် (သို့) edit မှာ clone ပေးပါရန်')
+                                    //    ->helperText('Clone Action လုပ်ပါက images ကို နောက်ဆုံးမှ ထည့်ပေးပါရန် (သို့) edit မှာ clone ပေးပါရန်')
                                     ->rules('required')->columnSpanFull(),
 
                             ])
@@ -485,6 +497,27 @@ class ProductResource extends Resource
 
         if ($get('discount') == 0) {
             $set('discount_price', 0.00);
+        }
+
+        if (! blank($get('price'))) {
+            self::getDiscountMmk($get, $set, $forVariants);
+        }
+    }
+
+    public static function getDiscountPercentage($get, $set, $forVariants = false)
+    {
+        if ($get('discount_price') != null && ! blank($get('price')) && $get('price') > 0) {
+            // Calculate discount percentage: ((original_price - discount_price) / original_price) * 100
+            $discountPercentage = (($get('price') - $get('discount_price')) / $get('price')) * 100;
+
+            // Ensure percentage is between 0 and 100
+            $discountPercentage = (int) max(0, min(100, round($discountPercentage, 2)));
+
+            $set('discount', $discountPercentage);
+        }
+
+        if ($get('discount_price') == 0 || $get('discount_price') >= $get('price')) {
+            $set('discount', 0);
         }
 
         if (! blank($get('price'))) {
@@ -525,10 +558,8 @@ class ProductResource extends Resource
                 $removeLastTowDigitsToZeroForMMKDiscountPrice = self::modifyPrice($discountCalculateForMMK);
 
                 $set('mmk_discount_price', $removeLastTowDigitsToZeroForMMKDiscountPrice);
-
             }
         }
-
     }
 
     public static function modifyPrice($price)
@@ -573,7 +604,7 @@ class ProductResource extends Resource
                         return $record->quantity * $record->mmk_buy_price;
                     })
                     ->numeric()
-                // ->money('mmk')
+                    // ->money('mmk')
                     ->label('Total Capital'),
 
                 //                Tables\Columns\IconColumn::make('has_variant')
@@ -678,6 +709,8 @@ class ProductResource extends Resource
                 Tables\Actions\ReplicateAction::make()
                     ->modalWidth('sm')
                     ->form([
+                        Placeholder::make('အကြောင်းအရာ')
+                            ->content('ပစ္စည်းကူးယူရန် Copy ပွားနိုင်ပါသည်။'),
                         Forms\Components\TextInput::make('name'),
                         Forms\Components\TextInput::make('sku'),
                         Forms\Components\SpatieMediaLibraryFileUpload::make('images')->collection('images')->previewable(false)->multiple(),

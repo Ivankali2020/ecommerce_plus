@@ -1,4 +1,4 @@
-<div class="min-h-screen  {{ app()->currentLocale() === 'my' ? 'font-mm' : '' }}">
+<div class="min-h-screen  ">
     <!-- Header Section -->
     <div class="py-8">
         <div class="max-w-7xl mx-auto px-4">

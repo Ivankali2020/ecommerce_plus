@@ -7,7 +7,7 @@
             </div>
         </div>
 
-        <h1 class="text-lg md:text-2xl 2xl:text-3xl font-bold mb-6 {{ app()->currentLocale() === 'my' ? 'font-mm' : '' }}">
+        <h1 class="text-lg md:text-2xl 2xl:text-3xl font-bold mb-6 ">
             {{ __('messages.orders.history') }}
         </h1>
 
@@ -92,10 +92,10 @@
                         <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
                             d="M16 11V7a4 4 0 00-8 0v4M5 9h14l1 12H4L5 9z" />
                     </svg>
-                    <h3 class="mt-4 text-lg font-medium text-gray-900 dark:text-white {{ app()->currentLocale() === 'my' ? 'font-mm' : '' }}">
+                    <h3 class="mt-4 text-lg font-medium text-gray-900 dark:text-white ">
                         {{ __('messages.orders.no_orders') }}
                     </h3>
-                    <p class="mt-2 text-gray-500 dark:text-gray-400 {{ app()->currentLocale() === 'my' ? 'font-mm' : '' }}">
+                    <p class="mt-2 text-gray-500 dark:text-gray-400 ">
                         {{ __('messages.orders.start_shopping_message') }}
                     </p>
                     <div class="mt-6">

@@ -2,7 +2,7 @@
     <!-- Reviews Header -->
     <div class="border-b border-gray-200 pb-6 mb-6">
         <div class="flex items-center justify-between">
-            <h2 class="text-2xl font-bold text-gray-900 {{ app()->currentLocale() === 'my' ? 'font-mm' : '' }}">
+            <h2 class="text-2xl font-bold text-gray-900 ">
                 {{ __('messages.reviews.title') }}
             </h2>
             
@@ -10,7 +10,7 @@
                 @if(!$this->userHasReviewed)
                     <button 
                         wire:click="toggleReviewForm"
-                        class="inline-flex items-center px-4 py-2 border border-transparent text-sm font-medium rounded-md text-white bg-slate-600 hover:bg-slate-700 transition-colors duration-200 {{ app()->currentLocale() === 'my' ? 'font-mm' : '' }}"
+                        class="inline-flex items-center px-4 py-2 border border-transparent text-sm font-medium rounded-md text-white bg-slate-600 hover:bg-slate-700 transition-colors duration-200 "
                     >
                         @if($showReviewForm)
                             {{ __('messages.reviews.cancel_review') }}
@@ -22,7 +22,7 @@
             @else
                 <a 
                     href="{{ route('login') }}"
-                    class="inline-flex items-center px-4 py-2 border border-gray-300 text-sm font-medium rounded-md text-gray-700 bg-white hover:bg-gray-50 transition-colors duration-200 {{ app()->currentLocale() === 'my' ? 'font-mm' : '' }}"
+                    class="inline-flex items-center px-4 py-2 border border-gray-300 text-sm font-medium rounded-md text-gray-700 bg-white hover:bg-gray-50 transition-colors duration-200 "
                 >
                     {{ __('messages.reviews.login_to_review') }}
                 </a>
@@ -44,7 +44,7 @@
                             @endfor
                         </div>
                     </div>
-                    <p class="text-sm text-gray-600 mt-2 {{ app()->currentLocale() === 'my' ? 'font-mm' : '' }}">
+                    <p class="text-sm text-gray-600 mt-2 ">
                         {{ __('messages.reviews.based_on_reviews', ['count' => $this->totalReviews]) }}
                     </p>
                 </div>
@@ -53,11 +53,11 @@
                 <div class="space-y-2 ">
                     @foreach($this->ratingBreakdown as $stars => $data)
                         <div class="flex items-center space-x-3">
-                            <span class="text-sm text-gray-700 w-20 {{ app()->currentLocale() === 'my' ? 'font-mm' : '' }}">{{ $stars }} {{ __('messages.reviews.stars') }}</span>
+                            <span class="text-sm text-gray-700 w-20 ">{{ $stars }} {{ __('messages.reviews.stars') }}</span>
                             <div class="flex-1 bg-gray-200 rounded-full h-2">
                                 <div class="bg-yellow-400 h-2 rounded-full transition-all duration-300" style="width: {{ $data['percentage'] }}%"></div>
                             </div>
-                            <span class="text-sm text-gray-600 w-12 text-right {{ app()->currentLocale() === 'my' ? 'font-mm' : '' }}">{{ $data['count'] }}</span>
+                            <span class="text-sm text-gray-600 w-12 text-right ">{{ $data['count'] }}</span>
                         </div>
                     @endforeach
                 </div>
@@ -75,7 +75,7 @@
                     </svg>
                 </div>
                 <div class="ml-3">
-                    <p class="text-sm font-medium text-green-800 {{ app()->currentLocale() === 'my' ? 'font-mm' : '' }}">
+                    <p class="text-sm font-medium text-green-800 ">
                         {{ session('success') }}
                     </p>
                 </div>
@@ -92,7 +92,7 @@
                     </svg>
                 </div>
                 <div class="ml-3">
-                    <p class="text-sm font-medium text-red-800 {{ app()->currentLocale() === 'my' ? 'font-mm' : '' }}">
+                    <p class="text-sm font-medium text-red-800 ">
                         {{ session('error') }}
                     </p>
                 </div>
@@ -103,14 +103,14 @@
     <!-- Review Form -->
     @if($showReviewForm && auth()->check() && !$this->userHasReviewed)
         <div class="mb-8 bg-gray-50 rounded-lg p-6 border border-gray-200">
-            <h3 class="text-lg font-semibold text-gray-900 mb-4 {{ app()->currentLocale() === 'my' ? 'font-mm' : '' }}">
+            <h3 class="text-lg font-semibold text-gray-900 mb-4 ">
                 {{ __('messages.reviews.write_your_review') }}
             </h3>
             
             <form wire:submit="submitReview" class="space-y-4">
                 <!-- Rating Stars -->
                 <div>
-                    <label class="block text-sm font-medium text-gray-700 mb-2 {{ app()->currentLocale() === 'my' ? 'font-mm' : '' }}">
+                    <label class="block text-sm font-medium text-gray-700 mb-2 ">
                         {{ __('messages.reviews.rating') }}
                     </label>
                     <div class="flex items-center space-x-1">
@@ -125,29 +125,29 @@
                                 </svg>
                             </button>
                         @endfor
-                        <span class="ml-2 text-sm text-gray-600 {{ app()->currentLocale() === 'my' ? 'font-mm' : '' }}">
+                        <span class="ml-2 text-sm text-gray-600 ">
                             {{ $newRating }} {{ $newRating === 1 ? __('messages.reviews.star') : __('messages.reviews.stars') }}
                         </span>
                     </div>
                     @error('newRating')
-                        <p class="mt-1 text-sm text-red-600 {{ app()->currentLocale() === 'my' ? 'font-mm' : '' }}">{{ $message }}</p>
+                        <p class="mt-1 text-sm text-red-600 ">{{ $message }}</p>
                     @enderror
                 </div>
 
                 <!-- Comment -->
                 <div>
-                    <label for="comment" class="block text-sm font-medium text-gray-700 mb-2 {{ app()->currentLocale() === 'my' ? 'font-mm' : '' }}">
+                    <label for="comment" class="block text-sm font-medium text-gray-700 mb-2 ">
                         {{ __('messages.reviews.comment') }}
                     </label>
                     <textarea 
                         id="comment"
                         wire:model="newComment"
                         rows="4"
-                        class="block w-full border-gray-300 rounded-md shadow-sm {{ app()->currentLocale() === 'my' ? 'font-mm' : '' }}"
+                        class="block w-full border-gray-300 rounded-md shadow-sm "
                         placeholder="{{ __('messages.reviews.comment_placeholder') }}"
                     ></textarea>
                     @error('newComment')
-                        <p class="mt-1 text-sm text-red-600 {{ app()->currentLocale() === 'my' ? 'font-mm' : '' }}">{{ $message }}</p>
+                        <p class="mt-1 text-sm text-red-600 ">{{ $message }}</p>
                     @enderror
                 </div>
 
@@ -156,13 +156,13 @@
                     <button 
                         type="button"
                         wire:click="toggleReviewForm"
-                        class="px-4 py-2 border border-gray-300 text-sm font-medium rounded-md text-gray-700 bg-white hover:bg-gray-50 transition-colors duration-200 {{ app()->currentLocale() === 'my' ? 'font-mm' : '' }}"
+                        class="px-4 py-2 border border-gray-300 text-sm font-medium rounded-md text-gray-700 bg-white hover:bg-gray-50 transition-colors duration-200 "
                     >
                         {{ __('messages.reviews.cancel') }}
                     </button>
                     <button 
                         type="submit"
-                        class="px-4 py-2 border border-transparent text-sm font-medium rounded-md text-white bg-slate-600 hover:bg-slate-700 transition-colors duration-200 {{ app()->currentLocale() === 'my' ? 'font-mm' : '' }}"
+                        class="px-4 py-2 border border-transparent text-sm font-medium rounded-md text-white bg-slate-600 hover:bg-slate-700 transition-colors duration-200 "
                         wire:loading.attr="disabled"
                     >
                         <span wire:loading.remove>{{ __('messages.reviews.submit') }}</span>
@@ -183,7 +183,7 @@
                     </svg>
                 </div>
                 <div class="ml-3">
-                    <p class="text-sm font-medium text-slate-800 {{ app()->currentLocale() === 'my' ? 'font-mm' : '' }}">
+                    <p class="text-sm font-medium text-slate-800 ">
                         {{ __('messages.reviews.already_reviewed') }}
                     </p>
                 </div>
@@ -213,7 +213,7 @@
                             <!-- User Info and Rating -->
                             <div class="flex items-center justify-between mb-2">
                                 <div>
-                                    <h4 class="text-sm font-medium text-gray-900 {{ app()->currentLocale() === 'my' ? 'font-mm' : '' }}">
+                                    <h4 class="text-sm font-medium text-gray-900 ">
                                         {{ $review->user->name }}
                                     </h4>
                                     <div class="flex items-center mt-1">
@@ -224,13 +224,13 @@
                                         @endfor
                                     </div>
                                 </div>
-                                <p class="text-sm text-gray-500 {{ app()->currentLocale() === 'my' ? 'font-mm' : '' }}">
+                                <p class="text-sm text-gray-500 ">
                                     {{ $review->created_at->format('d M Y H:i:s') }}
                                 </p>
                             </div>
 
                             <!-- Review Comment -->
-                            <div class="text-gray-700 text-sm leading-relaxed {{ app()->currentLocale() === 'my' ? 'font-mm' : '' }}">
+                            <div class="text-gray-700 text-sm leading-relaxed ">
                                 {{ $review->comment }}
                             </div>
                         </div>
@@ -251,10 +251,10 @@
             <svg class="w-16 h-16 mx-auto text-gray-400 mb-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                 <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M8 12h.01M12 12h.01M16 12h.01M21 12c0 4.418-4.03 8-9 8a9.863 9.863 0 01-4.255-.949L3 20l1.395-3.72C3.512 15.042 3 13.574 3 12c0-4.418 4.03-8 9-8s9 3.582 9 8z"/>
             </svg>
-            <h3 class="text-lg font-medium text-gray-900 mb-2 {{ app()->currentLocale() === 'my' ? 'font-mm' : '' }}">
+            <h3 class="text-lg font-medium text-gray-900 mb-2 ">
                 {{ __('messages.reviews.no_reviews') }}
             </h3>
-            <p class="text-gray-500 {{ app()->currentLocale() === 'my' ? 'font-mm' : '' }}">
+            <p class="text-gray-500 ">
                 {{ __('messages.reviews.be_first_to_review') }}
             </p>
         </div>

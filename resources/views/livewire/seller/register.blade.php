@@ -7,7 +7,7 @@
                 EN
             </a>
             <a href="{{ route('language.switch', 'my') }}" 
-               class="px-3 py-2 text-sm rounded-md transition-colors {{ app()->currentLocale() === 'my' ? 'bg-slate-600 text-white' : 'bg-white text-gray-700 hover:bg-gray-100' }} {{ app()->currentLocale() === 'my' ? 'font-mm' : '' }}">
+               class="px-3 py-2 text-sm rounded-md transition-colors {{ app()->currentLocale() === 'my' ? 'bg-slate-600 text-white' : 'bg-white text-gray-700 hover:bg-gray-100' }} ">
                 မြန်မာ
             </a>
         </div>
@@ -19,10 +19,10 @@
             <a href="/">
                 <img class="mx-auto h-20 w-auto" src="{{ asset('assets/logo.png') }}" alt="Your Logo">
             </a>
-            <h2 class="mt-6 text-3xl font-extrabold text-gray-900 dark:text-white {{ app()->currentLocale() === 'my' ? 'font-mm' : '' }}">
+            <h2 class="mt-6 text-3xl font-extrabold text-gray-900 dark:text-white ">
                 {{ __('messages.auth.seller_register_page.title') }}
             </h2>
-            <p class="mt-2 text-sm text-gray-600 dark:text-gray-400 {{ app()->currentLocale() === 'my' ? 'font-mm' : '' }}">
+            <p class="mt-2 text-sm text-gray-600 dark:text-gray-400 ">
                 {{ __('messages.auth.seller_register_page.subtitle') }}
             </p>
         </div>
@@ -33,9 +33,9 @@
                 <!-- Name -->
                 <div>
                     <x-input-label for="name" :value="__('messages.auth.seller_register_page.name')"
-                        class="mb-2 {{ app()->currentLocale() === 'my' ? 'font-mm' : '' }}" />
+                        class="mb-2 " />
                     <x-text-input wire:model="name" id="name" type="text"
-                        class="appearance-none rounded-lg relative block w-full px-3 py-2 border border-gray-300 dark:border-gray-700 placeholder-gray-500 text-gray-900 dark:text-gray-100 focus:outline-none focus:ring-slate-500 focus:border-slate-500 focus:z-10 sm:text-sm dark:bg-gray-800 {{ app()->currentLocale() === 'my' ? 'font-mm' : '' }}"
+                        class="appearance-none rounded-lg relative block w-full px-3 py-2 border border-gray-300 dark:border-gray-700 placeholder-gray-500 text-gray-900 dark:text-gray-100 focus:outline-none focus:ring-slate-500 focus:border-slate-500 focus:z-10 sm:text-sm dark:bg-gray-800 "
                         required autofocus autocomplete="name" />
                     <x-input-error :messages="$errors->get('name')" class="mt-2" />
                 </div>
@@ -43,7 +43,7 @@
                 <!-- Email -->
                 <div>
                     <x-input-label for="email" :value="__('messages.auth.seller_register_page.email')"
-                        class="mb-2 {{ app()->currentLocale() === 'my' ? 'font-mm' : '' }}" />
+                        class="mb-2 " />
                     <x-text-input wire:model="email" id="email" type="email"
                         class="appearance-none rounded-lg relative block w-full px-3 py-2 border border-gray-300 dark:border-gray-700 placeholder-gray-500 text-gray-900 dark:text-gray-100 focus:outline-none focus:ring-slate-500 focus:border-slate-500 focus:z-10 sm:text-sm dark:bg-gray-800"
                         required autocomplete="username" />
@@ -53,7 +53,7 @@
                 <!-- Domain -->
                 <div>
                     <x-input-label for="domain" :value="__('messages.auth.seller_register_page.subdomain')"
-                        class="mb-2 {{ app()->currentLocale() === 'my' ? 'font-mm' : '' }}" />
+                        class="mb-2 " />
                     <div class="flex">
                         <x-text-input wire:model.live="domain" id="domain" type="text"
                             class="appearance-none rounded-l-lg relative block w-full px-3 py-2 border border-gray-300 dark:border-gray-700 placeholder-gray-500 text-gray-900 dark:text-gray-100 focus:outline-none focus:ring-slate-500 focus:border-slate-500 focus:z-10 sm:text-sm dark:bg-gray-800"
@@ -62,7 +62,7 @@
                             .{{ config("tenancy.central_domains")[0] }}
                         </span>
                     </div>
-                    <p class="mt-1 text-sm text-gray-500 dark:text-gray-400 {{ app()->currentLocale() === 'my' ? 'font-mm' : '' }}">
+                    <p class="mt-1 text-sm text-gray-500 dark:text-gray-400 ">
                         {{ __('messages.auth.seller_register_page.subdomain_preview') }} <strong>{{ $domain ?: 'your-store' }}.{{ config("tenancy.central_domains")[0] }}</strong>
                     </p>
                     <x-input-error :messages="$errors->get('domain')" class="mt-2" />
@@ -71,7 +71,7 @@
                 <!-- Password -->
                 <div>
                     <x-input-label for="password" :value="__('messages.auth.seller_register_page.password')"
-                        class="mb-2 {{ app()->currentLocale() === 'my' ? 'font-mm' : '' }}" />
+                        class="mb-2 " />
                     <x-text-input wire:model="password" id="password" type="password"
                         class="appearance-none rounded-lg relative block w-full px-3 py-2 border border-gray-300 dark:border-gray-700 placeholder-gray-500 text-gray-900 dark:text-gray-100 focus:outline-none focus:ring-slate-500 focus:border-slate-500 focus:z-10 sm:text-sm dark:bg-gray-800"
                         required autocomplete="new-password" />
@@ -81,7 +81,7 @@
                 <!-- Confirm Password -->
                 <div>
                     <x-input-label for="password_confirmation" :value="__('messages.auth.seller_register_page.confirm_password')"
-                        class="mb-2 {{ app()->currentLocale() === 'my' ? 'font-mm' : '' }}" />
+                        class="mb-2 " />
                     <x-text-input wire:model="password_confirmation" id="password_confirmation" type="password"
                         class="appearance-none rounded-lg relative block w-full px-3 py-2 border border-gray-300 dark:border-gray-700 placeholder-gray-500 text-gray-900 dark:text-gray-100 focus:outline-none focus:ring-slate-500 focus:border-slate-500 focus:z-10 sm:text-sm dark:bg-gray-800"
                         required autocomplete="new-password" />
@@ -102,7 +102,7 @@
 
             <!-- Register Button -->
             <div>
-                <x-primary-button wire:loading.attr="disabled" class="group relative w-full flex justify-center py-2.5 px-4 border border-transparent text-sm font-medium rounded-md text-white bg-slate-600 hover:bg-slate-700 {{ app()->currentLocale() === 'my' ? 'font-mm' : '' }}">
+                <x-primary-button wire:loading.attr="disabled" class="group relative w-full flex justify-center py-2.5 px-4 border border-transparent text-sm font-medium rounded-md text-white bg-slate-600 hover:bg-slate-700 ">
                     <span class="absolute left-0 inset-y-0 flex items-center pl-3">
                         <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="currentColor" wire:loading.remove class="h-5 w-5 text-slate-500 group-hover:text-slate-400" >
                             <path fill-rule="evenodd" d="M18 10a8 8 0 1 1-16 0 8 8 0 0 1 16 0Zm-5.5-2.5a2.5 2.5 0 1 1-5 0 2.5 2.5 0 0 1 5 0ZM10 12a5.99 5.99 0 0 0-4.793 2.39A6.483 6.483 0 0 0 10 16.5a6.483 6.483 0 0 0 4.793-2.11A5.99 5.99 0 0 0 10 12Z" clip-rule="evenodd" />
@@ -115,7 +115,7 @@
             </div>
 
             <!-- Login Link -->
-            <p class="mt-2 text-center text-sm text-gray-600 dark:text-gray-400 {{ app()->currentLocale() === 'my' ? 'font-mm' : '' }}">
+            <p class="mt-2 text-center text-sm text-gray-600 dark:text-gray-400 ">
                 {{ __('messages.auth.seller_register_page.have_store') }}
                 <a href="{{ route('welcome') }}" class="font-medium text-slate-600 hover:text-slate-500">
                     {{ __('messages.auth.seller_register_page.go_to_main') }}

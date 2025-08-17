@@ -1,6 +1,6 @@
 <div class="w-full p-4 lg:p-0 lg:w-2/3" x-data="{ showCartItems: true }">
     <div class="flex items-center justify-between mb-4 md:mb-6">
-        <h2 class="text-2xl md:text-3xl font-bebas {{ app()->currentLocale() === 'my' ? 'font-mm' : '' }}">
+        <h2 class="text-2xl md:text-3xl font-bebas ">
             {{ __('messages.cart.shopping_cart') }}
         </h2>
         
@@ -8,7 +8,7 @@
         <div class="flex gap-2">
             <button 
                 @click="showCartItems = !showCartItems"
-                class="px-4 py-2 text-sm font-medium rounded-lg border transition-colors flex items-center gap-2 {{ app()->currentLocale() === 'my' ? 'font-mm' : '' }}"
+                class="px-4 py-2 text-sm font-medium rounded-lg border transition-colors flex items-center gap-2 "
                 :class="showCartItems ? 'bg-slate-900 text-white border-slate-900' : 'bg-slate-100  border-slate-200 text-black '"
             >
                 <!-- Receipt Icon -->
@@ -222,15 +222,15 @@
                 <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
                     d="M16 11V7a4 4 0 00-8 0v4M5 9h14l1 12H4L5 9z" />
             </svg>
-            <h3 class="mt-2 text-sm md:text-base font-medium text-gray-900 {{ app()->currentLocale() === 'my' ? 'font-mm' : '' }}">
+            <h3 class="mt-2 text-sm md:text-base font-medium text-gray-900 ">
                 {{ __('messages.cart.empty_cart') }}
             </h3>
-            <p class="mt-1 text-xs md:text-sm text-gray-500 {{ app()->currentLocale() === 'my' ? 'font-mm' : '' }}">
+            <p class="mt-1 text-xs md:text-sm text-gray-500 ">
                 {{ __('messages.cart.start_adding') }}
             </p>
             <div class="mt-4 md:mt-6">
                 <a href="{{ route('welcome') }}"
-                    class="inline-flex items-center px-4 py-2 border border-transparent shadow-sm text-sm font-medium rounded-md text-white bg-slate-900 hover:bg-slate-800 focus:outline-none focus:ring-0 focus:ring-offset-0 transition-colors {{ app()->currentLocale() === 'my' ? 'font-mm' : '' }}">
+                    class="inline-flex items-center px-4 py-2 border border-transparent shadow-sm text-sm font-medium rounded-md text-white bg-slate-900 hover:bg-slate-800 focus:outline-none focus:ring-0 focus:ring-offset-0 transition-colors ">
                     {{ __('messages.cart.continue_shopping') }}
                 </a>
             </div>
@@ -242,7 +242,7 @@
     <div x-show="!showCartItems && {{ $cartItems->isNotEmpty() ? 'true' : 'false' }}" x-transition:enter="transition ease-out duration-300" x-transition:enter-start="opacity-0 transform scale-95" x-transition:enter-end="opacity-100 transform scale-100" x-transition:leave="transition ease-in duration-200" x-transition:leave-start="opacity-100 transform scale-100" x-transition:leave-end="opacity-0 transform scale-95">
         @if($cartItems->isNotEmpty())
         <div class="bg-white rounded-lg shadow-sm border border-gray-100 p-4 md:p-6 animate-fade-in font-mono ">
-            <h3 class="text-xl font-bebas mb-4 {{ app()->currentLocale() === 'my' ? 'font-mm' : '' }}">
+            <h3 class="text-xl font-bebas mb-4 ">
                 Invoice Receipt
             </h3>
             

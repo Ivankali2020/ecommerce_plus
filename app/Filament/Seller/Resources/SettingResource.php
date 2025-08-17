@@ -19,6 +19,21 @@ class SettingResource extends Resource
 
     protected static ?string $navigationIcon = 'heroicon-o-cog-6-tooth';
 
+    public static function getNavigationLabel(): string
+    {
+        return __('filament/resources/setting-resource.navigation.label');
+    }
+
+    public static function getModelLabel(): string
+    {
+        return __('filament/resources/setting-resource.navigation.single');
+    }
+
+    public static function getPluralModelLabel(): string
+    {
+        return __('filament/resources/setting-resource.navigation.plural');
+    }
+
     public static function canCreate(): bool
     {
         return false; // Disable creation of settings through the Filament interface
@@ -28,48 +43,56 @@ class SettingResource extends Resource
     {
         return $form
             ->schema([
-                Tabs::make('Settings')
+                Tabs::make(__('filament/resources/setting-resource.form.tabs.general'))
                     ->tabs([
-                        Tabs\Tab::make('General Settings')
+                        Tabs\Tab::make(__('filament/resources/setting-resource.form.tabs.general'))
                             ->schema([
                                 Forms\Components\TextInput::make('data.point_percentage')
-                                    ->label('Point Percentage')
+                                    ->label(__('filament/resources/setting-resource.form.general.point_percentage.label'))
+                                    ->helperText(__('filament/resources/setting-resource.form.general.point_percentage.helper_text'))
                                     ->numeric()
                                     ->required(),
                                 Forms\Components\TextInput::make('data.tax_percentage')
-                                    ->label('Tax Percentage')
+                                    ->label(__('filament/resources/setting-resource.form.general.tax_percentage.label'))
+                                    ->helperText(__('filament/resources/setting-resource.form.general.tax_percentage.helper_text'))
                                     ->numeric()
                                     ->required(),
                                 Forms\Components\TextInput::make('data.referral_points')
-                                    ->label('Referral Points')
+                                    ->label(__('filament/resources/setting-resource.form.general.referral_points.label'))
+                                    ->helperText(__('filament/resources/setting-resource.form.general.referral_points.helper_text'))
                                     ->numeric()
                                     ->required(),
                             ]),
 
-                        Tabs\Tab::make('Social Media')
+                        Tabs\Tab::make(__('filament/resources/setting-resource.form.tabs.social_media'))
                             ->schema([
                                 Forms\Components\TextInput::make('data.facebook')
-                                    ->label('Facebook URL')
+                                    ->label(__('filament/resources/setting-resource.form.social_media.facebook.label'))
+                                    ->placeholder(__('filament/resources/setting-resource.form.social_media.facebook.placeholder'))
                                     ->url()
                                     ->maxLength(255),
                                 Forms\Components\TextInput::make('data.twitter')
-                                    ->label('Twitter URL')
+                                    ->label(__('filament/resources/setting-resource.form.social_media.twitter.label'))
+                                    ->placeholder(__('filament/resources/setting-resource.form.social_media.twitter.placeholder'))
                                     ->url()
                                     ->maxLength(255),
                                 Forms\Components\TextInput::make('data.youtube')
-                                    ->label('YouTube URL')
+                                    ->label(__('filament/resources/setting-resource.form.social_media.youtube.label'))
+                                    ->placeholder(__('filament/resources/setting-resource.form.social_media.youtube.placeholder'))
                                     ->url()
                                     ->maxLength(255),
                                 Forms\Components\TextInput::make('data.instagram')
-                                    ->label('Instagram URL')
+                                    ->label(__('filament/resources/setting-resource.form.social_media.instagram.label'))
+                                    ->placeholder(__('filament/resources/setting-resource.form.social_media.instagram.placeholder'))
                                     ->url()
                                     ->maxLength(255),
                             ]),
 
-                        Tabs\Tab::make('Content Pages')
+                        Tabs\Tab::make(__('filament/resources/setting-resource.form.tabs.content_pages'))
                             ->schema([
                                 RichEditor::make('data.privacy_policy')
-                                    ->label('Privacy Policy')
+                                    ->label(__('filament/resources/setting-resource.form.content_pages.privacy_policy.label'))
+                                    ->helperText(__('filament/resources/setting-resource.form.content_pages.privacy_policy.helper_text'))
                                     ->toolbarButtons([
                                         'bold',
                                         'italic',
@@ -84,7 +107,8 @@ class SettingResource extends Resource
                                     ->columnSpanFull(),
 
                                 RichEditor::make('data.terms_conditions')
-                                    ->label('Terms & Conditions')
+                                    ->label(__('filament/resources/setting-resource.form.content_pages.terms_conditions.label'))
+                                    ->helperText(__('filament/resources/setting-resource.form.content_pages.terms_conditions.helper_text'))
                                     ->toolbarButtons([
                                         'bold',
                                         'italic',
@@ -99,7 +123,8 @@ class SettingResource extends Resource
                                     ->columnSpanFull(),
 
                                 RichEditor::make('data.about_us')
-                                    ->label('About Us')
+                                    ->label(__('filament/resources/setting-resource.form.content_pages.about_us.label'))
+                                    ->helperText(__('filament/resources/setting-resource.form.content_pages.about_us.helper_text'))
                                     ->toolbarButtons([
                                         'bold',
                                         'italic',
@@ -114,7 +139,8 @@ class SettingResource extends Resource
                                     ->columnSpanFull(),
 
                                 RichEditor::make('data.returns_exchanges')
-                                    ->label('Returns & Exchanges Policy')
+                                    ->label(__('filament/resources/setting-resource.form.content_pages.returns_exchanges.label'))
+                                    ->helperText(__('filament/resources/setting-resource.form.content_pages.returns_exchanges.helper_text'))
                                     ->toolbarButtons([
                                         'bold',
                                         'italic',
@@ -129,17 +155,19 @@ class SettingResource extends Resource
                                     ->columnSpanFull(),
                             ]),
 
-                        Tabs\Tab::make('FAQ')
+                        Tabs\Tab::make(__('filament/resources/setting-resource.form.tabs.faq'))
                             ->schema([
                                 Repeater::make('data.faq')
-                                    ->label('Frequently Asked Questions')
+                                    ->label(__('filament/resources/setting-resource.form.faq.label'))
                                     ->schema([
                                         Forms\Components\TextInput::make('question')
-                                            ->label('Question')
+                                            ->label(__('filament/resources/setting-resource.form.faq.question.label'))
+                                            ->placeholder(__('filament/resources/setting-resource.form.faq.question.placeholder'))
                                             ->required()
                                             ->maxLength(255),
                                         RichEditor::make('answer')
-                                            ->label('Answer')
+                                            ->label(__('filament/resources/setting-resource.form.faq.answer.label'))
+                                            ->placeholder(__('filament/resources/setting-resource.form.faq.answer.placeholder'))
                                             ->required()
                                             ->toolbarButtons([
                                                 'bold',
@@ -154,7 +182,7 @@ class SettingResource extends Resource
                                     ->columns(2)
                                     ->collapsed()
                                     ->itemLabel(fn (array $state): ?string => $state['question'] ?? null)
-                                    ->addActionLabel('Add FAQ Item')
+                                    ->addActionLabel(__('filament/resources/setting-resource.form.faq.add_item'))
                                     ->reorderable()
                                     ->collapsible()
                                     ->columnSpanFull(),
@@ -170,17 +198,17 @@ class SettingResource extends Resource
             ->columns([
 
                 Tables\Columns\TextColumn::make('data.point_percentage')
-                    ->label('Point Percentage')
+                    ->label(__('filament/resources/setting-resource.table.columns.point_percentage'))
                     ->suffix(' % ')
                     ->sortable(),
 
                 Tables\Columns\TextColumn::make('data.referral_points')
-                    ->label('Referral Points')
+                    ->label(__('filament/resources/setting-resource.table.columns.referral_points'))
                     ->suffix(' PT ')
                     ->sortable(),
 
                 Tables\Columns\TextColumn::make('data.tax_percentage')
-                    ->label('Tax Percentage')
+                    ->label(__('filament/resources/setting-resource.table.columns.tax_percentage'))
                     ->suffix(' % ')
                     ->sortable(),
 

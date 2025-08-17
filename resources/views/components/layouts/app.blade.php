@@ -3,7 +3,7 @@
 <head>
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <link icon rel="icon" type="image/png" href="{{ $tenantSellerLogo ?? asset('images/favicon.png') }}">
+    <link icon rel="icon" type="image/png" href="{{ $tenantSellerLogo ?? asset('assets/favicon.ico') }}">
 
     <title>{{ isset($seo['title']) ? $seo['title'] : $tenantSellerName }}</title>
     
