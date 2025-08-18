@@ -1,87 +1,67 @@
 #!/bin/bash
 
-# SSL Certificate Setup Script for Docker
+# SSL Wildcard Certificate Setup Script for Multi-Tenant Docker
 # Usage: ./ssl-setup.sh [domain] [email]
 
 DOMAIN=${1:-padaung.me}
 EMAIL=${2:-admin@padaung.me}
 
-echo "Setting up SSL certificates for domain: $DOMAIN"
+echo "Setting up WILDCARD SSL certificates for domain: $DOMAIN"
 echo "Email: $EMAIL"
+echo ""
+echo "🔒 This will generate a wildcard certificate covering:"
+echo "   - $DOMAIN"
+echo "   - *.$DOMAIN (all subdomains)"
+echo ""
 
-# First, create a temporary Nginx config for initial setup (HTTP only)
-cat > nginx/default-temp.conf << EOF
-server {
-    listen 80;
-    server_name $DOMAIN www.$DOMAIN;
-    
-    location /.well-known/acme-challenge/ {
-        root /var/www/certbot;
-    }
-    
-    location / {
-        proxy_set_header X-Forwarded-Proto http;
-        try_files \$uri \$uri/ /index.php?\$query_string;
-        gzip_static on;
-    }
-    
-    location ~ \.php$ {
-        try_files \$uri =404;
-        fastcgi_split_path_info ^(.+\.php)(/.+)$;
-        fastcgi_pass app:9000;
-        fastcgi_index index.php;
-        include fastcgi_params;
-        fastcgi_param SCRIPT_FILENAME \$document_root\$fastcgi_script_name;
-        fastcgi_param PATH_INFO \$fastcgi_path_info;
-        fastcgi_read_timeout 300;
-        fastcgi_send_timeout 300;
-    }
-}
-EOF
+# Check if Cloudflare credentials exist
+if [ ! -f "nginx/ssl/cloudflare.ini" ]; then
+    echo "❌ ERROR: Cloudflare credentials file not found!"
+    echo "Please create nginx/ssl/cloudflare.ini with your Cloudflare API token"
+    echo "See the template file for instructions."
+    exit 1
+fi
 
-# Backup original config
-cp nginx/default.conf nginx/default.conf.backup
+# Check if credentials are configured
+if grep -q "YOUR_CLOUDFLARE_API_TOKEN_HERE" nginx/ssl/cloudflare.ini; then
+    echo "❌ ERROR: Please configure your Cloudflare API token in nginx/ssl/cloudflare.ini"
+    echo "Replace 'YOUR_CLOUDFLARE_API_TOKEN_HERE' with your actual token"
+    exit 1
+fi
 
-# Use temporary config
-cp nginx/default-temp.conf nginx/default.conf
+echo "✅ Cloudflare credentials found"
+echo "🚀 Starting wildcard certificate generation..."
 
-echo "Starting services with HTTP-only configuration..."
-docker-compose up -d web
+# Start services
+echo "Starting Docker services..."
+docker-compose up -d
 
-echo "Waiting for Nginx to start..."
-sleep 10
-
-echo "Obtaining SSL certificate..."
+echo "Obtaining wildcard SSL certificate via DNS challenge..."
 docker-compose run --rm certbot certonly \
-    --webroot \
-    --webroot-path=/var/www/certbot \
+    --dns-cloudflare \
+    --dns-cloudflare-credentials /etc/letsencrypt/cloudflare.ini \
     --email $EMAIL \
     --agree-tos \
     --no-eff-email \
     -d $DOMAIN \
-    -d www.$DOMAIN
+    -d "*.$DOMAIN"
 
 if [ $? -eq 0 ]; then
-    echo "SSL certificate obtained successfully!"
-    
-    # Update the Nginx config with the actual domain
-    sed -i.bak "s/your-domain.com/$DOMAIN/g" nginx/default.conf.backup
-    sed -i.bak "s/your-email@domain.com/$EMAIL/g" nginx/default.conf.backup
-    
-    # Restore the SSL-enabled config
-    cp nginx/default.conf.backup nginx/default.conf
-    
-    echo "Restarting Nginx with SSL configuration..."
+    echo "🎉 Wildcard SSL certificate obtained successfully!"
+    echo "📋 Certificate covers:"
+    echo "   - $DOMAIN"
+    echo "   - All subdomains: *.$DOMAIN"
+    echo ""
+    echo "🔄 Restarting services with SSL configuration..."
     docker-compose restart web
-    
-    echo "SSL setup complete! Your site should now be accessible via HTTPS."
-    echo "Certificate will auto-renew. Test renewal with: docker-compose run --rm certbot renew --dry-run"
+    echo ""
+    echo "✅ Multi-tenant SSL setup complete!"
+    echo "🌐 All tenant subdomains will automatically have SSL"
+    echo "🔄 Certificate will auto-renew every 60 days"
 else
-    echo "SSL certificate generation failed!"
-    echo "Restoring original configuration..."
-    cp nginx/default.conf.backup nginx/default.conf
-    docker-compose restart web
+    echo "❌ Wildcard SSL certificate generation failed!"
+    echo "Please check:"
+    echo "   - Cloudflare API token permissions"
+    echo "   - Domain is managed by Cloudflare"
+    echo "   - Network connectivity"
 fi
-
-# Cleanup
-rm -f nginx/default-temp.conf nginx/default.conf.bak
