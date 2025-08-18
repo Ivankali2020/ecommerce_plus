@@ -21,7 +21,14 @@ class TelegramWebhookController extends Controller
     {
         try {
             $telegram = new Api(env('TELEGRAM_BOT_TOKEN'));
-            $update = $telegram->commandsHandler(true);
+            
+            // Get the webhook update from the request
+            $update = $telegram->getWebhookUpdate();
+            
+            // Log for debugging
+            Log::info('Telegram webhook received', [
+                'update' => $update->toArray()
+            ]);
             
             // Handle the update with our service
             $this->telegramService->handleUpdate($update);
