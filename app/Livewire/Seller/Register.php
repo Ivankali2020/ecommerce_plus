@@ -40,7 +40,7 @@ class Register extends Component
                 'regex:/^[a-z0-9]+(?:-[a-z0-9]+)*$/',
                 function ($attribute, $value, $fail) {
                     // Check if domain already exists
-                    $existsDomain = Domain::where('domain', $value.'.padaung.test')->exists();
+                    $existsDomain = Domain::where('domain', $value.'.'.config('tenancy.central_domains')[0])->exists();
                     if ($existsDomain) {
                         $fail('This domain is already taken.');
                     }
@@ -82,7 +82,7 @@ class Register extends Component
 
         // Create domain record
         Domain::create([
-            'domain' => $domain.'.padaung.test',
+            'domain' => $domain.'.'.config('tenancy.central_domains')[0],
             'tenant_id' => $tenant->id,
         ]);
 
@@ -97,7 +97,7 @@ class Register extends Component
         // session(['registration_domain' => $domain]);
 
         // Redirect to tenant domain
-        return redirect()->away('http://'.$domain.'.padaung.test/seller/login');
+        return redirect()->away('http://'.$domain.'.'.config('tenancy.central_domains')[0].'/seller/login');
     }
 
     public function render()
