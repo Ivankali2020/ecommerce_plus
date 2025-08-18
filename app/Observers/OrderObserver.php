@@ -3,6 +3,7 @@
 namespace App\Observers;
 
 use App\Helper\OrderStatus;
+use App\Jobs\SendOrderTelegramNotification;
 use App\Models\Order;
 use App\Models\PointTransaction;
 use App\Services\PointService;
@@ -10,7 +11,6 @@ use Exception;
 use Filament\Actions\Action;
 use Filament\Notifications\Notification;
 use Illuminate\Support\Facades\Log;
-use Telegram\Bot\Api;
 
 class OrderObserver
 {
@@ -31,8 +31,8 @@ class OrderObserver
             ])
             ->sendToDatabase($order->seller);
 
-        // Send Telegram notification to seller if they have telegram_chat_id
-        $this->sendTelegramOrderNotification($order, 'created');
+        // Send Telegram notification to seller with a delay to ensure order products are saved
+        SendOrderTelegramNotification::dispatch($order, 'created')->delay(now()->addSeconds(5));
     }
 
     /**
@@ -75,9 +75,10 @@ class OrderObserver
             }
         }
 
-        // Notification::make()
-        //     ->title('Order has been '.$order->status->value)
-        //     ->sendToDatabase($order->seller);
+        // Send Telegram notification for status updates
+        if ($order->isDirty('status')) {
+            SendOrderTelegramNotification::dispatch($order, 'updated');
+        }
     }
 
     /**
@@ -90,93 +91,6 @@ class OrderObserver
             ->where('reference_id', $order->id)
             ->where('type', 'earned')
             ->exists();
-    }
-
-    /**
-     * Send Telegram notification to seller
-     */
-    protected function sendTelegramOrderNotification(Order $order, string $action): void
-    {
-        // Check if seller has telegram_chat_id
-        if (!$order->seller || !$order->seller->telegram_chat_id) {
-            return;
-        }
-
-        try {
-            $telegram = new Api(env('TELEGRAM_BOT_TOKEN'));
-            
-            $message = match($action) {
-                'created' => $this->formatNewOrderMessage($order),
-                'updated' => $this->formatOrderUpdateMessage($order),
-                default => "Order #{$order->invoice_number} has been {$action}"
-            };
-            
-            $telegram->sendMessage([
-                'chat_id' => $order->seller->telegram_chat_id,
-                'text' => $message,
-                // No parse_mode = plain text
-            ]);
-            
-        } catch (Exception $e) {
-            Log::error('Failed to send Telegram notification to seller', [
-                'error' => $e->getMessage(),
-                'order_id' => $order->id,
-                'seller_id' => $order->seller_id,
-                'telegram_chat_id' => $order->seller->telegram_chat_id,
-            ]);
-        }
-    }
-
-    /**
-     * Format new order message for Telegram
-     */
-    protected function formatNewOrderMessage(Order $order): string
-    {
-        $customerName = $order->walk_in_customer ? 'Walk-in Customer' : $order->user->name;
-        $itemCount = $order->products->sum('quantity');
-        
-        $message = "🛍️ New Order Received!\n\n" .
-                   "📋 Order #: {$order->invoice_number}\n" .
-                   "👤 Customer: {$customerName}\n" .
-                   "📦 Items: {$itemCount} item(s)\n" .
-                   "💰 Total: " . number_format($order->total, 0) . " MMK\n" .
-                   "🕐 Time: " . $order->created_at->format('M d, Y h:i A');
-        
-        // Add note if it exists
-        if (!empty($order->note)) {
-            $message .= "\n📝 Note: " . $order->note;
-        }
-        
-        $message .= "\n\nCheck your admin panel for full details.";
-        
-        return $message;
-    }
-
-    /**
-     * Format order update message for Telegram
-     */
-    protected function formatOrderUpdateMessage(Order $order): string
-    {
-        $statusEmoji = match($order->status) {
-            OrderStatus::Pending => '⏳',
-            OrderStatus::Confirmed => '✅',
-            OrderStatus::Delivered => '🚚',
-            OrderStatus::Cancelled => '❌',
-            default => '📦'
-        };
-        
-        $message = "{$statusEmoji} Order Status Updated\n\n" .
-                   "📋 Order #: {$order->invoice_number}\n" .
-                   "🔄 Status: {$order->status->value}\n" .
-                   "💰 Total: " . number_format($order->total, 0) . " MMK\n" .
-                   "🕐 Updated: " . now()->format('M d, Y h:i A');
-        
-        // Add note if it exists
-        if (!empty($order->note)) {
-            $message .= "\n📝 Note: " . $order->note;
-        }
-        
-        return $message;
     }
 
     /**
