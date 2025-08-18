@@ -114,7 +114,7 @@ class OrderObserver
             $telegram->sendMessage([
                 'chat_id' => $order->seller->telegram_chat_id,
                 'text' => $message,
-                'parse_mode' => 'Markdown',
+                // No parse_mode = plain text
             ]);
             
         } catch (Exception $e) {
@@ -133,14 +133,14 @@ class OrderObserver
     protected function formatNewOrderMessage(Order $order): string
     {
         $customerName = $order->walk_in_customer ? 'Walk-in Customer' : $order->user->name;
-        $itemCount = $order->orderProducts->sum('quantity');
+        $itemCount = $order->products->sum('quantity');
         
-        return "🛍️ *New Order Received!*\n\n" .
-               "📋 *Order #:* {$order->invoice_number}\n" .
-               "👤 *Customer:* {$customerName}\n" .
-               "📦 *Items:* {$itemCount} item(s)\n" .
-               "💰 *Total:* " . number_format($order->total, 0) . " MMK\n" .
-               "🕐 *Time:* " . $order->created_at->format('M d, Y h:i A') . "\n\n" .
+        return "🛍️ New Order Received!\n\n" .
+               "📋 Order #: {$order->invoice_number}\n" .
+               "👤 Customer: {$customerName}\n" .
+               "📦 Items: {$itemCount} item(s)\n" .
+               "💰 Total: " . number_format($order->total, 0) . " MMK\n" .
+               "🕐 Time: " . $order->created_at->format('M d, Y h:i A') . "\n\n" .
                "Check your admin panel for full details.";
     }
 
@@ -157,11 +157,11 @@ class OrderObserver
             default => '📦'
         };
         
-        return "{$statusEmoji} *Order Status Updated*\n\n" .
-               "📋 *Order #:* {$order->invoice_number}\n" .
-               "🔄 *Status:* {$order->status->value}\n" .
-               "💰 *Total:* " . number_format($order->total, 0) . " MMK\n" .
-               "🕐 *Updated:* " . now()->format('M d, Y h:i A');
+        return "{$statusEmoji} Order Status Updated\n\n" .
+               "📋 Order #: {$order->invoice_number}\n" .
+               "🔄 Status: {$order->status->value}\n" .
+               "💰 Total: " . number_format($order->total, 0) . " MMK\n" .
+               "🕐 Updated: " . now()->format('M d, Y h:i A');
     }
 
     /**

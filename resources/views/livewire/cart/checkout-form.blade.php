@@ -4,9 +4,12 @@
         <label for="note" class="block text-sm font-medium text-gray-700 ">
             {{ __('messages.cart.note') }}
         </label>
-        <textarea id="note" wire:model="note" rows="3"
-            class="mt-1 block w-full border-gray-300 rounded-md focus:ring-slate-500 focus:border-slate-500"
-            placeholder="{{ __('messages.cart.note') }}"></textarea>
+       
+        <x-textarea id="note" wire:model="note" rows="3"
+            class="mt-1 block w-full rounded-md"
+            placeholder="{{ __('messages.cart.note') }}"></x-textarea>
+        
+        {{-- Validation Error --}}
         @error('note')
             <p class="mt-1 text-sm text-red-600">{{ $message }}</p>
         @enderror
