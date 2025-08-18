@@ -72,14 +72,14 @@
                             </div>
 
                             <!-- Main Heading -->
-                            <h1  class="text-5xl lg:text-8xl font-bebas mt-2 tracking-wider font-bold  text-gray-900 sm:text-6xl bg-linear-to-r from-slate-500 via-[#c29f37] to-slate-500 bg-clip-text text-transparent dark:from-slate-400 dark:via-[#c29f37] dark:to-slate-400">
+                            <h1  class="text-5xl lg:text-8xl font-bebas mt-2 tracking-wider font-bold  sm:text-6xl bg-linear-to-r from-slate-900 via-[#c29f37] to-slate-900 bg-clip-text text-transparent dark:from-slate-900 dark:via-[#c29f37] dark:to-slate-400">
                                 {{ __('messages.title') }}
                             </h1>
 
                             <!-- Subheading -->
                             <div class="flex items-center justify-center">
-                                <p class="mt-6  max-w-2xl  font-jost text-md text-gray-600 dark:text-gray-300" style="line-height: 2rem">
-                                    {{ __('messages.description') }}
+                                <p class="mt-6  max-w-2xl  font-jost text-md  dark:text-gray-300" style="line-height: 2rem">
+                                    {{ __('messages.main_description') }}
                                 </p>
                             </div>
 

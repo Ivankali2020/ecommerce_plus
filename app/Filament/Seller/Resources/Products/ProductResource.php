@@ -731,8 +731,6 @@ class ProductResource extends Resource
                 ReplicateAction::make()
                     ->modalWidth('sm')
                     ->schema([
-                        Placeholder::make('အကြောင်းအရာ')
-                            ->content('ပစ္စည်းကူးယူရန် Copy ပွားနိုင်ပါသည်။'),
                         TextInput::make('name'),
                         TextInput::make('sku'),
                         SpatieMediaLibraryFileUpload::make('images')->collection('images')->previewable(false)->multiple(),
@@ -745,7 +743,7 @@ class ProductResource extends Resource
                         ]);
                     })->beforeReplicaSaved(function (Model $replica, array $data) {
                         $replica->fill($data);
-                    })->after(function (Model $replica, Product $product) {
+                    })->after(function (Product $replica, Product $product) {
                         $medias = $product->getMedia('images')->first();
                         if ($medias) {
                             $medias->copy($replica, 'images');
