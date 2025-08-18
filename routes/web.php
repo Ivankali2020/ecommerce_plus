@@ -26,6 +26,11 @@ Route::get('language/{locale}', function ($locale) {
     return redirect()->back();
 })->name('language.switch');
 
+// Tailwind test route
+Route::get('/tailwind-test', function () {
+    return view('tailwind-test');
+})->name('tailwind.test');
+
 
 
 // Central domain routes - Will only work on padaung.test, etc.

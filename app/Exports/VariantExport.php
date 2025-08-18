@@ -2,6 +2,8 @@
 
 namespace App\Exports;
 
+use App\Models\Attribute;
+use App\Models\AttributeValue;
 use App\Models\Variant;
 use Maatwebsite\Excel\Concerns\FromCollection;
 use Maatwebsite\Excel\Concerns\WithHeadings;
@@ -49,12 +51,12 @@ class VariantExport implements FromCollection, WithHeadings, WithMapping
             $attrs = [];
             foreach ($attributeData as $item) {
                 if (isset($item['attribute_id']) && isset($item['attribute_value_id'])) {
-                    $attribute = \App\Models\Attribute::find($item['attribute_id']);
+                    $attribute = Attribute::find($item['attribute_id']);
                     if ($attribute) {
-                        $values = \App\Models\AttributeValue::whereIn('id', $item['attribute_value_id'])
+                        $values = AttributeValue::whereIn('id', $item['attribute_value_id'])
                             ->pluck('value')
                             ->toArray();
-                        $attrs[] = $attribute->name . ':' . implode(',', $values);
+                        $attrs[] = $attribute->name.':'.implode(',', $values);
                     }
                 }
             }

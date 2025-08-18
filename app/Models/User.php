@@ -13,9 +13,9 @@ use Spatie\MediaLibrary\HasMedia;
 use Spatie\MediaLibrary\InteractsWithMedia;
 use Stancl\Tenancy\Database\Concerns\BelongsToTenant;
 
-class User extends Authenticatable implements HasMedia //, MustVerifyEmail
+class User extends Authenticatable implements HasMedia, MustVerifyEmail
 {
-    use HasApiTokens, HasFactory, InteractsWithMedia, Notifiable, BelongsToTenant;
+    use BelongsToTenant, HasApiTokens, HasFactory, InteractsWithMedia, Notifiable;
 
     public function registerMediaCollections(): void
     {
@@ -34,6 +34,7 @@ class User extends Authenticatable implements HasMedia //, MustVerifyEmail
         'seller_id',
         'email_verified_at',
         'remember_token',
+        'points',
     ];
 
     protected $hidden = [
@@ -74,6 +75,11 @@ class User extends Authenticatable implements HasMedia //, MustVerifyEmail
     public function giftExchanges()
     {
         return $this->hasMany(GiftExchange::class);
+    }
+
+    public function reviews()
+    {
+        return $this->hasMany(Review::class);
     }
 
     /**

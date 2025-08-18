@@ -3,6 +3,7 @@
 namespace App\Http\Middleware;
 
 use Closure;
+use Exception;
 use Filament\Facades\Filament;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
@@ -34,14 +35,14 @@ class SellerAuth
                     return $next($request);
                 }
             }
-        } catch (\Exception $e) {
-            Log::error('SellerAuth middleware error: ' . $e->getMessage());
+        } catch (Exception $e) {
+            Log::error('SellerAuth middleware error: '.$e->getMessage());
         }
 
         // If neither authentication method works, redirect to seller login
         if ($request->expectsJson()) {
             return response()->json([
-                'message' => 'Unauthenticated.'
+                'message' => 'Unauthenticated.',
             ], 401);
         }
 

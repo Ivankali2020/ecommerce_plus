@@ -14,9 +14,14 @@ use Stancl\Tenancy\Database\Concerns\BelongsToTenant;
 
 class Product extends Model implements HasMedia
 {
-    use HasFactory, InteractsWithMedia, SoftDeletes, BelongsToTenant;
+    use BelongsToTenant, HasFactory, InteractsWithMedia, SoftDeletes;
 
     public $preventObserver = false;
+
+    protected $casts = [
+        'attributes' => 'json',
+        'expired_date' => 'datetime',
+    ];
 
     protected $appends = ['productImg', 'attributeValues'];
 
@@ -29,7 +34,7 @@ class Product extends Model implements HasMedia
             return $firstVariant ? $firstVariant->getFirstMediaUrl('images') : $this->getFirstMediaUrl('images');
         }
 
-        // Return product's own image   
+        // Return product's own image
         return $this->getFirstMediaUrl('images');
     }
 
@@ -92,10 +97,6 @@ class Product extends Model implements HasMedia
             });
     }
 
-    protected $casts = [
-        'attributes' => 'json',
-    ];
-
     public function exchange()
     {
         return $this->belongsTo(Exchange::class);
@@ -144,6 +145,30 @@ class Product extends Model implements HasMedia
     public function orders()
     {
         return $this->hasMany(OrderProduct::class);
+    }
+
+    /**
+     * Get the average rating for this product
+     */
+    public function getAverageRatingAttribute(): float
+    {
+        return $this->reviews()->avg('stars') ?: 0;
+    }
+
+    /**
+     * Get the total count of reviews for this product
+     */
+    public function getReviewsCountAttribute(): int
+    {
+        return $this->reviews()->count();
+    }
+
+    /**
+     * Get a formatted average rating (e.g., "4.5")
+     */
+    public function getFormattedAverageRatingAttribute(): string
+    {
+        return number_format($this->average_rating, 1);
     }
 
     protected static function booted()

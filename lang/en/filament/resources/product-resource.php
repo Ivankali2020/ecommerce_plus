@@ -35,6 +35,11 @@ return [
         'sku' => [
             'label' => 'SKU',
         ],
+        'expired_date' => [
+            'label' => 'Expired Date',
+            'placeholder' => 'Select expired date',
+            'helper_text' => 'If your product has an expired date, please select the date here',
+        ],
         'description' => [
             'label' => 'Description',
         ],

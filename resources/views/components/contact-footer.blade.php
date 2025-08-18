@@ -1,4 +1,4 @@
-<div x-data="{ open: false }" class="fixed bottom-4 left-4 z-50" style="right:20px;bottom:20px">
+<div x-data="{ open: false }" class="fixed bottom-4 right-4 z-50" style="right:20px;bottom:20px">
     <!-- Toggle Button -->
     <button @click="open = !open" class="bg-primary-600 hover:bg-primary-700 text-white rounded-full p-3 shadow-lg flex items-center justify-center transition-all duration-300 focus:outline-none">
         <x-heroicon-s-chat-bubble-left-right x-show="!open" class="w-6 h-6" />
@@ -18,12 +18,12 @@
         
         <div class="space-y-3 ">
             <div class="flex items-center gap-3 text-gray-600 dark:text-gray-300">
-                <x-heroicon-s-phone class="w-5 h-5 text-primary-500 dark:text-primary-400 flex-shrink-0" />
+                <x-heroicon-s-phone class="w-5 h-5 text-primary-500 dark:text-primary-400 shrink-0" />
                 <span class="text-sm">{{ __('contact.phone') }}</span>
             </div>
             
             <div class="flex items-center gap-3 text-gray-600 dark:text-gray-300">
-                <x-heroicon-s-envelope class="w-5 h-5 text-primary-500 dark:text-primary-400 flex-shrink-0" />
+                <x-heroicon-s-envelope class="w-5 h-5 text-primary-500 dark:text-primary-400 shrink-0" />
                 <span class="text-sm">{{ __('contact.email') }}</span>
             </div>
             

@@ -10,8 +10,8 @@ use Filament\Forms\Components\SpatieMediaLibraryFileUpload;
 use Filament\Forms\Components\Textarea;
 use Filament\Forms\Concerns\InteractsWithForms;
 use Filament\Forms\Contracts\HasForms;
-use Filament\Forms\Form;
 use Filament\Notifications\Notification;
+use Filament\Schemas\Schema;
 use Illuminate\Support\Facades\Auth;
 use Livewire\Component;
 
@@ -32,10 +32,10 @@ class SubscriptionPlans extends Component implements HasForms
         $this->form->fill();
     }
 
-    public function form(Form $form): Form
+    public function form(Schema $schema): Schema
     {
-        return $form
-            ->schema([
+        return $schema
+            ->components([
                 Radio::make('payment_method')
                     ->label(__('subscription.payment_method'))
                     ->options([
@@ -63,10 +63,10 @@ class SubscriptionPlans extends Component implements HasForms
 
     public function selectPlan($planId)
     {
-        $this->selectedPlan = SubscriptionPlan::where('id',$planId)->where('is_active', true)->firstOrFail();
+        $this->selectedPlan = SubscriptionPlan::where('id', $planId)->where('is_active', true)->firstOrFail();
 
         // Create a new subscription instance for the form
-        $this->subscription = new SellerSubscription();
+        $this->subscription = new SellerSubscription;
 
         // Set the form model to the subscription instance
         $this->form->model($this->subscription);

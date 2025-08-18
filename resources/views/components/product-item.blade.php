@@ -5,10 +5,10 @@
             @if(($product->has_variant && $product->variants()->first() && $product->variants()->first()->discount > 0) || (!$product->has_variant && $product->discount > 0))
                 <div class="absolute top-0 right-0 z-10">
                     <div class="bg-red-500 text-white px-3 py-1 text-[10px] md:text-xs rounded-md shadow-md transform transition-transform duration-300 hover:scale-105 flex items-center gap-1">
-                        <span class="font-bold  {{ app()->currentLocale() === 'my' ? 'font-mm' : '' }}">
+                        <span class="font-bold  ">
                             {{ $product->has_variant && $product->variants()->first() ? $product->variants()->first()->discount ?? 0 : $product->discount ?? '0' }}%
                         </span>
-                        <span class="selection:{{ app()->currentLocale() === 'my' ? 'font-mm' : '' }}">
+                        <span class="selection:">
                             {{ __('messages.off') }}
                         </span>
                     </div>
@@ -17,7 +17,7 @@
 
             <!-- Out of Stock Indicator -->
             @if($product->quantity <= 0 && !$product->has_variant)
-                <div class="absolute z-10  inset-0 bg-black bg-opacity-40 flex items-center justify-center">
+                <div class="absolute z-10 inset-0 bg-black/30 backdrop-blur-xs flex items-center justify-center">
                     <div class="bg-red-500 text-white px-3 py-1 rounded-md font-medium transform -rotate-12 text-[10px] md:text-xs">
                         {{ __('messages.out_of_stock') }}
                     </div>
@@ -34,11 +34,11 @@
             @endif
                 
             <img src="{{ $product->productImg }}"
-                 class="rounded w-full h-32 md:h-48 lg:h-60 object-cover transition duration-700 ease-out group-hover:scale-105"
+                 class="rounded w-full h-32 md:h-48 lg:52 2xl:h-60 object-cover transition duration-700 ease-out group-hover:scale-105"
                  alt="{{ $product->name }}" />
         </a>
 
-        <div class="flex flex-col flex-grow justify-between lg:gap-3 gap-2 lg:p-6 p-3 relative">
+        <div class="flex flex-col grow justify-between lg:gap-3 gap-2 lg:p-4 p-3 relative">
 
             {{-- Wholesale Badge --}}
             @if($type === 'wholesale')
@@ -60,27 +60,27 @@
                 @if($product->has_variant && $product->variants()->first())
                     @if($product->variants()->first()->discount > 0)
                         <p class="text-slate-900 font-bold text-lg">
-                            {{ number_format($product->variants()->first()->mmk_discount_price, 0) }} Ks
+                            {{ number_format($product->variants()->first()->mmk_discount_price, 0) }} {{ __('messages.mmk') }}
                         </p>
                         <p class="text-gray-400 line-through text-sm">
-                            {{ number_format($product->variants()->first()->mmk_price, 0) }} Ks
+                            {{ number_format($product->variants()->first()->mmk_price, 0) }} {{ __('messages.mmk') }}
                         </p>
                     @else
                         <p class="text-gray-600">
-                            {{ number_format($product->variants()->first()->mmk_price, 0) }} Ks
+                            {{ number_format($product->variants()->first()->mmk_price, 0) }} {{ __('messages.mmk') }}
                         </p>
                     @endif
                 @else
                     @if($product->discount > 0)
                         <p class="text-slate-900 font-bold text-lg">
-                            {{ number_format($product->mmk_discount_price, 0) }} Ks
+                            {{ number_format($product->mmk_discount_price, 0) }} {{ __('messages.mmk') }}
                         </p>
                         <p class="text-gray-400 line-through text-sm">
-                            {{ number_format($product->mmk_price, 0) }} Ks
+                            {{ number_format($product->mmk_price, 0) }} {{ __('messages.mmk') }}
                         </p>
                     @else
                         <p class="text-gray-600">
-                            {{ number_format($product->mmk_price, 0) }} Ks
+                            {{ number_format($product->mmk_price, 0) }} {{ __('messages.mmk') }}
                         </p>
                     @endif
                 @endif
@@ -91,7 +91,7 @@
             <x-filament::button
                 x-data
                 color="gray"
-                class="{{ app()->currentLocale() === 'my' ? 'font-mm' : '' }}"
+                class=""
                 wire:loading.attr="disabled"
                 wire:click="addToCart({{ $product->id }})"
                 wire:target="addToCart({{ $product->id }})">

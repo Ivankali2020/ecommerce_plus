@@ -2,7 +2,6 @@
 
 namespace App\Http\Middleware;
 
-use App\Helper\CheckFilamentSellerUser;
 use App\Models\Attribute;
 use App\Models\Brand;
 use App\Models\Category;
@@ -10,9 +9,7 @@ use App\Models\Exchange;
 use App\Models\Payment;
 use App\Models\Product;
 use Closure;
-use Filament\Facades\Filament;
 use Illuminate\Http\Request;
-use Illuminate\Support\Facades\Auth;
 use Symfony\Component\HttpFoundation\Response;
 
 class AssignGlobeScope
@@ -20,7 +17,7 @@ class AssignGlobeScope
     /**
      * Handle an incoming request.
      *
-     * @param  \Closure(\Illuminate\Http\Request): (\Symfony\Component\HttpFoundation\Response)  $next
+     * @param  Closure(Request):Response  $next
      */
     public function handle(Request $request, Closure $next): Response
     {
@@ -72,7 +69,7 @@ class AssignGlobeScope
 
         // Additional check: not on central domain
         $centralDomains = config('tenancy.central_domains', []);
-        if (!in_array(request()->getHost(), $centralDomains)) {
+        if (! in_array(request()->getHost(), $centralDomains)) {
             return true;
         }
 

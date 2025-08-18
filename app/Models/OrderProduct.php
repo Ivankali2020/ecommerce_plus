@@ -11,7 +11,7 @@ use Stancl\Tenancy\Database\Concerns\BelongsToPrimaryModel;
 // #[ObservedBy(\App\Observers\OrderProductObserver::class)]
 class OrderProduct extends Model
 {
-    use HasFactory,BelongsToPrimaryModel;
+    use BelongsToPrimaryModel,HasFactory;
 
     public function getRelationshipToPrimaryModel(): string
     {
@@ -19,7 +19,7 @@ class OrderProduct extends Model
     }
 
     protected $casts = [
-        'attributes' => 'json',
+        'attributes' => 'array',
     ];
 
     public function order()

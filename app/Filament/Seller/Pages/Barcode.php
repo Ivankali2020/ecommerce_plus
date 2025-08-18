@@ -10,7 +10,7 @@ class Barcode extends Page
     use HasPageShield;
     // protected static ?string $navigationIcon = 'heroicon-o-document-text';
 
-    protected static ?string $navigationGroup = 'Business Section';
+    protected static string|\UnitEnum|null $navigationGroup = 'Business Section';
 
-    protected static string $view = 'filament.seller.pages.barcode';
+    protected string $view = 'filament.seller.pages.barcode';
 }

@@ -8,15 +8,6 @@ use App\Models\Tenant;
 
 new class extends Component
 {
-    public $seller;
-    public $logo;
-
-
-    public function mount()
-    {
-        $this->seller = Tenant::where('id',tenant('id'))->first()->sellers()->first();
-        $this->logo = $this->seller->getFirstMediaUrl('logos');
-    }
     /**
      * Log the current user out of the application.
      */
@@ -41,51 +32,61 @@ new class extends Component
                 <!-- Logo -->
                     <div class="shrink-0 flex items-center">
                         <a href="{{ route('welcome') }}" >
-                            <img src="{{ $this->logo != null ? $this->logo : asset('assets/logo.png') }}" alt="{{  $seller->name }}" class="block rounded h-12 w-auto fill-current text-slate-800 dark:text-slate-200" />
+                            @if ($tenantSellerLogo)
+                                <img src="{{ $tenantSellerLogo != null ? $tenantSellerLogo : asset('assets/logo.png') }}" alt="{{  $seller->name }}" class="block rounded h-12 w-auto fill-current text-slate-800 dark:text-slate-200" />
+                                @else
+                                <h1 class="text-lg lg:text-2xl font-bold font-bebas text-center ">{{  $tenantSellerName  }}</h1>
+                            @endif
                         </a>
                     </div>
 
-                    <div class="hidden space-x-8 sm:-my-px sm:ms-10 sm:flex h-[100%] ">
-                        <x-nav-link :href="route('welcome')" :active="request()->routeIs('store')" wire:navigate>
+                    <div class="hidden space-x-8 sm:-my-px sm:ms-10 sm:flex h-full ">
+                        <x-nav-link :href="route('welcome')" :active="request()->routeIs('welcome')" wire:navigate>
                             {{ __('messages.navigation.main_store') }}
                         </x-nav-link>
                     </div>
 
-                    <div class="hidden space-x-8 sm:-my-px sm:ms-10 sm:flex h-[100%] ">
-                        <x-nav-link :href="route('products', $this->sellerId())" :active="request()->routeIs('products')" wire:navigate>
+                    <div class="hidden space-x-8 sm:-my-px sm:ms-10 sm:flex h-full ">
+                        <x-nav-link :href="route('products')" :active="request()->routeIs('products')" wire:navigate>
                             {{ __('messages.navigation.products') }}
                         </x-nav-link>
                     </div>
 
-                    <div class="hidden space-x-8 sm:-my-px sm:ms-10 sm:flex h-[100%] ">
+                    <div class="hidden space-x-8 sm:-my-px sm:ms-10 sm:flex h-full ">
                         <x-nav-link :href="route('wholesale')" :active="request()->routeIs('wholesale')" wire:navigate>
                             {{ __('messages.navigation.wholesale') }}
                         </x-nav-link>
                     </div>
 
+                    {{-- <div class="hidden space-x-8 sm:-my-px sm:ms-10 sm:flex h-full ">
+                        <x-nav-link :href="route('delivery')" :active="request()->routeIs('delivery')" wire:navigate>
+                            {{ __('messages.navigation.delivery') }}
+                        </x-nav-link>
+                    </div> --}}
+
                 @auth
 
                     <!-- Navigation Links -->
-                    <div class="hidden space-x-8 sm:-my-px sm:ms-10 sm:flex h-[100%] ">
+                    {{-- <div class="hidden space-x-8 sm:-my-px sm:ms-10 sm:flex h-full ">
                         <x-nav-link :href="route('dashboard')" :active="request()->routeIs('dashboard')" >
                             {{ __('messages.navigation.dashboard') }}
                         </x-nav-link>
-                    </div>
+                    </div> --}}
 
 
-                    <div class="hidden space-x-8 sm:-my-px sm:ms-10 sm:flex h-[100%] ">
+                    <div class="hidden space-x-8 sm:-my-px sm:ms-10 sm:flex h-full ">
                         <x-nav-link :href="route('order')" :active="request()->routeIs('order')" wire:navigate>
                             {{ __('messages.navigation.order') }}
                         </x-nav-link>
                     </div>
 
-                    <div class="hidden space-x-8 sm:-my-px sm:ms-10 sm:flex h-[100%] ">
+                    <div class="hidden space-x-8 sm:-my-px sm:ms-10 sm:flex h-full ">
                         <x-nav-link :href="route('recent.orders')" :active="request()->routeIs('recent.orders')" wire:navigate>
                             {{ __('messages.navigation.recent_orders') }}
                         </x-nav-link>
                     </div>
 
-                    <div class="hidden space-x-8 sm:-my-px sm:ms-10 sm:flex h-[100%] ">
+                    <div class="hidden space-x-8 sm:-my-px sm:ms-10 sm:flex h-full ">
                         <x-nav-link :href="route('gifts')" :active="request()->routeIs('gifts')" wire:navigate>
                             {{ __('gifts.gifts') }}
                         </x-nav-link>
@@ -102,7 +103,7 @@ new class extends Component
             <div class="hidden sm:flex sm:items-center sm:ms-6 ">
                 <x-dropdown align="right" width="48">
                     <x-slot name="trigger" >
-                        <button class="{{ app()->currentLocale() === 'my' ? 'font-mm' : '' }} hover:bg-gray-50 inline-flex items-center px-3 py-2 border border-transparent text-sm leading-4 font-medium rounded-md text-gray-500 dark:text-gray-400 bg-white dark:bg-gray-800 hover:text-gray-700 dark:hover:text-gray-300 focus:outline-none transition ease-in-out duration-150">
+                        <button class=" hover:bg-gray-50 inline-flex items-center px-3 py-2 border border-transparent text-sm leading-4 font-medium rounded-md text-gray-500 dark:text-gray-400 bg-white dark:bg-gray-800 hover:text-gray-700 dark:hover:text-gray-300 focus:outline-none transition ease-in-out duration-150">
                             <div x-data="{{ json_encode(['name' => auth()->user()->name]) }}" x-text="name" x-on:profile-updated.window="name = $event.detail.name"></div>
 
                             <div class="ms-1">
@@ -121,10 +122,40 @@ new class extends Component
                             {{ __('messages.auth.profile.title') }}
                         </x-dropdown-link>
 
+                        <x-dropdown-link :href="route('dashboard')" wire:navigate class="flex gap-3 items-center">
+                            <svg xmlns="http://www.w3.org/2000/svg" class="w-5 h-5 " fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="size-6">
+                                <path stroke-linecap="round" stroke-linejoin="round" d="m7.875 14.25 1.214 1.942a2.25 2.25 0 0 0 1.908 1.058h2.006c.776 0 1.497-.4 1.908-1.058l1.214-1.942M2.41 9h4.636a2.25 2.25 0 0 1 1.872 1.002l.164.246a2.25 2.25 0 0 0 1.872 1.002h2.092a2.25 2.25 0 0 0 1.872-1.002l.164-.246A2.25 2.25 0 0 1 16.954 9h4.636M2.41 9a2.25 2.25 0 0 0-.16.832V12a2.25 2.25 0 0 0 2.25 2.25h15A2.25 2.25 0 0 0 21.75 12V9.832c0-.287-.055-.57-.16-.832M2.41 9a2.25 2.25 0 0 1 .382-.632l3.285-3.832a2.25 2.25 0 0 1 1.708-.786h8.43c.657 0 1.281.287 1.709.786l3.284 3.832c.163.19.291.404.382.632M4.5 20.25h15A2.25 2.25 0 0 0 21.75 18v-2.625c0-.621-.504-1.125-1.125-1.125H3.375c-.621 0-1.125.504-1.125 1.125V18a2.25 2.25 0 0 0 2.25 2.25Z" />
+                            </svg>
+                            {{ __('messages.navigation.dashboard') }}
+                        </x-dropdown-link>
+
+                        <x-dropdown-link :href="route('delivery')" wire:navigate class="flex gap-3 items-center">
+                            <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="size-5">
+                                <path stroke-linecap="round" stroke-linejoin="round" d="M8.25 18.75a1.5 1.5 0 0 1-3 0m3 0a1.5 1.5 0 0 0-3 0m3 0h6m-9 0H3.375a1.125 1.125 0 0 1-1.125-1.125V14.25m17.25 4.5a1.5 1.5 0 0 1-3 0m3 0a1.5 1.5 0 0 0-3 0m3 0h1.125c.621 0 1.129-.504 1.09-1.124a17.902 17.902 0 0 0-3.213-9.193 2.056 2.056 0 0 0-1.58-.86H14.25M16.5 18.75h-2.25m0-11.177v-.958c0-.568-.422-1.048-.987-1.106a48.554 48.554 0 0 0-10.026 0 1.106 1.106 0 0 0-.987 1.106v7.635m12-6.677v6.677m0 4.5v-4.5m0 0h-12" />
+                            </svg>
+
+                             {{ __('messages.navigation.delivery') }}
+                        </x-dropdown-link>
+
+                        <x-dropdown-link :href="route('recent.orders')" wire:abort="navigate" class="flex gap-3 items-center">
+                            <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="size-5">
+                                <path stroke-linecap="round" stroke-linejoin="round" d="M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2m-3 7h3m-3 4h3m-6-4h.01M9 16h.01"></path>
+                            </svg>
+                            {{ __('messages.navigation.recent_orders') }}
+                        </x-dropdown-link>
+
+                        <x-dropdown-link :href="route('gifts')" wire:abort="navigate" class="flex gap-3 items-center">
+                            <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="size-5">
+                            <path stroke-linecap="round" stroke-linejoin="round" d="M21 11.25v8.25a1.5 1.5 0 0 1-1.5 1.5H5.25a1.5 1.5 0 0 1-1.5-1.5v-8.25M12 4.875A2.625 2.625 0 1 0 9.375 7.5H12m0-2.625V7.5m0-2.625A2.625 2.625 0 1 1 14.625 7.5H12m0 0V21m-8.625-9.75h18c.621 0 1.125-.504 1.125-1.125v-1.5c0-.621-.504-1.125-1.125-1.125h-18c-.621 0-1.125.504-1.125 1.125v1.5c0 .621.504 1.125 1.125 1.125Z" />
+                            </svg>
+
+                            {{ __('gifts.gifts') }}
+                        </x-dropdown-link>
+
                         <!-- Authentication -->
-                        <button wire:click="logout" class="w-full text-start">
-                            <x-dropdown-link class="flex gap-3 items-center">
-                                <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="currentColor" class="size-5">
+                        <button wire:click="logout" class="w-full text-start bg-red-100 rounded-sm ">
+                            <x-dropdown-link class="flex gap-3 items-center text-red-500">
+                                <svg xmlns="http://www.w3.org/2000/svg"  viewBox="0 0 20 20" fill="currentColor" class="size-5">
                                     <path fill-rule="evenodd" d="M10 1a4.5 4.5 0 0 0-4.5 4.5V9H5a2 2 0 0 0-2 2v6a2 2 0 0 0 2 2h10a2 2 0 0 0 2-2v-6a2 2 0 0 0-2-2h-.5V5.5A4.5 4.5 0 0 0 10 1Zm3 8V5.5a3 3 0 1 0-6 0V9h6Z" clip-rule="evenodd" />
                                   </svg>
                                 {{ __('messages.auth.logout') }}
@@ -161,7 +192,7 @@ new class extends Component
 
 
             <!-- Hamburger -->  
-            <div class="-me-2 flex items-center sm:hidden  {{ app()->currentLocale() === 'my' ? 'font-mm' : '' }}">
+            <div class="-me-2 flex items-center sm:hidden  ">
 
 
                 @guest
@@ -209,19 +240,23 @@ new class extends Component
     <div :class="{'block': open, 'hidden': ! open}" class="hidden sm:hidden">
 
         <!-- Responsive Settings Options -->
-        <div class="pt-4 pb-1 border-t border-gray-200 dark:border-gray-600  {{ app()->currentLocale() === 'my' ? 'font-mm' : '' }}">
+        <div class="pt-4 pb-1 border-t border-gray-200 dark:border-gray-600  ">
             @auth
             <div class="px-4 ">
-                <div class="font-medium text-base text-gray-800 dark:text-gray-200 {{ app()->currentLocale() === 'my' ? 'font-mm' : '' }}" x-data="{{ json_encode(['name' => auth()->user()->name]) }}" x-text="name" x-on:profile-updated.window="name = $event.detail.name"></div>
-                <div class="font-medium text-sm text-gray-500 {{ app()->currentLocale() === 'my' ? 'font-mm' : '' }}">{{ auth()->user()->email }}</div>
+                <div class="font-medium text-base text-gray-800 dark:text-gray-200 " x-data="{{ json_encode(['name' => auth()->user()->name]) }}" x-text="name" x-on:profile-updated.window="name = $event.detail.name"></div>
+                <div class="font-medium text-sm text-gray-500 ">{{ auth()->user()->email }}</div>
             </div>
             <div class="mt-3 space-y-1">
                 <x-responsive-nav-link :href="route('profile',Auth::user()->id)" wire:navigate>
                     {{ __('messages.auth.profile.title') }}
                 </x-responsive-nav-link>
 
-                <x-responsive-nav-link :href="route('store',Auth::user()->seller_id ?? 1)" wire:navigate>
+                <x-responsive-nav-link :href="route('welcome')" wire:navigate>
                     {{ __('messages.navigation.main_store') }}
+                </x-responsive-nav-link>
+
+                <x-responsive-nav-link :href="route('delivery')" wire:navigate>
+                    {{ __('messages.navigation.delivery') }}
                 </x-responsive-nav-link>
 
                 <x-responsive-nav-link :href="route('dashboard')" wire:navigate>
@@ -275,7 +310,7 @@ new class extends Component
 
 <!-- Mobile Bottom Navigation -->
 @auth
-<div class="fixed bottom-0 left-0 z-50 w-full h-16 bg-white border-t border-t-gray-200 sm:hidden {{ app()->currentLocale() === 'my' ? 'font-mm' : '' }}">
+<div class="fixed bottom-0 left-0 z-50 w-full h-16 bg-white border-t border-t-gray-200 sm:hidden ">
     <div class=" h-full flex justify-around items-center ">
         <a wire:navigate href="{{ route('welcome') }}"  class="inline-flex flex-col items-center justify-center px-1 hover:bg-gray-50 {{ request()->routeIs(['store', 'store.*']) ? 'text-[#c2a03d]' : 'text-gray-500' }}">
             <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="size-6 w-6 h-6 mb-1">

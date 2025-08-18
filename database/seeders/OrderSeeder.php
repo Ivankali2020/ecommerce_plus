@@ -7,10 +7,10 @@ use App\Models\Order;
 use App\Models\OrderProduct;
 use App\Models\Product;
 use App\Models\Seller;
-use Illuminate\Database\Seeder;
-use Illuminate\Support\Facades\DB;
 use Carbon\Carbon;
 use Faker\Factory as Faker;
+use Illuminate\Database\Seeder;
+use Illuminate\Support\Facades\DB;
 
 class OrderSeeder extends Seeder
 {
@@ -25,6 +25,7 @@ class OrderSeeder extends Seeder
 
         if (empty($sellers) || empty($products)) {
             $this->command->warn('Please seed Sellers and Products before running OrderSeeder.');
+
             return;
         }
 
@@ -40,7 +41,7 @@ class OrderSeeder extends Seeder
 
                 // Create Order
                 $order = Order::create([
-                    'invoice_number' => 'INV-' . strtoupper(uniqid()),
+                    'invoice_number' => 'INV-'.strtoupper(uniqid()),
                     'seller_id' => $sellerId,
                     'tenant_id' => Seller::find($sellerId)->tenants()->first()->id, // Assuming tenant_id is linked to seller
                     'staff_id' => null, // Assuming walk-in doesn't have staff ID, adjust if needed
@@ -70,8 +71,10 @@ class OrderSeeder extends Seeder
                 $selectedProducts = $faker->randomElements($products, $numberOfProducts);
 
                 foreach ($selectedProducts as $productId) {
-                    $product = Product::find($productId); // Fetch product details for price
-                    if (!$product) continue; // Skip if product not found
+                    $product = Product::where('id', $productId)->where('seller_id', $sellerId)->first(); // Fetch product details for price
+                    if (! $product) {
+                        continue;
+                    } // Skip if product not found
 
                     $quantity = $faker->numberBetween(1, 3);
                     // Use product's price or generate a random one if not available
@@ -85,7 +88,7 @@ class OrderSeeder extends Seeder
                         'order_id' => $order->id,
                         'product_id' => $productId,
                         'variant_id' => null, // Assuming no variants for simplicity
-                        'attributes' => json_encode([['attribute' => 'TEST', 'value' => 'TXT']]), // Properly formatted JSON
+                        'attributes' => [['attribute' => 'TEST', 'value' => 'TXT']], // Store as array, not JSON string
                         'price' => $price,
                         'discount_price' => $discountPrice,
                         'discount' => $discount,
@@ -121,7 +124,7 @@ class OrderSeeder extends Seeder
             $this->command->info('OrderSeeder completed successfully.');
         } catch (\Exception $e) {
             DB::rollBack();
-            $this->command->error('OrderSeeder failed: ' . $e->getMessage());
+            $this->command->error('OrderSeeder failed: '.$e->getMessage());
         }
     }
 }

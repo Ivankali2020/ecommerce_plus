@@ -55,6 +55,8 @@ return new class extends Migration
             $table->boolean('is_return')->default(false);
             $table->boolean('is_shipped')->default(false);
 
+            $table->dateTime('expired_date')->nullable();
+
             $table->softDeletes();
             $table->timestamps();
 

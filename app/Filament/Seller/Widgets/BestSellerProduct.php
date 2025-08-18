@@ -27,7 +27,7 @@ class BestSellerProduct extends ChartWidget
 
     protected static ?int $sort = 2;
 
-    protected static ?string $pollingInterval = null;
+    protected ?string $pollingInterval = null;
 
     public function mount(): void
     {

@@ -20,6 +20,7 @@ return new class extends Migration
             $table->foreignIdFor(Tenant::class)->constrained()->cascadeOnDelete()->cascadeOnUpdate();
             $table->foreignIdFor(Currency::class)->constrained()->cascadeOnDelete()->cascadeOnUpdate();
             $table->string('name');
+            $table->string('note')->nullable();
             $table->boolean('is_published')->default(false);
             $table->softDeletes();
             $table->timestamps();

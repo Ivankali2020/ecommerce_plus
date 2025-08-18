@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Models\User;
+use Exception;
 use Filament\Notifications\Notification;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Hash;
@@ -38,7 +39,7 @@ class SocialAuthController extends Controller
             // Redirect to profile page
             return redirect()->route('profile');
 
-        } catch (\Exception $e) {
+        } catch (Exception $e) {
             // Handle errors
             Notification::make()->title('Google Authentication Failed')
                 ->body($e->getMessage())

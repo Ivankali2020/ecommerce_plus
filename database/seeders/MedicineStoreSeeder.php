@@ -28,8 +28,7 @@ class MedicineStoreSeeder extends Seeder
 
         try {
 
-
-            //create tenant
+            // create tenant
             $tenant = Tenant::create([
                 'data' => [
                     'domain' => 'medicine',
@@ -44,15 +43,24 @@ class MedicineStoreSeeder extends Seeder
                     'phone' => '09 454949610',
                     'description' => 'ဆေးဆိုင်',
                     'email_verified_at' => now(),
+                    'tenant_id' => $tenant->id,
                 ])
                 // ->has(Attribute::factory(3)->has(AttributeValue::factory(3), 'values'))
-                ->has(Payment::factory(5)->state(fn() => ['tenant_id' => isset($tenant) ? $tenant->id : null])->has(PaymentAccount::factory(2), 'accounts'))
+                ->has(Payment::factory(5)->state(fn () => ['tenant_id' => isset($tenant) ? $tenant->id : null])->has(PaymentAccount::factory(2), 'accounts'))
                 ->create()->toArray()[0];
 
-            //create domains
+            // create domains
             $domain = Domain::create([
-                'domain' => 'medicine' . '.' . config('tenancy.central_domains')[0],
+                'domain' => 'medicine'.'.'.config('tenancy.central_domains')[0],
                 'tenant_id' => $tenant->id,
+            ]);
+
+            // attach tenant to seller
+            DB::table('tenant_seller')->insert([
+                'tenant_id' => $tenant->id,
+                'seller_id' => $medicine['id'],
+                'created_at' => now(),
+                'updated_at' => now(),
             ]);
 
             $attributes = [

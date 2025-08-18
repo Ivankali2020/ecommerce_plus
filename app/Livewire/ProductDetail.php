@@ -42,7 +42,7 @@ class ProductDetail extends Component
     {
         return view('livewire.product-detail', [
             'product' => $this->product,
-        ])->layout('layouts.app', [
+        ])->layout('components.layouts.app', [
             'seo' => [
                 'title' => $this->product->name,
                 'description' => strip_tags(substr($this->product->description, 0, 160)),

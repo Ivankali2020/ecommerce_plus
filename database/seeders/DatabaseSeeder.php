@@ -6,7 +6,6 @@ namespace Database\Seeders;
 use App\Models\Region;
 use App\Models\Township;
 use Illuminate\Database\Seeder;
-use Database\Seeders\OrderSeeder;
 
 class DatabaseSeeder extends Seeder
 {
@@ -53,7 +52,7 @@ class DatabaseSeeder extends Seeder
             GiftSeeder::class,
         ]);
 
-        //         \App\Models\User::factory(10)->create();
+        // \App\Models\User::factory(10)->create();
 
     }
 }

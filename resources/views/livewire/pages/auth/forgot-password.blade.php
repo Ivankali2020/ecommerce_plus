@@ -40,12 +40,16 @@ new #[Layout('layouts.guest')] class extends Component
     <div class="max-w-md w-full space-y-8">
         <div class="text-center">
             <a href="/">
-                <img class="mx-auto h-20 w-auto" src="{{ asset('assets/logo.png') }}" alt="Your Logo">
+                @if ($tenantSellerLogo)
+                    <img class="mx-auto h-20 w-auto" src="{{ $tenantSellerLogo }}" alt="{{  $tenantSellerName }}">
+                    @else
+                    <h1 class="text-6xl font-bold font-bebas text-center ">{{  $tenantSellerName  }}</h1>
+                @endif
             </a>
-            <h2 class="mt-6 text-3xl font-extrabold text-gray-900 dark:text-white {{ app()->currentLocale() === 'my' ? 'font-mm' : '' }}">
+            <h2 class="mt-6 text-3xl font-extrabold text-gray-900 dark:text-white ">
                 {{ __('messages.auth.forgot_password.title') }}
             </h2>
-            <p class="mt-2 text-sm text-gray-600 dark:text-gray-400 {{ app()->currentLocale() === 'my' ? 'font-mm' : '' }}">
+            <p class="mt-2 text-sm text-gray-600 dark:text-gray-400 ">
                 {{ __('messages.auth.forgot_password.subtitle') }}
             </p>
         </div>
@@ -58,16 +62,16 @@ new #[Layout('layouts.guest')] class extends Component
                 <!-- Email Address -->
                 <div>
                     <x-input-label for="email" :value="__('messages.auth.login_page.email')" 
-                        class="mb-2 {{ app()->currentLocale() === 'my' ? 'font-mm' : '' }}" />
+                        class="mb-2 " />
                     <x-text-input wire:model="email" id="email" 
-                        class="appearance-none rounded-lg relative block w-full px-3 py-2 border border-gray-300 dark:border-gray-700 placeholder-gray-500 text-gray-900 dark:text-gray-100 focus:outline-none focus:ring-slate-500 focus:border-slate-500 focus:z-10 sm:text-sm {{ app()->currentLocale() === 'my' ? 'font-mm' : '' }}"
+                        class="appearance-none rounded-lg relative block w-full px-3 py-2 border border-gray-300 dark:border-gray-700 placeholder-gray-500 text-gray-900 dark:text-gray-100 focus:outline-none focus:ring-slate-500 focus:border-slate-500 focus:z-10 sm:text-sm "
                         type="email" name="email" required autofocus />
                     <x-input-error :messages="$errors->get('email')" class="mt-2" />
                 </div>
             </div>
 
             <div>
-                <x-primary-button wire:loading.attr="disabled" class="group relative w-full flex justify-center py-2 px-4 border border-transparent text-sm font-medium rounded-md text-white bg-slate-600 hover:bg-slate-700 focus:outline-none focus:ring-0 ring-none outline-none focus:ring-offset-0 {{ app()->currentLocale() === 'my' ? 'font-mm' : '' }}">
+                <x-primary-button wire:loading.attr="disabled" class="group relative w-full flex justify-center py-2 px-4 border border-transparent text-sm font-medium rounded-md text-white bg-slate-600 hover:bg-slate-700 focus:outline-none focus:ring-0 ring-none outline-none focus:ring-offset-0 ">
                     <span class="absolute left-0 inset-y-0 flex items-center pl-3">
                         <svg wire:loading.remove class="h-5 w-5 text-slate-500 group-hover:text-slate-400" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="currentColor" aria-hidden="true">
                             <path fill-rule="evenodd" d="M2.94 6.412A2 2 0 002 8.108V16a2 2 0 002 2h12a2 2 0 002-2V8.108a2 2 0 00-.94-1.696l-6-3.75a2 2 0 00-2.12 0l-6 3.75zm2.615 2.423a1 1 0 10-1.11 1.664l5 3.333a1 1 0 001.11 0l5-3.333a1 1 0 00-1.11-1.664L10 11.798 5.555 8.835z" clip-rule="evenodd" />

@@ -20,4 +20,9 @@ class Supplier extends Model
     {
         return $this->belongsTo(Township::class);
     }
+
+    public function region(): BelongsTo
+    {
+        return $this->belongsTo(Region::class);
+    }
 }

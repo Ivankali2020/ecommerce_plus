@@ -2,10 +2,12 @@
 
 namespace App\Observers;
 
-use App\Models\Order;
 use App\Helper\OrderStatus;
+use App\Models\Order;
+use App\Models\PointTransaction;
 use App\Services\PointService;
-use Filament\Notifications\Actions\Action;
+use Exception;
+use Filament\Actions\Action;
 use Filament\Notifications\Notification;
 use Illuminate\Support\Facades\Log;
 
@@ -21,12 +23,12 @@ class OrderObserver
     public function created(Order $order): void
     {
         // send notification to admin
-        // Notification::make()
-        //     ->title('New order arrived')
-        //     ->actions([
-        //         Action::make('View Order')->button()->url(route('filament.seller.resources.orders.index'))
-        //     ])
-        //     ->sendToDatabase($order->seller);
+        Notification::make()
+            ->title('New order arrived')
+            ->actions([
+                Action::make('View Order')->button()->url(route('filament.seller.resources.orders.index')),
+            ])
+            ->sendToDatabase($order->seller);
 
     }
 
@@ -40,11 +42,11 @@ class OrderObserver
             $order->isDirty('status') &&
             $order->status === OrderStatus::Delivered &&
             $order->user &&
-            !$order->walk_in_customer
+            ! $order->walk_in_customer
         ) {
-            
+
             // Check if points haven't been awarded yet for this order
-            if (!$this->hasPointsBeenAwarded($order)) {
+            if (! $this->hasPointsBeenAwarded($order)) {
                 try {
                     // Award loyalty points for delivered order
                     $this->pointService->awardOrderPoints($order->user, $order);
@@ -59,9 +61,9 @@ class OrderObserver
                             ->success()
                             ->sendToDatabase($order->user);
                     }
-                } catch (\Exception $e) {
+                } catch (Exception $e) {
                     // Log error if points awarding fails
-                    Log::error('Failed to award points for order: ' . $order->id, [
+                    Log::error('Failed to award points for order: '.$order->id, [
                         'error' => $e->getMessage(),
                         'order_id' => $order->id,
                         'user_id' => $order->user_id,
@@ -80,7 +82,7 @@ class OrderObserver
      */
     protected function hasPointsBeenAwarded(Order $order): bool
     {
-        return \App\Models\PointTransaction::where('user_id', $order->user_id)
+        return PointTransaction::where('user_id', $order->user_id)
             ->where('reference_type', 'order')
             ->where('reference_id', $order->id)
             ->where('type', 'earned')

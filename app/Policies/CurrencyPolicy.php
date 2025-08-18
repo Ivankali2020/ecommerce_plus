@@ -4,20 +4,9 @@ namespace App\Policies;
 
 use App\Models\Currency;
 use App\Models\Seller;
-use Filament\Models\Contracts\FilamentUser;
-use Illuminate\Auth\Access\HandlesAuthorization;
 
-class CurrencyPolicy
+class CurrencyPolicy extends BasePolicy
 {
-    use HandlesAuthorization;
-
-    public function before(FilamentUser $user, $ability)
-    {
-        if (auth()->guard('admin')->check()) {
-            return true;
-        }
-    }
-
     /**
      * Determine whether the seller can view any models.
      */

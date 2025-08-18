@@ -1,0 +1,92 @@
+name: CI/CD Pipeline
+
+on:
+  push:
+    branches: [main]
+
+jobs:
+ 
+  build-and-deploy:
+    name: Build and Deploy to Production
+    runs-on: ubuntu-latest
+    environment:
+      name: production
+      url: https://padaung.me/
+
+    steps:
+      - uses: actions/checkout@v3
+        with:
+          fetch-depth: 0 # Get full history instead of shallow clone
+      
+      - name: Debug SSH_HOST
+        run: echo "${{ secrets.SSH_HOST }}"
+
+      - name: Configure SSH
+        run: |
+          mkdir -p ~/.ssh/
+          # Write private key without any manipulation that might corrupt it
+          echo "${{ secrets.SSH_PRIVATE_KEY }}" > ~/.ssh/id_rsa
+          chmod 600 ~/.ssh/id_rsa
+
+          # Check the key format
+          if ! grep -q "BEGIN OPENSSH PRIVATE KEY" ~/.ssh/id_rsa; then
+            echo "ERROR: Private key appears to be in wrong format or missing header"
+            head -n 1 ~/.ssh/id_rsa
+            exit 1
+          fi
+
+          # Add host key
+          ssh-keyscan -H ${{ secrets.SSH_HOST }} >> ~/.ssh/known_hosts
+        shell: bash
+
+      - name: Test SSH Connection
+        run: ssh -o StrictHostKeyChecking=no ${{ secrets.SSH_USER }}@${{ secrets.SSH_HOST }} "echo 'SSH connection successful'"
+
+      - name: Deploy to Server
+        run: |
+          ssh ${{ secrets.SSH_USER }}@${{ secrets.SSH_HOST }} "
+            set -e
+            ssh-keyscan -H github.com >> ~/.ssh/known_hosts
+
+            cd ${{ secrets.WORK_DIR }}
+           
+            # Store the current commit hash before pull
+            BEFORE_COMMIT=$(git rev-parse HEAD)
+            
+            git pull origin production
+            
+            # Store the commit hash after pull
+            AFTER_COMMIT=$(git rev-parse HEAD)
+            
+            # Check if Docker, composer files, or crontab files changed between commits
+            CONFIG_CHANGED=$(git diff $BEFORE_COMMIT $AFTER_COMMIT --name-only | grep -E 'Dockerfile|docker-compose\.yml|composer\.(json|lock)|docker/crontab' || true)
+            
+            # Print what was detected for debugging
+            echo \"Checking for changes in configuration files...\"
+            echo \"Before commit: $BEFORE_COMMIT\"
+            echo \"After commit: $AFTER_COMMIT\"
+            echo \"Detected changes: $CONFIG_CHANGED\"
+            
+            if [ -n \"$CONFIG_CHANGED\" ]; then
+              echo \"Configuration files changed, rebuilding Docker containers...\"
+              docker-compose build --parallel
+              docker-compose up -d
+              echo \"Changed configuration files: $CONFIG_CHANGED\"
+            else
+              echo 'No configuration changes detected, just restarting services...'
+              docker-compose down --remove-orphans
+              docker-compose up -d
+            fi
+
+            # Wait for MySQL to be ready
+            until docker-compose exec -T app php artisan migrate:status > /dev/null 2>&1; do
+              echo \"Waiting for database connection...\"
+              sleep 5
+            done
+
+            # Now run migrations
+            docker-compose exec -T app php artisan migrate --force
+            docker-compose exec -T app php artisan optimize:clear
+            
+            echo 'Deployment completed successfully.'
+          "

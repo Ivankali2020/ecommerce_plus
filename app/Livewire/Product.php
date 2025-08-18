@@ -5,9 +5,10 @@ namespace App\Livewire;
 use App\Models\Category;
 use App\Models\Product as ProductModel;
 use App\Traits\WithCart;
+use Exception;
 use Filament\Notifications\Notification;
 use Illuminate\Database\Eloquent\Collection;
-use Illuminate\Support\Facades\Validator;
+use Illuminate\Validation\ValidationException;
 use Livewire\Attributes\Computed;
 use Livewire\Component;
 use Livewire\WithPagination;
@@ -44,7 +45,7 @@ class Product extends Component
 
             $this->getProductData();
             $this->selectedCategory = null;
-        } catch (\Illuminate\Validation\ValidationException $e) {
+        } catch (ValidationException $e) {
             // Handle validation error
             Notification::make()
                 ->title('Invalid store ID')
@@ -117,10 +118,10 @@ class Product extends Component
             $newProducts = $query->skip($this->perPage - 10)->take($this->perPage)->get();
 
             $this->products = $this->products->merge($newProducts)->unique('id');
-        } catch (\Exception $e) {
+        } catch (Exception $e) {
             $this->products = new Collection;
             $this->hasMorePages = false;
-            logger()->error('Error loading products: ' . $e->getMessage());
+            logger()->error('Error loading products: '.$e->getMessage());
         }
     }
 
@@ -134,8 +135,8 @@ class Product extends Component
 
             $this->perPage += 10;
             $this->getProductData();
-        } catch (\Exception $e) {
-            logger()->error('Error loading more products: ' . $e->getMessage());
+        } catch (Exception $e) {
+            logger()->error('Error loading more products: '.$e->getMessage());
             $this->hasMorePages = false;
         }
     }
