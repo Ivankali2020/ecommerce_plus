@@ -37,12 +37,10 @@
                         {{ __('messages.search') }}
                     </label>
                     <div class="relative">
-                        <input 
-                            type="text" 
+                        <x-text-input 
                             wire:model.live.debounce.500ms="search"
-                            class="w-full pl-10 pr-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-slate-500 focus:border-transparent "
-                            placeholder="{{ __('messages.search_wholesale') }}"
-                        >
+                            class="w-full pl-10 pr-4 py-2 border border-gray-300 rounded-lg "
+                            placeholder="{{ __('messages.search_wholesale') }}" />
                         <svg class="absolute left-3 top-2.5 h-5 w-5 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="m21 21-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"></path>
                         </svg>
@@ -55,20 +53,18 @@
                         {{ __('messages.price_range') }}
                     </label>
                     <div class="grid grid-cols-2 gap-2">
-                        <input 
-                            type="number" 
+                        <x-text-input 
                             wire:model.live.debounce.500ms="minPrice"
-                            class="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-slate-500 focus:border-transparent text-sm "
+                            type="number"
+                            class="w-full px-3 py-2 border border-gray-300 rounded-lg text-sm "
                             placeholder="{{ __('messages.min_price') }}"
-                            min="0"
-                        >
-                        <input 
-                            type="number" 
+                            min="0" />
+                        <x-text-input
                             wire:model.live.debounce.500ms="maxPrice"
-                            class="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-slate-500 focus:border-transparent text-sm "
+                            type="number"
+                            class="w-full px-3 py-2 border border-gray-300 rounded-lg text-sm "
                             placeholder="{{ __('messages.max_price') }}"
-                            min="0"
-                        >
+                            min="0" />
                     </div>
                     @if($minPrice || $maxPrice)
                     <button 

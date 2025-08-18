@@ -22,7 +22,7 @@ class EditProfile extends \Filament\Auth\Pages\EditProfile implements HasForms
 
     protected static string|\BackedEnum|null $navigationIcon = 'heroicon-o-document-text';
 
-    protected string $view = 'filament.seller.pages.edit-profile';
+    // protected string $view = 'filament.seller.pages.edit-profile';
 
     public ?array $data = [];
 
@@ -63,17 +63,17 @@ class EditProfile extends \Filament\Auth\Pages\EditProfile implements HasForms
         return redirect()->route('filament.seller.pages.dashboard');
     }
 
-    protected function getFormActions(): array
-    {
-        return [
+    // protected function getFormActions(): array
+    // {
+    //     return [
 
-            Action::make('back')
-                ->label(__('filament-panels::pages/auth/edit-profile.actions.cancel.label'))
-                ->alpineClickHandler('document.referrer ? window.history.back() : (window.location.href = '.Js::from(filament()->getUrl()).')')
-                ->color('gray'),
-            Action::make('Update')
-                ->color('primary')
-                ->submit('Update'),
-        ];
-    }
+    //         Action::make('back')
+    //             ->label(__('filament-panels::pages/auth/edit-profile.actions.cancel.label'))
+    //             ->alpineClickHandler('document.referrer ? window.history.back() : (window.location.href = '.Js::from(filament()->getUrl()).')')
+    //             ->color('gray'),
+    //         Action::make('Update')
+    //             ->color('primary')
+    //             ->submit('Update'),
+    //     ];
+    // }
 }

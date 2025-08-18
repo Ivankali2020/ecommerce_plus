@@ -34,11 +34,13 @@ new #[Layout('layouts.guest')] class extends Component
         <div class="text-center">
 
             {{-- check tenant logo  --}}
+            <a href="{{ route('welcome') }}" class="cursor-pointer">
              @if ($tenantSellerLogo)
                     <img class="mx-auto h-20 w-auto" src="{{ $tenantSellerLogo }}" alt="{{  $tenantSellerName }}">
                 @else
                     <h1 class="text-6xl font-bold font-bebas text-center ">{{  $tenantSellerName  }}</h1>
             @endif
+            </a>
             <h2 class="mt-6 text-3xl font-extrabold text-gray-900 dark:text-white ">
                 {{ __('messages.auth.login_page.title') }}
             </h2>

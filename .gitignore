@@ -17,3 +17,7 @@ yarn-error.log
 /.fleet
 /.idea
 /.vscode
+/nginx/ssl/accounts
+/nginx/ssl/archive
+/nginx/ssl/live
+/nginx/ssl/renewal

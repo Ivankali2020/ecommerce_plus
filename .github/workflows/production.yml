@@ -87,6 +87,16 @@ jobs:
             # Now run migrations
             docker-compose exec -T app php artisan migrate --force
             docker-compose exec -T app php artisan optimize:clear
+
+            # run npm install and build
+            
+            echo 'Running npm install and build...'
+            
+            docker-compose exec -T app npm install
+            
+            docker-compose exec -T app npm run build
+            
+            echo 'NPM install and build completed.'
             
             echo 'Deployment completed successfully.'
           "

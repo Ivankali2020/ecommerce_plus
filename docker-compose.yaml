@@ -35,7 +35,7 @@ services:
 
   # MySQL Service
   db:
-    image: mysql:8.0
+    image: mysql:8.0.39-oracle
     container_name: db
     restart: unless-stopped
     environment:
@@ -52,6 +52,21 @@ services:
       - "3304:3306"
     networks:
       - network
+    deploy:
+      resources:
+        limits:
+          memory: 400M
+        reservations:
+          memory: 200M
+    ulimits:
+      memlock:
+        soft: -1
+        hard: -1
+      nofile:
+        soft: 65536
+        hard: 65536
+    security_opt:
+      - seccomp:unconfined
   queue_worker:
     build: .
     command: php artisan queue:work --sleep=3 --tries=3

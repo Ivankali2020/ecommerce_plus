@@ -10,12 +10,13 @@
                     <path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="m19 19-4-4m0-7A7 7 0 1 1 1 8a7 7 0 0 1 14 0Z"/>
                 </svg>  
             </div>
-            <input 
-                type="search" 
-                wire:model.live.debounce.1000ms="search" 
-                class="block w-full p-3 ps-10 text-sm text-gray-900 border border-gray-300 rounded-lg bg-gray-50 focus:ring-slate-500 focus:border-slate-500 {{ app()->currentLocale() === 'my' ? 'placeholder-font-mm font-mm' : 'placeholder-font font-jost' }}"
-                placeholder="{{ __('messages.search_product') }}"
-            >
+            <x-text-input 
+                wire:model.live.debounce.500ms="search"
+                class="w-full pl-10 pr-4 py-2 rounded-lg "
+                placeholder="{{ __('messages.search_product') }}" />
+            <div class="absolute inset-y-0 end-0 top-0  flex items-center pr-3 pointer-events-none">
+                <x-filament::loading-indicator class="h-5 w-5"  wire:loading />
+            </div>
         </div>
         
         <!-- Discount Filter Button -->
@@ -37,19 +38,19 @@
         <div class="flex border-b border-gray-200">
             <button 
                x-on:click="$wire.filterType = 'category'" 
-                class="py-2 px-4 font-bold text-sm border-b-2 transition-colors {{ app()->currentLocale() === 'my' ? 'font-mm' : 'font-jost' }}"
+                class="py-2 px-4 font-bold text-sm border-b-2 transition-colors "
                 :class="$wire.filterType === 'category' ? 
                     'border-slate-900 text-slate-900' : 
-                    ''"
+                    'border-transparent text-gray-500 hover:text-gray-700 hover:border-gray-300'"
                 >
                 {{ __('messages.categories') }}
             </button>
             <button 
               x-on:click="$wire.filterType = 'brand'" 
-                class="py-2 px-4 font-bold text-sm border-b-2 transition-colors {{ app()->currentLocale() === 'my' ? 'font-mm' : 'font-jost' }}"
+                class="py-2 px-4 font-bold text-sm border-b-2 transition-colors "
                 :class="$wire.filterType === 'brand' ? 
                     'border-slate-900 text-slate-900' : 
-                    ''"
+                    'border-transparent text-gray-500 hover:text-gray-700 hover:border-gray-300'"
             >
                 {{ __('messages.brands') }}
             </button>

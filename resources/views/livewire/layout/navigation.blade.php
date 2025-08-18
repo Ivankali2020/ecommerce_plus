@@ -33,7 +33,7 @@ new class extends Component
                     <div class="shrink-0 flex items-center">
                         <a href="{{ route('welcome') }}" >
                             @if ($tenantSellerLogo)
-                                <img src="{{ $tenantSellerLogo != null ? $tenantSellerLogo : asset('assets/logo.png') }}" alt="{{  $seller->name }}" class="block rounded h-12 w-auto fill-current text-slate-800 dark:text-slate-200" />
+                                <img src="{{ $tenantSellerLogo != null ? $tenantSellerLogo : asset('assets/logo.png') }}" alt="{{  $tenantSellerName }}" class="block rounded h-12 w-auto fill-current text-slate-800 dark:text-slate-200" />
                                 @else
                                 <h1 class="text-lg lg:text-2xl font-bold font-bebas text-center ">{{  $tenantSellerName  }}</h1>
                             @endif
