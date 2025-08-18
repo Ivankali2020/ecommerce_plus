@@ -86,10 +86,12 @@ class SendOrderTelegramNotification implements ShouldQueue
     protected function formatOrderUpdateMessage(Order $order): string
     {
         $statusEmoji = match($order->status) {
-            OrderStatus::Pending => '⏳',
-            OrderStatus::Confirmed => '✅',
-            OrderStatus::Delivered => '🚚',
+            OrderStatus::New => '🆕',
+            OrderStatus::Processing => '⏳',
+            OrderStatus::Shipped => '🚚',
+            OrderStatus::Delivered => '✅',
             OrderStatus::Cancelled => '❌',
+            OrderStatus::Refunded => '💰',
             default => '📦'
         };
         
