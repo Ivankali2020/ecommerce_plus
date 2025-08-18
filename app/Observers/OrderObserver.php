@@ -135,13 +135,21 @@ class OrderObserver
         $customerName = $order->walk_in_customer ? 'Walk-in Customer' : $order->user->name;
         $itemCount = $order->products->sum('quantity');
         
-        return "🛍️ New Order Received!\n\n" .
-               "📋 Order #: {$order->invoice_number}\n" .
-               "👤 Customer: {$customerName}\n" .
-               "📦 Items: {$itemCount} item(s)\n" .
-               "💰 Total: " . number_format($order->total, 0) . " MMK\n" .
-               "🕐 Time: " . $order->created_at->format('M d, Y h:i A') . "\n\n" .
-               "Check your admin panel for full details.";
+        $message = "🛍️ New Order Received!\n\n" .
+                   "📋 Order #: {$order->invoice_number}\n" .
+                   "👤 Customer: {$customerName}\n" .
+                   "📦 Items: {$itemCount} item(s)\n" .
+                   "💰 Total: " . number_format($order->total, 0) . " MMK\n" .
+                   "🕐 Time: " . $order->created_at->format('M d, Y h:i A');
+        
+        // Add note if it exists
+        if (!empty($order->note)) {
+            $message .= "\n📝 Note: " . $order->note;
+        }
+        
+        $message .= "\n\nCheck your admin panel for full details.";
+        
+        return $message;
     }
 
     /**
@@ -157,11 +165,18 @@ class OrderObserver
             default => '📦'
         };
         
-        return "{$statusEmoji} Order Status Updated\n\n" .
-               "📋 Order #: {$order->invoice_number}\n" .
-               "🔄 Status: {$order->status->value}\n" .
-               "💰 Total: " . number_format($order->total, 0) . " MMK\n" .
-               "🕐 Updated: " . now()->format('M d, Y h:i A');
+        $message = "{$statusEmoji} Order Status Updated\n\n" .
+                   "📋 Order #: {$order->invoice_number}\n" .
+                   "🔄 Status: {$order->status->value}\n" .
+                   "💰 Total: " . number_format($order->total, 0) . " MMK\n" .
+                   "🕐 Updated: " . now()->format('M d, Y h:i A');
+        
+        // Add note if it exists
+        if (!empty($order->note)) {
+            $message .= "\n📝 Note: " . $order->note;
+        }
+        
+        return $message;
     }
 
     /**
