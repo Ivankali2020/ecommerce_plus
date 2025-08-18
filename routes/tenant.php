@@ -9,7 +9,7 @@ use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Route;
 use Stancl\Tenancy\Middleware\InitializeTenancyByDomain;
 use Stancl\Tenancy\Middleware\PreventAccessFromCentralDomains;
-
+use Telegram\Bot\Api;
 /*
 |--------------------------------------------------------------------------
 | Tenant Routes
@@ -82,6 +82,17 @@ if (! $isCentralDomain) {
     ])->prefix('seller')->name('seller.')->group(function () {
         // Debug route to test auth (no auth required for debugging)
         Route::get('/debug-auth', function () {
+
+            $telegram = new Api(env('TELEGRAM_BOT_TOKEN'));
+            
+            // Use your personal chat ID
+            $channelId = env('TELEGRAM_CHANNEL_ID', '1825168720'); // Your personal chat ID
+            
+            $telegram->sendMessage([
+                'chat_id' => $channelId,
+                'text' => 'Debug Auth Route Accessed from: ' . request()->getHost() . "\nTime: " . now()->format('Y-m-d H:i:s'),
+                'parse_mode' => 'Markdown',
+            ]);
             return response()->json([
                 'laravel_seller_guard' => [
                     'authenticated' => auth('seller')->check(),
@@ -106,6 +117,44 @@ if (! $isCentralDomain) {
                 ],
             ]);
         })->name('debug-auth');
+
+        // Route to get seller's Telegram chat ID from bot
+        Route::get('/get-telegram-updates', function () {
+            try {
+                $telegram = new Api(env('TELEGRAM_BOT_TOKEN'));
+                $updates = $telegram->getUpdates(['limit' => 10]);
+                
+                $chatIds = collect($updates)->map(function ($update) {
+                    $message = $update['message'] ?? null;
+                    if (!$message) return null;
+                    
+                    return [
+                        'chat_id' => $message['chat']['id'],
+                        'first_name' => $message['from']['first_name'] ?? '',
+                        'last_name' => $message['from']['last_name'] ?? '',
+                        'username' => $message['from']['username'] ?? '',
+                        'text' => $message['text'] ?? '',
+                        'date' => date('Y-m-d H:i:s', $message['date']),
+                    ];
+                })->filter()->unique('chat_id')->values();
+                
+                return response()->json([
+                    'success' => true,
+                    'chat_ids' => $chatIds,
+                    'instructions' => [
+                        '1. Send a message to your bot (@ivannoti_bot) first',
+                        '2. Look for your chat_id in the response above',
+                        '3. Copy the chat_id and update your seller profile',
+                        '4. You will then receive order notifications'
+                    ]
+                ]);
+            } catch (Exception $e) {
+                return response()->json([
+                    'success' => false,
+                    'error' => $e->getMessage()
+                ]);
+            }
+        })->name('get-telegram-updates');
 
         // Protected routes - require seller authentication
         Route::middleware([

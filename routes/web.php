@@ -11,6 +11,49 @@ $isCentralDomain = in_array(request()->getHost(), config('tenancy.central_domain
 // Only include auth.php for central domains
 if ($isCentralDomain) {
     require __DIR__ . '/auth.php';
+    
+    // Telegram webhook routes (global for all tenants)
+    Route::post('/telegram/webhook', [App\Http\Controllers\TelegramWebhookController::class, 'webhook'])
+        ->name('telegram.webhook');
+    
+    Route::get('/telegram/set-webhook', [App\Http\Controllers\TelegramWebhookController::class, 'setWebhook'])
+        ->name('telegram.set-webhook');
+    
+    Route::get('/telegram/webhook-info', [App\Http\Controllers\TelegramWebhookController::class, 'getWebhookInfo'])
+        ->name('telegram.webhook-info');
+        
+    // Manual testing for local development
+    Route::get('/telegram/test-command/{command}', function ($command) {
+        $telegramService = new \App\Services\TelegramCommandService();
+        
+        $fakeUpdate = new \Telegram\Bot\Objects\Update([
+            'update_id' => 999999,
+            'message' => [
+                'message_id' => 999,
+                'from' => [
+                    'id' => 1825168720, // Your chat ID
+                    'is_bot' => false,
+                    'first_name' => 'Test',
+                    'last_name' => 'User',
+                    'username' => 'testuser'
+                ],
+                'chat' => [
+                    'id' => 1825168720,
+                    'type' => 'private'
+                ],
+                'date' => time(),
+                'text' => '/' . $command
+            ]
+        ]);
+        
+        $telegramService->handleUpdate($fakeUpdate);
+        
+        return response()->json([
+            'success' => true,
+            'message' => "Command /{$command} executed",
+            'note' => 'Check your Telegram for the response'
+        ]);
+    })->name('telegram.test-command');
 }
 
 // Only include tenant.php for tenant domains

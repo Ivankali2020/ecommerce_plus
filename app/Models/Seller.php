@@ -46,6 +46,7 @@ class Seller extends Authenticatable implements FilamentUser, HasMedia //, MustV
         'subscription_started_at',
         'subscription_expired_at',
         'subscription_status',
+        'telegram_chat_id',
     ];
 
     protected $hidden = [

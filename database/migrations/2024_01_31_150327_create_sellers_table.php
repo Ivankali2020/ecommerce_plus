@@ -26,6 +26,7 @@ return new class extends Migration
             $table->timestamp('subscription_expired_at')->nullable();
             $table->string('subscription_status')->default('inactive');
             $table->unsignedBigInteger('tenant_id')->nullable();
+            $table->string('telegram_chat_id')->nullable();
             $table->rememberToken();
             $table->softDeletes();
             $table->timestamps();
