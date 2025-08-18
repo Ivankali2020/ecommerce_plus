@@ -80,10 +80,10 @@ class TelegramCommandService
     {
         $message = "👋 Hello {$firstName}!\n\n" .
                   "Welcome to PADAUNG Notification Bot!\n\n" .
-                  "🤖 *Available Commands:*\n" .
+                  "🤖 Available Commands:\n" .
                   "/getId - Get your Telegram Chat ID\n" .
                   "/help - Show this help message\n\n" .
-                  "💡 *How to get order notifications:*\n" .
+                  "💡 How to get order notifications:\n" .
                   "1. Use /getId to get your chat ID\n" .
                   "2. Add this chat ID to your seller profile\n" .
                   "3. You'll receive notifications for new orders!";
@@ -102,28 +102,28 @@ class TelegramCommandService
         // Check if this chat ID is already associated with any seller across all tenants
         $existingSellers = \App\Models\Seller::where('telegram_chat_id', $chatId)->get();
 
-        $message = "🆔 *Your Telegram Information:*\n\n" .
-                  "📱 *Chat ID:* `{$chatId}`\n" .
-                  "👤 *Name:* {$fullName}\n" .
-                  ($username ? "🔗 *Username:* @{$username}\n" : "") .
-                  "\n📋 *Next Steps:*\n" .
-                  "1. Copy your Chat ID: `{$chatId}`\n" .
+        $message = "🆔 Your Telegram Information:\n\n" .
+                  "📱 Chat ID: {$chatId}\n" .
+                  "👤 Name: {$fullName}\n" .
+                  ($username ? "🔗 Username: @{$username}\n" : "") .
+                  "\n📋 Next Steps:\n" .
+                  "1. Copy your Chat ID: {$chatId}\n" .
                   "2. Go to your seller admin panel (any tenant domain)\n" .
                   "3. Edit your profile and paste this Chat ID\n" .
                   "4. Save your profile\n\n";
 
         if ($existingSellers->count() > 0) {
-            $message .= "✅ *Current Status:* This Chat ID is already linked to " . $existingSellers->count() . " seller account(s)\n";
+            $message .= "✅ Current Status: This Chat ID is already linked to " . $existingSellers->count() . " seller account(s)\n";
             foreach ($existingSellers as $seller) {
                 $message .= "   • {$seller->name} ({$seller->email})\n";
             }
             $message .= "\n🔔 You should already be receiving order notifications!\n";
         } else {
-            $message .= "⚠️ *Current Status:* This Chat ID is not linked to any seller account yet\n";
+            $message .= "⚠️ Current Status: This Chat ID is not linked to any seller account yet\n";
             $message .= "👆 Follow the steps above to start receiving notifications\n";
         }
 
-        $message .= "\n💡 *Multi-tenant Support:* This bot works across all your store domains!";
+        $message .= "\n💡 Multi-tenant Support: This bot works across all your store domains!";
 
         $this->sendMessage($chatId, $message);
 
@@ -141,17 +141,17 @@ class TelegramCommandService
      */
     protected function handleHelpCommand(string $chatId): void
     {
-        $message = "🤖 *PADAUNG Bot Help*\n\n" .
-                  "*Available Commands:*\n" .
+        $message = "🤖 PADAUNG Bot Help\n\n" .
+                  "Available Commands:\n" .
                   "/start - Welcome message\n" .
                   "/getId - Get your Telegram Chat ID\n" .
                   "/help - Show this help message\n\n" .
-                  "*Purpose:*\n" .
+                  "Purpose:\n" .
                   "This bot sends you notifications when:\n" .
                   "• New orders are received\n" .
                   "• Order status changes\n" .
                   "• Important seller updates\n\n" .
-                  "*Setup:*\n" .
+                  "Setup:\n" .
                   "1. Use /getId to get your chat ID\n" .
                   "2. Add it to your seller profile\n" .
                   "3. Start receiving notifications!";
@@ -182,8 +182,11 @@ class TelegramCommandService
             $this->telegram->sendMessage([
                 'chat_id' => $chatId,
                 'text' => $message,
-                'parse_mode' => 'Markdown',
+                // No parse_mode = plain text
             ]);
+            
+            Log::info('Message sent successfully', ['chat_id' => $chatId]);
+            
         } catch (Exception $e) {
             Log::error('Failed to send Telegram message', [
                 'error' => $e->getMessage(),
