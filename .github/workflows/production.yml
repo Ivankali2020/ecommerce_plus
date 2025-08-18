@@ -53,7 +53,7 @@ jobs:
             # Store the current commit hash before pull
             BEFORE_COMMIT=$(git rev-parse HEAD)
             
-            git pull origin production
+            git pull origin main
             
             # Store the commit hash after pull
             AFTER_COMMIT=$(git rev-parse HEAD)
