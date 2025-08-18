@@ -17,7 +17,7 @@ return [
      * Only relevant if you're using the domain or subdomain identification middleware.
      */
     'central_domains' => [
-        'airry.me',
+        'padaung.me',
         'padaung.test',
         'padaung.com',
         '127.0.0.1',
