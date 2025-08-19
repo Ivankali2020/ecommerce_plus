@@ -50,7 +50,7 @@
             <div class="space-y-4">
                 <h3 class="text-lg font-semibold">{{ __('messages.footer.payment_methods') }}</h3>
                 @if($seller && $seller->payments->isNotEmpty())
-                    <div class="grid grid-cols-2 lg:grid-cols-3 gap-3">
+                    <div class="grid grid-cols-5 md:grid-cols-3 gap-3">
                         @foreach($seller->payments as $payment)
                             <div class="rounded-md bg-slate-100 h-14 w-14 text-center p-2 flex items-center justify-center ">
                                 @if($payment->media->isNotEmpty())
@@ -67,7 +67,7 @@
         </div>
 
         <!-- Bottom Bar -->
-        <div class="border-t border-gray-800 mt-8 pt-8 flex flex-col sm:flex-row justify-between items-center">
+        <div class="border-t border-gray-800 mt-8 pt-8 pb-16 mb:pb-0 flex flex-col sm:flex-row justify-between items-center">
             <p class="text-gray-400 text-sm">
                 © {{ date('Y') }} {{ $seller ? $seller->name : __('messages.footer.company_info') }}. 
                 {{ __('messages.footer.all_rights_reserved') }}

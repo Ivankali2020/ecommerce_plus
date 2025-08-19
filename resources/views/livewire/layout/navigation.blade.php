@@ -309,7 +309,6 @@ new class extends Component
 </nav>
 
 <!-- Mobile Bottom Navigation -->
-@auth
 <div class="fixed bottom-0 left-0 z-50 w-full h-16 bg-white border-t border-t-gray-200 sm:hidden ">
     <div class=" h-full flex justify-around items-center ">
         <a wire:navigate href="{{ route('welcome') }}"  class="inline-flex flex-col items-center justify-center px-1 hover:bg-gray-50 {{ request()->routeIs(['store', 'store.*']) ? 'text-[#c2a03d]' : 'text-gray-500' }}">
@@ -355,5 +354,4 @@ new class extends Component
         </a>
     </div>
 </div>
-@endauth
 </div>

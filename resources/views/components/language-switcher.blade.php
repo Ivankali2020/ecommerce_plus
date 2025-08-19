@@ -5,14 +5,14 @@
             <img src="{{  asset('assets/us.png') }}"
                  width="20"
                  height="20"
-                 class="rounded-sm object-contain"
+                 class="rounded-xs object-contain"
                  alt="English">
             <span class="font-jost">English</span>
         @else
             <img src="{{  asset('assets/mm.png') }}"
                  width="20"
                  height="20"
-                 class="rounded-sm object-contain"
+                 class="rounded-xs object-contain"
                  alt="Myanmar">
             <span class="font-mm">မြန်မာ</span>
         @endif

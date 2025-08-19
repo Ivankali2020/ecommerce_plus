@@ -5,6 +5,7 @@ namespace App\Filament\Seller\Pages;
 use Filament\Actions\Action;
 use Filament\Actions\Concerns\InteractsWithActions;
 use Filament\Forms\Components\SpatieMediaLibraryFileUpload;
+use Filament\Forms\Components\TextInput;
 use Filament\Forms\Concerns\InteractsWithForms;
 use Filament\Forms\Contracts\HasForms;
 use Filament\Schemas\Schema;
@@ -42,6 +43,10 @@ class EditProfile extends \Filament\Auth\Pages\EditProfile implements HasForms
                 $this->getEmailFormComponent(),
                 $this->getPasswordFormComponent(),
                 $this->getPasswordConfirmationFormComponent(),
+
+                TextInput::make('telegram_chat_id')
+                    ->nullable()->string(),
+
                 SpatieMediaLibraryFileUpload::make('logo')
                     ->collection('logos')->imageEditor()
                     ->image()->rules('required|mimes:jpeg,png,jpg,svg|dimensions:ratio=1/1'),
