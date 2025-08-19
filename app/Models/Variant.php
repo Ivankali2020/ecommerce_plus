@@ -17,8 +17,6 @@ class Variant extends Model implements HasMedia
 
     public $preventObserver = false;
 
-    protected $with = ['product.exchange'];
-
     public function getRelationshipToPrimaryModel(): string
     {
         return 'product';

@@ -39,6 +39,8 @@ class AppServiceProvider extends ServiceProvider
 
         Model::unguard();
 
+        Model::automaticallyEagerLoadRelationships();
+
         // Configure Filament for v4 compatibility
         \Filament\Forms\Components\FileUpload::configureUsing(function (\Filament\Forms\Components\FileUpload $fileUpload) {
             $fileUpload->visibility('public');
@@ -68,10 +70,10 @@ class AppServiceProvider extends ServiceProvider
         });
 
         // Bind custom registration response for seller panel
-        $this->app->bind(
-            \Filament\Http\Responses\Auth\Contracts\RegistrationResponse::class,
-            \App\Http\Responses\Auth\RegistrationResponse::class,
-        );
+        // $this->app->bind(
+        //     \Filament\Http\Responses\Auth\Contracts\RegistrationResponse::class,
+        //     \App\Http\Responses\Auth\RegistrationResponse::class,
+        // );
 
         // Set Livewire update route for seller panel
         Livewire::setUpdateRoute(function ($handle) {

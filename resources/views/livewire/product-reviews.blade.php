@@ -2,7 +2,7 @@
     <!-- Reviews Header -->
     <div class="border-b border-gray-200 pb-6 mb-6">
         <div class="flex items-center justify-between">
-            <h2 class="text-2xl font-bold text-gray-900 ">
+            <h2 class="text-sm md:text-2xl font-bold text-gray-900 ">
                 {{ __('messages.reviews.title') }}
             </h2>
             
@@ -22,7 +22,7 @@
             @else
                 <a 
                     href="{{ route('login') }}"
-                    class="inline-flex items-center px-4 py-2 border border-gray-300 text-sm font-medium rounded-md text-gray-700 bg-white hover:bg-gray-50 transition-colors duration-200 "
+                    class="inline-flex items-center px-4 py-2 border border-gray-300 text-xs md:text-sm font-medium rounded-md text-gray-700 bg-white hover:bg-gray-50 transition-colors duration-200 "
                 >
                     {{ __('messages.reviews.login_to_review') }}
                 </a>

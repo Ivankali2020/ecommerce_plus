@@ -69,9 +69,9 @@ new #[Layout('layouts.guest')] class extends Component
                 <div>
                     <x-input-label for="password" :value="__('messages.auth.login_page.password')"
                         class="mb-2 " />
-                    <x-text-input wire:model="form.password" id="password"
+                    <x-text-input wire:model="form.password" type="password"  id="password" 
                         class="appearance-none rounded-lg relative block w-full  border border-gray-300 dark:border-gray-700 placeholder-gray-500 text-gray-900 dark:text-gray-100 focus:outline-none focus:ring-slate-500 focus:border-slate-500 focus:z-10 sm:text-sm"
-                        type="password" name="password" required autocomplete="current-password" />
+                        name="password" required autocomplete="current-password" />
                     <x-input-error :messages="$errors->get('form.password')" class="mt-2" />
                 </div>
             </div>
@@ -80,7 +80,7 @@ new #[Layout('layouts.guest')] class extends Component
                 <!-- Remember Me -->
                 <div class="flex items-center">
                     <input wire:model="form.remember" id="remember" type="checkbox"
-                        class="h-4 w-4 text-slate-600 focus:ring-slate-500 border-gray-300 rounded">
+                        class="h-4 w-4 text-slate-600 focus:border-black focus:ring-slate-300 active:text-amber-400 border-gray-300 rounded">
                     <label for="remember" class="ml-2 block text-sm text-gray-900 dark:text-gray-300 ">
                         {{ __('messages.auth.login_page.remember') }}
                     </label>
