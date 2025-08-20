@@ -145,6 +145,7 @@ new #[Layout('layouts.guest')] class extends Component
                 </a>
             </p>
             
+            @if($tenantEnableGoogleAuth)
             <!-- Social Login Divider -->
             <div class="mt-6">
                 <div class="relative">
@@ -173,6 +174,7 @@ new #[Layout('layouts.guest')] class extends Component
                     </a>
                 </div>
             </div>
+            @endif
         </form>
     </div>
 </div>

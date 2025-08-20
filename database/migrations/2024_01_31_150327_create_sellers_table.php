@@ -27,6 +27,7 @@ return new class extends Migration
             $table->string('subscription_status')->default('inactive');
             $table->unsignedBigInteger('tenant_id')->nullable();
             $table->string('telegram_chat_id')->nullable();
+            $table->boolean('enabled_google_auth')->default(false);
             $table->rememberToken();
             $table->softDeletes();
             $table->timestamps();

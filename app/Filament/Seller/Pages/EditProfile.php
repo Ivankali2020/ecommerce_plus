@@ -2,6 +2,7 @@
 
 namespace App\Filament\Seller\Pages;
 
+use BackedEnum;
 use Filament\Actions\Action;
 use Filament\Actions\Concerns\InteractsWithActions;
 use Filament\Forms\Components\SpatieMediaLibraryFileUpload;
@@ -49,10 +50,11 @@ class EditProfile extends \Filament\Auth\Pages\EditProfile implements HasForms
 
                 SpatieMediaLibraryFileUpload::make('logo')
                     ->collection('logos')->imageEditor()
-                    ->image()->rules('required|mimes:jpeg,png,jpg,svg|dimensions:ratio=1/1'),
+                    ->image()
+                    ->rules('required|mimes:jpeg,png,jpg,svg|dimensions:ratio=1/1'),
 
                 SpatieMediaLibraryFileUpload::make('cover_photo')
-                    ->multiple()->maxFiles(5)->label('Cover Photos')
+                    ->multiple()->maxFiles(5)
                     ->collection('cover_photos')->imageEditor()
                     ->image()->rules('required|mimes:jpeg,png,jpg,webp'), // |dimensions:ratio=16/9
             ])

@@ -64,6 +64,7 @@ class AppServiceProvider extends ServiceProvider
                 Cache::remember('tenant_seller', 60, function () use ($view) {
                     $seller = Tenant::where('id', tenant('id'))->first()?->sellers->first();
                     $view->with('tenantSellerLogo', $seller?->getFirstMediaUrl('logos'))
+                        ->with('tenantEnableGoogleAuth', $seller?->enabled_google_auth)
                         ->with('tenantSellerName', $seller?->name);
                 });
             }

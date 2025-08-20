@@ -9,6 +9,7 @@ use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Str;
 use Laravel\Socialite\Facades\Socialite;
+use Stancl\Tenancy\Database\Models\Domain;
 
 class SocialAuthController extends Controller
 {
@@ -36,8 +37,14 @@ class SocialAuthController extends Controller
             // Log the user in
             Auth::login($user);
 
-            // Redirect to profile page
-            return redirect()->route('profile');
+            Notification::make()
+                ->title('Google Authentication Successful')
+                ->body('You have successfully logged in with Google.')
+                ->success()
+                ->send();
+
+            // Redirect to welcome page
+            return redirect()->route('welcome');
 
         } catch (Exception $e) {
             // Handle errors

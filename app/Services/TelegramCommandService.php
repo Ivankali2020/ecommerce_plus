@@ -3,6 +3,7 @@
 namespace App\Services;
 
 use App\Models\Seller;
+use Exception;
 use Illuminate\Support\Facades\Log;
 use Telegram\Bot\Api;
 use Telegram\Bot\Objects\Update;

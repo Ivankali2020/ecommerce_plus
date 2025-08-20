@@ -11,7 +11,6 @@ $isCentralDomain = in_array(request()->getHost(), config('tenancy.central_domain
 // Only include auth.php for central domains
 if ($isCentralDomain) {
     require __DIR__ . '/auth.php';
-    
     // Telegram webhook routes (global for all tenants)
     Route::post('/telegram/webhook', [App\Http\Controllers\TelegramWebhookController::class, 'webhook'])
         ->name('telegram.webhook');
