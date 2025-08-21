@@ -1,4 +1,4 @@
-<footer class="mt-16 border-t ">    
+<footer class="mt-16 border-t border-gray-300">    
     <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-12">        
     <div class="grid grid-cols-1 md:grid-cols-4 gap-8">           
          <!-- Company Info -->           
@@ -67,7 +67,7 @@
         </div>
 
         <!-- Bottom Bar -->
-        <div class="border-t border-gray-800 mt-8 pt-8 pb-16 mb:pb-0 flex flex-col sm:flex-row justify-between items-center">
+        <div class="border-t border-gray-300 mt-8 pt-8 pb-16 mb:pb-0 flex flex-col sm:flex-row justify-between items-center">
             <p class="text-gray-400 text-sm">
                 © {{ date('Y') }} {{ $seller ? $seller->name : __('messages.footer.company_info') }}. 
                 {{ __('messages.footer.all_rights_reserved') }}

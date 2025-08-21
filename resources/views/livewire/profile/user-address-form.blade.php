@@ -93,7 +93,10 @@
                 </div>
 
                 <div>
-                    <x-input-label for="township" :value="__('messages.address.township')" />
+                    <div class="flex gap-2 ">
+                        <x-input-label for="township" :value="__('messages.address.township')" />
+                        <x-filament::loading-indicator wire:loading class="h-4 w-4" />
+                    </div>
                     <x-select id="township" wire:model.live="selectedTownship" class="mt-1 block w-full  ">
                         <option value="">{{ __('messages.address.select_township') }}</option>
                         @foreach($townships as $township)

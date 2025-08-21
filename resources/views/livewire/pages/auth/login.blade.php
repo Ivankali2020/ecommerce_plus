@@ -12,16 +12,23 @@ new #[Layout('layouts.guest')] class extends Component
 
     public string $cfTurnstileResponse;
 
+    protected function getTurnstileValidationRules(): array
+    {
+        return [
+            'cfTurnstileResponse' => ['required', 'turnstile'],
+        ];
+    }
+
     /**
      * Handle an incoming authentication request.
      */
     public function login(): void
     {
-        $this->validate([
-            'cfTurnstileResponse' => ['required', 'turnstile'],
-        ]);
-
+        // First validate the login form (without Turnstile)
         $this->form->authenticate();
+
+        // Then validate Turnstile separately to avoid token consumption
+        $this->validate($this->getTurnstileValidationRules());
 
         Session::regenerate();
 

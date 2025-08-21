@@ -2,6 +2,7 @@
 
 namespace App\Livewire\Profile;
 
+use App\Models\Delivery;
 use App\Models\Region;
 use App\Models\Township;
 use App\Models\UserAddress;
@@ -36,7 +37,10 @@ class UserAddressForm extends Component
 
     public function mount()
     {
-        $this->regions = Region::all();
+        $sellRegions = Delivery::where('tenant_id', tenant('id'))->pluck('region_id')->toArray();
+        $uniqueSellerRegions = array_unique($sellRegions);
+
+        $this->regions = Region::whereIn('id', $uniqueSellerRegions)->get();
         $this->loadAddresses();
     }
 

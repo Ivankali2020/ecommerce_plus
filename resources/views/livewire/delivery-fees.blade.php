@@ -15,10 +15,12 @@
                     <div class="space-y-2">
                         @foreach($regions as $region)
                             <button 
+                                wire:key="region-{{ $region->id }}"
                                 wire:click="selectRegion({{ $region->id }})"
-                                class="w-full text-left p-3 rounded-md transition-colors {{ $selectedRegion == $region->id ? 'bg-slate-500 text-white' : 'bg-gray-50 hover:bg-gray-100' }}"
+                                class="w-full text-left p-3 rounded-md transition-colors flex justify-between items-center {{ $selectedRegion == $region->id ? 'bg-slate-500 text-white' : 'bg-gray-50 hover:bg-gray-100' }}"
                             >
-                                {{ app()->currentLocale() === 'my' ? $region->mm_name : $region->en_name }}
+                                <span> {{ app()->currentLocale() === 'my' ? $region->mm_name : $region->en_name }} </span>
+                                <x-filament::loading-indicator wire:loading wire:target="selectRegion({{ $region->id }})" class="h-4 w-4" />
                             </button>
                         @endforeach
                     </div>

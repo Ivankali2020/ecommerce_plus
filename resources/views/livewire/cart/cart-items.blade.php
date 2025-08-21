@@ -31,7 +31,7 @@
 
     @forelse($cartItems as $item)
         <div wire:key="cart-item-{{ $item->id }}"
-            class="relative bg-white rounded-lg shadow-sm border border-gray-100 p-3 md:p-4 mb-3 md:mb-4 {{ app()->currentLocale() === 'my' ? 'font-mm' : 'font-jost' }} animate-fade-in-up">
+            class="relative bg-white rounded-lg shadow-sm border border-gray-100 p-3 md:p-4 mb-3 md:mb-4  animate-fade-in-up">
             
             <!-- Mobile Layout (sm and below) -->
             <div class="block md:hidden">
@@ -63,11 +63,12 @@
                     <!-- Remove Button - Mobile -->
                     <button wire:click="removeItem({{ $item->id }})"
                         class="shrink-0 p-1 text-red-500 hover:text-red-700 transition-colors">
-                        <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" viewBox="0 0 20 20" fill="currentColor">
+                        <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" wire:loading.remove wire:target="removeItem({{ $item->id }})" viewBox="0 0 20 20" fill="currentColor">
                             <path fill-rule="evenodd"
                                 d="M4.293 4.293a1 1 0 011.414 0L10 8.586l4.293-4.293a1 1 0 111.414 1.414L11.414 10l4.293 4.293a1 1 0 01-1.414 1.414L10 11.414l-4.293 4.293a1 1 0 01-1.414-1.414L8.586 10 4.293 5.707a1 1 0 010-1.414z"
                                 clip-rule="evenodd" />
                         </svg>
+                        <x-filament::loading-indicator class="h-5 w-5" wire:loading wire:target="removeItem({{ $item->id }})" />
                     </button>
                 </div>
                 
@@ -103,17 +104,20 @@
                 <div class="mt-3 pt-2 border-t border-gray-100 flex justify-between items-center">
                     <div class="flex items-center gap-2">
                         <button wire:click="updateQuantity({{ $item->id }}, {{ $item->quantity - 1 }})"
-                            class="p-2 bg-gray-100 hover:bg-gray-200 rounded-full transition-colors">
-                            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 16 16" fill="currentColor" class="w-3 h-3">
+                            class="flex items-center justify-center w-8 h-8 bg-gray-100 hover:bg-gray-200 rounded-full transition-colors">
+                            <svg xmlns="http://www.w3.org/2000/svg" wire:loading.remove wire:target="updateQuantity({{ $item->id }}, {{ $item->quantity - 1 }})"  viewBox="0 0 16 16" fill="currentColor" class="w-3 h-3">
                                 <path d="M3.75 7.25a.75.75 0 0 0 0 1.5h8.5a.75.75 0 0 0 0-1.5h-8.5Z" />
                             </svg>
+                            <x-filament::loading-indicator class="h-4 w-4" wire:loading wire:target="updateQuantity({{ $item->id }}, {{ $item->quantity - 1 }})" />
                         </button>
                         <span class="w-8 text-center text-sm font-medium">{{ $item->quantity }}</span>
-                        <button wire:click="updateQuantity({{ $item->id }}, {{ $item->quantity + 1 }})"
-                            class="p-2 bg-gray-100 hover:bg-gray-200 rounded-full transition-colors">
-                            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 16 16" fill="currentColor" class="w-3 h-3">
+                        <button wire:click="updateQuantity({{ $item->id }}, {{ $item->quantity + 1 }})" 
+                            wire:loading.attr="diabled" wire:target="updateQuantity({{ $item->id }}, {{ $item->quantity + 1 }})"
+                            class="flex items-center justify-center w-8 h-8 bg-gray-100 hover:bg-gray-200 rounded-full transition-colors">
+                            <svg xmlns="http://www.w3.org/2000/svg"  wire:loading.remove wire:target="updateQuantity({{ $item->id }}, {{ $item->quantity + 1 }})"  viewBox="0 0 16 16" fill="currentColor" class="w-3 h-3">
                                 <path d="M8.75 3.75a.75.75 0 0 0-1.5 0v3.5h-3.5a.75.75 0 0 0 0 1.5h3.5v3.5a.75.75 0 0 0 1.5 0v-3.5h3.5a.75.75 0 0 0 0-1.5h-3.5v-3.5Z" />
                             </svg>
+                             <x-filament::loading-indicator class="h-4 w-4" wire:loading wire:target="updateQuantity({{ $item->id }}, {{ $item->quantity + 1 }})" />
                         </button>
                     </div>
                     
@@ -169,18 +173,20 @@
 
                 <!-- Quantity Controls - Desktop -->
                 <div class="flex items-center gap-3">
-                    <button wire:click="updateQuantity({{ $item->id }}, {{ $item->quantity - 1 }})"
-                        class="p-2 bg-gray-100 hover:bg-gray-200 rounded-full transition-colors">
-                        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 16 16" fill="currentColor" class="w-4 h-4">
+                    <button wire:loading.attr="disabled" wire:click="updateQuantity({{ $item->id }}, {{ $item->quantity - 1 }})"
+                        class="flex items-center justify-center w-8 h-8 bg-gray-100 hover:bg-gray-200 rounded-full transition-colors">
+                        <svg xmlns="http://www.w3.org/2000/svg" wire:loading.remove wire:target="updateQuantity({{ $item->id }}, {{ $item->quantity - 1 }})" viewBox="0 0 16 16" fill="currentColor" class="w-4 h-4">
                             <path d="M3.75 7.25a.75.75 0 0 0 0 1.5h8.5a.75.75 0 0 0 0-1.5h-8.5Z" />
                         </svg>
+                         <x-filament::loading-indicator class="h-4 w-4" wire:loading wire:target="updateQuantity({{ $item->id }}, {{ $item->quantity - 1 }})" />
                     </button>
                     <span class="w-12 text-center font-medium">{{ $item->quantity }}</span>
-                    <button wire:click="updateQuantity({{ $item->id }}, {{ $item->quantity + 1 }})"
-                        class="p-2 bg-gray-100 hover:bg-gray-200 rounded-full transition-colors">
-                        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 16 16" fill="currentColor" class="w-4 h-4">
+                    <button wire:loading.attr="disabled" wire:click="updateQuantity({{ $item->id }}, {{ $item->quantity + 1 }})"
+                        class="flex items-center justify-center w-8 h-8 bg-gray-100 hover:bg-gray-200 rounded-full transition-colors">
+                        <svg xmlns="http://www.w3.org/2000/svg" wire:loading.remove wire:target="updateQuantity({{ $item->id }}, {{ $item->quantity + 1 }})" viewBox="0 0 16 16" fill="currentColor" class="w-4 h-4">
                             <path d="M8.75 3.75a.75.75 0 0 0-1.5 0v3.5h-3.5a.75.75 0 0 0 0 1.5h3.5v3.5a.75.75 0 0 0 1.5 0v-3.5h3.5a.75.75 0 0 0 0-1.5h-3.5v-3.5Z" />
                         </svg>
+                        <x-filament::loading-indicator class="h-4 w-4" wire:loading wire:target="updateQuantity({{ $item->id }}, {{ $item->quantity + 1 }})" />
                     </button>
                 </div>
 
@@ -205,13 +211,14 @@
                 </div>
 
                 <!-- Remove Button - Desktop -->
-                <button wire:click="removeItem({{ $item->id }})"
+                <button wire:click="removeItem({{ $item->id }})"  wire:loading.attr="disabled" wire:target="removeItem({{ $item->id }})"
                     class="p-2 text-red-500 hover:text-red-700 hover:bg-red-50 rounded-full transition-colors">
-                    <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" viewBox="0 0 20 20" fill="currentColor">
+                    <svg xmlns="http://www.w3.org/2000/svg" wire:loading.remove wire:target="removeItem({{ $item->id }})" class="h-5 w-5" viewBox="0 0 20 20" fill="currentColor">
                         <path fill-rule="evenodd"
                             d="M4.293 4.293a1 1 0 011.414 0L10 8.586l4.293-4.293a1 1 0 111.414 1.414L11.414 10l4.293 4.293a1 1 0 01-1.414 1.414L10 11.414l-4.293 4.293a1 1 0 01-1.414-1.414L8.586 10 4.293 5.707a1 1 0 010-1.414z"
                             clip-rule="evenodd" />
                     </svg>
+                    <x-filament::loading-indicator class="h-5 w-5" wire:loading wire:target="removeItem({{ $item->id }})" />
                 </button>
             </div>
         </div>

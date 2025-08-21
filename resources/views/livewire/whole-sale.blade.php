@@ -343,10 +343,13 @@
                                 <div class="flex gap-2">
                                     <button 
                                         wire:click="addToCart({{ $product->id }},null,{{  $product->MOQ }})"
+                                        wire:loading.attr="disabled"
+                                        wire:target="addToCart({{ $product->id }},null,{{  $product->MOQ }})"
                                         @if($product->quantity <= 0) disabled @endif
                                         class="flex-1 bg-slate-900 text-white py-2 px-4 rounded-lg hover:bg-slate-800 transition-colors disabled:bg-gray-300 disabled:cursor-not-allowed text-xs 2xl:text-sm "
                                     >
-                                        {{ __('messages.add_to_cart') }}
+                                        <span wire:loading.remove wire:target="addToCart({{ $product->id }},null,{{  $product->MOQ }})"> {{ __('messages.add_to_cart') }} </span>
+                                        <x-filament::loading-indicator wire:loading wire:target="addToCart({{ $product->id }},null,{{  $product->MOQ }})" class="h-4 w-4" />
                                     </button>
                                     <a 
                                         href="{{ route('product', $product->id) }}"
@@ -453,10 +456,15 @@
                                 <div class="flex gap-2">
                                     <button 
                                         wire:click="addVariantToCart({{ $variant->id }}, '{{ $variant->MOQ }}')"
+                                        wire:loading.attr="disabled"
+                                        wire:target="addVariantToCart({{ $variant->id }}, '{{ $variant->MOQ }}')"
                                         @if($variant->quantity <= 0) disabled @endif
                                         class="flex-1 bg-slate-900 text-white py-2 px-4 rounded-lg hover:bg-slate-800 transition-colors disabled:bg-gray-300 disabled:cursor-not-allowed text-xs 2xl:text-sm "
                                     >
-                                        {{ __('messages.add_to_cart') }}
+                                        <span wire:loading.remove wire:target="addVariantToCart({{ $variant->id }}, '{{ $variant->MOQ }}')">
+                                            {{ __('messages.add_to_cart') }}
+                                        </span>
+                                        <x-filament::loading-indicator wire:loading wire:target="addVariantToCart({{ $variant->id }}, '{{ $variant->MOQ }}')" class="h-4 w-4" />
                                     </button>
                                     <a 
                                         href="{{ route('product', $variant->product->id) }}"

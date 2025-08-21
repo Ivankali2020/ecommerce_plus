@@ -92,7 +92,7 @@
                     <div wire:ignore class="text-center">
                         <x-turnstile wire:model="cfTurnstileResponse" 
                         data-action="register"
-                        data-cdata="{{ uniqid() }}"
+                        data-cdata="seller_register"
                         data-size="flexible" data-theme="light" data-tabindex="1" />
                     </div>
                 

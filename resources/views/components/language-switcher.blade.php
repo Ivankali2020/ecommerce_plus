@@ -40,7 +40,7 @@
                 <img src="{{  asset('assets/us.png') }}"
                      width="20"
                      height="20"
-                     class="rounded-sm object-contain"
+                     class="rounded-xs object-contain"
                      alt="English">
                 <span class="font-medium">English</span>
                 @if(app()->getLocale() === 'en')
@@ -54,7 +54,7 @@
                 <img  src="{{  asset('assets/mm.png') }}"
                      width="20"
                      height="20"
-                     class="rounded-sm object-contain"
+                     class="rounded-xs object-contain"
                      alt="Myanmar">
                 <span class="font-medium font-mm ">မြန်မာ</span>
                 @if(app()->getLocale() === 'my')

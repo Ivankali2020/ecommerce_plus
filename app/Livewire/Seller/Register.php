@@ -29,6 +29,11 @@ class Register extends Component
 
     public function rules()
     {
+        return $this->getMainValidationRules();
+    }
+
+    protected function getMainValidationRules(): array
+    {
         return [
             'name' => ['required', 'string', 'max:255'],
             'email' => ['required', 'string', 'lowercase', 'email', 'max:255', 'unique:sellers'],
@@ -37,7 +42,7 @@ class Register extends Component
                 'required',
                 'string',
                 'max:255',
-                'regex:/^[a-z0-9]+(?:-[a-z0-9]+)*$/',
+                'regex:/^[a-z]+$/',
                 function ($attribute, $value, $fail) {
                     // Check if domain already exists
                     $existsDomain = Domain::where('domain', $value.'.'.config('tenancy.central_domains')[0])->exists();
@@ -46,18 +51,26 @@ class Register extends Component
                     }
                 },
             ],
+        ];
+    }
+
+    protected function getTurnstileValidationRules(): array
+    {
+        return [
             'cfTurnstileResponse' => ['required', 'turnstile'],
         ];
     }
 
     public function register()
     {
-        $validated = $this->validate();
+        // First, validate everything EXCEPT turnstile
+        $validated = $this->validate($this->getMainValidationRules());
+
+        // Then, validate ONLY turnstile (when we're sure other fields are OK)
+        $this->validate($this->getTurnstileValidationRules());
 
         // Hash password
-        $validated['password'] = Hash::make($validated['password']);
-
-        // Remove domain from user data and password confirmation
+        $validated['password'] = Hash::make($validated['password']);        // Remove domain from user data and password confirmation
         $domain = $validated['domain'];
         unset($validated['domain']);
         unset($validated['password_confirmation']);

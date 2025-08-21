@@ -17,20 +17,33 @@ new #[Layout('layouts.guest')] class extends Component
     public string $password_confirmation = '';
     public string $cfTurnstileResponse = '';
 
+    protected function getMainValidationRules(): array
+    {
+        return [
+            'name' => ['required', 'string', 'max:255'],
+            'email' => ['required', 'string', 'lowercase', 'email', 'max:255', 'unique:'.User::class],
+            'password' => ['required', 'string', 'confirmed', Rules\Password::defaults()],
+        ];
+    }
+
+    protected function getTurnstileValidationRules(): array
+    {
+        return [
+            'cfTurnstileResponse' => ['required', 'turnstile'],
+        ];
+    }
 
     /**
      * Handle an incoming registration request.
      */
     public function register(): void
     {
-        $validated = $this->validate([
-            'name' => ['required', 'string', 'max:255'],
-            'email' => ['required', 'string', 'lowercase', 'email', 'max:255', 'unique:'.User::class],
-            'password' => ['required', 'string', 'confirmed', Rules\Password::defaults()],
-            'cfTurnstileResponse' => ['required', 'turnstile'],
-        ]);
+        // First, validate everything EXCEPT turnstile
+        $validated = $this->validate($this->getMainValidationRules());
 
-       
+        // Then, validate ONLY turnstile (when we're sure other fields are OK)
+        $this->validate($this->getTurnstileValidationRules());
+
         $validated['password'] = Hash::make($validated['password']);
 
         // Remove cfTurnstileResponse from the validated data

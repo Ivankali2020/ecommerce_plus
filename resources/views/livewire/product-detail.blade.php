@@ -51,10 +51,10 @@
                 $images = $images->merge($product->getMedia('images'));
             @endphp
             @if($images->count() > 0)
-                <div  class="flex justify-center items-center gap-4 ">
+                <div class="flex items-center gap-4 overflow-x-auto scrollbar-hide pb-2">
                     @foreach($images as $media)
-                    <div class="lg:p-2 p-1 h-16 w-16  lg:h-20 lg:w-20 border flex item-center justify-center  rounded object-cover cursor-pointer hover:ring-2 hover:ring-slate-500" :class="currentImage == '{{ $media->getUrl() }}' ? 'ring-2 ring-slate-500' : '' " > 
-                        <img src="{{ $media->getUrl() }}"  @click="currentImage = '{{ $media->getUrl() }}'; if(!selectedVariant) { selectedVariant = null; }else { selectedVariant.product_img = '{{ $media->getUrl() }}';}"  class="rounded">
+                    <div class="lg:p-2 p-1 h-16 w-16 lg:h-20 lg:w-20 border flex item-center justify-center rounded object-cover cursor-pointer hover:ring-1 hover:ring-slate-500 flex-shrink-0" :class="currentImage == '{{ $media->getUrl() }}' ? 'ring-1 ring-slate-500' : '' " > 
+                        <img src="{{ $media->getUrl() }}"  @click="currentImage = '{{ $media->getUrl() }}'; if(!selectedVariant) { selectedVariant = null; }else { selectedVariant.product_img = '{{ $media->getUrl() }}';}"  class="rounded w-full h-full object-cover">
                     </div>
                     @endforeach
                 </div>
@@ -257,25 +257,27 @@
             <div class="flex items-center gap-4">
                 <div class="flex items-center border rounded-md">
                     <button @click="quantity > 1 ? quantity-- : null"
-                            class="px-3 py-2 border-r hover:bg-gray-100">
+                            class="px-3 py-2 border-r hover:bg-gray-100 hover:rounded ">
                             <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="currentColor" class="size-5">
                                 <path fill-rule="evenodd" d="M4 10a.75.75 0 0 1 .75-.75h10.5a.75.75 0 0 1 0 1.5H4.75A.75.75 0 0 1 4 10Z" clip-rule="evenodd" />
                               </svg>
                     </button>
                     <input type="text" x-model="quantity" min="1"
-                           class="w-16 text-center border-none focus:ring-0"
+                           class="w-16 text-center border-none focus:ring-0 focus:outline-none"
                            :min="{{ $product->MOQ }}">
                     <button @click="quantity++"
-                            class="px-3 py-2 border-l hover:bg-gray-100">
-                            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="currentColor" class="size-5">
+                            class="px-3 py-2 border-l hover:bg-gray-100  hover:rounded">
+                            <svg xmlns="http://www.w3.org/2000/svg" wire:loading.remove wire:target="quantity"  viewBox="0 0 20 20" fill="currentColor" class="size-5">
                                 <path d="M10.75 4.75a.75.75 0 0 0-1.5 0v4.5h-4.5a.75.75 0 0 0 0 1.5h4.5v4.5a.75.75 0 0 0 1.5 0v-4.5h4.5a.75.75 0 0 0 0-1.5h-4.5v-4.5Z" />
                             </svg>
+                             <x-filament::loading-indicator wire:loading wire:target="quantity" class="h-4 w-4" />
                     </button>
                 </div>
                 <button
                     @click="addToCart"  wire:loading.attr="disabled"
                     class="w-full bg-slate-900 text-white py-2 px-4 rounded hover:bg-slate-800 transition-colors ">
-                    {{ __('messages.product_detail.add_to_cart') }}
+                    <span wire:loading.remove wire:target="addToCart"> {{ __('messages.product_detail.add_to_cart') }} </span>
+                    <x-filament::loading-indicator wire:loading wire:target="addToCart" class="h-4 w-4" />
                 </button>
             </div>
 
@@ -317,6 +319,31 @@
         </div>
     @endif
 </div>
+<style>
+    .scrollbar-hide {
+        -ms-overflow-style: none;  /* Internet Explorer 10+ */
+        scrollbar-width: none;  /* Firefox */
+    }
+    .scrollbar-hide::-webkit-scrollbar { 
+        display: none;  /* Safari and Chrome */
+    }
+    
+    /* Alternative: Custom styled scrollbar */
+    .custom-scrollbar::-webkit-scrollbar {
+        height: 4px;
+    }
+    .custom-scrollbar::-webkit-scrollbar-track {
+        background: #f1f1f1;
+        border-radius: 2px;
+    }
+    .custom-scrollbar::-webkit-scrollbar-thumb {
+        background: #cbd5e1;
+        border-radius: 2px;
+    }
+    .custom-scrollbar::-webkit-scrollbar-thumb:hover {
+        background: #94a3b8;
+    }
+</style>
 <script>
     function productDetail(product, variants) {
         return {
