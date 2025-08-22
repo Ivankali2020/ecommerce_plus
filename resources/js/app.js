@@ -1,14 +1,15 @@
 import './bootstrap';
-import { initTapSound } from './tap-sound';
+import { initTapVibration, playVibrationPattern } from './tap-sound';
 
-// Initialize tap sound
+// Initialize tap vibration
 document.addEventListener('DOMContentLoaded', () => {
-    initTapSound();
-    const tapSound = new Audio('/sounds/tap.wav');
-    tapSound.preload = 'auto';
+    initTapVibration();
 });
 
 // For Livewire - reinitialize on page updates
 document.addEventListener('livewire:navigated', () => {
-    initTapSound();
+    initTapVibration();
 });
+
+// Make vibration functions globally available for inline usage
+window.playVibrationPattern = playVibrationPattern;

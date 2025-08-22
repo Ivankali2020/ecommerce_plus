@@ -30,7 +30,7 @@
 
                 <!-- Available Stock Indicator -->
                 @if($product->quantity > 0 && !$product->has_variant)
-                    <div class="absolute z-20 bottom-4 left-4  flex items-center justify-center">
+                    <div class="absolute z-10 bottom-4 left-4  flex items-center justify-center">
                         <div class="bg-gray-500 text-white px-3 py-1 rounded-md font-medium transform text-[12px] md:text-sm">
                         {{  $product->quantity }} <span class="text-[10px] md:text-xs">{{ __('messages.in_stock') }}</span>
                         </div>

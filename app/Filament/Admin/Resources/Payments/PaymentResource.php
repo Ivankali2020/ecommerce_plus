@@ -53,13 +53,13 @@ class PaymentResource extends Resource
                                 ->searchable()->preload()
                                 ->required()->relationship('seller', 'name'),
 
-                            Select::make('currency_id')
-                                ->label(__('filament/resources/payment-resource.form.currency.label'))
-                                ->searchable()->preload()->disabled()
-                                ->hidden()
-                                ->default(fn () => Currency::where('code', 'MMK')->first()->id)
-                                ->helperText(__('filament/resources/payment-resource.form.currency.helper_text'))
-                                ->required()->relationship('currency', 'name'),
+                            // Select::make('currency_id')
+                            //     ->label(__('filament/resources/payment-resource.form.currency.label'))
+                            //     ->searchable()->preload()
+                            //     // ->hidden()
+                            //     ->default(fn () => Currency::where('code', 'MMK')->first()->id)
+                            //     ->helperText(__('filament/resources/payment-resource.form.currency.helper_text'))
+                            //     ->required()->relationship('currency', 'name'),
 
                             TextInput::make('name')
                                 ->label(__('filament/resources/payment-resource.form.name.label'))
