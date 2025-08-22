@@ -13,14 +13,41 @@ use Stancl\Tenancy\Database\Models\Domain;
 
 class SocialAuthController extends Controller
 {
+    /**
+     * Generate dynamic Google callback URL based on current domain
+     */
+    private function getDynamicCallbackUrl(): string
+    {
+        $scheme = request()->isSecure() ? 'https' : 'http';
+        $host = request()->getHost();
+        
+        // Handle different environments
+        if (app()->environment('production')) {
+            // In production, ensure HTTPS
+            $scheme = 'https';
+        }
+        
+        return "{$scheme}://{$host}/google/callback";
+    }
+
     public function redirectToGoogle()
     {
+        // Set dynamic redirect URL based on current domain
+        $redirectUrl = $this->getDynamicCallbackUrl();
+        
+        // Temporarily override the config for this request
+        config(['services.google.redirect' => $redirectUrl]);
+        
         return Socialite::driver('google')->redirect();
     }
 
     public function handleGoogleCallback()
     {
         try {
+            // Set the same dynamic redirect URL for the callback
+            $redirectUrl = $this->getDynamicCallbackUrl();
+            config(['services.google.redirect' => $redirectUrl]);
+            
             $googleUser = Socialite::driver('google')->user();
 
             // Find existing user or create new one
