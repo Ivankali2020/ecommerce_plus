@@ -79,17 +79,17 @@ services:
       - ./:/var/www
 
   # Certbot Service
-  certbot:
-    image: certbot/dns-cloudflare
-    container_name: certbot
-    volumes:
-      - ./nginx/ssl:/etc/letsencrypt
-      - ./nginx/certbot-www:/var/www/certbot
-    command: certonly --dns-cloudflare --dns-cloudflare-credentials /etc/letsencrypt/cloudflare.ini --email admin@padaung.me --agree-tos --no-eff-email -d padaung.me -d *.padaung.me
-    # For individual domains (not recommended for multi-tenant):
-    # command: certonly --webroot --webroot-path=/var/www/certbot --email admin@padaung.me --agree-tos --no-eff-email -d padaung.me -d www.padaung.me
-    depends_on:
-      - web
+  # certbot:
+  #   image: certbot/dns-cloudflare
+  #   container_name: certbot
+  #   volumes:
+  #     - ./nginx/ssl:/etc/letsencrypt
+  #     - ./nginx/certbot-www:/var/www/certbot
+  #   command: certonly --dns-cloudflare --dns-cloudflare-credentials /etc/letsencrypt/cloudflare.ini --email admin@padaung.me --agree-tos --no-eff-email -d padaung.me -d *.padaung.me
+  #   # For individual domains (not recommended for multi-tenant):
+  #   # command: certonly --webroot --webroot-path=/var/www/certbot --email admin@padaung.me --agree-tos --no-eff-email -d padaung.me -d www.padaung.me
+  #   depends_on:
+  #     - web
 
 # Networks
 networks:
