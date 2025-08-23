@@ -1,19 +1,19 @@
-<div class="rounded-lg shadow-sm  backdrop-blur-xs p-6 ">
+<div class="rounded-lg shadow-sm  backdrop-blur-xs p-4 md:p-8 ">
     @if($user)
         <div class="flex items-center justify-between mb-4">
             <div class="flex items-center space-x-3">
-                <div class="w-12 h-12 bg-linear-to-r from-slate-500 to-slate-600 rounded-full flex items-center justify-center">
+                <div class="w-12 h-12 bg-linear-to-r hidden md:block from-slate-500 to-slate-600 rounded-full flex items-center justify-center">
                     <svg class="w-6 h-6 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                         <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8c-1.657 0-3 .895-3 2s1.343 2 3 2 3 .895 3 2-1.343 2-3 2m0-8c1.11 0 2.08.402 2.599 1M12 8V7m0 1v8m0 0v1m0-1c-1.11 0-2.08-.402-2.599-1"></path>
                     </svg>
                 </div>
-                <div>
-                    <h3 class="text-lg font-semibold text-gray-900">{{ __('gifts.points_widget.title') }}</h3>
-                    <p class="text-sm text-gray-500">{{ __('gifts.points_widget.subtitle') }}</p>
+                <div class="">
+                    <h3 class="text-sm md:text-lg font-semibold text-gray-900">{{ __('gifts.points_widget.title') }}</h3>
+                    <p class="text-xs md:text-sm text-gray-500">{{ __('gifts.points_widget.subtitle') }}</p>
                 </div>
             </div>
             <button wire:click="toggleHistory" 
-                    class="text-slate-600 hover:text-slate-800 text-sm font-medium">
+                    class="text-slate-600 hidden d-block hover:text-slate-800 text-xs md:text-sm text-nowrap font-medium">
                 {{ $showHistory ? __('gifts.points_widget.hide_history') : __('gifts.points_widget.view_history') }}
             </button>
         </div>

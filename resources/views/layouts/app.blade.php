@@ -32,8 +32,8 @@
     <meta property="twitter:image" content="{{ $seo['image'] ?? asset('assets/logo.png') }}">
     
     <!-- Fonts -->
-    <link rel="preconnect" href="https://fonts.bunny.net">
-    <link href="https://fonts.bunny.net/css?family=figtree:400,500,600&display=swap" rel="stylesheet" />
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=Jost:wght@300;400;500;600;700&display=swap" rel="stylesheet" />
 
     <link icon rel="icon" type="image/png" href="{{ asset('assets/logo.png') }}">
     <!-- Scripts -->
@@ -63,8 +63,10 @@
             style="clip-path: polygon(74.1% 44.1%, 100% 61.6%, 97.5% 26.9%, 85.5% 0.1%, 80.7% 2%, 72.5% 32.5%, 60.2% 62.4%, 52.4% 68.1%, 47.5% 58.3%, 45.2% 34.5%, 27.5% 76.7%, 0.1% 64.9%, 17.9% 100%, 27.6% 76.8%, 76.1% 97.7%, 74.1% 44.1%)">
         </div>
     </div>
+
+    <x-footer />
     @livewire('notifications')
-    @filamentScripts
+    {{-- @filamentScripts --}}
     {{-- @livewireScripts --}}
     <script>
         // Add error handling for Livewire

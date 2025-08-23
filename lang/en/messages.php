@@ -156,7 +156,7 @@ return [
         ],
     ],
     'order_detail' => [
-        'invoice_number' => 'Invoice #',
+        'invoice_number' => 'Invoice No',
         'date' => 'Date',
         'item' => 'Item',
         'quantity' => 'Qty',

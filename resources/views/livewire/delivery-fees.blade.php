@@ -10,10 +10,10 @@
                 <h3 class="text-lg font-semibold mb-4">
                     {{ __('messages.delivery.regions') }}
                 </h3>
-                
-                @if($regions && $regions->count() > 0)
+
+                @if($this->regions->count() > 0)
                     <div class="space-y-2">
-                        @foreach($regions as $region)
+                        @foreach($this->regions as $region)
                             <button 
                                 wire:key="region-{{ $region->id }}"
                                 wire:click="selectRegion({{ $region->id }})"

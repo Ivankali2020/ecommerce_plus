@@ -5,10 +5,11 @@ namespace App\Livewire;
 use App\Helper\UserHelper;
 use App\Models\Region;
 use Livewire\Component;
+use Livewire\Attributes\Computed;
+use Illuminate\Support\Facades\Cache;
 
 class DeliveryFees extends Component
 {
-    public $regions;
 
     public $selectedRegion = null;
 
@@ -16,33 +17,37 @@ class DeliveryFees extends Component
 
     public $sellerId;
 
+
     public function mount()
     {
         $this->sellerId = UserHelper::getUserSellerId();
         $this->townships = collect();
-        $this->loadRegions();
     }
 
-    public function loadRegions()
+    #[Computed]
+    public function regions()
     {
-        // Get regions that have deliveries for this seller
-        $this->regions = Region::whereHas('townships', function ($query) {
-            $query->whereHas('deliveries', function ($subQuery) {
-                $subQuery->where('seller_id', $this->sellerId);
-            });
-        })->with(['townships' => function ($query) {
-            $query->whereHas('deliveries', function ($subQuery) {
-                $subQuery->where('seller_id', $this->sellerId);
-            })->with(['deliveries' => function ($deliveryQuery) {
-                $deliveryQuery->where('seller_id', $this->sellerId);
-            }]);
-        }])->get();
+        $sellerId = $this->sellerId;
+        return Cache::remember("delivery_regions_{$sellerId}", 180, function () use ($sellerId) {
+            return Region::whereHas('townships', function ($query) use ($sellerId) {
+                $query->whereHas('deliveries', function ($subQuery) use ($sellerId) {
+                    $subQuery->where('seller_id', $sellerId);
+                });
+            })->with(['townships' => function ($query) use ($sellerId) {
+                $query->whereHas('deliveries', function ($subQuery) use ($sellerId) {
+                    $subQuery->where('seller_id', $sellerId);
+                })->with(['deliveries' => function ($deliveryQuery) use ($sellerId) {
+                    $deliveryQuery->where('seller_id', $sellerId);
+                }]);
+            }])->get();
+        });
     }
+    // No need for loadRegions(), handled by computed property
 
     public function selectRegion($regionId)
     {
         $this->selectedRegion = $regionId;
-        $region = $this->regions->firstWhere('id', $regionId);
+    $region = $this->regions->firstWhere('id', $regionId);
         $this->townships = $region ? $region->townships : collect();
     }
 

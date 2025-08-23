@@ -52,10 +52,14 @@
                     </div>
                 </div>
             @endif
-                
-            <img src="{{ $product->productImg }}"
-                 class="rounded w-full h-32 md:h-48 lg:52 2xl:h-60 object-cover transition duration-700 ease-out group-hover:scale-105"
-                 alt="{{ $displayName }}" />
+
+            <img
+                src="{{ $product->productImgThumb }}"
+                data-src="{{ $product->productImg }}"
+                class="rounded w-full h-32 md:h-48 lg:52 2xl:h-60 object-cover transition duration-700 ease-out group-hover:scale-105 lazyload blur-xs"
+                alt="{{ $displayName }}"
+                loading="lazy"
+            />
         </a>
 
         <div class="flex flex-col grow justify-between lg:gap-3 gap-2 lg:p-4 p-3 relative">
@@ -96,7 +100,7 @@
             <x-filament::button
                 x-data
                 color="gray"
-                class=""
+                class="fi-size-sm md:fi-size-md text-xs md:text-sm  rounded md:rounded-md "
                 wire:loading.attr="disabled"
                 wire:click="addToCart({{ $product->id }})"
                 wire:target="addToCart({{ $product->id }})">

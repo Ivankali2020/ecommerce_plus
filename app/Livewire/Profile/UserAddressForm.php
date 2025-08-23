@@ -53,7 +53,11 @@ class UserAddressForm extends Component
 
     public function updatedSelectedRegion($value)
     {
-        $this->townships = Township::where('region_id', $value)->get();
+        $this->townships = Township::where('region_id', $value)
+            ->whereHas('deliveries', function ($query) {
+                $query->where('tenant_id', tenant('id'));
+            })
+            ->get();
 
         // Only reset the township when not in edit mode
         if ($this->editId === null) {

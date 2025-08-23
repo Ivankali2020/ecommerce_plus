@@ -23,7 +23,7 @@ class Product extends Model implements HasMedia
         'expired_date' => 'datetime',
     ];
 
-    protected $appends = ['productImg'];
+    protected $appends = ['productImg', 'productImgThumb'];
 
     // Cache expensive attribute values computation
     protected $cachedAttributeValues = null;
@@ -44,6 +44,23 @@ class Product extends Model implements HasMedia
         }
 
         return $this->getFirstMediaUrl('images');
+    }
+
+    public function getProductImgThumbAttribute()
+    {
+        // Use relationLoaded to avoid additional queries when media is already loaded
+        if ($this->has_variant && $this->relationLoaded('variants')) {
+            $firstVariant = $this->variants->first();
+            if ($firstVariant && $firstVariant->relationLoaded('media') && $firstVariant->media->isNotEmpty()) {
+                return $firstVariant->getFirstMediaUrl('images', 'thumb');
+            }
+        }
+
+        if ($this->relationLoaded('media') && $this->media->isNotEmpty()) {
+            return $this->getFirstMediaUrl('images', 'thumb');
+        }
+
+        return $this->getFirstMediaUrl('images', 'thumb');
     }
 
     public function getAttributeValuesAttribute()

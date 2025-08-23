@@ -10,6 +10,7 @@ use App\Services\PointService;
 use Exception;
 use Filament\Actions\Action;
 use Filament\Notifications\Notification;
+use Illuminate\Support\Facades\Cache;
 use Illuminate\Support\Facades\Log;
 
 class OrderObserver
@@ -33,6 +34,10 @@ class OrderObserver
 
         // Send Telegram notification to seller with a delay to ensure order products are saved
         SendOrderTelegramNotification::dispatch($order, 'created')->delay(now()->addSeconds(5));
+
+        // Clear recent orders and user orders cache for user
+        $this->clearRecentOrdersCache($order->user_id);
+        $this->clearUserOrdersCache($order->user_id);
     }
 
     /**
@@ -78,6 +83,30 @@ class OrderObserver
         // Send Telegram notification for status updates
         if ($order->isDirty('status')) {
             SendOrderTelegramNotification::dispatch($order, 'updated');
+        }
+
+        // Clear recent orders and user orders cache for user
+        $this->clearRecentOrdersCache($order->user_id);
+        $this->clearUserOrdersCache($order->user_id);
+    }
+    /**
+     * Clear the user orders cache for a user (all pages)
+     */
+    protected function clearUserOrdersCache($userId): void
+    {
+        // Remove all cached pages for this user's orders
+        foreach (range(1, 10) as $page) {
+            Cache::forget('user_orders_' . $userId . '_page_' . $page);
+        }
+    }
+    /**
+     * Clear the recent orders cache for a user (all pages)
+     */
+    protected function clearRecentOrdersCache($userId): void
+    {
+        // Remove all cached pages for this user's recent orders
+        foreach (range(1, 10) as $page) {
+            Cache::forget('recent_orders_user_' . $userId . '_page_' . $page);
         }
     }
 

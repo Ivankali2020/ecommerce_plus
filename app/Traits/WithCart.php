@@ -41,6 +41,8 @@ trait WithCart
             $newQuantity = $existingCart ? $existingCart->quantity + 1 : $quantity;
 
             $this->dispatch('cartUpdated');
+            // Dispatch custom event for image refresh after cart update
+            $this->dispatch('product-image-refresh');
             // Check MOQ
             if ($newQuantity < ($variant?->MOQ ?? $product->MOQ)) {
                 Notification::make()

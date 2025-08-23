@@ -198,7 +198,7 @@ return [
         ],
     ],
     'order_detail' => [
-        'invoice_number' => 'ငွေတောင်းခံလွှာ #',
+        'invoice_number' => 'ငွေတောင်းခံလွှာ',
         'date' => 'ရက်စွဲ',
         'item' => 'ပစ္စည်း',
         'quantity' => 'အရေအတွက်',

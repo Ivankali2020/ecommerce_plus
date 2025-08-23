@@ -55,7 +55,7 @@ class ProductObserver
 
         // Clear product's attribute cache
         if ($product->attributes) {
-            $attributeData = $product->attributes['attributes'];
+            $attributeData = $product->attributes;
             if ($attributeData) {
                 $cacheKey = 'product_attributes_'.md5(json_encode($attributeData));
                 Cache::forget($cacheKey);

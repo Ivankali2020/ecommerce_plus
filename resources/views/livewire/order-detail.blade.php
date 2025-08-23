@@ -32,11 +32,15 @@
                             {{ __('messages.order_detail.status.' . strtolower($order->status->value)) }}
                         </p>
                     </div>
-                    <p class="text-sm text-gray-600 my-2 ">
-                        {{ __('messages.order_detail.invoice_number') }}{{ $order->invoice_number }}
+                    <p class="text-xs md:text-sm text-gray-600 my-2  flex gap-2 items-center justify-start md:justify-end ">
+                        <span>{{ __('messages.order_detail.invoice_number') }}</span>
+                        <span>: </span>
+                        <span>#{{ $order->invoice_number }}</span>
                     </p>
-                    <p class="text-sm text-gray-600 ">
-                        {{ __('messages.order_detail.date') }}: {{ $order->created_at->format('M d, Y') }}
+                    <p class="text-xs md:text-sm text-gray-600 flex gap-2 items-center justify-start md:justify-end  ">
+                        <span>{{ __('messages.order_detail.date') }}</span>
+                        <span>: </span>
+                        <span>{{ $order->created_at->format('M d, Y') }}</span>
                     </p>
                 </div>
             </div>
@@ -48,16 +52,16 @@
                 <table class="w-full">
                     <thead>
                         <tr class="border-b">
-                            <th class="text-left py-2 text-sm font-semibold text-gray-600 ">
+                            <th class="text-left py-2 text-xs  md:text-sm font-semibold text-gray-600 ">
                                 {{ __('messages.order_detail.item') }}
                             </th>
-                            <th class="text-center py-2 text-sm font-semibold text-gray-600">
+                            <th class="text-center py-2 text-xs  md:text-sm font-semibold text-gray-600">
                                 {{ __('messages.order_detail.quantity') }}
                             </th>
-                            <th class="text-right py-2 text-sm font-semibold text-gray-600">
+                            <th class="text-right py-2 text-xs  md:text-sm font-semibold text-gray-600">
                                 {{ __('messages.order_detail.price') }}
                             </th>
-                            <th class="text-right py-2 text-sm font-semibold text-gray-600">
+                            <th class="text-right py-2 text-xs  md:text-sm font-semibold text-gray-600">
                                 {{ __('messages.order_detail.total') }}
                             </th>
                         </tr>
@@ -70,17 +74,17 @@
                                         <img src="{{ $item->product->productImg }}" alt="{{ $item->product->name }}"
                                              class="w-10 h-10 sm:w-12 sm:h-12 object-cover hidden lg:block  rounded">
                                         <div  class="">
-                                            <p class="text-sm font-medium text-gray-800 line-clamp-2">{{ $item->product->name }}</p>
-                                            <p class="text-xs text-gray-500">{{ $item->product->category->name }}</p>
+                                            <p class="text-xs md:text-sm font-medium text-gray-800 line-clamp-2">{{ $item->product->name }}</p>
+                                            <p class="text-[10px] text-xs mt-1  text-gray-500">{{ $item->product->category->name }}</p>
                                             @if($item->variant)
                                                 <p class="text-xs text-gray-500">{{ $item->variant->name }}</p>
                                             @endif
                                         </div>
                                     </div>
                                 </td>
-                                <td class="text-center text-sm text-gray-600">{{ $item->quantity }}</td>
-                                <td class="text-right text-sm text-gray-600">{{ number_format($item->price) }} Ks</td>
-                                <td class="text-right text-sm text-gray-600">{{ number_format($item->price * $item->quantity) }} Ks</td>
+                                <td class="text-center text-xs  md:text-sm text-gray-600 text-nowrap">{{ $item->quantity }}</td>
+                                <td class="text-right text-xs  md:text-sm text-gray-600 pr-2 text-nowrap">{{ number_format($item->price) }} Ks</td>
+                                <td class="text-right text-xs  md:text-sm text-gray-600 text-nowrap">{{ number_format($item->price * $item->quantity) }} Ks</td>
                             </tr>
                         @endforeach
                     </tbody>
@@ -90,19 +94,19 @@
             <!-- Summary -->
             <div class="mt-4 sm:mt-6 border-t border-dotted space-y-2 pt-4">
                 <div class="flex justify-between items-center">
-                    <span class="text-sm font-medium text-gray-600">
+                    <span class="text-xs md:text-sm font-medium text-gray-600">
                         {{ __('messages.order_detail.subtotal') }}
                     </span>
-                    <span class="text-sm text-gray-600">{{ number_format($order->products->sum(fn($item) => $item->price * $item->quantity)) }} Ks</span>
+                    <span class="text-xs md:text-sm text-gray-600">{{ number_format($order->products->sum(fn($item) => $item->price * $item->quantity)) }} Ks</span>
                 </div>
                 <div class="flex justify-between items-center">
-                    <span class="text-sm font-medium text-gray-600">
+                    <span class="text-xs md:text-sm font-medium text-gray-600">
                         {{ __('messages.order_detail.delivery_fee') }}
                     </span>
-                    <span class="text-sm text-gray-600">{{ number_format($order->delivery_fees) }} Ks</span>
+                    <span class="text-xs md:text-sm text-gray-600">{{ number_format($order->delivery_fees) }} Ks</span>
                 </div>
                 <div class="flex justify-between items-center pt-2 border-t-2 border-slate-700">
-                    <span class="text-sm font-bold text-gray-800">
+                    <span class="text-xs md:text-sm font-bold text-gray-800">
                         {{ __('messages.order_detail.total') }}
                     </span>
                     <span class="text-lg sm:text-xl font-bold text-gray-800">{{ number_format($order->total_price) }} Ks</span>
@@ -114,24 +118,24 @@
         <div class="p-4 sm:p-8 border-t">
             <div class="grid grid-cols-1 sm:grid-cols-2 gap-6 sm:gap-8">
                 <div>
-                    <h2 class="text-xl sm:text-2xl text-gray-800 mb-2 font-bebas  ">
+                    <h2 class="text-sm md:text-xl lg:text-2xl text-gray-800 mb-2 font-bebas  ">
                         {{ __('messages.order_detail.customer_details') }}
                     </h2>
-                    <p class="text-sm text-gray-600">{{ auth()->user()->name }}</p>
-                    <p class="text-sm my-2 text-gray-600">{{ $order->address?->address }}</p>
-                    <p class="text-sm text-gray-600">{{ $order->address?->township?->mm_name }}, {{ $order->address?->region?->mm_name }}</p>
+                    <p class="text-xs md:text-sm text-gray-600">{{ auth()->user()->name }}</p>
+                    <p class="text-xs md:text-sm my-2 text-gray-600">{{ $order->address?->address }}</p>
+                    <p class="text-xs md:text-sm text-gray-600">{{ $order->address?->township?->mm_name }}, {{ $order->address?->region?->mm_name }}</p>
                 </div>
                 <div class="text-start sm:text-end">
-                    <h2 class="text-xl sm:text-2xl text-gray-800 mb-2 font-bebas">
+                    <h2 class="text-sm md:text-xl lg:text-2xl text-gray-800 mb-2 font-bebas">
                         {{ __('messages.order_detail.payment_method') }}
                     </h2>
                     @if($order->is_cod)
-                        <p class="text-sm text-gray-600">
+                        <p class="text-xs md:text-sm text-gray-600">
                             {{ __('messages.order_detail.cash_on_delivery') }}
                         </p>
                     @else
-                        <p class="text-sm text-gray-600 font-bold">{{ $order->payment?->name }}</p>
-                        <p class="text-sm text-gray-500">{{ $order->paymentAccount?->name }}</p>
+                        <p class="text-xs md:text-sm text-gray-600 font-bold">{{ $order->payment?->name }}</p>
+                        <p class="text-xs md:text-sm text-gray-500">{{ $order->paymentAccount?->name }}</p>
                         {{-- show slip if exists --}}
                         @if($order->payment_slip)
                            <a href="{{  asset('storage/'.$order->payment_slip)  }}" class="flex justify-end items-end "> 
@@ -148,7 +152,7 @@
         <div class="p-4 sm:p-8 bg-gray-50 border-t">
             <div class="max-w-3xl mx-auto text-center">
                 @foreach ($order->seller->addresses as $addre)
-                    <p class="text-sm mb-2 text-gray-600">{{ $addre->address }}</p>
+                    <p class="text-xs md:text-sm mb-2 text-gray-600">{{ $addre->address }}</p>
                 @endforeach
             </div>
         </div>
