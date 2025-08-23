@@ -21,6 +21,13 @@ document.addEventListener('product-image-refresh', () => {
     // alert('Product images refreshed');
 });
 
+document.addEventListener('livewire:init', () => {
+    Livewire.hook('morph.updated', ({ el, component }) => {
+        // Your logic here, e.g.:
+        lazyLoadProductImages();
+    });
+});
+
 // Make vibration functions globally available for inline usage
 window.playVibrationPattern = playVibrationPattern;
 
