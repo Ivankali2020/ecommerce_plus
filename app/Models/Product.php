@@ -23,55 +23,83 @@ class Product extends Model implements HasMedia
         'expired_date' => 'datetime',
     ];
 
-    protected $appends = ['productImg', 'attributeValues'];
+    protected $appends = ['productImg'];
+
+    // Cache expensive attribute values computation
+    protected $cachedAttributeValues = null;
 
     public function getProductImgAttribute()
     {
-        if ($this->has_variant) {
-            // Get first variant's image
-            $firstVariant = $this->variants()->first();
-
-            return $firstVariant ? $firstVariant->getFirstMediaUrl('images') : $this->getFirstMediaUrl('images');
+        // Use relationLoaded to avoid additional queries when media is already loaded
+        if ($this->has_variant && $this->relationLoaded('variants')) {
+            $firstVariant = $this->variants->first();
+            if ($firstVariant && $firstVariant->relationLoaded('media') && $firstVariant->media->isNotEmpty()) {
+                return $firstVariant->getFirstMediaUrl('images');
+            }
         }
 
-        // Return product's own image
+        // Use loaded media if available, otherwise fallback to query
+        if ($this->relationLoaded('media') && $this->media->isNotEmpty()) {
+            return $this->getFirstMediaUrl('images');
+        }
+
         return $this->getFirstMediaUrl('images');
     }
 
     public function getAttributeValuesAttribute()
     {
+        // Return cached result if available
+        if ($this->cachedAttributeValues !== null) {
+            return $this->cachedAttributeValues;
+        }
+
         // Check if the attributes column exists in the model
         if (! array_key_exists('attributes', $this->attributes)) {
-            return [];
+            return $this->cachedAttributeValues = [];
         }
 
         // If attributes is null or empty, return empty array
         if (empty($this->attributes['attributes'])) {
-            return [];
+            return $this->cachedAttributeValues = [];
         }
 
         $formattedAttributes = [];
         $attributeData = json_decode($this->attributes['attributes'], true);
 
         if (! $attributeData) {
-            return [];
+            return $this->cachedAttributeValues = [];
         }
 
-        foreach ($attributeData as $item) {
-            $attribute = Attribute::find($item['attribute_id']);
-            if ($attribute) {
-                $values = AttributeValue::whereIn('id', $item['attribute_value_id'])
-                    ->pluck('value')
-                    ->toArray();
+        // Cache the expensive queries
+        $cacheKey = 'product_attributes_'.md5(json_encode($attributeData));
 
-                $formattedAttributes[] = [
-                    'attribute' => $attribute->name,
-                    'value' => $values,
-                ];
+        return $this->cachedAttributeValues = \Illuminate\Support\Facades\Cache::remember($cacheKey, 3600, function () use ($attributeData) {
+            // Optimize by batching queries
+            $attributeIds = collect($attributeData)->pluck('attribute_id')->unique();
+            $attributes = Attribute::whereIn('id', $attributeIds)->get()->keyBy('id');
+
+            $allValueIds = collect($attributeData)->pluck('attribute_value_id')->flatten()->unique();
+            $attributeValues = AttributeValue::whereIn('id', $allValueIds)->get()->keyBy('id');
+
+            $formattedAttributes = [];
+            foreach ($attributeData as $item) {
+                $attribute = $attributes->get($item['attribute_id']);
+                if ($attribute) {
+                    $values = collect($item['attribute_value_id'])
+                        ->map(fn ($id) => $attributeValues->get($id))
+                        ->filter() // Remove null values
+                        ->pluck('value')
+                        ->toArray();
+
+                    $formattedAttributes[] = [
+                        'attribute' => $attribute->name,
+                        'value' => $values,
+                    ];
+                }
             }
-        }
 
-        return $formattedAttributes;
+            return $formattedAttributes;
+        });
     }
 
     public function registerMediaCollections(): void

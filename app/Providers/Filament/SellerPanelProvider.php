@@ -9,7 +9,8 @@ use App\Http\Middleware\AssignGlobeScope;
 use App\Http\Middleware\EnsureSellerBelongsToTenant;
 use App\Http\Middleware\RedirectIfSubscriptionExpired;
 use App\Http\Middleware\SetLocale;
-use App\Models\Tenant;
+use App\Http\Middleware\ShareTenantData;
+use App\Models\Seller;
 use BezhanSalleh\FilamentShield\FilamentShieldPlugin;
 use Filament\Http\Middleware\Authenticate;
 use Filament\Http\Middleware\DisableBladeIconComponents;
@@ -26,6 +27,7 @@ use Illuminate\Routing\Middleware\SubstituteBindings;
 use Illuminate\Session\Middleware\AuthenticateSession;
 use Illuminate\Session\Middleware\StartSession;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\Cache;
 use Illuminate\View\Middleware\ShareErrorsFromSession;
 use Stancl\Tenancy\Middleware\InitializeTenancyByDomain;
 use Stancl\Tenancy\Middleware\PreventAccessFromCentralDomains;
@@ -34,14 +36,19 @@ class SellerPanelProvider extends PanelProvider
 {
     protected function getSeller()
     {
-        $seller = Tenant::where('id', tenant('id'))->with('sellers')->first()->sellers->first();
-        if (! $seller) {
-            // Handle case where no seller is found, e.g., throw an exception or return a default value
-            Auth::logout();
-            abort(404, 'Seller not found for the current tenant.');
+        $seller = Cache::remember('tenant_seller_'.tenant('id'), 3600, function () {
+            return Seller::where('tenant_id', tenant('id'))->with('media')->first();
+        });
+
+        if ($seller) {
+            return [
+                'tenantSellerLogo' => $seller->getFirstMediaUrl('logos'),
+                'tenantEnableGoogleAuth' => $seller->enabled_google_auth,
+                'tenantSellerName' => $seller->name,
+            ];
         }
 
-        return Tenant::where('id', tenant('id'))->with('sellers')->first()->sellers->first();
+        return null;
     }
 
     public function panel(Panel $panel): Panel
@@ -89,12 +96,13 @@ class SellerPanelProvider extends PanelProvider
                 EnsureSellerBelongsToTenant::class,
                 RedirectIfSubscriptionExpired::class,
                 SetLocale::class,
+                ShareTenantData::class,
             ], true)
             //            ->spa(fn()=>  Str::contains(request()->userAgent(),'Chrome'))
             ->sidebarWidth('17rem')
             ->brandLogoHeight(fn () => Auth::guard('seller')->check() ? '3rem' : '5rem')
-            ->brandLogo(fn () => self::getSeller()->getFirstMediaUrl('logos')) // ->getFirstMediaUrl('logos')
-            ->brandName(fn () => self::getSeller()->name ?? 'EMPTY')
+            ->brandLogo(fn () => self::getSeller() ? self::getSeller()['tenantSellerLogo'] : '') // ->getFirstMediaUrl('logos')
+            ->brandName(fn () => self::getSeller() ? self::getSeller()['tenantSellerName'] : 'EMPTY')
             ->sidebarCollapsibleOnDesktop()
             ->databaseNotifications()
             ->databaseNotificationsPolling(null) // this is testing purpose

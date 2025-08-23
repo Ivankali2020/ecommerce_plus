@@ -6,9 +6,10 @@ use App\Models\Product;
 use App\Models\Review;
 use Filament\Notifications\Notification;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\Cache;
+use Livewire\Attributes\Computed;
 use Livewire\Component;
 use Livewire\WithPagination;
-use Mockery\Matcher\Not;
 
 class ProductReviews extends Component
 {
@@ -72,6 +73,7 @@ class ProductReviews extends Component
                 ->body('You have already submitted a review for this product.')
                 ->danger()
                 ->send();
+
             return;
         }
 
@@ -86,6 +88,9 @@ class ProductReviews extends Component
 
         $this->resetForm();
         $this->showReviewForm = false;
+
+        // Clear caches after adding review
+        $this->clearReviewCaches();
 
         Notification::make()
             ->title('Review Submitted')
@@ -104,49 +109,74 @@ class ProductReviews extends Component
         $this->resetValidation();
     }
 
-    public function getAverageRatingProperty(): float
+    protected function clearReviewCaches(): void
     {
-        return $this->product->reviews()->avg('stars') ?: 0;
+        Cache::forget("avg_rating_product_{$this->product->id}");
+        Cache::forget("total_reviews_product_{$this->product->id}");
+        Cache::forget("rating_breakdown_product_{$this->product->id}");
+        Cache::forget("user_reviewed_product_{$this->product->id}_".(Auth::id() ?? 'guest'));
     }
 
-    public function getTotalReviewsProperty(): int
+    #[Computed]
+    public function averageRating(): float
     {
-        return $this->product->reviews()->count();
+        return Cache::remember("avg_rating_product_{$this->product->id}", 1800, function () {
+            return $this->product->reviews()->avg('stars') ?: 0;
+        });
     }
 
-    public function getRatingBreakdownProperty(): array
+    #[Computed]
+    public function totalReviews(): int
     {
-        $breakdown = [];
-        $totalReviews = $this->totalReviews;
-
-        for ($i = 5; $i >= 1; $i--) {
-            $count = $this->product->reviews()->where('stars', $i)->count();
-            $percentage = $totalReviews > 0 ? round(($count / $totalReviews) * 100) : 0;
-
-            $breakdown[$i] = [
-                'count' => $count,
-                'percentage' => $percentage,
-            ];
-        }
-
-        return $breakdown;
+        return Cache::remember("total_reviews_product_{$this->product->id}", 1800, function () {
+            return $this->product->reviews()->count();
+        });
     }
 
-    public function getUserHasReviewedProperty(): bool
+    #[Computed]
+    public function ratingBreakdown(): array
+    {
+        return Cache::remember("rating_breakdown_product_{$this->product->id}", 1800, function () {
+            $breakdown = [];
+            $totalReviews = $this->totalReviews;
+
+            for ($i = 5; $i >= 1; $i--) {
+                $count = $this->product->reviews()->where('stars', $i)->count();
+                $percentage = $totalReviews > 0 ? round(($count / $totalReviews) * 100) : 0;
+
+                $breakdown[$i] = [
+                    'count' => $count,
+                    'percentage' => $percentage,
+                ];
+            }
+
+            return $breakdown;
+        });
+    }
+
+    #[Computed]
+    public function userHasReviewed(): bool
     {
         if (! Auth::check()) {
             return false;
         }
 
-        return Review::where('user_id', Auth::id())
-            ->where('product_id', $this->product->id)
-            ->exists();
+        return Cache::remember("user_reviewed_product_{$this->product->id}_".Auth::id(), 1800, function () {
+            return Review::where('user_id', Auth::id())
+                ->where('product_id', $this->product->id)
+                ->exists();
+        });
     }
 
     public function render()
     {
         $reviews = $this->product->reviews()
-            ->with('user')
+            ->select(['id', 'user_id', 'product_id', 'stars', 'comment', 'created_at'])
+            ->with([
+                'user' => function ($query) {
+                    $query->select(['id', 'name'])->with('media');
+                },
+            ])
             ->latest()
             ->paginate(5);
 

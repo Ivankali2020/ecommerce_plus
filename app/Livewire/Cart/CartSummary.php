@@ -6,6 +6,7 @@ use App\Helper\UserHelper;
 use App\Models\Cart as CartModel;
 use App\Models\Seller;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\Cache;
 use Livewire\Attributes\Computed;
 use Livewire\Attributes\Locked;
 use Livewire\Attributes\On;
@@ -16,24 +17,44 @@ class CartSummary extends Component
     #[Locked]
     public $sellerId;
 
-    public $cartItems = [];
-
     public $deliveryFee = 0;
 
     public function mount(): void
     {
         $this->sellerId = UserHelper::getUserSellerId();
-        $this->loadCartItems();
+    }
+
+    #[Computed]
+    public function cartItems()
+    {
+        if (! Auth::check()) {
+            return collect();
+        }
+
+        $userId = Auth::id();
+        $cacheKey = "cart_items_{$userId}_{$this->sellerId}";
+
+        return Cache::remember($cacheKey, 300, function () use ($userId) {
+            return CartModel::select(['id', 'user_id', 'seller_id', 'product_id', 'variant_id', 'quantity', 'price', 'total'])
+                ->with([
+                    'product:id,name,price,seller_id',
+                    'variant:id,name,price,product_id',
+                ])
+                ->where('user_id', $userId)
+                ->where('seller_id', $this->sellerId)
+                ->get();
+        });
     }
 
     #[On('cart-updated')]
     #[On('delivery-updated')]
-    public function loadCartItems(): void
+    public function refreshCartItems(): void
     {
-        $this->cartItems = CartModel::with(['product', 'variant'])
-            ->where('user_id', auth('web')->id())
-            ->where('seller_id', $this->sellerId)
-            ->get();
+        if (Auth::check()) {
+            $userId = Auth::id();
+            $cacheKey = "cart_items_{$userId}_{$this->sellerId}";
+            Cache::forget($cacheKey);
+        }
     }
 
     #[On('delivery-fee-updated')]
@@ -45,7 +66,7 @@ class CartSummary extends Component
     #[Computed]
     public function subtotal(): float
     {
-        return collect($this->cartItems)->sum(fn ($item) => $item->total);
+        return $this->cartItems->sum('total');
     }
 
     #[Computed]
@@ -61,12 +82,15 @@ class CartSummary extends Component
             return 0;
         }
 
-        $subtotal = $this->subtotal;
+        $cacheKey = "seller_points_percentage_{$this->sellerId}";
 
-        // Get points earning percentage from system settings (default to 1% if not set)
-        $pointsPercentage = Seller::find($this->sellerId)->setting->data['point_percentage'] ?? 1;
+        $pointsPercentage = Cache::remember($cacheKey, 1800, function () {
+            $seller = Seller::select(['id'])->with(['setting:id,seller_id,data'])->find($this->sellerId);
 
-        return floor($subtotal * ((int) $pointsPercentage / 100));
+            return $seller?->setting?->data['point_percentage'] ?? 1;
+        });
+
+        return floor($this->subtotal * ((int) $pointsPercentage / 100));
     }
 
     public function render()

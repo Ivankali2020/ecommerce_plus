@@ -2,17 +2,20 @@
 
 namespace App\Policies;
 
-use App\Models\Attribute;
 use App\Models\Seller;
+use App\Models\Attribute;
+use Illuminate\Auth\Access\HandlesAuthorization;
 
 class AttributePolicy extends BasePolicy
 {
+    use HandlesAuthorization;
+
     /**
      * Determine whether the seller can view any models.
      */
     public function viewAny(Seller $seller): bool
     {
-        return $seller->can('view_any_attribute');
+        return $seller->can('view_any_attributes::attribute');
     }
 
     /**
@@ -20,7 +23,7 @@ class AttributePolicy extends BasePolicy
      */
     public function view(Seller $seller, Attribute $attribute): bool
     {
-        return $seller->can('view_attribute');
+        return $seller->can('view_attributes::attribute');
     }
 
     /**
@@ -28,7 +31,7 @@ class AttributePolicy extends BasePolicy
      */
     public function create(Seller $seller): bool
     {
-        return $seller->can('create_attribute');
+        return $seller->can('create_attributes::attribute');
     }
 
     /**
@@ -36,7 +39,7 @@ class AttributePolicy extends BasePolicy
      */
     public function update(Seller $seller, Attribute $attribute): bool
     {
-        return $seller->can('update_attribute');
+        return $seller->can('update_attributes::attribute');
     }
 
     /**
@@ -44,7 +47,7 @@ class AttributePolicy extends BasePolicy
      */
     public function delete(Seller $seller, Attribute $attribute): bool
     {
-        return $seller->can('delete_attribute');
+        return $seller->can('delete_attributes::attribute');
     }
 
     /**
@@ -52,7 +55,7 @@ class AttributePolicy extends BasePolicy
      */
     public function deleteAny(Seller $seller): bool
     {
-        return $seller->can('delete_any_attribute');
+        return $seller->can('delete_any_attributes::attribute');
     }
 
     /**
@@ -60,7 +63,7 @@ class AttributePolicy extends BasePolicy
      */
     public function forceDelete(Seller $seller, Attribute $attribute): bool
     {
-        return $seller->can('force_delete_attribute');
+        return $seller->can('force_delete_attributes::attribute');
     }
 
     /**
@@ -68,7 +71,7 @@ class AttributePolicy extends BasePolicy
      */
     public function forceDeleteAny(Seller $seller): bool
     {
-        return $seller->can('force_delete_any_attribute');
+        return $seller->can('force_delete_any_attributes::attribute');
     }
 
     /**
@@ -76,7 +79,7 @@ class AttributePolicy extends BasePolicy
      */
     public function restore(Seller $seller, Attribute $attribute): bool
     {
-        return $seller->can('restore_attribute');
+        return $seller->can('restore_attributes::attribute');
     }
 
     /**
@@ -84,7 +87,7 @@ class AttributePolicy extends BasePolicy
      */
     public function restoreAny(Seller $seller): bool
     {
-        return $seller->can('restore_any_attribute');
+        return $seller->can('restore_any_attributes::attribute');
     }
 
     /**
@@ -92,7 +95,7 @@ class AttributePolicy extends BasePolicy
      */
     public function replicate(Seller $seller, Attribute $attribute): bool
     {
-        return $seller->can('replicate_attribute');
+        return $seller->can('replicate_attributes::attribute');
     }
 
     /**
@@ -100,6 +103,6 @@ class AttributePolicy extends BasePolicy
      */
     public function reorder(Seller $seller): bool
     {
-        return $seller->can('reorder_attribute');
+        return $seller->can('reorder_attributes::attribute');
     }
 }

@@ -2,17 +2,20 @@
 
 namespace App\Policies;
 
-use App\Models\Purchase;
 use App\Models\Seller;
+use App\Models\Purchase;
+use Illuminate\Auth\Access\HandlesAuthorization;
 
 class PurchasePolicy extends BasePolicy
 {
+    use HandlesAuthorization;
+
     /**
      * Determine whether the seller can view any models.
      */
     public function viewAny(Seller $seller): bool
     {
-        return $seller->can('view_any_purchase');
+        return $seller->can('view_any_purchases::purchase');
     }
 
     /**
@@ -20,7 +23,7 @@ class PurchasePolicy extends BasePolicy
      */
     public function view(Seller $seller, Purchase $purchase): bool
     {
-        return $seller->can('view_purchase');
+        return $seller->can('view_purchases::purchase');
     }
 
     /**
@@ -28,7 +31,7 @@ class PurchasePolicy extends BasePolicy
      */
     public function create(Seller $seller): bool
     {
-        return $seller->can('create_purchase');
+        return $seller->can('create_purchases::purchase');
     }
 
     /**
@@ -36,7 +39,7 @@ class PurchasePolicy extends BasePolicy
      */
     public function update(Seller $seller, Purchase $purchase): bool
     {
-        return $seller->can('update_purchase');
+        return $seller->can('update_purchases::purchase');
     }
 
     /**
@@ -44,7 +47,7 @@ class PurchasePolicy extends BasePolicy
      */
     public function delete(Seller $seller, Purchase $purchase): bool
     {
-        return $seller->can('delete_purchase');
+        return $seller->can('delete_purchases::purchase');
     }
 
     /**
@@ -52,7 +55,7 @@ class PurchasePolicy extends BasePolicy
      */
     public function deleteAny(Seller $seller): bool
     {
-        return $seller->can('delete_any_purchase');
+        return $seller->can('delete_any_purchases::purchase');
     }
 
     /**
@@ -60,7 +63,7 @@ class PurchasePolicy extends BasePolicy
      */
     public function forceDelete(Seller $seller, Purchase $purchase): bool
     {
-        return $seller->can('force_delete_purchase');
+        return $seller->can('force_delete_purchases::purchase');
     }
 
     /**
@@ -68,7 +71,7 @@ class PurchasePolicy extends BasePolicy
      */
     public function forceDeleteAny(Seller $seller): bool
     {
-        return $seller->can('force_delete_any_purchase');
+        return $seller->can('force_delete_any_purchases::purchase');
     }
 
     /**
@@ -76,7 +79,7 @@ class PurchasePolicy extends BasePolicy
      */
     public function restore(Seller $seller, Purchase $purchase): bool
     {
-        return $seller->can('restore_purchase');
+        return $seller->can('restore_purchases::purchase');
     }
 
     /**
@@ -84,7 +87,7 @@ class PurchasePolicy extends BasePolicy
      */
     public function restoreAny(Seller $seller): bool
     {
-        return $seller->can('restore_any_purchase');
+        return $seller->can('restore_any_purchases::purchase');
     }
 
     /**
@@ -92,7 +95,7 @@ class PurchasePolicy extends BasePolicy
      */
     public function replicate(Seller $seller, Purchase $purchase): bool
     {
-        return $seller->can('replicate_purchase');
+        return $seller->can('replicate_purchases::purchase');
     }
 
     /**
@@ -100,6 +103,6 @@ class PurchasePolicy extends BasePolicy
      */
     public function reorder(Seller $seller): bool
     {
-        return $seller->can('reorder_purchase');
+        return $seller->can('reorder_purchases::purchase');
     }
 }

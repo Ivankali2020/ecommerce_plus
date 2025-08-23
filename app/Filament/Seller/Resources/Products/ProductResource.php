@@ -19,7 +19,6 @@ use Filament\Actions\ReplicateAction;
 use Filament\Actions\RestoreBulkAction;
 use Filament\Actions\ViewAction;
 use Filament\Facades\Filament;
-use Filament\Forms\Components\Placeholder;
 use Filament\Forms\Components\Repeater;
 use Filament\Forms\Components\RichEditor;
 use Filament\Forms\Components\Select;
@@ -342,7 +341,7 @@ class ProductResource extends Resource
                             ->minItems(2)->defaultItems(2)
                             ->collapsible()->reorderable()->cloneable()
                             ->schema([
-                                Grid::make()->schema([
+                                Grid::make(2)->schema([
                                     Group::make()->schema([
                                         TextInput::make('name')
                                             ->label(__('filament/resources/product-resource.form.variants.name.label'))
@@ -489,7 +488,7 @@ class ProductResource extends Resource
                                             }),
                                     ])->columnSpan(1),
 
-                                ])->columns(2),
+                                ])->columnSpanFull(),
 
                                 SpatieMediaLibraryFileUpload::make('images')
                                     ->label(__('filament/resources/product-resource.form.variants.images.label'))
@@ -500,7 +499,9 @@ class ProductResource extends Resource
                                     ->rules('required')->columnSpanFull(),
 
                             ])
-                            ->columns(3)->grid(2)
+                            ->columnSpanFull()
+                            ->columns(3)
+                            ->grid(2)
                             ->visible(fn (Get $get) => $get('has_variant') && ! blank($get('exchange_id'))),
                     ])->columnSpanFull(),
 
@@ -535,7 +536,8 @@ class ProductResource extends Resource
             // Ensure percentage is between 0 and 100
             $discountPercentage = (int) max(0, min(100, round($discountPercentage, 2)));
 
-            $set('discount', $discountPercentage);
+            // remain discount percentage
+            $set('discount', 100 - $discountPercentage);
         }
 
         if ($get('discount_price') == 0 || $get('discount_price') >= $get('price')) {
@@ -707,6 +709,18 @@ class ProductResource extends Resource
                             $q->where('is_whole_sale', true)->orWhereHas('variants', function ($q) {
                                 $q->where('is_whole_sale', true);
                             });
+                        });
+                    }),
+
+                Filter::make('is_recommended')
+                    ->schema([
+                        Toggle::make('is_recommended')
+                            ->label('Recommended')
+                            ->helperText('Recommended ပစွည်းများကို စစ်ရန်'),
+                    ])
+                    ->query(function (Builder $query, array $data): Builder {
+                        return $query->when($data['is_recommended'], function ($q) {
+                            $q->where('is_recommended', true);
                         });
                     }),
 

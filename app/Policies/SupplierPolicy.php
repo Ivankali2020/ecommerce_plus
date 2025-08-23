@@ -4,15 +4,18 @@ namespace App\Policies;
 
 use App\Models\Seller;
 use App\Models\Supplier;
+use Illuminate\Auth\Access\HandlesAuthorization;
 
 class SupplierPolicy extends BasePolicy
 {
+    use HandlesAuthorization;
+
     /**
      * Determine whether the seller can view any models.
      */
     public function viewAny(Seller $seller): bool
     {
-        return $seller->can('view_any_supplier');
+        return $seller->can('view_any_suppliers::supplier');
     }
 
     /**
@@ -20,7 +23,7 @@ class SupplierPolicy extends BasePolicy
      */
     public function view(Seller $seller, Supplier $supplier): bool
     {
-        return $seller->can('view_supplier');
+        return $seller->can('view_suppliers::supplier');
     }
 
     /**
@@ -28,7 +31,7 @@ class SupplierPolicy extends BasePolicy
      */
     public function create(Seller $seller): bool
     {
-        return $seller->can('create_supplier');
+        return $seller->can('create_suppliers::supplier');
     }
 
     /**
@@ -36,7 +39,7 @@ class SupplierPolicy extends BasePolicy
      */
     public function update(Seller $seller, Supplier $supplier): bool
     {
-        return $seller->can('update_supplier');
+        return $seller->can('update_suppliers::supplier');
     }
 
     /**
@@ -44,7 +47,7 @@ class SupplierPolicy extends BasePolicy
      */
     public function delete(Seller $seller, Supplier $supplier): bool
     {
-        return $seller->can('delete_supplier');
+        return $seller->can('delete_suppliers::supplier');
     }
 
     /**
@@ -52,7 +55,7 @@ class SupplierPolicy extends BasePolicy
      */
     public function deleteAny(Seller $seller): bool
     {
-        return $seller->can('delete_any_supplier');
+        return $seller->can('delete_any_suppliers::supplier');
     }
 
     /**
@@ -60,7 +63,7 @@ class SupplierPolicy extends BasePolicy
      */
     public function forceDelete(Seller $seller, Supplier $supplier): bool
     {
-        return $seller->can('force_delete_supplier');
+        return $seller->can('force_delete_suppliers::supplier');
     }
 
     /**
@@ -68,7 +71,7 @@ class SupplierPolicy extends BasePolicy
      */
     public function forceDeleteAny(Seller $seller): bool
     {
-        return $seller->can('force_delete_any_supplier');
+        return $seller->can('force_delete_any_suppliers::supplier');
     }
 
     /**
@@ -76,7 +79,7 @@ class SupplierPolicy extends BasePolicy
      */
     public function restore(Seller $seller, Supplier $supplier): bool
     {
-        return $seller->can('restore_supplier');
+        return $seller->can('restore_suppliers::supplier');
     }
 
     /**
@@ -84,7 +87,7 @@ class SupplierPolicy extends BasePolicy
      */
     public function restoreAny(Seller $seller): bool
     {
-        return $seller->can('restore_any_supplier');
+        return $seller->can('restore_any_suppliers::supplier');
     }
 
     /**
@@ -92,7 +95,7 @@ class SupplierPolicy extends BasePolicy
      */
     public function replicate(Seller $seller, Supplier $supplier): bool
     {
-        return $seller->can('replicate_supplier');
+        return $seller->can('replicate_suppliers::supplier');
     }
 
     /**
@@ -100,6 +103,6 @@ class SupplierPolicy extends BasePolicy
      */
     public function reorder(Seller $seller): bool
     {
-        return $seller->can('reorder_supplier');
+        return $seller->can('reorder_suppliers::supplier');
     }
 }

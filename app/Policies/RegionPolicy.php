@@ -2,17 +2,20 @@
 
 namespace App\Policies;
 
-use App\Models\Region;
 use App\Models\Seller;
+use App\Models\Region;
+use Illuminate\Auth\Access\HandlesAuthorization;
 
 class RegionPolicy extends BasePolicy
 {
+    use HandlesAuthorization;
+
     /**
      * Determine whether the seller can view any models.
      */
     public function viewAny(Seller $seller): bool
     {
-        return $seller->can('view_any_region');
+        return $seller->can('view_any_regions::region');
     }
 
     /**
@@ -20,7 +23,7 @@ class RegionPolicy extends BasePolicy
      */
     public function view(Seller $seller, Region $region): bool
     {
-        return $seller->can('view_region');
+        return $seller->can('view_regions::region');
     }
 
     /**
@@ -28,7 +31,7 @@ class RegionPolicy extends BasePolicy
      */
     public function create(Seller $seller): bool
     {
-        return $seller->can('create_region');
+        return $seller->can('create_regions::region');
     }
 
     /**
@@ -36,7 +39,7 @@ class RegionPolicy extends BasePolicy
      */
     public function update(Seller $seller, Region $region): bool
     {
-        return $seller->can('update_region');
+        return $seller->can('update_regions::region');
     }
 
     /**
@@ -44,7 +47,7 @@ class RegionPolicy extends BasePolicy
      */
     public function delete(Seller $seller, Region $region): bool
     {
-        return $seller->can('delete_region');
+        return $seller->can('delete_regions::region');
     }
 
     /**
@@ -52,7 +55,7 @@ class RegionPolicy extends BasePolicy
      */
     public function deleteAny(Seller $seller): bool
     {
-        return $seller->can('delete_any_region');
+        return $seller->can('delete_any_regions::region');
     }
 
     /**
@@ -60,7 +63,7 @@ class RegionPolicy extends BasePolicy
      */
     public function forceDelete(Seller $seller, Region $region): bool
     {
-        return $seller->can('force_delete_region');
+        return $seller->can('force_delete_regions::region');
     }
 
     /**
@@ -68,7 +71,7 @@ class RegionPolicy extends BasePolicy
      */
     public function forceDeleteAny(Seller $seller): bool
     {
-        return $seller->can('force_delete_any_region');
+        return $seller->can('force_delete_any_regions::region');
     }
 
     /**
@@ -76,7 +79,7 @@ class RegionPolicy extends BasePolicy
      */
     public function restore(Seller $seller, Region $region): bool
     {
-        return $seller->can('restore_region');
+        return $seller->can('restore_regions::region');
     }
 
     /**
@@ -84,7 +87,7 @@ class RegionPolicy extends BasePolicy
      */
     public function restoreAny(Seller $seller): bool
     {
-        return $seller->can('restore_any_region');
+        return $seller->can('restore_any_regions::region');
     }
 
     /**
@@ -92,7 +95,7 @@ class RegionPolicy extends BasePolicy
      */
     public function replicate(Seller $seller, Region $region): bool
     {
-        return $seller->can('replicate_region');
+        return $seller->can('replicate_regions::region');
     }
 
     /**
@@ -100,6 +103,6 @@ class RegionPolicy extends BasePolicy
      */
     public function reorder(Seller $seller): bool
     {
-        return $seller->can('reorder_region');
+        return $seller->can('reorder_regions::region');
     }
 }

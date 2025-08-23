@@ -67,7 +67,7 @@
         </div>
 
         <!-- Bottom Bar -->
-        <div class="border-t border-gray-300 mt-8 pt-8 pb-16 mb:pb-0 flex flex-col sm:flex-row justify-between items-center">
+        <div class="border-t border-gray-300 mt-8 pt-8 pb-16 lg:pb-0 flex flex-col sm:flex-row justify-between items-center">
             <p class="text-gray-400 text-sm">
                 © {{ date('Y') }} {{ $seller ? $seller->name : __('messages.footer.company_info') }}. 
                 {{ __('messages.footer.all_rights_reserved') }}

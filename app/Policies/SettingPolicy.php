@@ -4,15 +4,18 @@ namespace App\Policies;
 
 use App\Models\Seller;
 use App\Models\Setting;
+use Illuminate\Auth\Access\HandlesAuthorization;
 
 class SettingPolicy extends BasePolicy
 {
+    use HandlesAuthorization;
+
     /**
      * Determine whether the seller can view any models.
      */
     public function viewAny(Seller $seller): bool
     {
-        return $seller->can('view_any_setting');
+        return $seller->can('view_any_settings::setting');
     }
 
     /**
@@ -20,7 +23,7 @@ class SettingPolicy extends BasePolicy
      */
     public function view(Seller $seller, Setting $setting): bool
     {
-        return $seller->can('view_setting');
+        return $seller->can('view_settings::setting');
     }
 
     /**
@@ -28,7 +31,7 @@ class SettingPolicy extends BasePolicy
      */
     public function create(Seller $seller): bool
     {
-        return $seller->can('create_setting');
+        return $seller->can('create_settings::setting');
     }
 
     /**
@@ -36,7 +39,7 @@ class SettingPolicy extends BasePolicy
      */
     public function update(Seller $seller, Setting $setting): bool
     {
-        return $seller->can('update_setting');
+        return $seller->can('update_settings::setting');
     }
 
     /**
@@ -44,7 +47,7 @@ class SettingPolicy extends BasePolicy
      */
     public function delete(Seller $seller, Setting $setting): bool
     {
-        return $seller->can('delete_setting');
+        return $seller->can('delete_settings::setting');
     }
 
     /**
@@ -52,7 +55,7 @@ class SettingPolicy extends BasePolicy
      */
     public function deleteAny(Seller $seller): bool
     {
-        return $seller->can('delete_any_setting');
+        return $seller->can('delete_any_settings::setting');
     }
 
     /**
@@ -60,7 +63,7 @@ class SettingPolicy extends BasePolicy
      */
     public function forceDelete(Seller $seller, Setting $setting): bool
     {
-        return $seller->can('force_delete_setting');
+        return $seller->can('force_delete_settings::setting');
     }
 
     /**
@@ -68,7 +71,7 @@ class SettingPolicy extends BasePolicy
      */
     public function forceDeleteAny(Seller $seller): bool
     {
-        return $seller->can('force_delete_any_setting');
+        return $seller->can('force_delete_any_settings::setting');
     }
 
     /**
@@ -76,7 +79,7 @@ class SettingPolicy extends BasePolicy
      */
     public function restore(Seller $seller, Setting $setting): bool
     {
-        return $seller->can('restore_setting');
+        return $seller->can('restore_settings::setting');
     }
 
     /**
@@ -84,7 +87,7 @@ class SettingPolicy extends BasePolicy
      */
     public function restoreAny(Seller $seller): bool
     {
-        return $seller->can('restore_any_setting');
+        return $seller->can('restore_any_settings::setting');
     }
 
     /**
@@ -92,7 +95,7 @@ class SettingPolicy extends BasePolicy
      */
     public function replicate(Seller $seller, Setting $setting): bool
     {
-        return $seller->can('replicate_setting');
+        return $seller->can('replicate_settings::setting');
     }
 
     /**
@@ -100,6 +103,6 @@ class SettingPolicy extends BasePolicy
      */
     public function reorder(Seller $seller): bool
     {
-        return $seller->can('reorder_setting');
+        return $seller->can('reorder_settings::setting');
     }
 }

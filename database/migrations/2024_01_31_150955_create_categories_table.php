@@ -23,6 +23,13 @@ return new class extends Migration
             $table->boolean('is_sub_category')->default(false);
             $table->softDeletes();
             $table->timestamps();
+            
+            // Performance indexes for category operations
+            $table->index(['seller_id', 'deleted_at'], 'categories_seller_deleted_idx');
+            $table->index(['tenant_id', 'deleted_at'], 'categories_tenant_deleted_idx');
+            $table->index(['parent_id', 'deleted_at'], 'categories_parent_deleted_idx');
+            $table->index(['is_sub_category', 'seller_id'], 'categories_sub_seller_idx');
+            $table->index(['name', 'tenant_id'], 'categories_name_tenant_idx');
         });
     }
 

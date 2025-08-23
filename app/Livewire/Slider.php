@@ -3,7 +3,7 @@
 namespace App\Livewire;
 
 use App\Models\Seller;
-use App\Models\Tenant;
+use Illuminate\Support\Facades\Cache;
 use Livewire\Component;
 
 class Slider extends Component
@@ -12,7 +12,9 @@ class Slider extends Component
 
     public function mount()
     {
-        $seller = Tenant::find(tenant('id'))->sellers()->first();
+        $seller = Cache::remember('seller_'.tenant('id'), 60, function () {
+            return Seller::where('tenant_id', tenant('id'))->with('media')->first();
+        });
         $this->sliders = $seller->getMedia('cover_photos');
     }
 

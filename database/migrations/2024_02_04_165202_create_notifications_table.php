@@ -18,6 +18,11 @@ return new class extends Migration
             $table->text('data');
             $table->timestamp('read_at')->nullable();
             $table->timestamps();
+            
+            // Performance indexes for notifications
+            $table->index(['notifiable_type', 'notifiable_id', 'read_at'], 'notifications_notifiable_read_idx');
+            $table->index(['read_at', 'created_at'], 'notifications_read_created_idx');
+            $table->index(['type', 'created_at'], 'notifications_type_created_idx');
         });
     }
 

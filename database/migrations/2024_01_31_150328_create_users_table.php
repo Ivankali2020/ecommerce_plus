@@ -35,6 +35,13 @@ return new class extends Migration
             $table->bigInteger('points')->default();
             $table->rememberToken();
             $table->timestamps();
+            
+            // Performance indexes
+            $table->index(['seller_id', 'created_at'], 'users_seller_created_idx');
+            $table->index(['tenant_id', 'created_at'], 'users_tenant_created_idx');
+            $table->index(['phone', 'seller_id'], 'users_phone_seller_idx');
+            $table->index(['referral_code'], 'users_referral_code_idx');
+            $table->index(['points', 'seller_id'], 'users_points_seller_idx');
         });
     }
 

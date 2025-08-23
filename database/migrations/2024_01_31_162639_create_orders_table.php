@@ -54,6 +54,14 @@ return new class extends Migration
 
             $table->index(['user_id', 'seller_id', 'is_cod']);
             $table->index('created_at');
+            
+            // Additional performance indexes
+            $table->index(['seller_id', 'status', 'deleted_at'], 'orders_seller_status_deleted_idx');
+            $table->index(['tenant_id', 'status', 'deleted_at'], 'orders_tenant_status_deleted_idx');
+            $table->index(['status', 'created_at', 'deleted_at'], 'orders_status_created_deleted_idx');
+            $table->index(['payment_id', 'status'], 'orders_payment_status_idx');
+            $table->index(['user_id', 'created_at'], 'orders_user_created_idx');
+            $table->index(['total_price', 'seller_id'], 'orders_total_seller_idx');
         });
 
     }

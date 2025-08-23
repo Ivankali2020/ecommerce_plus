@@ -2,17 +2,20 @@
 
 namespace App\Policies;
 
-use App\Models\OrderProduct;
 use App\Models\Seller;
+use App\Models\OrderProduct;
+use Illuminate\Auth\Access\HandlesAuthorization;
 
 class OrderProductPolicy extends BasePolicy
 {
+    use HandlesAuthorization;
+
     /**
      * Determine whether the seller can view any models.
      */
     public function viewAny(Seller $seller): bool
     {
-        return $seller->can('view_any_order::product');
+        return $seller->can('view_any_order::products::order::product');
     }
 
     /**
@@ -20,7 +23,7 @@ class OrderProductPolicy extends BasePolicy
      */
     public function view(Seller $seller, OrderProduct $orderProduct): bool
     {
-        return $seller->can('view_order::product');
+        return $seller->can('view_order::products::order::product');
     }
 
     /**
@@ -28,7 +31,7 @@ class OrderProductPolicy extends BasePolicy
      */
     public function create(Seller $seller): bool
     {
-        return $seller->can('create_order::product');
+        return $seller->can('create_order::products::order::product');
     }
 
     /**
@@ -36,7 +39,7 @@ class OrderProductPolicy extends BasePolicy
      */
     public function update(Seller $seller, OrderProduct $orderProduct): bool
     {
-        return $seller->can('update_order::product');
+        return $seller->can('update_order::products::order::product');
     }
 
     /**
@@ -44,7 +47,7 @@ class OrderProductPolicy extends BasePolicy
      */
     public function delete(Seller $seller, OrderProduct $orderProduct): bool
     {
-        return $seller->can('delete_order::product');
+        return $seller->can('delete_order::products::order::product');
     }
 
     /**
@@ -52,7 +55,7 @@ class OrderProductPolicy extends BasePolicy
      */
     public function deleteAny(Seller $seller): bool
     {
-        return $seller->can('delete_any_order::product');
+        return $seller->can('delete_any_order::products::order::product');
     }
 
     /**
@@ -60,7 +63,7 @@ class OrderProductPolicy extends BasePolicy
      */
     public function forceDelete(Seller $seller, OrderProduct $orderProduct): bool
     {
-        return $seller->can('force_delete_order::product');
+        return $seller->can('force_delete_order::products::order::product');
     }
 
     /**
@@ -68,7 +71,7 @@ class OrderProductPolicy extends BasePolicy
      */
     public function forceDeleteAny(Seller $seller): bool
     {
-        return $seller->can('force_delete_any_order::product');
+        return $seller->can('force_delete_any_order::products::order::product');
     }
 
     /**
@@ -76,7 +79,7 @@ class OrderProductPolicy extends BasePolicy
      */
     public function restore(Seller $seller, OrderProduct $orderProduct): bool
     {
-        return $seller->can('restore_order::product');
+        return $seller->can('restore_order::products::order::product');
     }
 
     /**
@@ -84,7 +87,7 @@ class OrderProductPolicy extends BasePolicy
      */
     public function restoreAny(Seller $seller): bool
     {
-        return $seller->can('restore_any_order::product');
+        return $seller->can('restore_any_order::products::order::product');
     }
 
     /**
@@ -92,7 +95,7 @@ class OrderProductPolicy extends BasePolicy
      */
     public function replicate(Seller $seller, OrderProduct $orderProduct): bool
     {
-        return $seller->can('replicate_order::product');
+        return $seller->can('replicate_order::products::order::product');
     }
 
     /**
@@ -100,6 +103,6 @@ class OrderProductPolicy extends BasePolicy
      */
     public function reorder(Seller $seller): bool
     {
-        return $seller->can('reorder_order::product');
+        return $seller->can('reorder_order::products::order::product');
     }
 }

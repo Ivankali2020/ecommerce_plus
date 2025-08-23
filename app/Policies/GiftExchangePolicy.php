@@ -2,17 +2,20 @@
 
 namespace App\Policies;
 
-use App\Models\GiftExchange;
 use App\Models\Seller;
+use App\Models\GiftExchange;
+use Illuminate\Auth\Access\HandlesAuthorization;
 
 class GiftExchangePolicy extends BasePolicy
 {
+    use HandlesAuthorization;
+
     /**
      * Determine whether the seller can view any models.
      */
     public function viewAny(Seller $seller): bool
     {
-        return $seller->can('view_any_gift::exchange');
+        return $seller->can('view_any_gift::exchanges::gift::exchange');
     }
 
     /**
@@ -20,7 +23,7 @@ class GiftExchangePolicy extends BasePolicy
      */
     public function view(Seller $seller, GiftExchange $giftExchange): bool
     {
-        return $seller->can('view_gift::exchange');
+        return $seller->can('view_gift::exchanges::gift::exchange');
     }
 
     /**
@@ -28,7 +31,7 @@ class GiftExchangePolicy extends BasePolicy
      */
     public function create(Seller $seller): bool
     {
-        return $seller->can('create_gift::exchange');
+        return $seller->can('create_gift::exchanges::gift::exchange');
     }
 
     /**
@@ -36,7 +39,7 @@ class GiftExchangePolicy extends BasePolicy
      */
     public function update(Seller $seller, GiftExchange $giftExchange): bool
     {
-        return $seller->can('update_gift::exchange');
+        return $seller->can('update_gift::exchanges::gift::exchange');
     }
 
     /**
@@ -44,7 +47,7 @@ class GiftExchangePolicy extends BasePolicy
      */
     public function delete(Seller $seller, GiftExchange $giftExchange): bool
     {
-        return $seller->can('delete_gift::exchange');
+        return $seller->can('delete_gift::exchanges::gift::exchange');
     }
 
     /**
@@ -52,7 +55,7 @@ class GiftExchangePolicy extends BasePolicy
      */
     public function deleteAny(Seller $seller): bool
     {
-        return $seller->can('delete_any_gift::exchange');
+        return $seller->can('delete_any_gift::exchanges::gift::exchange');
     }
 
     /**
@@ -60,7 +63,7 @@ class GiftExchangePolicy extends BasePolicy
      */
     public function forceDelete(Seller $seller, GiftExchange $giftExchange): bool
     {
-        return $seller->can('force_delete_gift::exchange');
+        return $seller->can('force_delete_gift::exchanges::gift::exchange');
     }
 
     /**
@@ -68,7 +71,7 @@ class GiftExchangePolicy extends BasePolicy
      */
     public function forceDeleteAny(Seller $seller): bool
     {
-        return $seller->can('force_delete_any_gift::exchange');
+        return $seller->can('force_delete_any_gift::exchanges::gift::exchange');
     }
 
     /**
@@ -76,7 +79,7 @@ class GiftExchangePolicy extends BasePolicy
      */
     public function restore(Seller $seller, GiftExchange $giftExchange): bool
     {
-        return $seller->can('restore_gift::exchange');
+        return $seller->can('restore_gift::exchanges::gift::exchange');
     }
 
     /**
@@ -84,7 +87,7 @@ class GiftExchangePolicy extends BasePolicy
      */
     public function restoreAny(Seller $seller): bool
     {
-        return $seller->can('restore_any_gift::exchange');
+        return $seller->can('restore_any_gift::exchanges::gift::exchange');
     }
 
     /**
@@ -92,7 +95,7 @@ class GiftExchangePolicy extends BasePolicy
      */
     public function replicate(Seller $seller, GiftExchange $giftExchange): bool
     {
-        return $seller->can('replicate_gift::exchange');
+        return $seller->can('replicate_gift::exchanges::gift::exchange');
     }
 
     /**
@@ -100,6 +103,6 @@ class GiftExchangePolicy extends BasePolicy
      */
     public function reorder(Seller $seller): bool
     {
-        return $seller->can('reorder_gift::exchange');
+        return $seller->can('reorder_gift::exchanges::gift::exchange');
     }
 }

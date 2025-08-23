@@ -5,6 +5,7 @@ namespace App\Livewire;
 use App\Models\Product;
 use App\Traits\WithCart;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\Cache;
 use Livewire\Attributes\Computed;
 use Livewire\Component;
 
@@ -18,24 +19,53 @@ class ProductDetail extends Component
 
     public function mount($product, $type = 'detail')
     {
-        $this->product = $product;
+        // Ensure we have the product with necessary relationships loaded
+        if (is_numeric($product)) {
+            $this->product = Product::with([
+                'category:id,name',
+                'brand:id,name',
+                'media',
+                'variants' => function ($query) {
+                    $query->select(['id', 'product_id', 'name', 'mmk_price', 'mmk_discount_price', 'discount'])
+                        ->with('media');
+                },
+            ])->findOrFail($product);
+        } else {
+            $this->product = $product;
+        }
+
         $this->type = $type;
     }
 
     #[Computed]
     public function relatedProducts()
     {
-        return Product::query()
-            ->when(Auth::check(), function ($q) {
-                return $q->where('seller_id', Auth::user()->seller_id);
-            })
-            ->where('is_public', true)
-            ->where('category_id', $this->product->category_id)
-            ->where('id', '!=', $this->product->id)
-            ->with(['variants', 'category'])
-            ->latest()
-            ->limit(5)
-            ->get();
+        $cacheKey = "related_products_{$this->product->id}_{$this->product->category_id}";
+
+        return Cache::remember($cacheKey, 1800, function () {
+            return Product::query()
+                ->select(['id', 'name', 'category_id', 'brand_id', 'seller_id', 'mmk_price', 'mmk_discount_price', 'discount', 'quantity', 'MOQ', 'is_public', 'has_variant', 'created_at'])
+                ->when(Auth::check(), function ($q) {
+                    return $q->where('seller_id', Auth::user()->seller_id);
+                })
+                ->where('is_public', true)
+                ->where('category_id', $this->product->category_id)
+                ->where('id', '!=', $this->product->id)
+                ->with([
+                    'category:id,name',
+                    'brand:id,name',
+                    'media',
+                    'variants' => function ($query) {
+                        $query->select(['id', 'product_id', 'name', 'mmk_price', 'mmk_discount_price', 'discount'])
+                            ->with('media')
+                            ->orderBy('created_at')
+                            ->limit(1);
+                    },
+                ])
+                ->latest()
+                ->limit(5)
+                ->get();
+        });
     }
 
     public function render()

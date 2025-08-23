@@ -39,6 +39,13 @@ return new class extends Migration
 
             // Make SKU unique per product (since variants belong to products which belong to tenants)
             $table->unique(['sku', 'product_id']);
+            
+            // Performance indexes
+            $table->index(['product_id', 'deleted_at'], 'variants_product_deleted_idx');
+            $table->index(['price', 'product_id'], 'variants_price_product_idx');
+            $table->index(['mmk_price', 'product_id'], 'variants_mmk_price_product_idx');
+            $table->index(['quantity', 'product_id'], 'variants_quantity_product_idx');
+            $table->index(['is_whole_sale', 'product_id'], 'variants_wholesale_product_idx');
         });
     }
 

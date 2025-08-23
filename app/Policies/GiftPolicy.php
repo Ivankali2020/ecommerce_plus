@@ -2,17 +2,20 @@
 
 namespace App\Policies;
 
-use App\Models\Gift;
 use App\Models\Seller;
+use App\Models\Gift;
+use Illuminate\Auth\Access\HandlesAuthorization;
 
 class GiftPolicy extends BasePolicy
 {
+    use HandlesAuthorization;
+
     /**
      * Determine whether the seller can view any models.
      */
     public function viewAny(Seller $seller): bool
     {
-        return $seller->can('view_any_gift');
+        return $seller->can('view_any_gifts::gift');
     }
 
     /**
@@ -20,7 +23,7 @@ class GiftPolicy extends BasePolicy
      */
     public function view(Seller $seller, Gift $gift): bool
     {
-        return $seller->can('view_gift');
+        return $seller->can('view_gifts::gift');
     }
 
     /**
@@ -28,7 +31,7 @@ class GiftPolicy extends BasePolicy
      */
     public function create(Seller $seller): bool
     {
-        return $seller->can('create_gift');
+        return $seller->can('create_gifts::gift');
     }
 
     /**
@@ -36,7 +39,7 @@ class GiftPolicy extends BasePolicy
      */
     public function update(Seller $seller, Gift $gift): bool
     {
-        return $seller->can('update_gift');
+        return $seller->can('update_gifts::gift');
     }
 
     /**
@@ -44,7 +47,7 @@ class GiftPolicy extends BasePolicy
      */
     public function delete(Seller $seller, Gift $gift): bool
     {
-        return $seller->can('delete_gift');
+        return $seller->can('delete_gifts::gift');
     }
 
     /**
@@ -52,7 +55,7 @@ class GiftPolicy extends BasePolicy
      */
     public function deleteAny(Seller $seller): bool
     {
-        return $seller->can('delete_any_gift');
+        return $seller->can('delete_any_gifts::gift');
     }
 
     /**
@@ -60,7 +63,7 @@ class GiftPolicy extends BasePolicy
      */
     public function forceDelete(Seller $seller, Gift $gift): bool
     {
-        return $seller->can('force_delete_gift');
+        return $seller->can('force_delete_gifts::gift');
     }
 
     /**
@@ -68,7 +71,7 @@ class GiftPolicy extends BasePolicy
      */
     public function forceDeleteAny(Seller $seller): bool
     {
-        return $seller->can('force_delete_any_gift');
+        return $seller->can('force_delete_any_gifts::gift');
     }
 
     /**
@@ -76,7 +79,7 @@ class GiftPolicy extends BasePolicy
      */
     public function restore(Seller $seller, Gift $gift): bool
     {
-        return $seller->can('restore_gift');
+        return $seller->can('restore_gifts::gift');
     }
 
     /**
@@ -84,7 +87,7 @@ class GiftPolicy extends BasePolicy
      */
     public function restoreAny(Seller $seller): bool
     {
-        return $seller->can('restore_any_gift');
+        return $seller->can('restore_any_gifts::gift');
     }
 
     /**
@@ -92,7 +95,7 @@ class GiftPolicy extends BasePolicy
      */
     public function replicate(Seller $seller, Gift $gift): bool
     {
-        return $seller->can('replicate_gift');
+        return $seller->can('replicate_gifts::gift');
     }
 
     /**
@@ -100,6 +103,6 @@ class GiftPolicy extends BasePolicy
      */
     public function reorder(Seller $seller): bool
     {
-        return $seller->can('reorder_gift');
+        return $seller->can('reorder_gifts::gift');
     }
 }

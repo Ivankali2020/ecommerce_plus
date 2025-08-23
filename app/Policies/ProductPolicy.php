@@ -2,17 +2,20 @@
 
 namespace App\Policies;
 
-use App\Models\Product;
 use App\Models\Seller;
+use App\Models\Product;
+use Illuminate\Auth\Access\HandlesAuthorization;
 
 class ProductPolicy extends BasePolicy
 {
+    use HandlesAuthorization;
+
     /**
      * Determine whether the seller can view any models.
      */
     public function viewAny(Seller $seller): bool
     {
-        return $seller->can('view_any_product');
+        return $seller->can('view_any_products::product');
     }
 
     /**
@@ -20,7 +23,7 @@ class ProductPolicy extends BasePolicy
      */
     public function view(Seller $seller, Product $product): bool
     {
-        return $seller->can('view_product');
+        return $seller->can('view_products::product');
     }
 
     /**
@@ -28,7 +31,7 @@ class ProductPolicy extends BasePolicy
      */
     public function create(Seller $seller): bool
     {
-        return $seller->can('create_product');
+        return $seller->can('create_products::product');
     }
 
     /**
@@ -36,7 +39,7 @@ class ProductPolicy extends BasePolicy
      */
     public function update(Seller $seller, Product $product): bool
     {
-        return $seller->can('update_product');
+        return $seller->can('update_products::product');
     }
 
     /**
@@ -44,7 +47,7 @@ class ProductPolicy extends BasePolicy
      */
     public function delete(Seller $seller, Product $product): bool
     {
-        return $seller->can('delete_product');
+        return $seller->can('delete_products::product');
     }
 
     /**
@@ -52,7 +55,7 @@ class ProductPolicy extends BasePolicy
      */
     public function deleteAny(Seller $seller): bool
     {
-        return $seller->can('delete_any_product');
+        return $seller->can('delete_any_products::product');
     }
 
     /**
@@ -60,7 +63,7 @@ class ProductPolicy extends BasePolicy
      */
     public function forceDelete(Seller $seller, Product $product): bool
     {
-        return $seller->can('force_delete_product');
+        return $seller->can('force_delete_products::product');
     }
 
     /**
@@ -68,7 +71,7 @@ class ProductPolicy extends BasePolicy
      */
     public function forceDeleteAny(Seller $seller): bool
     {
-        return $seller->can('force_delete_any_product');
+        return $seller->can('force_delete_any_products::product');
     }
 
     /**
@@ -76,7 +79,7 @@ class ProductPolicy extends BasePolicy
      */
     public function restore(Seller $seller, Product $product): bool
     {
-        return $seller->can('restore_product');
+        return $seller->can('restore_products::product');
     }
 
     /**
@@ -84,7 +87,7 @@ class ProductPolicy extends BasePolicy
      */
     public function restoreAny(Seller $seller): bool
     {
-        return $seller->can('restore_any_product');
+        return $seller->can('restore_any_products::product');
     }
 
     /**
@@ -92,7 +95,7 @@ class ProductPolicy extends BasePolicy
      */
     public function replicate(Seller $seller, Product $product): bool
     {
-        return $seller->can('replicate_product');
+        return $seller->can('replicate_products::product');
     }
 
     /**
@@ -100,6 +103,6 @@ class ProductPolicy extends BasePolicy
      */
     public function reorder(Seller $seller): bool
     {
-        return $seller->can('reorder_product');
+        return $seller->can('reorder_products::product');
     }
 }

@@ -2,17 +2,20 @@
 
 namespace App\Policies;
 
-use App\Models\Expanse;
 use App\Models\Seller;
+use App\Models\Expanse;
+use Illuminate\Auth\Access\HandlesAuthorization;
 
 class ExpansePolicy extends BasePolicy
 {
+    use HandlesAuthorization;
+
     /**
      * Determine whether the seller can view any models.
      */
     public function viewAny(Seller $seller): bool
     {
-        return $seller->can('view_any_expanse');
+        return $seller->can('view_any_expanses::expanse');
     }
 
     /**
@@ -20,7 +23,7 @@ class ExpansePolicy extends BasePolicy
      */
     public function view(Seller $seller, Expanse $expanse): bool
     {
-        return $seller->can('view_expanse');
+        return $seller->can('view_expanses::expanse');
     }
 
     /**
@@ -28,7 +31,7 @@ class ExpansePolicy extends BasePolicy
      */
     public function create(Seller $seller): bool
     {
-        return $seller->can('create_expanse');
+        return $seller->can('create_expanses::expanse');
     }
 
     /**
@@ -36,7 +39,7 @@ class ExpansePolicy extends BasePolicy
      */
     public function update(Seller $seller, Expanse $expanse): bool
     {
-        return $seller->can('update_expanse');
+        return $seller->can('update_expanses::expanse');
     }
 
     /**
@@ -44,7 +47,7 @@ class ExpansePolicy extends BasePolicy
      */
     public function delete(Seller $seller, Expanse $expanse): bool
     {
-        return $seller->can('delete_expanse');
+        return $seller->can('delete_expanses::expanse');
     }
 
     /**
@@ -52,7 +55,7 @@ class ExpansePolicy extends BasePolicy
      */
     public function deleteAny(Seller $seller): bool
     {
-        return $seller->can('delete_any_expanse');
+        return $seller->can('delete_any_expanses::expanse');
     }
 
     /**
@@ -60,7 +63,7 @@ class ExpansePolicy extends BasePolicy
      */
     public function forceDelete(Seller $seller, Expanse $expanse): bool
     {
-        return $seller->can('force_delete_expanse');
+        return $seller->can('force_delete_expanses::expanse');
     }
 
     /**
@@ -68,7 +71,7 @@ class ExpansePolicy extends BasePolicy
      */
     public function forceDeleteAny(Seller $seller): bool
     {
-        return $seller->can('force_delete_any_expanse');
+        return $seller->can('force_delete_any_expanses::expanse');
     }
 
     /**
@@ -76,7 +79,7 @@ class ExpansePolicy extends BasePolicy
      */
     public function restore(Seller $seller, Expanse $expanse): bool
     {
-        return $seller->can('restore_expanse');
+        return $seller->can('restore_expanses::expanse');
     }
 
     /**
@@ -84,7 +87,7 @@ class ExpansePolicy extends BasePolicy
      */
     public function restoreAny(Seller $seller): bool
     {
-        return $seller->can('restore_any_expanse');
+        return $seller->can('restore_any_expanses::expanse');
     }
 
     /**
@@ -92,7 +95,7 @@ class ExpansePolicy extends BasePolicy
      */
     public function replicate(Seller $seller, Expanse $expanse): bool
     {
-        return $seller->can('replicate_expanse');
+        return $seller->can('replicate_expanses::expanse');
     }
 
     /**
@@ -100,6 +103,6 @@ class ExpansePolicy extends BasePolicy
      */
     public function reorder(Seller $seller): bool
     {
-        return $seller->can('reorder_expanse');
+        return $seller->can('reorder_expanses::expanse');
     }
 }

@@ -9,7 +9,6 @@ use Carbon\Carbon;
 use Filament\Models\Contracts\FilamentUser;
 use Filament\Notifications\Notification;
 use Filament\Panel;
-use Filament\Panel\Concerns\HasTenancy;
 use Illuminate\Contracts\Auth\MustVerifyEmail;
 use Illuminate\Database\Eloquent\Attributes\ObservedBy;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
@@ -21,10 +20,9 @@ use Laravel\Sanctum\HasApiTokens;
 use Spatie\MediaLibrary\HasMedia;
 use Spatie\MediaLibrary\InteractsWithMedia;
 use Spatie\Permission\Traits\HasRoles;
-use Stancl\Tenancy\Database\Concerns\HasDomains;
 
 #[ObservedBy([SellerObserver::class])]
-class Seller extends Authenticatable implements FilamentUser, HasMedia //, MustVerifyEmail
+class Seller extends Authenticatable implements FilamentUser, HasMedia // , MustVerifyEmail
 {
     use HasApiTokens, HasFactory, HasPanelShield, HasRoles, InteractsWithMedia, Notifiable, SoftDeletes;
 
@@ -49,6 +47,25 @@ class Seller extends Authenticatable implements FilamentUser, HasMedia //, MustV
         'telegram_chat_id',
     ];
 
+    protected static function boot(): void
+    {
+        parent::boot();
+
+        static::saved(function ($seller) {
+            // Clear cache for all tenants this seller belongs to
+            foreach ($seller->tenants as $tenant) {
+                \Illuminate\Support\Facades\Cache::forget('tenant_seller_'.$tenant->id);
+            }
+        });
+
+        static::deleted(function ($seller) {
+            // Clear cache for all tenants this seller belongs to
+            foreach ($seller->tenants as $tenant) {
+                \Illuminate\Support\Facades\Cache::forget('tenant_seller_'.$tenant->id);
+            }
+        });
+    }
+
     protected $hidden = [
         'password',
         'remember_token',
@@ -66,7 +83,6 @@ class Seller extends Authenticatable implements FilamentUser, HasMedia //, MustV
     {
         return $this->belongsToMany(Tenant::class, 'tenant_seller', 'seller_id', 'tenant_id');
     }
-
 
     // Setting one-to-one relationship
     public function setting()
@@ -199,12 +215,13 @@ class Seller extends Authenticatable implements FilamentUser, HasMedia //, MustV
             $currentTenantId = tenant('id');
 
             // Check if seller belongs to current tenant using the many-to-many relationship
-            if (!$this->tenants()->where('tenant_id', $currentTenantId)->exists()) {
+            if (! $this->tenants()->where('tenant_id', $currentTenantId)->exists()) {
                 Notification::make()
                     ->title('Access Denied')
                     ->body('You do not have access to this tenant domain.')
                     ->danger()
                     ->send();
+
                 return false; // Deny access if seller doesn't belong to current tenant
             }
         }

@@ -4,15 +4,18 @@ namespace App\Policies;
 
 use App\Models\Seller;
 use App\Models\SellerSubscription;
+use Illuminate\Auth\Access\HandlesAuthorization;
 
 class SellerSubscriptionPolicy extends BasePolicy
 {
+    use HandlesAuthorization;
+
     /**
      * Determine whether the seller can view any models.
      */
     public function viewAny(Seller $seller): bool
     {
-        return $seller->can('view_any_seller::subscription');
+        return $seller->can('view_any_seller::subscriptions::seller::subscription');
     }
 
     /**
@@ -20,7 +23,7 @@ class SellerSubscriptionPolicy extends BasePolicy
      */
     public function view(Seller $seller, SellerSubscription $sellerSubscription): bool
     {
-        return $seller->can('view_seller::subscription');
+        return $seller->can('view_seller::subscriptions::seller::subscription');
     }
 
     /**
@@ -28,7 +31,7 @@ class SellerSubscriptionPolicy extends BasePolicy
      */
     public function create(Seller $seller): bool
     {
-        return $seller->can('create_seller::subscription');
+        return $seller->can('create_seller::subscriptions::seller::subscription');
     }
 
     /**
@@ -36,7 +39,7 @@ class SellerSubscriptionPolicy extends BasePolicy
      */
     public function update(Seller $seller, SellerSubscription $sellerSubscription): bool
     {
-        return $seller->can('update_seller::subscription');
+        return $seller->can('update_seller::subscriptions::seller::subscription');
     }
 
     /**
@@ -44,7 +47,7 @@ class SellerSubscriptionPolicy extends BasePolicy
      */
     public function delete(Seller $seller, SellerSubscription $sellerSubscription): bool
     {
-        return $seller->can('delete_seller::subscription');
+        return $seller->can('delete_seller::subscriptions::seller::subscription');
     }
 
     /**
@@ -52,7 +55,7 @@ class SellerSubscriptionPolicy extends BasePolicy
      */
     public function deleteAny(Seller $seller): bool
     {
-        return $seller->can('delete_any_seller::subscription');
+        return $seller->can('delete_any_seller::subscriptions::seller::subscription');
     }
 
     /**
@@ -60,7 +63,7 @@ class SellerSubscriptionPolicy extends BasePolicy
      */
     public function forceDelete(Seller $seller, SellerSubscription $sellerSubscription): bool
     {
-        return $seller->can('force_delete_seller::subscription');
+        return $seller->can('force_delete_seller::subscriptions::seller::subscription');
     }
 
     /**
@@ -68,7 +71,7 @@ class SellerSubscriptionPolicy extends BasePolicy
      */
     public function forceDeleteAny(Seller $seller): bool
     {
-        return $seller->can('force_delete_any_seller::subscription');
+        return $seller->can('force_delete_any_seller::subscriptions::seller::subscription');
     }
 
     /**
@@ -76,7 +79,7 @@ class SellerSubscriptionPolicy extends BasePolicy
      */
     public function restore(Seller $seller, SellerSubscription $sellerSubscription): bool
     {
-        return $seller->can('restore_seller::subscription');
+        return $seller->can('restore_seller::subscriptions::seller::subscription');
     }
 
     /**
@@ -84,7 +87,7 @@ class SellerSubscriptionPolicy extends BasePolicy
      */
     public function restoreAny(Seller $seller): bool
     {
-        return $seller->can('restore_any_seller::subscription');
+        return $seller->can('restore_any_seller::subscriptions::seller::subscription');
     }
 
     /**
@@ -92,7 +95,7 @@ class SellerSubscriptionPolicy extends BasePolicy
      */
     public function replicate(Seller $seller, SellerSubscription $sellerSubscription): bool
     {
-        return $seller->can('replicate_seller::subscription');
+        return $seller->can('replicate_seller::subscriptions::seller::subscription');
     }
 
     /**
@@ -100,6 +103,6 @@ class SellerSubscriptionPolicy extends BasePolicy
      */
     public function reorder(Seller $seller): bool
     {
-        return $seller->can('reorder_seller::subscription');
+        return $seller->can('reorder_seller::subscriptions::seller::subscription');
     }
 }

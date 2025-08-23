@@ -2,17 +2,20 @@
 
 namespace App\Policies;
 
-use App\Models\Currency;
 use App\Models\Seller;
+use App\Models\Currency;
+use Illuminate\Auth\Access\HandlesAuthorization;
 
 class CurrencyPolicy extends BasePolicy
 {
+    use HandlesAuthorization;
+
     /**
      * Determine whether the seller can view any models.
      */
     public function viewAny(Seller $seller): bool
     {
-        return $seller->can('view_any_currency');
+        return $seller->can('view_any_currencies::currency');
     }
 
     /**
@@ -20,7 +23,7 @@ class CurrencyPolicy extends BasePolicy
      */
     public function view(Seller $seller, Currency $currency): bool
     {
-        return $seller->can('view_currency');
+        return $seller->can('view_currencies::currency');
     }
 
     /**
@@ -28,7 +31,7 @@ class CurrencyPolicy extends BasePolicy
      */
     public function create(Seller $seller): bool
     {
-        return $seller->can('create_currency');
+        return $seller->can('create_currencies::currency');
     }
 
     /**
@@ -36,7 +39,7 @@ class CurrencyPolicy extends BasePolicy
      */
     public function update(Seller $seller, Currency $currency): bool
     {
-        return $seller->can('update_currency');
+        return $seller->can('update_currencies::currency');
     }
 
     /**
@@ -44,7 +47,7 @@ class CurrencyPolicy extends BasePolicy
      */
     public function delete(Seller $seller, Currency $currency): bool
     {
-        return $seller->can('delete_currency');
+        return $seller->can('delete_currencies::currency');
     }
 
     /**
@@ -52,7 +55,7 @@ class CurrencyPolicy extends BasePolicy
      */
     public function deleteAny(Seller $seller): bool
     {
-        return $seller->can('delete_any_currency');
+        return $seller->can('delete_any_currencies::currency');
     }
 
     /**
@@ -60,7 +63,7 @@ class CurrencyPolicy extends BasePolicy
      */
     public function forceDelete(Seller $seller, Currency $currency): bool
     {
-        return $seller->can('force_delete_currency');
+        return $seller->can('force_delete_currencies::currency');
     }
 
     /**
@@ -68,7 +71,7 @@ class CurrencyPolicy extends BasePolicy
      */
     public function forceDeleteAny(Seller $seller): bool
     {
-        return $seller->can('force_delete_any_currency');
+        return $seller->can('force_delete_any_currencies::currency');
     }
 
     /**
@@ -76,7 +79,7 @@ class CurrencyPolicy extends BasePolicy
      */
     public function restore(Seller $seller, Currency $currency): bool
     {
-        return $seller->can('restore_currency');
+        return $seller->can('restore_currencies::currency');
     }
 
     /**
@@ -84,7 +87,7 @@ class CurrencyPolicy extends BasePolicy
      */
     public function restoreAny(Seller $seller): bool
     {
-        return $seller->can('restore_any_currency');
+        return $seller->can('restore_any_currencies::currency');
     }
 
     /**
@@ -92,7 +95,7 @@ class CurrencyPolicy extends BasePolicy
      */
     public function replicate(Seller $seller, Currency $currency): bool
     {
-        return $seller->can('replicate_currency');
+        return $seller->can('replicate_currencies::currency');
     }
 
     /**
@@ -100,6 +103,6 @@ class CurrencyPolicy extends BasePolicy
      */
     public function reorder(Seller $seller): bool
     {
-        return $seller->can('reorder_currency');
+        return $seller->can('reorder_currencies::currency');
     }
 }

@@ -7,6 +7,7 @@ use App\Models\GiftExchange;
 use App\Models\PointTransaction;
 use App\Models\User;
 use Exception;
+use Illuminate\Support\Facades\Cache;
 use Illuminate\Support\Facades\DB;
 
 class PointService
@@ -26,6 +27,9 @@ class PointService
             // Update user's point balance
             $user->increment('points', $points);
             $user->refresh();
+
+            // Clear cache for this user
+            $this->clearUserCache($user);
 
             // Create transaction record
             return PointTransaction::create([
@@ -62,6 +66,9 @@ class PointService
             // Update user's point balance
             $user->decrement('points', $points);
             $user->refresh();
+
+            // Clear cache for this user
+            $this->clearUserCache($user);
 
             // Create transaction record
             return PointTransaction::create([
@@ -202,10 +209,14 @@ class PointService
      */
     public function getTransactionHistory(User $user, int $limit = 50)
     {
-        return PointTransaction::where('user_id', $user->id)
-            ->orderBy('created_at', 'desc')
-            ->limit($limit)
-            ->get();
+        $cacheKey = "user_transactions_{$user->id}_{$limit}";
+
+        return Cache::remember($cacheKey, 3600, function () use ($user, $limit) {
+            return PointTransaction::where('user_id', $user->id)
+                ->orderBy('created_at', 'desc')
+                ->limit($limit)
+                ->get();
+        });
     }
 
     /**
@@ -213,14 +224,33 @@ class PointService
      */
     public function getPointsSummary(User $user): array
     {
-        $transactions = PointTransaction::where('user_id', $user->id);
+        $cacheKey = "user_points_summary_{$user->id}";
 
-        return [
-            'current_balance' => $user->points,
-            'total_earned' => $transactions->clone()->where('type', 'earned')->sum('points'),
-            'total_spent' => abs($transactions->clone()->where('type', 'spent')->sum('points')),
-            'total_expired' => abs($transactions->clone()->where('type', 'expired')->sum('points')),
-            'transaction_count' => $transactions->count(),
-        ];
+        return Cache::remember($cacheKey, 3600, function () use ($user) {
+            $transactions = PointTransaction::where('user_id', $user->id);
+
+            return [
+                'current_balance' => $user->points,
+                'total_earned' => $transactions->clone()->where('type', 'earned')->sum('points'),
+                'total_spent' => abs($transactions->clone()->where('type', 'spent')->sum('points')),
+                'total_expired' => abs($transactions->clone()->where('type', 'expired')->sum('points')),
+                'transaction_count' => $transactions->count(),
+            ];
+        });
+    }
+
+    /**
+     * Clear cached data for a user
+     */
+    protected function clearUserCache(User $user): void
+    {
+        // Clear points summary cache
+        Cache::forget("user_points_summary_{$user->id}");
+
+        // Clear transaction history cache for different limits (common limits)
+        $commonLimits = [10, 20, 50, 100];
+        foreach ($commonLimits as $limit) {
+            Cache::forget("user_transactions_{$user->id}_{$limit}");
+        }
     }
 }

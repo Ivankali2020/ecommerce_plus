@@ -2,17 +2,20 @@
 
 namespace App\Policies;
 
-use App\Models\Exchange;
 use App\Models\Seller;
+use App\Models\Exchange;
+use Illuminate\Auth\Access\HandlesAuthorization;
 
 class ExchangePolicy extends BasePolicy
 {
+    use HandlesAuthorization;
+
     /**
      * Determine whether the seller can view any models.
      */
     public function viewAny(Seller $seller): bool
     {
-        return $seller->can('view_any_exchange');
+        return $seller->can('view_any_exchanges::exchange');
     }
 
     /**
@@ -20,7 +23,7 @@ class ExchangePolicy extends BasePolicy
      */
     public function view(Seller $seller, Exchange $exchange): bool
     {
-        return $seller->can('view_exchange');
+        return $seller->can('view_exchanges::exchange');
     }
 
     /**
@@ -28,7 +31,7 @@ class ExchangePolicy extends BasePolicy
      */
     public function create(Seller $seller): bool
     {
-        return $seller->can('create_exchange');
+        return $seller->can('create_exchanges::exchange');
     }
 
     /**
@@ -36,7 +39,7 @@ class ExchangePolicy extends BasePolicy
      */
     public function update(Seller $seller, Exchange $exchange): bool
     {
-        return $seller->can('update_exchange');
+        return $seller->can('update_exchanges::exchange');
     }
 
     /**
@@ -44,7 +47,7 @@ class ExchangePolicy extends BasePolicy
      */
     public function delete(Seller $seller, Exchange $exchange): bool
     {
-        return $seller->can('delete_exchange');
+        return $seller->can('delete_exchanges::exchange');
     }
 
     /**
@@ -52,7 +55,7 @@ class ExchangePolicy extends BasePolicy
      */
     public function deleteAny(Seller $seller): bool
     {
-        return $seller->can('delete_any_exchange');
+        return $seller->can('delete_any_exchanges::exchange');
     }
 
     /**
@@ -60,7 +63,7 @@ class ExchangePolicy extends BasePolicy
      */
     public function forceDelete(Seller $seller, Exchange $exchange): bool
     {
-        return $seller->can('force_delete_exchange');
+        return $seller->can('force_delete_exchanges::exchange');
     }
 
     /**
@@ -68,7 +71,7 @@ class ExchangePolicy extends BasePolicy
      */
     public function forceDeleteAny(Seller $seller): bool
     {
-        return $seller->can('force_delete_any_exchange');
+        return $seller->can('force_delete_any_exchanges::exchange');
     }
 
     /**
@@ -76,7 +79,7 @@ class ExchangePolicy extends BasePolicy
      */
     public function restore(Seller $seller, Exchange $exchange): bool
     {
-        return $seller->can('restore_exchange');
+        return $seller->can('restore_exchanges::exchange');
     }
 
     /**
@@ -84,7 +87,7 @@ class ExchangePolicy extends BasePolicy
      */
     public function restoreAny(Seller $seller): bool
     {
-        return $seller->can('restore_any_exchange');
+        return $seller->can('restore_any_exchanges::exchange');
     }
 
     /**
@@ -92,7 +95,7 @@ class ExchangePolicy extends BasePolicy
      */
     public function replicate(Seller $seller, Exchange $exchange): bool
     {
-        return $seller->can('replicate_exchange');
+        return $seller->can('replicate_exchanges::exchange');
     }
 
     /**
@@ -100,6 +103,6 @@ class ExchangePolicy extends BasePolicy
      */
     public function reorder(Seller $seller): bool
     {
-        return $seller->can('reorder_exchange');
+        return $seller->can('reorder_exchanges::exchange');
     }
 }

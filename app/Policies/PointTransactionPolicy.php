@@ -2,17 +2,20 @@
 
 namespace App\Policies;
 
-use App\Models\PointTransaction;
 use App\Models\Seller;
+use App\Models\PointTransaction;
+use Illuminate\Auth\Access\HandlesAuthorization;
 
 class PointTransactionPolicy extends BasePolicy
 {
+    use HandlesAuthorization;
+
     /**
      * Determine whether the seller can view any models.
      */
     public function viewAny(Seller $seller): bool
     {
-        return $seller->can('view_any_point::transaction');
+        return $seller->can('view_any_point::transactions::point::transaction');
     }
 
     /**
@@ -20,7 +23,7 @@ class PointTransactionPolicy extends BasePolicy
      */
     public function view(Seller $seller, PointTransaction $pointTransaction): bool
     {
-        return $seller->can('view_point::transaction');
+        return $seller->can('view_point::transactions::point::transaction');
     }
 
     /**
@@ -28,7 +31,7 @@ class PointTransactionPolicy extends BasePolicy
      */
     public function create(Seller $seller): bool
     {
-        return $seller->can('create_point::transaction');
+        return $seller->can('create_point::transactions::point::transaction');
     }
 
     /**
@@ -36,7 +39,7 @@ class PointTransactionPolicy extends BasePolicy
      */
     public function update(Seller $seller, PointTransaction $pointTransaction): bool
     {
-        return $seller->can('update_point::transaction');
+        return $seller->can('update_point::transactions::point::transaction');
     }
 
     /**
@@ -44,7 +47,7 @@ class PointTransactionPolicy extends BasePolicy
      */
     public function delete(Seller $seller, PointTransaction $pointTransaction): bool
     {
-        return $seller->can('delete_point::transaction');
+        return $seller->can('delete_point::transactions::point::transaction');
     }
 
     /**
@@ -52,7 +55,7 @@ class PointTransactionPolicy extends BasePolicy
      */
     public function deleteAny(Seller $seller): bool
     {
-        return $seller->can('delete_any_point::transaction');
+        return $seller->can('delete_any_point::transactions::point::transaction');
     }
 
     /**
@@ -60,7 +63,7 @@ class PointTransactionPolicy extends BasePolicy
      */
     public function forceDelete(Seller $seller, PointTransaction $pointTransaction): bool
     {
-        return $seller->can('force_delete_point::transaction');
+        return $seller->can('force_delete_point::transactions::point::transaction');
     }
 
     /**
@@ -68,7 +71,7 @@ class PointTransactionPolicy extends BasePolicy
      */
     public function forceDeleteAny(Seller $seller): bool
     {
-        return $seller->can('force_delete_any_point::transaction');
+        return $seller->can('force_delete_any_point::transactions::point::transaction');
     }
 
     /**
@@ -76,7 +79,7 @@ class PointTransactionPolicy extends BasePolicy
      */
     public function restore(Seller $seller, PointTransaction $pointTransaction): bool
     {
-        return $seller->can('restore_point::transaction');
+        return $seller->can('restore_point::transactions::point::transaction');
     }
 
     /**
@@ -84,7 +87,7 @@ class PointTransactionPolicy extends BasePolicy
      */
     public function restoreAny(Seller $seller): bool
     {
-        return $seller->can('restore_any_point::transaction');
+        return $seller->can('restore_any_point::transactions::point::transaction');
     }
 
     /**
@@ -92,7 +95,7 @@ class PointTransactionPolicy extends BasePolicy
      */
     public function replicate(Seller $seller, PointTransaction $pointTransaction): bool
     {
-        return $seller->can('replicate_point::transaction');
+        return $seller->can('replicate_point::transactions::point::transaction');
     }
 
     /**
@@ -100,6 +103,6 @@ class PointTransactionPolicy extends BasePolicy
      */
     public function reorder(Seller $seller): bool
     {
-        return $seller->can('reorder_point::transaction');
+        return $seller->can('reorder_point::transactions::point::transaction');
     }
 }

@@ -2,17 +2,20 @@
 
 namespace App\Policies;
 
-use App\Models\Admin;
 use App\Models\Seller;
+use App\Models\Admin;
+use Illuminate\Auth\Access\HandlesAuthorization;
 
 class AdminPolicy extends BasePolicy
 {
+    use HandlesAuthorization;
+
     /**
      * Determine whether the seller can view any models.
      */
     public function viewAny(Seller $seller): bool
     {
-        return $seller->can('view_any_admin');
+        return $seller->can('view_any_admins::admin');
     }
 
     /**
@@ -20,7 +23,7 @@ class AdminPolicy extends BasePolicy
      */
     public function view(Seller $seller, Admin $admin): bool
     {
-        return $seller->can('view_admin');
+        return $seller->can('view_admins::admin');
     }
 
     /**
@@ -28,7 +31,7 @@ class AdminPolicy extends BasePolicy
      */
     public function create(Seller $seller): bool
     {
-        return $seller->can('create_admin');
+        return $seller->can('create_admins::admin');
     }
 
     /**
@@ -36,7 +39,7 @@ class AdminPolicy extends BasePolicy
      */
     public function update(Seller $seller, Admin $admin): bool
     {
-        return $seller->can('update_admin');
+        return $seller->can('update_admins::admin');
     }
 
     /**
@@ -44,7 +47,7 @@ class AdminPolicy extends BasePolicy
      */
     public function delete(Seller $seller, Admin $admin): bool
     {
-        return $seller->can('delete_admin');
+        return $seller->can('delete_admins::admin');
     }
 
     /**
@@ -52,7 +55,7 @@ class AdminPolicy extends BasePolicy
      */
     public function deleteAny(Seller $seller): bool
     {
-        return $seller->can('delete_any_admin');
+        return $seller->can('delete_any_admins::admin');
     }
 
     /**
@@ -60,7 +63,7 @@ class AdminPolicy extends BasePolicy
      */
     public function forceDelete(Seller $seller, Admin $admin): bool
     {
-        return $seller->can('force_delete_admin');
+        return $seller->can('force_delete_admins::admin');
     }
 
     /**
@@ -68,7 +71,7 @@ class AdminPolicy extends BasePolicy
      */
     public function forceDeleteAny(Seller $seller): bool
     {
-        return $seller->can('force_delete_any_admin');
+        return $seller->can('force_delete_any_admins::admin');
     }
 
     /**
@@ -76,7 +79,7 @@ class AdminPolicy extends BasePolicy
      */
     public function restore(Seller $seller, Admin $admin): bool
     {
-        return $seller->can('restore_admin');
+        return $seller->can('restore_admins::admin');
     }
 
     /**
@@ -84,7 +87,7 @@ class AdminPolicy extends BasePolicy
      */
     public function restoreAny(Seller $seller): bool
     {
-        return $seller->can('restore_any_admin');
+        return $seller->can('restore_any_admins::admin');
     }
 
     /**
@@ -92,7 +95,7 @@ class AdminPolicy extends BasePolicy
      */
     public function replicate(Seller $seller, Admin $admin): bool
     {
-        return $seller->can('replicate_admin');
+        return $seller->can('replicate_admins::admin');
     }
 
     /**
@@ -100,6 +103,6 @@ class AdminPolicy extends BasePolicy
      */
     public function reorder(Seller $seller): bool
     {
-        return $seller->can('reorder_admin');
+        return $seller->can('reorder_admins::admin');
     }
 }

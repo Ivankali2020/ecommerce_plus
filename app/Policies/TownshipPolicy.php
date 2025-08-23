@@ -4,15 +4,18 @@ namespace App\Policies;
 
 use App\Models\Seller;
 use App\Models\Township;
+use Illuminate\Auth\Access\HandlesAuthorization;
 
 class TownshipPolicy extends BasePolicy
 {
+    use HandlesAuthorization;
+
     /**
      * Determine whether the seller can view any models.
      */
     public function viewAny(Seller $seller): bool
     {
-        return $seller->can('view_any_township');
+        return $seller->can('view_any_townships::township');
     }
 
     /**
@@ -20,7 +23,7 @@ class TownshipPolicy extends BasePolicy
      */
     public function view(Seller $seller, Township $township): bool
     {
-        return $seller->can('view_township');
+        return $seller->can('view_townships::township');
     }
 
     /**
@@ -28,7 +31,7 @@ class TownshipPolicy extends BasePolicy
      */
     public function create(Seller $seller): bool
     {
-        return $seller->can('create_township');
+        return $seller->can('create_townships::township');
     }
 
     /**
@@ -36,7 +39,7 @@ class TownshipPolicy extends BasePolicy
      */
     public function update(Seller $seller, Township $township): bool
     {
-        return $seller->can('update_township');
+        return $seller->can('update_townships::township');
     }
 
     /**
@@ -44,7 +47,7 @@ class TownshipPolicy extends BasePolicy
      */
     public function delete(Seller $seller, Township $township): bool
     {
-        return $seller->can('delete_township');
+        return $seller->can('delete_townships::township');
     }
 
     /**
@@ -52,7 +55,7 @@ class TownshipPolicy extends BasePolicy
      */
     public function deleteAny(Seller $seller): bool
     {
-        return $seller->can('delete_any_township');
+        return $seller->can('delete_any_townships::township');
     }
 
     /**
@@ -60,7 +63,7 @@ class TownshipPolicy extends BasePolicy
      */
     public function forceDelete(Seller $seller, Township $township): bool
     {
-        return $seller->can('force_delete_township');
+        return $seller->can('force_delete_townships::township');
     }
 
     /**
@@ -68,7 +71,7 @@ class TownshipPolicy extends BasePolicy
      */
     public function forceDeleteAny(Seller $seller): bool
     {
-        return $seller->can('force_delete_any_township');
+        return $seller->can('force_delete_any_townships::township');
     }
 
     /**
@@ -76,7 +79,7 @@ class TownshipPolicy extends BasePolicy
      */
     public function restore(Seller $seller, Township $township): bool
     {
-        return $seller->can('restore_township');
+        return $seller->can('restore_townships::township');
     }
 
     /**
@@ -84,7 +87,7 @@ class TownshipPolicy extends BasePolicy
      */
     public function restoreAny(Seller $seller): bool
     {
-        return $seller->can('restore_any_township');
+        return $seller->can('restore_any_townships::township');
     }
 
     /**
@@ -92,7 +95,7 @@ class TownshipPolicy extends BasePolicy
      */
     public function replicate(Seller $seller, Township $township): bool
     {
-        return $seller->can('replicate_township');
+        return $seller->can('replicate_townships::township');
     }
 
     /**
@@ -100,6 +103,6 @@ class TownshipPolicy extends BasePolicy
      */
     public function reorder(Seller $seller): bool
     {
-        return $seller->can('reorder_township');
+        return $seller->can('reorder_townships::township');
     }
 }

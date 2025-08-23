@@ -2,17 +2,20 @@
 
 namespace App\Policies;
 
-use App\Models\Payment;
 use App\Models\Seller;
+use App\Models\Payment;
+use Illuminate\Auth\Access\HandlesAuthorization;
 
 class PaymentPolicy extends BasePolicy
 {
+    use HandlesAuthorization;
+
     /**
      * Determine whether the seller can view any models.
      */
     public function viewAny(Seller $seller): bool
     {
-        return $seller->can('view_any_payment');
+        return $seller->can('view_any_payments::payment');
     }
 
     /**
@@ -20,7 +23,7 @@ class PaymentPolicy extends BasePolicy
      */
     public function view(Seller $seller, Payment $payment): bool
     {
-        return $seller->can('view_payment');
+        return $seller->can('view_payments::payment');
     }
 
     /**
@@ -28,7 +31,7 @@ class PaymentPolicy extends BasePolicy
      */
     public function create(Seller $seller): bool
     {
-        return $seller->can('create_payment');
+        return $seller->can('create_payments::payment');
     }
 
     /**
@@ -36,7 +39,7 @@ class PaymentPolicy extends BasePolicy
      */
     public function update(Seller $seller, Payment $payment): bool
     {
-        return $seller->can('update_payment');
+        return $seller->can('update_payments::payment');
     }
 
     /**
@@ -44,7 +47,7 @@ class PaymentPolicy extends BasePolicy
      */
     public function delete(Seller $seller, Payment $payment): bool
     {
-        return $seller->can('delete_payment');
+        return $seller->can('delete_payments::payment');
     }
 
     /**
@@ -52,7 +55,7 @@ class PaymentPolicy extends BasePolicy
      */
     public function deleteAny(Seller $seller): bool
     {
-        return $seller->can('delete_any_payment');
+        return $seller->can('delete_any_payments::payment');
     }
 
     /**
@@ -60,7 +63,7 @@ class PaymentPolicy extends BasePolicy
      */
     public function forceDelete(Seller $seller, Payment $payment): bool
     {
-        return $seller->can('force_delete_payment');
+        return $seller->can('force_delete_payments::payment');
     }
 
     /**
@@ -68,7 +71,7 @@ class PaymentPolicy extends BasePolicy
      */
     public function forceDeleteAny(Seller $seller): bool
     {
-        return $seller->can('force_delete_any_payment');
+        return $seller->can('force_delete_any_payments::payment');
     }
 
     /**
@@ -76,7 +79,7 @@ class PaymentPolicy extends BasePolicy
      */
     public function restore(Seller $seller, Payment $payment): bool
     {
-        return $seller->can('restore_payment');
+        return $seller->can('restore_payments::payment');
     }
 
     /**
@@ -84,7 +87,7 @@ class PaymentPolicy extends BasePolicy
      */
     public function restoreAny(Seller $seller): bool
     {
-        return $seller->can('restore_any_payment');
+        return $seller->can('restore_any_payments::payment');
     }
 
     /**
@@ -92,7 +95,7 @@ class PaymentPolicy extends BasePolicy
      */
     public function replicate(Seller $seller, Payment $payment): bool
     {
-        return $seller->can('replicate_payment');
+        return $seller->can('replicate_payments::payment');
     }
 
     /**
@@ -100,6 +103,6 @@ class PaymentPolicy extends BasePolicy
      */
     public function reorder(Seller $seller): bool
     {
-        return $seller->can('reorder_payment');
+        return $seller->can('reorder_payments::payment');
     }
 }

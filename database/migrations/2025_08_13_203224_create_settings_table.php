@@ -18,6 +18,8 @@ return new class extends Migration
             $table->foreignIdFor(Seller::class)->constrained()->cascadeOnDelete()->cascadeOnUpdate();
             $table->foreignIdFor(Tenant::class)->constrained()->cascadeOnDelete()->cascadeOnUpdate();
             $table->json('data');
+            
+            $table->unique(['seller_id', 'tenant_id'], 'settings_seller_tenant_unique');
             $table->timestamps();
         });
     }

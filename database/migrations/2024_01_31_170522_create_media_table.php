@@ -27,6 +27,10 @@ return new class extends Migration
             $table->unsignedInteger('order_column')->nullable()->index();
 
             $table->nullableTimestamps();
+            
+            // Additional performance indexes
+            $table->index(['model_type', 'model_id', 'collection_name'], 'media_model_collection_idx');
+            $table->index(['collection_name', 'created_at'], 'media_collection_created_idx');
         });
     }
 };

@@ -62,6 +62,18 @@ return new class extends Migration
 
             // Make SKU unique per tenant
             $table->unique(['sku', 'tenant_id']);
+            
+            // Performance indexes
+            $table->index(['seller_id', 'is_public', 'deleted_at'], 'products_seller_public_deleted_idx');
+            $table->index(['category_id', 'is_public', 'deleted_at'], 'products_category_public_deleted_idx');
+            $table->index(['brand_id', 'is_public', 'deleted_at'], 'products_brand_public_deleted_idx');
+            $table->index(['is_public', 'is_recommended', 'deleted_at'], 'products_public_recommended_deleted_idx');
+            $table->index(['tenant_id', 'is_public', 'deleted_at'], 'products_tenant_public_deleted_idx');
+            $table->index(['name', 'tenant_id'], 'products_name_tenant_idx');
+            $table->index(['price', 'tenant_id'], 'products_price_tenant_idx');
+            $table->index(['mmk_price', 'tenant_id'], 'products_mmk_price_tenant_idx');
+            $table->index(['quantity', 'tenant_id'], 'products_quantity_tenant_idx');
+            $table->index(['created_at', 'tenant_id'], 'products_created_tenant_idx');
         });
     }
 

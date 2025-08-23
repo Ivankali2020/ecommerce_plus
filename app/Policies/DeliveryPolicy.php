@@ -2,17 +2,20 @@
 
 namespace App\Policies;
 
-use App\Models\Delivery;
 use App\Models\Seller;
+use App\Models\Delivery;
+use Illuminate\Auth\Access\HandlesAuthorization;
 
 class DeliveryPolicy extends BasePolicy
 {
+    use HandlesAuthorization;
+
     /**
      * Determine whether the seller can view any models.
      */
     public function viewAny(Seller $seller): bool
     {
-        return $seller->can('view_any_delivery');
+        return $seller->can('view_any_deliveries::delivery');
     }
 
     /**
@@ -20,7 +23,7 @@ class DeliveryPolicy extends BasePolicy
      */
     public function view(Seller $seller, Delivery $delivery): bool
     {
-        return $seller->can('view_delivery');
+        return $seller->can('view_deliveries::delivery');
     }
 
     /**
@@ -28,7 +31,7 @@ class DeliveryPolicy extends BasePolicy
      */
     public function create(Seller $seller): bool
     {
-        return $seller->can('create_delivery');
+        return $seller->can('create_deliveries::delivery');
     }
 
     /**
@@ -36,7 +39,7 @@ class DeliveryPolicy extends BasePolicy
      */
     public function update(Seller $seller, Delivery $delivery): bool
     {
-        return $seller->can('update_delivery');
+        return $seller->can('update_deliveries::delivery');
     }
 
     /**
@@ -44,7 +47,7 @@ class DeliveryPolicy extends BasePolicy
      */
     public function delete(Seller $seller, Delivery $delivery): bool
     {
-        return $seller->can('delete_delivery');
+        return $seller->can('delete_deliveries::delivery');
     }
 
     /**
@@ -52,7 +55,7 @@ class DeliveryPolicy extends BasePolicy
      */
     public function deleteAny(Seller $seller): bool
     {
-        return $seller->can('delete_any_delivery');
+        return $seller->can('delete_any_deliveries::delivery');
     }
 
     /**
@@ -60,7 +63,7 @@ class DeliveryPolicy extends BasePolicy
      */
     public function forceDelete(Seller $seller, Delivery $delivery): bool
     {
-        return $seller->can('force_delete_delivery');
+        return $seller->can('force_delete_deliveries::delivery');
     }
 
     /**
@@ -68,7 +71,7 @@ class DeliveryPolicy extends BasePolicy
      */
     public function forceDeleteAny(Seller $seller): bool
     {
-        return $seller->can('force_delete_any_delivery');
+        return $seller->can('force_delete_any_deliveries::delivery');
     }
 
     /**
@@ -76,7 +79,7 @@ class DeliveryPolicy extends BasePolicy
      */
     public function restore(Seller $seller, Delivery $delivery): bool
     {
-        return $seller->can('restore_delivery');
+        return $seller->can('restore_deliveries::delivery');
     }
 
     /**
@@ -84,7 +87,7 @@ class DeliveryPolicy extends BasePolicy
      */
     public function restoreAny(Seller $seller): bool
     {
-        return $seller->can('restore_any_delivery');
+        return $seller->can('restore_any_deliveries::delivery');
     }
 
     /**
@@ -92,7 +95,7 @@ class DeliveryPolicy extends BasePolicy
      */
     public function replicate(Seller $seller, Delivery $delivery): bool
     {
-        return $seller->can('replicate_delivery');
+        return $seller->can('replicate_deliveries::delivery');
     }
 
     /**
@@ -100,6 +103,6 @@ class DeliveryPolicy extends BasePolicy
      */
     public function reorder(Seller $seller): bool
     {
-        return $seller->can('reorder_delivery');
+        return $seller->can('reorder_deliveries::delivery');
     }
 }

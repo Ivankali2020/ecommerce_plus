@@ -21,6 +21,11 @@ return new class extends Migration
             $table->mediumText('description')->nullable();
             $table->softDeletes();
             $table->timestamps();
+            
+            // Performance indexes
+            $table->index(['seller_id', 'deleted_at'], 'brands_seller_deleted_idx');
+            $table->index(['tenant_id', 'deleted_at'], 'brands_tenant_deleted_idx');
+            $table->index(['name', 'tenant_id'], 'brands_name_tenant_idx');
         });
     }
 

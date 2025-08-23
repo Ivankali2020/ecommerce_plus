@@ -2,17 +2,20 @@
 
 namespace App\Policies;
 
-use App\Models\Brand;
 use App\Models\Seller;
+use App\Models\Brand;
+use Illuminate\Auth\Access\HandlesAuthorization;
 
 class BrandPolicy extends BasePolicy
 {
+    use HandlesAuthorization;
+
     /**
      * Determine whether the seller can view any models.
      */
     public function viewAny(Seller $seller): bool
     {
-        return $seller->can('view_any_brand');
+        return $seller->can('view_any_brands::brand');
     }
 
     /**
@@ -20,7 +23,7 @@ class BrandPolicy extends BasePolicy
      */
     public function view(Seller $seller, Brand $brand): bool
     {
-        return $seller->can('view_brand');
+        return $seller->can('view_brands::brand');
     }
 
     /**
@@ -28,7 +31,7 @@ class BrandPolicy extends BasePolicy
      */
     public function create(Seller $seller): bool
     {
-        return $seller->can('create_brand');
+        return $seller->can('create_brands::brand');
     }
 
     /**
@@ -36,7 +39,7 @@ class BrandPolicy extends BasePolicy
      */
     public function update(Seller $seller, Brand $brand): bool
     {
-        return $seller->can('update_brand');
+        return $seller->can('update_brands::brand');
     }
 
     /**
@@ -44,7 +47,7 @@ class BrandPolicy extends BasePolicy
      */
     public function delete(Seller $seller, Brand $brand): bool
     {
-        return $seller->can('delete_brand');
+        return $seller->can('delete_brands::brand');
     }
 
     /**
@@ -52,7 +55,7 @@ class BrandPolicy extends BasePolicy
      */
     public function deleteAny(Seller $seller): bool
     {
-        return $seller->can('delete_any_brand');
+        return $seller->can('delete_any_brands::brand');
     }
 
     /**
@@ -60,7 +63,7 @@ class BrandPolicy extends BasePolicy
      */
     public function forceDelete(Seller $seller, Brand $brand): bool
     {
-        return $seller->can('force_delete_brand');
+        return $seller->can('force_delete_brands::brand');
     }
 
     /**
@@ -68,7 +71,7 @@ class BrandPolicy extends BasePolicy
      */
     public function forceDeleteAny(Seller $seller): bool
     {
-        return $seller->can('force_delete_any_brand');
+        return $seller->can('force_delete_any_brands::brand');
     }
 
     /**
@@ -76,7 +79,7 @@ class BrandPolicy extends BasePolicy
      */
     public function restore(Seller $seller, Brand $brand): bool
     {
-        return $seller->can('restore_brand');
+        return $seller->can('restore_brands::brand');
     }
 
     /**
@@ -84,7 +87,7 @@ class BrandPolicy extends BasePolicy
      */
     public function restoreAny(Seller $seller): bool
     {
-        return $seller->can('restore_any_brand');
+        return $seller->can('restore_any_brands::brand');
     }
 
     /**
@@ -92,7 +95,7 @@ class BrandPolicy extends BasePolicy
      */
     public function replicate(Seller $seller, Brand $brand): bool
     {
-        return $seller->can('replicate_brand');
+        return $seller->can('replicate_brands::brand');
     }
 
     /**
@@ -100,6 +103,6 @@ class BrandPolicy extends BasePolicy
      */
     public function reorder(Seller $seller): bool
     {
-        return $seller->can('reorder_brand');
+        return $seller->can('reorder_brands::brand');
     }
 }

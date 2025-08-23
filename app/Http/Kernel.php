@@ -15,6 +15,7 @@ use App\Http\Middleware\RedirectIfSubscriptionExpired;
 use App\Http\Middleware\RedirectIfUnauthenticated;
 use App\Http\Middleware\SellerAuth;
 use App\Http\Middleware\SetLocale;
+use App\Http\Middleware\ShareTenantData;
 use App\Http\Middleware\SuperAdmin;
 use App\Http\Middleware\TrimStrings;
 use App\Http\Middleware\TrustProxies;
@@ -70,6 +71,7 @@ class Kernel extends HttpKernel
             VerifyCsrfToken::class,
             SubstituteBindings::class,
             SetLocale::class,
+            ShareTenantData::class,
         ],
 
         'api' => [
@@ -81,6 +83,7 @@ class Kernel extends HttpKernel
             RedirectIfUnauthenticated::class,
             RedirectIfSubscriptionExpired::class,
             SetLocale::class,
+            ShareTenantData::class,
         ],
     ];
 

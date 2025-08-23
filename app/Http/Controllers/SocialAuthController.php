@@ -20,13 +20,13 @@ class SocialAuthController extends Controller
     {
         $scheme = request()->isSecure() ? 'https' : 'http';
         $host = request()->getHost();
-        
+
         // Handle different environments
         if (app()->environment('production')) {
             // In production, ensure HTTPS
             $scheme = 'https';
         }
-        
+
         return "{$scheme}://{$host}/google/callback";
     }
 
@@ -34,10 +34,10 @@ class SocialAuthController extends Controller
     {
         // Set dynamic redirect URL based on current domain
         $redirectUrl = $this->getDynamicCallbackUrl();
-        
+
         // Temporarily override the config for this request
         config(['services.google.redirect' => $redirectUrl]);
-        
+
         return Socialite::driver('google')->redirect();
     }
 
@@ -47,19 +47,34 @@ class SocialAuthController extends Controller
             // Set the same dynamic redirect URL for the callback
             $redirectUrl = $this->getDynamicCallbackUrl();
             config(['services.google.redirect' => $redirectUrl]);
-            
+
             $googleUser = Socialite::driver('google')->user();
 
             // Find existing user or create new one
-            $user = User::firstOrCreate(
-                ['email' => $googleUser->email],
-                [
-                    'google_id' => $googleUser->id,
+            $user = User::where('email', $googleUser->email)->first();
+
+            if (! $user) {
+                $user = User::create([
                     'name' => $googleUser->name,
+                    'email' => $googleUser->email,
+                    'google_id' => $googleUser->id,
                     'password' => Hash::make(Str::random(24)),
-                    'email_verified_at' => now(), // Google accounts are already verified
-                ]
-            );
+                    'email_verified_at' => now(),
+                ]);
+            } else {
+                // Update existing user with Google ID if missing
+                if (! $user->google_id) {
+                    $user->update(['google_id' => $googleUser->id]);
+                }
+            }
+
+            // attach photo to profile_photo
+            if ($googleUser->avatar) {
+                // check have profile photo already
+                if (! $user->hasMedia('profile_photo')) {
+                    $user->addMediaFromUrl($googleUser->avatar)->toMediaCollection('profile_photo');
+                }
+            }
 
             // Log the user in
             Auth::login($user);

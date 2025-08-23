@@ -2,8 +2,8 @@
 
 namespace App\View\Components;
 
-use App\Helper\UserHelper;
 use App\Models\Seller;
+use Illuminate\Support\Facades\Cache;
 use Illuminate\View\Component;
 use Illuminate\View\View;
 
@@ -14,8 +14,13 @@ class Footer extends Component
      */
     public function render(): View
     {
-        $sellerId = UserHelper::getUserSellerId();
-        $seller = Seller::with(['payments.media', 'media'])->find($sellerId);
+        // $seller = Seller::with(['payments.media', 'media'])->find($sellerId);
+        $tenant = tenant('id');
+        $seller = Cache::remember("seller_{$tenant}", 60, function () use ($tenant) {
+            return Seller::where('tenant_id', $tenant)->with(['payments.media', 'media' , 'setting'])->first();
+        });
+
+        
 
         return view('components.footer', [
             'seller' => $seller,

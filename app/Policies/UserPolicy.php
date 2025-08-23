@@ -4,15 +4,18 @@ namespace App\Policies;
 
 use App\Models\Seller;
 use App\Models\User;
+use Illuminate\Auth\Access\HandlesAuthorization;
 
 class UserPolicy extends BasePolicy
 {
+    use HandlesAuthorization;
+
     /**
      * Determine whether the seller can view any models.
      */
     public function viewAny(Seller $seller): bool
     {
-        return $seller->can('view_any_user');
+        return $seller->can('view_any_users::user');
     }
 
     /**
@@ -20,7 +23,7 @@ class UserPolicy extends BasePolicy
      */
     public function view(Seller $seller, User $user): bool
     {
-        return $seller->can('view_user');
+        return $seller->can('view_users::user');
     }
 
     /**
@@ -28,7 +31,7 @@ class UserPolicy extends BasePolicy
      */
     public function create(Seller $seller): bool
     {
-        return $seller->can('create_user');
+        return $seller->can('create_users::user');
     }
 
     /**
@@ -36,7 +39,7 @@ class UserPolicy extends BasePolicy
      */
     public function update(Seller $seller, User $user): bool
     {
-        return $seller->can('update_user');
+        return $seller->can('update_users::user');
     }
 
     /**
@@ -44,7 +47,7 @@ class UserPolicy extends BasePolicy
      */
     public function delete(Seller $seller, User $user): bool
     {
-        return $seller->can('delete_user');
+        return $seller->can('delete_users::user');
     }
 
     /**
@@ -52,7 +55,7 @@ class UserPolicy extends BasePolicy
      */
     public function deleteAny(Seller $seller): bool
     {
-        return $seller->can('delete_any_user');
+        return $seller->can('delete_any_users::user');
     }
 
     /**
@@ -60,7 +63,7 @@ class UserPolicy extends BasePolicy
      */
     public function forceDelete(Seller $seller, User $user): bool
     {
-        return $seller->can('force_delete_user');
+        return $seller->can('force_delete_users::user');
     }
 
     /**
@@ -68,7 +71,7 @@ class UserPolicy extends BasePolicy
      */
     public function forceDeleteAny(Seller $seller): bool
     {
-        return $seller->can('force_delete_any_user');
+        return $seller->can('force_delete_any_users::user');
     }
 
     /**
@@ -76,7 +79,7 @@ class UserPolicy extends BasePolicy
      */
     public function restore(Seller $seller, User $user): bool
     {
-        return $seller->can('restore_user');
+        return $seller->can('restore_users::user');
     }
 
     /**
@@ -84,7 +87,7 @@ class UserPolicy extends BasePolicy
      */
     public function restoreAny(Seller $seller): bool
     {
-        return $seller->can('restore_any_user');
+        return $seller->can('restore_any_users::user');
     }
 
     /**
@@ -92,7 +95,7 @@ class UserPolicy extends BasePolicy
      */
     public function replicate(Seller $seller, User $user): bool
     {
-        return $seller->can('replicate_user');
+        return $seller->can('replicate_users::user');
     }
 
     /**
@@ -100,6 +103,6 @@ class UserPolicy extends BasePolicy
      */
     public function reorder(Seller $seller): bool
     {
-        return $seller->can('reorder_user');
+        return $seller->can('reorder_users::user');
     }
 }
