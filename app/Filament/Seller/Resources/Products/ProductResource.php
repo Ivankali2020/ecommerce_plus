@@ -35,6 +35,7 @@ use Filament\Schemas\Components\Utilities\Get;
 use Filament\Schemas\Components\Utilities\Set;
 use Filament\Schemas\Schema;
 use Filament\Tables;
+use Filament\Infolists\Components\TextEntry;
 use Filament\Tables\Columns\IconColumn;
 use Filament\Tables\Columns\TextColumn;
 use Filament\Tables\Enums\FiltersLayout;
@@ -46,6 +47,7 @@ use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\SoftDeletingScope;
 use Illuminate\Support\Str;
+use Filament\Actions\Action;
 
 class ProductResource extends Resource
 {
@@ -322,7 +324,16 @@ class ProductResource extends Resource
                                     ->panelLayout('grid')
                                     ->reorderable()
                                     ->label(__('filament/resources/product-resource.form.variants.images.label'))
-                                    ->image()->rules('required')->columnSpanFull(),
+                                    ->image()->rules('required|image|max:512')->columnSpanFull(),
+
+                                Section::make()->description('500 kb ထက် များနေပါက Optimize လုပ်ပေးပါရန် ')
+                                                ->afterHeader([
+                                                    Action::make('optimize image')
+                                                        ->size('sm')
+                                                        ->color('green')
+                                                        ->url('https://saruwakakun.com/tools/png-jpeg-to-webp/')
+                                                        ->openUrlInNewTab()
+                                                ])->columnSpanFull()
 
                             ])->columns(2),
 
@@ -380,12 +391,14 @@ class ProductResource extends Resource
                                                     // this is auto change discount price
                                                     self::getDiscountPrice($get, $set, true);
                                                 })
+                                                ->columnSpanFull()
                                                 ->default(0),
 
                                             TextInput::make('discount_price')
                                                 ->label(__('filament/resources/product-resource.form.variants.discount_price.label'))
                                                 ->numeric()
                                                 ->live(onBlur: true, debounce: 200)
+                                                ->columnSpanFull()
                                                 ->afterStateUpdated(function (Get $get, Set $set) {
                                                     // this is auto change discount percentage
                                                     self::getDiscountPercentage($get, $set, true);
@@ -478,14 +491,7 @@ class ProductResource extends Resource
 
                                                 ])->columns(1),
 
-                                            ])->columnSpanFull()->hidden(function (Get $get) {
-                                                // ဒါက admin အတွက်စစ်တာပါ ဗျာ
-                                                if (Filament::getAuthGuard() == 'admin') {
-                                                    return blank($get('../../seller_id'));
-                                                }
-
-                                                return false;
-                                            }),
+                                            ])->columnSpanFull(),
                                     ])->columnSpan(1),
 
                                 ])->columnSpanFull(),
@@ -494,15 +500,27 @@ class ProductResource extends Resource
                                     ->label(__('filament/resources/product-resource.form.variants.images.label'))
                                     ->helperText(__('filament/resources/product-resource.form.variants.images.helper_text'))
                                     ->collection('images')->imageEditor()->multiple()
+                                    ->image()->rules('required|image|max:1024')->columnSpanFull()
                                     ->panelLayout('grid')
                                     //    ->helperText('Clone Action လုပ်ပါက images ကို နောက်ဆုံးမှ ထည့်ပေးပါရန် (သို့) edit မှာ clone ပေးပါရန်')
                                     ->rules('required')->columnSpanFull(),
+
 
                             ])
                             ->columnSpanFull()
                             ->columns(3)
                             ->grid(2)
                             ->visible(fn (Get $get) => $get('has_variant') && ! blank($get('exchange_id'))),
+
+
+                                Section::make()->description('500 kb ထက် များနေပါက Optimize လုပ်ပေးပါရန် ')
+                                                ->afterHeader([
+                                                    Action::make('optimize image')
+                                                        ->size('sm')
+                                                        ->color('green')
+                                                        ->url('https://saruwakakun.com/tools/png-jpeg-to-webp/')
+                                                        ->openUrlInNewTab()
+                                                ])->columnSpanFull()->visible(fn (Get $get) => $get('has_variant') && ! blank($get('exchange_id'))),
                     ])->columnSpanFull(),
 
                 ])->columnSpanFull(),
