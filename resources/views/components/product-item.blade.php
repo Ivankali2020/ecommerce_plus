@@ -53,13 +53,15 @@
                 </div>
             @endif
 
-            <img
-                src="{{ $product->productImgThumb }}"
-                data-src="{{ $product->productImg }}"
-                class="rounded w-full h-32 md:h-48 lg:52 2xl:h-60 object-cover transition duration-700 ease-out group-hover:scale-105 lazyload blur-xs"
-                alt="{{ $displayName }}"
-                loading="lazy"
-            />
+            <picture>
+                <img
+                    src="{{ $product->productImgThumb }}"
+                    srcset="{{ $product->productImg }} 800w"
+                    class="rounded w-full h-32 md:h-48 lg:52 2xl:h-60 object-cover transition duration-700 ease-out group-hover:scale-105 lazyload"
+                    alt="{{ $displayName }}"
+                    loading="lazy"
+                />
+            </picture>
         </a>
 
         <div class="flex flex-col grow justify-between lg:gap-3 gap-2 lg:p-4 p-3 relative">

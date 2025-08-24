@@ -278,13 +278,15 @@
                         @foreach($products as $product)
                         <div class="bg-white rounded-xl shadow-lg overflow-hidden hover:shadow-xl transition-shadow duration-300" wire:key="product-{{ $product->id }}">
                             <a href="{{ route('product', $product->id ) }}" class="relative">
-                                <img
-                                    src="{{ $product->productImgThumb ?: asset('images/placeholder.jpg') }}"
-                                    data-src="{{ $product->productImg ?: asset('images/placeholder.jpg') }}"
-                                    alt="{{ $product->name }}"
-                                    class="w-full h-40 md:h-48 lg:52 2xl:h-60 object-cover lazyload blur-sm"
-                                    loading="lazy"
-                                >
+                                <picture>
+                                    <img
+                                        src="{{ $product->productImgThumb ?: $tenantSellerLogo }}"
+                                        srcset="{{ $product->productImg ?: $tenantSellerLogo }}"
+                                        alt="{{ $product->name }}"
+                                        class="w-full h-40 md:h-48 lg:52 2xl:h-60 object-cover lazyload "
+                                        loading="lazy"
+                                    >
+                                </picture>
                                 <div class="absolute top-2 right-2">
                                     <span class="bg-purple-100 text-purple-800 text-xs font-medium px-2.5 py-0.5 rounded-full">
                                         {{ __('messages.wholesale.wholesale') }}
@@ -380,13 +382,15 @@
                         @foreach($variants as $variant)
                         <div class="bg-white rounded-xl shadow-lg overflow-hidden hover:shadow-xl transition-shadow duration-300" wire:key="variant-{{ $variant->id }}">
                             <div class="relative">
-                                <img
-                                    src="{{ $variant->getFirstMediaUrl('images', 'thumb') ?: $variant->product->productImgThumb ?: asset('images/placeholder.jpg') }}"
-                                    data-src="{{ $variant->getFirstMediaUrl('images') ?: $variant->product->productImg ?: asset('images/placeholder.jpg') }}"
-                                    alt="{{ $variant->name }}"
-                                    class="w-full h-32 md:h-48 lg:52 2xl:h-60 object-cover lazyload blur-sm"
-                                    loading="lazy"
-                                >
+                                <picture>
+                                    <img
+                                        src="{{ $variant->getFirstMediaUrl('images', 'thumb') ?: $variant->product->productImgThumb ?: $tenantSellerLogo }}"
+                                        srcset="{{ $variant->getFirstMediaUrl('images') ?: $variant->product->productImg ?: $tenantSellerLogo }}"
+                                        alt="{{ $variant->name }}"
+                                        class="w-full h-32 md:h-48 lg:52 2xl:h-60 object-cover lazyload "
+                                        loading="lazy"
+                                    >
+                                </picture>
                                 <div class="absolute top-2 right-2">
                                     <span class="bg-blue-100 text-blue-800 text-xs font-medium px-2.5 py-0.5 rounded-full">
                                         {{ __('messages.wholesale.variant') }}

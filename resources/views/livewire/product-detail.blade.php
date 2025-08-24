@@ -40,10 +40,10 @@
                         </div>
                     </div>
                 @endif
-
+                
                 <img :src="selectedVariant ? selectedVariant.product_img : currentImage"
                     :data-src="selectedVariant ? selectedVariant.product_img : currentImage"
-                    class="h-full w-full object-cover rounded-md object-center lazyload blur-xs" loading="lazy">
+                    class="h-full w-full object-cover rounded-md object-center lazyload " loading="lazy">
 
             </div>
             @php
@@ -61,7 +61,7 @@
                         <div class="lg:p-2 p-1 h-16 w-16 lg:h-20 lg:w-20 border flex item-center justify-center rounded object-cover cursor-pointer hover:ring-1 hover:ring-slate-500 flex-shrink-0"
                             :class="currentImage == '{{ $media->getUrl() }}' ? 'ring-1 ring-slate-500' : ''">
                             <img src="{{ $media->getUrl('thumb') }}" data-src="{{ $media->getUrl() }}"
-                                class="rounded w-full h-full object-cover lazyload blur-xs" loading="lazy"
+                                class="rounded w-full h-full object-cover lazyload " loading="lazy"
                                 @click="currentImage = '{{ $media->getUrl() }}'; currentImageThumb = '{{ $media->getUrl('thumb') }}'; if(!selectedVariant) { selectedVariant = null; }else { selectedVariant.product_img = '{{ $media->getUrl() }}'; selectedVariant.product_img_thumb = '{{ $media->getUrl('thumb') }}'; }">
                         </div>
                     @endforeach
