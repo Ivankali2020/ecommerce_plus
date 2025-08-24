@@ -68,10 +68,10 @@
 
         <!-- Bottom Bar -->
         <div class="border-t border-gray-300 mt-8 pt-8 pb-16 lg:pb-0 flex flex-col sm:flex-row justify-between items-center">
-            <p class="text-gray-400 text-sm">
-                © {{ date('Y') }} {{ $seller ? $seller->name : __('messages.footer.company_info') }}. 
+            <a href="https://ivankali2020.github.io/porfolio/" class="text-gray-400 text-sm underline decoration-gray-200 underline-offset-7 hover:text-red-500">
+                {{-- © {{ date('Y') }} {{ $seller ? $seller->name : __('messages.footer.company_info') }}.  --}}
                 {{ __('messages.footer.all_rights_reserved') }}
-            </p>
+            </a>
             <div class="flex space-x-4 mt-4 sm:mt-0">
                 @php
                     $social = $seller && $seller->setting ? $seller->setting->data : [];
