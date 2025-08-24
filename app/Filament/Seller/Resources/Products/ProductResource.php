@@ -500,7 +500,7 @@ class ProductResource extends Resource
                                     ->label(__('filament/resources/product-resource.form.variants.images.label'))
                                     ->helperText(__('filament/resources/product-resource.form.variants.images.helper_text'))
                                     ->collection('images')->imageEditor()->multiple()
-                                    ->image()->rules('required|image|max:1024')->columnSpanFull()
+                                    ->image()->rules('required|image|max:512')->columnSpanFull()
                                     ->panelLayout('grid')
                                     //    ->helperText('Clone Action လုပ်ပါက images ကို နောက်ဆုံးမှ ထည့်ပေးပါရန် (သို့) edit မှာ clone ပေးပါရန်')
                                     ->rules('required')->columnSpanFull(),

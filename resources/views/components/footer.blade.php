@@ -3,18 +3,18 @@
     <div class="grid grid-cols-1 md:grid-cols-4 gap-4 md:gap-8">           
          <!-- Company Info -->           
           <div class="space-y-2 md:space-y-4">              
-              <h3 class="text-sm md:text-lg font-semibold">{{ __('messages.footer.company_info') }}</h3>                
+              <h3 class="text-md md:text-lg font-semibold">{{ __('messages.footer.company_info') }}</h3>                
                         @if($seller)                  
                           <div>                        
                             <h4 class="font-medium mb-4">{{ $seller->name }}</h4>                        
                         @if($seller->phone)
-                            <p class="text-xs md:text-sm lg:text-lg text-gray-500 mb-2">{{ __('messages.footer.phone') }}: {{ $seller->phone}}</p>
+                            <p class="text-sm lg:text-lg text-gray-500 mb-2">{{ __('messages.footer.phone') }}: {{ $seller->phone}}</p>
                         @endif
                         @if($seller->email)
-                            <p class="text-xs md:text-sm lg:text-lg text-gray-500 mb-2">{{ __('messages.footer.email') }}: {{ $seller->email }}</p>
+                            <p class="text-sm lg:text-lg text-gray-500 mb-2">{{ __('messages.footer.email') }}: {{ $seller->email }}</p>
                         @endif
                         @if($seller->address)
-                            <p class="text-xs md:text-sm lg:text-lg text-gray-500">{{ $seller->address }}</p>
+                            <p class="text-sm lg:text-lg text-gray-500">{{ $seller->address }}</p>
                         @endif
                     </div>
                 @endif
@@ -25,30 +25,30 @@
            
             <!-- Customer Support -->
             <div class="space-y-2 md:space-y-4">
-                <h3 class="text-sm md:text-lg font-semibold">{{ __('messages.footer.support') }}</h3>
+                <h3 class="text-md md:text-lg font-semibold">{{ __('messages.footer.support') }}</h3>
                 <ul class="space-y-2">
-                    <li><a href="{{ route('about-us') }}" class="text-xs md:text-sm lg:text-lg text-gray-500 hover:text-black transition-colors">{{ __('messages.footer.about_us') }}</a></li>
-                    <li><a href="{{ route('faq') }}" class="text-xs md:text-sm lg:text-lg text-gray-500 hover:text-black transition-colors">{{ __('messages.footer.faq') }}</a></li>
-                    <li><a href="{{ route('returns-exchanges') }}" class="text-xs md:text-sm lg:text-lg text-gray-500 hover:text-black transition-colors">{{ __('messages.footer.returns') }}</a></li>
-                    <li><a href="{{ route('privacy-policy') }}" class="text-xs md:text-sm lg:text-lg text-gray-500 hover:text-black transition-colors">{{ __('messages.footer.privacy_policy') }}</a></li>
-                    <li><a href="{{ route('terms-conditions') }}" class="text-xs md:text-sm lg:text-lg text-gray-500 hover:text-black transition-colors">{{ __('messages.footer.terms_conditions') }}</a></li>
+                    <li><a href="{{ route('about-us') }}" class="text-sm lg:text-lg text-gray-500 hover:text-black transition-colors">{{ __('messages.footer.about_us') }}</a></li>
+                    <li><a href="{{ route('faq') }}" class="text-sm lg:text-lg text-gray-500 hover:text-black transition-colors">{{ __('messages.footer.faq') }}</a></li>
+                    <li><a href="{{ route('returns-exchanges') }}" class="text-sm lg:text-lg text-gray-500 hover:text-black transition-colors">{{ __('messages.footer.returns') }}</a></li>
+                    <li><a href="{{ route('privacy-policy') }}" class="text-sm lg:text-lg text-gray-500 hover:text-black transition-colors">{{ __('messages.footer.privacy_policy') }}</a></li>
+                    <li><a href="{{ route('terms-conditions') }}" class="text-sm lg:text-lg text-gray-500 hover:text-black transition-colors">{{ __('messages.footer.terms_conditions') }}</a></li>
                 </ul>
             </div>
 
 
             <!-- Quick Links -->
             <div class="space-y-2 md:space-y-4  ">
-                <h3 class="text-sm md:text-lg font-semibold">{{ __('messages.footer.quick_links') }}</h3>
+                <h3 class="text-md md:text-lg font-semibold">{{ __('messages.footer.quick_links') }}</h3>
                 <ul class="space-y-2">
-                    <li><a href="{{ route('welcome') }}" class="text-xs md:text-sm lg:text-lg text-gray-500 hover:text-black transition-colors">{{ __('messages.navigation.main_store') }}</a></li>
-                    <li><a href="{{ route('products') }}" class="text-xs md:text-sm lg:text-lg text-gray-500 hover:text-black transition-colors">{{ __('messages.navigation.products') }}</a></li>
-                    <li><a href="{{ route('wholesale') }}" class="text-xs md:text-sm lg:text-lg text-gray-500 hover:text-black transition-colors">{{ __('messages.navigation.wholesale') }}</a></li>
-                    <li><a href="{{ route('delivery') }}" class="text-xs md:text-sm lg:text-lg text-gray-500 hover:text-black transition-colors">{{ __('messages.navigation.delivery') }}</a></li>
+                    <li><a href="{{ route('welcome') }}" class="text-sm lg:text-lg text-gray-500 hover:text-black transition-colors">{{ __('messages.navigation.main_store') }}</a></li>
+                    <li><a href="{{ route('products') }}" class="text-sm lg:text-lg text-gray-500 hover:text-black transition-colors">{{ __('messages.navigation.products') }}</a></li>
+                    <li><a href="{{ route('wholesale') }}" class="text-sm lg:text-lg text-gray-500 hover:text-black transition-colors">{{ __('messages.navigation.wholesale') }}</a></li>
+                    <li><a href="{{ route('delivery') }}" class="text-sm lg:text-lg text-gray-500 hover:text-black transition-colors">{{ __('messages.navigation.delivery') }}</a></li>
                 </ul>
             </div>
 
             <div class="space-y-2 md:space-y-4">
-                <h3 class="text-sm md:text-lg font-semibold">{{ __('messages.footer.payment_methods') }}</h3>
+                <h3 class="text-md md:text-lg font-semibold">{{ __('messages.footer.payment_methods') }}</h3>
                 @if($seller && $seller->payments->isNotEmpty())
                     <div class="grid grid-cols-5 md:grid-cols-3 gap-3">
                         @foreach($seller->payments as $payment)

@@ -57,7 +57,7 @@
             </template>
 
             <!-- slides min-h-[15svh] lg:min-h-[40svh] -->
-            <div class="relative  w-full min-h-[15svh] sm:min-h-[25svh] md:min-h-[30svh] lg:min-h-[40svh] ">
+            <div class="relative  w-full min-h-[15svh] sm:min-h-[25svh] md:min-h-[30svh] lg:min-h-[44svh] 2xl:min-h-[50svh] ">
                 <template x-for="(slide, index) in slides" :key="index">
                     <div
                         x-show="currentSlideIndex == index + 1"
@@ -70,7 +70,7 @@
                         x-transition:leave-end="opacity-0 transform scale-95"
                         >
                         <img
-                            class=" rounded-lg w-full h-full inset-0 object-contain "
+                            class=" rounded-lg w-full h-full inset-0 object-contain rounded-lg "
                             :src="slide.imgSrc"
                             :alt="slide.imgAlt"
                             loading="lazy" />

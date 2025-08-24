@@ -176,8 +176,10 @@ class WholeSale extends Component
     #[Computed]
     public function products()
     {
-        $query = Product::select(['id', 'name', 'description', 'sku', 'price', 'quantity', 'category_id', 'brand_id', 'seller_id', 'is_public', 'is_whole_sale', 'created_at'])
-            ->where('seller_id', $this->seller_id)
+        $query = Product::
+            // select(['id', 'name', 'description', 'sku', 'price', 'quantity', 'category_id', 'brand_id', 'seller_id', 'is_public', 'is_whole_sale', 'created_at'])
+            // ->
+            where('seller_id', $this->seller_id)
             ->where('is_public', true)
             ->where('is_whole_sale', true)
             ->when($this->search, function ($query) {
@@ -225,7 +227,8 @@ class WholeSale extends Component
             return collect();
         }
 
-        $query = Variant::select(['id', 'product_id', 'name', 'sku', 'price', 'quantity', 'is_whole_sale', 'created_at'])
+        $query = Variant::query()
+            // select(['id', 'product_id', 'name', 'sku', 'price', 'quantity', 'is_whole_sale', 'created_at'])
             ->whereHas('product', function ($query) {
                 $query->where('seller_id', $this->seller_id)
                     ->where('is_public', true);

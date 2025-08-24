@@ -13,7 +13,7 @@ class ProductObserver
             $product->update([
                 'mmk_buy_price' => $product->buy_price,
                 'mmk_price' => $product->price,
-                'mmk_discount_price' => $product->discount_price,
+                'mmk_discount_price' => $product->discount > 0 ?  $product->discount_price : $product->price,
             ]);
         }
 
@@ -31,7 +31,7 @@ class ProductObserver
             $product->update([
                 'mmk_buy_price' => $product->buy_price,
                 'mmk_price' => $product->price,
-                'mmk_discount_price' => $product->discount_price,
+                'mmk_discount_price' => $product->discount > 0 ?  $product->discount_price : $product->price,
             ]);
             $product->preventObserver = false;
         }
