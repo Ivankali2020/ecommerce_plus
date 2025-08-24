@@ -77,7 +77,6 @@ class AppServiceProvider extends ServiceProvider
         // });
 
         InitializeTenancyByDomain::$onFail = function ($exception, $request, $next) {
-            dd($exception);
             return redirect(env('APP_URL'));
         };
 

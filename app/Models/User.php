@@ -105,4 +105,9 @@ class User extends Authenticatable implements HasMedia, MustVerifyEmail
     {
         return abs($this->pointTransactions()->where('type', 'spent')->sum('points'));
     }
+
+    public function referrals()
+    {
+        return $this->hasMany(ReferralHistory::class,'referrer_id','id');
+    }
 }

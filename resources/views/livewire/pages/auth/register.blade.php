@@ -8,7 +8,10 @@ use Illuminate\Validation\Rules;
 use Livewire\Attributes\Layout;
 use Livewire\Volt\Component;
 use App\Models\Tenant;
-
+use App\Models\Seller;
+use App\Models\ReferralHistory;
+// notification class
+use Filament\Notifications\Notification;
 new #[Layout('layouts.guest')] class extends Component
 {
     public string $name = '';
@@ -16,6 +19,7 @@ new #[Layout('layouts.guest')] class extends Component
     public string $password = '';
     public string $password_confirmation = '';
     public string $cfTurnstileResponse = '';
+    public string $referral_code = '';
 
     protected function getMainValidationRules(): array
     {
@@ -23,6 +27,7 @@ new #[Layout('layouts.guest')] class extends Component
             'name' => ['required', 'string', 'max:255'],
             'email' => ['required', 'string', 'lowercase', 'email', 'max:255', 'unique:'.User::class],
             'password' => ['required', 'string', 'confirmed', Rules\Password::defaults()],
+            'referral_code' => ['nullable', 'string', 'exists:users,referral_code'],
         ];
     }
 
@@ -31,6 +36,12 @@ new #[Layout('layouts.guest')] class extends Component
         return [
             'cfTurnstileResponse' => ['required', 'turnstile'],
         ];
+    }
+
+    public function mount(): void
+    {
+        // Pre-fill referral code if present in the URL
+        $this->referral_code = request()->query('ref', '');
     }
 
     /**
@@ -49,15 +60,54 @@ new #[Layout('layouts.guest')] class extends Component
         // Remove cfTurnstileResponse from the validated data
         unset($validated['cfTurnstileResponse']);
 
+        DB::beginTransaction();
+        try {
+
+        $seller = Seller::where('tenant_id', tenant('id'))->whereNull('parent_id')->with('setting')->first();
         // tentant_id add 
         $validated['tenant_id'] = tenant('id');
-        $validated['seller_id'] = Tenant::where('id', tenant('id'))->first()->sellers->first()->id;
-        
+        $validated['seller_id'] = $seller->id;
+
+        if ($this->referral_code) {
+            $referrer = User::where('referral_code', $this->referral_code)->first();
+            if ($referrer) {
+                $validated['referred_by'] = $referrer->id;
+            }
+        }
+
         event(new Registered($user = User::create($validated)));
+
+        // Create referral history if there's a valid referral code
+        if ($this->referral_code && isset($referrer)) {
+
+            $referralPoints = $seller->setting->data['referral_points'] ?? 0;
+
+            if ($referralPoints > 0) {
+                ReferralHistory::create([
+                    'referrer_id' => $referrer->id,
+                    'referred_id' => $user->id,
+                    'seller_id' => $seller->id,
+                    'tenant_id' => tenant('id'),
+                    'points_awarded' => $referralPoints,
+                ]);
+            }
+        }
 
         Auth::login($user);
 
+        DB::commit();
         $this->redirect(route('verification.notice', absolute: false), navigate: true);
+
+        } catch (\Throwable $th) {
+            Notification::make()
+                ->title('ERROR')
+                ->body($th->getMessage())
+                ->danger()
+                ->send();
+            DB::rollBack();
+            //throw $th;
+        }
+       
     }
 }; ?>
 
@@ -122,6 +172,16 @@ new #[Layout('layouts.guest')] class extends Component
                         class="appearance-none rounded-lg relative block w-full px-3 py-2 border border-gray-300 dark:border-gray-700 placeholder-gray-500 text-gray-900 dark:text-gray-100 focus:outline-none focus:ring-slate-500 focus:border-slate-500 focus:z-10 sm:text-sm"
                         required autocomplete="new-password" />
                     <x-input-error :messages="$errors->get('password_confirmation')" class="mt-2" />
+                </div>
+
+                <!-- Referral Code -->
+                <div>
+                    <x-input-label for="referral_code" :value="__('messages.auth.register_page.referral_code')"
+                        class="mb-2" />
+                    <x-text-input wire:model="referral_code" id="referral_code" type="text"
+                        class="appearance-none rounded-lg relative block w-full px-3 py-2 border border-gray-300 dark:border-gray-700 placeholder-gray-500 text-gray-900 dark:text-gray-100 focus:outline-none focus:ring-slate-500 focus:border-slate-500 focus:z-10 sm:text-sm"
+                         />
+                    <x-input-error :messages="$errors->get('referral_code')" class="mt-2" />
                 </div>
             </div>
 

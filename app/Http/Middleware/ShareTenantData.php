@@ -19,12 +19,13 @@ class ShareTenantData
     public function handle(Request $request, Closure $next): Response
     {
         if (tenant()) {
-            $seller = Cache::remember('tenant_seller_'.tenant('id'), 3600, function () {
-                return Seller::where('tenant_id', tenant('id'))->with('media')->first();
+            $seller = Cache::remember('tenant_seller_'.tenant('id'), 300, function () {
+                return Seller::where('tenant_id', tenant('id'))->whereNull('parent_id')->with('media')->first();
             });
 
             if ($seller) {
                 View::share([
+                    'tenantSellerId' => $seller->id,
                     'tenantSellerLogo' => $seller->getFirstMediaUrl('logos'),
                     'tenantEnableGoogleAuth' => $seller->enabled_google_auth,
                     'tenantSellerName' => $seller->name,

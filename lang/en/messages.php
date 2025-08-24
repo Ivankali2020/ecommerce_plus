@@ -288,6 +288,7 @@ return [
             'name' => 'Full Name',
             'email' => 'Email Address',
             'password' => 'Password',
+            'referral_code' => 'Referral Code (Optional)',
             'confirm_password' => 'Confirm Password',
             'register_button' => 'Create Account',
             'registering' => 'Registering...',
