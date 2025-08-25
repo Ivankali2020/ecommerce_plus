@@ -31,13 +31,15 @@ use Illuminate\Support\Facades\Cache;
 use Illuminate\View\Middleware\ShareErrorsFromSession;
 use Stancl\Tenancy\Middleware\InitializeTenancyByDomain;
 use Stancl\Tenancy\Middleware\PreventAccessFromCentralDomains;
+use Filament\View\PanelsRenderHook;
+use Illuminate\Contracts\View\View;
 
 class SellerPanelProvider extends PanelProvider
 {
     protected function getSeller()
     {
         $seller = Cache::remember('tenant_seller_'.tenant('id'), 3600, function () {
-            return Seller::where('tenant_id', tenant('id'))->with('media')->first();
+            return Seller::where('tenant_id', tenant('id'))->whereNull('parent_id')->with('media')->first();
         });
 
         if ($seller) {
@@ -130,6 +132,10 @@ class SellerPanelProvider extends PanelProvider
             // ->font('mm',url: asset('css/admin-font.css'), provider: LocalFontProvider::class)
             // ->font('Jost')
             ->databaseTransactions()
+            ->renderHook(
+                 PanelsRenderHook::PAGE_FOOTER_WIDGETS_AFTER,
+                fn (): View => view('components.contact-footer'),
+            )
             ->authMiddleware([
                 // RedirectIfUnauthenticated::class,
                 Authenticate::class,

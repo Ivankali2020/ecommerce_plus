@@ -99,10 +99,10 @@ class AppServiceProvider extends ServiceProvider
         );
 
         // Register custom footer with contact information
-        FilamentView::registerRenderHook(
-            PanelsRenderHook::PAGE_FOOTER_WIDGETS_AFTER,
-            fn (): View => view('components.contact-footer'),
-        );
+        // FilamentView::registerRenderHook(
+        //     PanelsRenderHook::PAGE_FOOTER_WIDGETS_AFTER,
+        //     fn (): View => view('components.contact-footer'),
+        // );
         // Register the subscription info card in the seller panel sidebar
         FilamentView::registerRenderHook(
             PanelsRenderHook::USER_MENU_PROFILE_AFTER,

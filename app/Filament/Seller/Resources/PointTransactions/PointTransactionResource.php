@@ -38,7 +38,7 @@ class PointTransactionResource extends Resource
 
     public static function getModelLabel(): string
     {
-        return __('filament/resources/point-transaction-resource.navigation.model_label');
+        return __('filament/resources/point-transaction-resource.navigation.label');
     }
 
     public static function getPluralModelLabel(): string
@@ -51,29 +51,29 @@ class PointTransactionResource extends Resource
         return $schema
             ->components([
                 Select::make('user_id')
-                    ->label(__('filament/resources/point-transaction-resource.form.fields.user'))
+                    ->label(__('filament/resources/point-transaction-resource.form.user_id.label'))
                     ->relationship('user', 'name')
                     ->required(),
 
                 TextInput::make('type')
-                    ->label(__('filament/resources/point-transaction-resource.form.fields.type'))
+                    ->label(__('filament/resources/point-transaction-resource.form.type.label'))
                     ->required(),
                 TextInput::make('points')
-                    ->label(__('filament/resources/point-transaction-resource.form.fields.points'))
+                    ->label(__('filament/resources/point-transaction-resource.form.points.label'))
                     ->required()
                     ->numeric(),
                 TextInput::make('balance_after')
-                    ->label(__('filament/resources/point-transaction-resource.form.fields.balance_after'))
+                    ->label(__('filament/resources/point-transaction-resource.form.balance_after.label'))
                     ->required()
                     ->numeric(),
                 
                 Textarea::make('description')
-                    ->label(__('filament/resources/point-transaction-resource.form.fields.description'))
+                    ->label(__('filament/resources/point-transaction-resource.form.description.label'))
                     ->columnSpanFull(),
                 TextInput::make('metadata')
-                    ->label(__('filament/resources/point-transaction-resource.form.fields.metadata')),
+                    ->label(__('filament/resources/point-transaction-resource.form.metadata.label')),
                 DateTimePicker::make('expires_at')
-                    ->label(__('filament/resources/point-transaction-resource.form.fields.expires_at')),
+                    ->label(__('filament/resources/point-transaction-resource.form.expires_at.label')),
             ]);
     }
 

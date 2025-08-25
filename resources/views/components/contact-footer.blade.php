@@ -1,6 +1,6 @@
-<div x-data="{ open: false }" class="fixed bottom-4 right-4 z-50" style="right:20px;bottom:20px">
+<div x-data="{ open: false }" class="fixed bottom-4 text-green-500 right-4 z-50" style="right:20px;bottom:20px">
     <!-- Toggle Button -->
-    <button @click="open = !open" class="bg-primary-600 hover:bg-primary-700 text-white rounded-full p-3 shadow-lg flex items-center justify-center transition-all duration-300 focus:outline-none">
+    <button @click="open = !open" class="bg-green-500 hover:bg-green-500 text-white rounded-full p-3 shadow-lg flex items-center justify-center transition-all duration-300 focus:outline-none">
         <x-heroicon-s-chat-bubble-left-right x-show="!open" class="w-6 h-6" />
         <x-heroicon-s-x-mark x-show="open" class="w-6 h-6" />
     </button>
@@ -28,7 +28,7 @@
             </div>
             
             <div class="pt-2 text-xs text-center text-gray-500 dark:text-gray-400 border-t border-gray-200 dark:border-gray-700">
-                {{ __('contact.copyright', ['year' => now()->format('Y')]) }}
+                {{ __('contact.copyright') }}
             </div>
         </div>
     </div>

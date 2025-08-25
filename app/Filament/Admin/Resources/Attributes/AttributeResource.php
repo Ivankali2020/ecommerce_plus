@@ -99,28 +99,28 @@ class AttributeResource extends Resource
                                             // Try multiple approaches to access parent state
                                             $type = $get('../../type') ?? $get('../type') ?? $get('type');
 
-                                            return $type === AttributeType::Text;
+                                            return $type !== AttributeType::Text;
                                         })
                                         ->required(),
 
+                                    // TextInput::make('value')
+                                    //     ->live()->label(__('filament/resources/attribute-resource.form.value'))
+                                    //     ->placeholder(fn() => $loading ? 'Searching Color Name' : '')
+                                    //     ->visible(function (Get $get) {
+                                    //         // Try multiple approaches to access parent state
+                                    //         $type = $get('../../type') ?? $get('../type') ?? $get('type');
+
+                                    //         return $type !== AttributeType::Color;
+                                    //     })
+                                    //     ->required(),
+
                                     TextInput::make('value')
-                                        ->live()->label(__('filament/resources/attribute-resource.form.value'))
-                                        ->placeholder(fn() => $loading ? 'Searching Color Name' : '')
-                                        ->visible(function (Get $get) {
-                                            // Try multiple approaches to access parent state
-                                            $type = $get('../../type') ?? $get('../type') ?? $get('type');
+                                        // ->visible(function (Get $get) {
+                                        //     // Try multiple approaches to access parent state
+                                        //     $type = $get('../../type') ?? $get('../type') ?? $get('type');
 
-                                            return $type === AttributeType::Color;
-                                        })
-                                        ->required(),
-
-                                    TextInput::make('value')
-                                        ->visible(function (Get $get) {
-                                            // Try multiple approaches to access parent state
-                                            $type = $get('../../type') ?? $get('../type') ?? $get('type');
-
-                                            return $type === AttributeType::Text;
-                                        })
+                                        //     return $type === AttributeType::Text;
+                                        // })
                                         ->helperText('ဉပမာ - Sizes ဆိုရင် (xl,l,md), Colors ဆိုရင် (red,green,...), ...')
                                         ->required()
                                         ->maxLength(255)

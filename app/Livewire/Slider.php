@@ -13,7 +13,7 @@ class Slider extends Component
     public function mount()
     {
         $seller = Cache::remember('seller_'.tenant('id'), 60, function () {
-            return Seller::where('tenant_id', tenant('id'))->with('media')->first();
+            return Seller::where('tenant_id', tenant('id'))->whereNull('parent_id')->with('media')->first();
         });
         $this->sliders = $seller->getMedia('cover_photos');
     }

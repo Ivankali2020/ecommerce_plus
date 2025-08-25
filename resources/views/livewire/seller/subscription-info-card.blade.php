@@ -1,6 +1,6 @@
-<div class="fi-sidebar-item">
-    <div class="fi-section dark:bg-gray-900 dark:ring-white/10">
-        <div class="fi-section-header px-4 py-2 border-b border-gray-100 dark:border-gray-400">
+<div class="fi-sidebar-item border-none ">
+    <div class="border-none ">
+        <div class="px-4 py-2 border-b border-gray-100 dark:border-gray-800">
             <h3 class="text-sm uppercase text-center " >
                 Subscription Status
             </h3>
