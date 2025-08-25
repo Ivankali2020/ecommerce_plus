@@ -137,19 +137,19 @@ new class extends Component
                              {{ __('messages.navigation.delivery') }}
                         </x-dropdown-link>
 
-                        <x-dropdown-link :href="route('recent.orders')" wire:abort="navigate" class="flex gap-3 items-center">
+                        <x-dropdown-link :href="route('referral')" wire:abort="navigate" class="flex gap-3 items-center">
                             <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="size-5">
-                                <path stroke-linecap="round" stroke-linejoin="round" d="M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2m-3 7h3m-3 4h3m-6-4h.01M9 16h.01"></path>
+                            <path stroke-linecap="round" stroke-linejoin="round" d="M7.217 10.907a2.25 2.25 0 1 0 0 2.186m0-2.186c.18.324.283.696.283 1.093s-.103.77-.283 1.093m0-2.186 9.566-5.314m-9.566 7.5 9.566 5.314m0 0a2.25 2.25 0 1 0 3.935 2.186 2.25 2.25 0 0 0-3.935-2.186Zm0-12.814a2.25 2.25 0 1 0 3.933-2.185 2.25 2.25 0 0 0-3.933 2.185Z" />
                             </svg>
-                            {{ __('messages.navigation.recent_orders') }}
+                            {{ __('referral.title') }}
                         </x-dropdown-link>
 
-                        <x-dropdown-link :href="route('gifts')" wire:abort="navigate" class="flex gap-3 items-center">
+                        <x-dropdown-link :href="route('addresses')" wire:abort="navigate" class="flex gap-3 items-center">
                             <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="size-5">
-                            <path stroke-linecap="round" stroke-linejoin="round" d="M21 11.25v8.25a1.5 1.5 0 0 1-1.5 1.5H5.25a1.5 1.5 0 0 1-1.5-1.5v-8.25M12 4.875A2.625 2.625 0 1 0 9.375 7.5H12m0-2.625V7.5m0-2.625A2.625 2.625 0 1 1 14.625 7.5H12m0 0V21m-8.625-9.75h18c.621 0 1.125-.504 1.125-1.125v-1.5c0-.621-.504-1.125-1.125-1.125h-18c-.621 0-1.125.504-1.125 1.125v1.5c0 .621.504 1.125 1.125 1.125Z" />
+                            <path stroke-linecap="round" stroke-linejoin="round" d="M15 10.5a3 3 0 1 1-6 0 3 3 0 0 1 6 0Z" />
+                            <path stroke-linecap="round" stroke-linejoin="round" d="M19.5 10.5c0 7.142-7.5 11.25-7.5 11.25S4.5 17.642 4.5 10.5a7.5 7.5 0 1 1 15 0Z" />
                             </svg>
-
-                            {{ __('gifts.gifts') }}
+                            {{ __('messages.address.addresses_count') }}
                         </x-dropdown-link>
 
                         <!-- Authentication -->
@@ -250,15 +250,7 @@ new class extends Component
                 <x-responsive-nav-link :href="route('profile',Auth::user()->id)" wire:navigate>
                     {{ __('messages.auth.profile.title') }}
                 </x-responsive-nav-link>
-
-                <x-responsive-nav-link :href="route('welcome')" wire:navigate>
-                    {{ __('messages.navigation.main_store') }}
-                </x-responsive-nav-link>
-
-                <x-responsive-nav-link :href="route('delivery')" wire:navigate>
-                    {{ __('messages.navigation.delivery') }}
-                </x-responsive-nav-link>
-
+                
                 <x-responsive-nav-link :href="route('dashboard')" wire:navigate>
                     {{ __('messages.navigation.dashboard') }}
                 </x-responsive-nav-link>
@@ -271,12 +263,12 @@ new class extends Component
                     {{ __('messages.navigation.order') }}
                 </x-responsive-nav-link>
 
-                <x-responsive-nav-link :href="route('recent.orders')" wire:navigate>
-                    {{ __('messages.navigation.recent_orders') }}
+                <x-responsive-nav-link :href="route('referral')" wire:navigate>
+                    {{ __('referral.title') }}
                 </x-responsive-nav-link>
 
-                <x-responsive-nav-link :href="route('gifts')" wire:navigate>
-                   {{ __('gifts.gifts') }}
+                <x-responsive-nav-link :href="route('addresses')" wire:navigate>
+                    {{ __('messages.address.addresses_count') }}
                 </x-responsive-nav-link>
 
 

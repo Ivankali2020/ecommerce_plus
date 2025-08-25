@@ -37,20 +37,20 @@ new class extends Component
 
 }; ?>
 
-<div class="p-4 sm:p-8 bg-white dark:bg-gray-800 shadow sm:rounded-lg">
+<div class="max-w-7xl mx-auto px-4 lg:px-8 py-4 md:py-10 space-y-6 mt-4 ">
     <div class="">
         <header>
             <h2 class="text-lg font-medium text-gray-900 dark:text-gray-100">
                 {{ __('referral.title') }}
             </h2>
 
-            <p class="mt-1 text-sm text-gray-600 dark:text-gray-400">
+            <p class="mt-2 text-sm text-gray-600 dark:text-gray-400">
                 {{ __('referral.description') }}
             </p>
         </header>
 
         <!-- Stats Grid -->
-        <div class="mt-6 max-w-xl grid grid-cols-1 sm:grid-cols-3 gap-4">
+        <div class="mt-6 grid grid-cols-1 sm:grid-cols-3 gap-4">
             <!-- Total Referrals -->
             <div class="bg-gray-50 dark:bg-gray-700 rounded-lg p-4 text-center">
                 <dt class="text-sm font-medium text-gray-500 dark:text-gray-400">

@@ -44,6 +44,7 @@
                     <li><a href="{{ route('products') }}" class="text-sm lg:text-lg text-gray-500 hover:text-black transition-colors">{{ __('messages.navigation.products') }}</a></li>
                     <li><a href="{{ route('wholesale') }}" class="text-sm lg:text-lg text-gray-500 hover:text-black transition-colors">{{ __('messages.navigation.wholesale') }}</a></li>
                     <li><a href="{{ route('delivery') }}" class="text-sm lg:text-lg text-gray-500 hover:text-black transition-colors">{{ __('messages.navigation.delivery') }}</a></li>
+                    <li><a href="{{ route('recent.orders') }}" class="text-sm lg:text-lg text-gray-500 hover:text-black transition-colors">{{ __('messages.navigation.recent_orders') }}</a></li>
                 </ul>
             </div>
 

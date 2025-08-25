@@ -3,10 +3,12 @@
 declare(strict_types=1);
 
 use App\Livewire\ProductDetail;
+use App\Livewire\Profile\UserAddressForm;
 use App\Livewire\Seller\SubscriptionPlans;
 use Filament\Actions\Exports\Http\Controllers\DownloadExport;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Route;
+use Livewire\Volt\Volt;
 use Stancl\Tenancy\Middleware\InitializeTenancyByDomain;
 use Stancl\Tenancy\Middleware\PreventAccessFromCentralDomains;
 use Telegram\Bot\Api;
@@ -55,6 +57,9 @@ if (! $isCentralDomain) {
             Route::get('point-transaction-history', \App\Livewire\PointTransactionHistory::class)->name('point.transaction.history');
             Route::view('dashboard', 'dashboard')->name('dashboard');
             Route::view('profile', 'profile')->name('profile');
+
+            Route::get('addresses', UserAddressForm::class)->name('addresses');
+            Volt::route('referral', 'referral-code-widget')->name('referral');
         });
 
         Route::get('products', \App\Livewire\AllProduct::class)->name('products');
@@ -80,43 +85,6 @@ if (! $isCentralDomain) {
         PreventAccessFromCentralDomains::class,
         'assignGlobeScope',
     ])->prefix('seller')->name('seller.')->group(function () {
-        // Debug route to test auth (no auth required for debugging)
-        Route::get('/debug-auth', function () {
-
-            $telegram = new Api(env('TELEGRAM_BOT_TOKEN'));
-            
-            // Use your personal chat ID
-            $channelId = env('TELEGRAM_CHANNEL_ID', '1825168720'); // Your personal chat ID
-            
-            $telegram->sendMessage([
-                'chat_id' => $channelId,
-                'text' => 'Debug Auth Route Accessed from: ' . request()->getHost() . "\nTime: " . now()->format('Y-m-d H:i:s'),
-                'parse_mode' => 'Markdown',
-            ]);
-            return response()->json([
-                'laravel_seller_guard' => [
-                    'authenticated' => auth('seller')->check(),
-                    'user' => auth('seller')->user()?->only(['id', 'name', 'email']),
-                ],
-                'filament_auth' => [
-                    'authenticated' => \Filament\Facades\Filament::auth()->check(),
-                    'user' => \Filament\Facades\Filament::auth()->user()?->only(['id', 'name', 'email']),
-                    'guard' => \Filament\Facades\Filament::getCurrentPanel()?->getAuthGuard(),
-                    'current_panel_id' => \Filament\Facades\Filament::getCurrentPanel()?->getId(),
-                ],
-                'session_data' => [
-                    'all_sessions' => array_keys(session()->all()),
-                    'seller_login_session' => session()->has('login_seller_'.sha1('seller')),
-                ],
-                'tenant' => tenant()?->only(['id', 'data']),
-                'domain' => request()->getHost(),
-                'tenant_scoping_test' => [
-                    'total_products_without_scope' => DB::table('products')->count(),
-                    'total_products_with_model' => \App\Models\Product::count(),
-                    'tenant_id' => tenant('id'),
-                ],
-            ]);
-        })->name('debug-auth');
 
         // Route to get seller's Telegram chat ID from bot
         Route::get('/get-telegram-updates', function () {

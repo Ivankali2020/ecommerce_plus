@@ -5,16 +5,10 @@
             
             <livewire:points-widget>
 
-            <livewire:referral-code-widget />
-
             <div class="p-4 sm:p-8 bg-white dark:bg-gray-800 shadow rounded-lg  lg:rounded-lg">
                 <div class="max-w-xl">
                     <livewire:profile.update-profile-information-form />
                 </div>
-            </div>
-
-            <div class="p-4 sm:p-8 bg-white dark:bg-gray-800 shadow rounded-lg  lg:rounded-lg">
-                    <livewire:profile.user-address-form />
             </div>
 
             <div class="p-4 sm:p-8 bg-white dark:bg-gray-800 shadow rounded-lg  lg:rounded-lg">
