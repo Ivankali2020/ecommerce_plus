@@ -40,7 +40,7 @@ class ProductReviews extends Component
 
     public function mount(Product $product): void
     {
-        $this->product = $product;
+        $this->product = $product->load('reviews');
     }
 
     public function toggleReviewForm(): void

@@ -4,17 +4,17 @@
          <!-- Company Info -->           
           <div class="space-y-2 md:space-y-4">              
               <h3 class="text-md md:text-lg font-semibold">{{ __('messages.footer.company_info') }}</h3>                
-                        @if($seller)                  
+                        @if($tenantSeller)                  
                           <div>                        
-                            <h4 class="font-medium mb-4">{{ $seller->name }}</h4>                        
-                        @if($seller->phone)
-                            <p class="text-sm lg:text-lg text-gray-500 mb-2">{{ __('messages.footer.phone') }}: {{ $seller->phone}}</p>
+                            <h4 class="font-medium mb-4">{{ $tenantSeller->name }}</h4>                        
+                        @if($tenantSeller->phone)
+                            <p class="text-sm lg:text-lg text-gray-500 mb-2">{{ __('messages.footer.phone') }}: {{ $tenantSeller->phone}}</p>
                         @endif
-                        @if($seller->email)
-                            <p class="text-sm lg:text-lg text-gray-500 mb-2">{{ __('messages.footer.email') }}: {{ $seller->email }}</p>
+                        @if($tenantSeller->email)
+                            <p class="text-sm lg:text-lg text-gray-500 mb-2">{{ __('messages.footer.email') }}: {{ $tenantSeller->email }}</p>
                         @endif
-                        @if($seller->address)
-                            <p class="text-sm lg:text-lg text-gray-500">{{ $seller->address }}</p>
+                        @if($tenantSeller->address)
+                            <p class="text-sm lg:text-lg text-gray-500">{{ $tenantSeller->address }}</p>
                         @endif
                     </div>
                 @endif
@@ -49,9 +49,9 @@
 
             <div class="space-y-2 md:space-y-4">
                 <h3 class="text-md md:text-lg font-semibold">{{ __('messages.footer.payment_methods') }}</h3>
-                @if($seller && $seller->payments->isNotEmpty())
+                @if($tenantSeller && $tenantSeller->payments->isNotEmpty())
                     <div class="grid grid-cols-5 md:grid-cols-3 gap-3">
-                        @foreach($seller->payments as $payment)
+                        @foreach($tenantSeller->payments as $payment)
                             <div class="rounded-md bg-slate-100 h-14 w-14 text-center p-2 flex items-center justify-center ">
                                 @if($payment->media->isNotEmpty())
                                     <img src="{{ $payment->media->first()->getUrl() }}" 
@@ -69,12 +69,12 @@
         <!-- Bottom Bar -->
         <div class="border-t border-gray-300 mt-8 pt-8 pb-16 lg:pb-0 flex flex-col sm:flex-row justify-between items-center">
             <a href="https://ivankali2020.github.io/porfolio/" class="text-gray-400 text-sm underline decoration-gray-200 underline-offset-7 hover:text-red-500">
-                {{-- © {{ date('Y') }} {{ $seller ? $seller->name : __('messages.footer.company_info') }}.  --}}
+                {{-- © {{ date('Y') }} {{ $tenantSeller ? $tenantSeller->name : __('messages.footer.company_info') }}.  --}}
                 {{ __('messages.footer.all_rights_reserved') }}
             </a>
             <div class="flex space-x-4 mt-4 sm:mt-0">
                 @php
-                    $social = $seller && $seller->setting ? $seller->setting->data : [];
+                    $social = $tenantSeller->setting ? $tenantSeller->setting->data : [];
                 @endphp
                 @if(!empty($social['facebook']))
                     <a href="{{ $social['facebook'] }}" target="_blank" rel="noopener" class="text-gray-400 hover:text-blue-600 transition-colors">

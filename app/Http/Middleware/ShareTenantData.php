@@ -20,7 +20,9 @@ class ShareTenantData
     {
         if (tenant()) {
             $seller = Cache::remember('tenant_seller_'.tenant('id'), 300, function () {
-                return Seller::where('tenant_id', tenant('id'))->whereNull('parent_id')->with('media')->first();
+                return Seller::where('tenant_id', tenant('id'))->whereNull('parent_id')->with([
+                    'media','setting','payments.media'
+                ])->first();
             });
 
             if ($seller) {
@@ -29,6 +31,7 @@ class ShareTenantData
                     'tenantSellerLogo' => $seller->getFirstMediaUrl('logos'),
                     'tenantEnableGoogleAuth' => $seller->enabled_google_auth,
                     'tenantSellerName' => $seller->name,
+                    'tenantSeller' => $seller,
                 ]);
             }
         }

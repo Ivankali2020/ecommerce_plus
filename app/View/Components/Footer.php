@@ -15,15 +15,11 @@ class Footer extends Component
     public function render(): View
     {
         // $seller = Seller::with(['payments.media', 'media'])->find($sellerId);
-        $tenant = tenant('id');
-        $seller = Cache::remember("seller_{$tenant}", 60, function () use ($tenant) {
-            return Seller::where('tenant_id', $tenant)->with(['payments.media', 'media' , 'setting'])->first();
-        });
+        // $tenant = tenant('id');
+        // $seller = Cache::remember("seller_{$tenant}", 60, function () use ($tenant) {
+        //     return Seller::where('tenant_id', $tenant)->with(['payments.media', 'media' , 'setting'])->first();
+        // });
 
-        
-
-        return view('components.footer', [
-            'seller' => $seller,
-        ]);
+        return view('components.footer');
     }
 }
