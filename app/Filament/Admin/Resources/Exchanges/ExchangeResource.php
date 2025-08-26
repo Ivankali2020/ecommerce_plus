@@ -5,6 +5,7 @@ namespace App\Filament\Admin\Resources\Exchanges;
 use App\Filament\Admin\Resources\Exchanges\Pages\CreateExchange;
 use App\Filament\Admin\Resources\Exchanges\Pages\EditExchange;
 use App\Filament\Admin\Resources\Exchanges\Pages\ListExchanges;
+use App\Models\Currency;
 use App\Models\Exchange;
 use Filament\Actions\BulkActionGroup;
 use Filament\Actions\DeleteBulkAction;
@@ -64,6 +65,7 @@ class ExchangeResource extends Resource
 
                         Select::make('currency_id')
                             ->required()->relationship('currency', 'name')
+                            ->live(onBlur: true)
                             ->label(__('filament/resources/exchange-resource.form.currency_id.label'))
                             ->unique(table: 'exchanges', column: 'currency_id', ignoreRecord: true,
                                 modifyRuleUsing: function (Unique $rule, Get $get) {
@@ -75,6 +77,8 @@ class ExchangeResource extends Resource
                         TextInput::make('rate')
                             ->label(__('filament/resources/exchange-resource.form.rate.label'))
                             ->helperText(__('filament/resources/exchange-resource.form.rate.helper'))
+                            ->prefix('1 Ks = ')
+                            ->suffix(fn (Get $get) => $get('currency_id') != null ? Currency::find($get('currency_id'))->symbol_native : '')
                             ->required()
                             ->numeric(),
                     ])->columns(2),

@@ -51,7 +51,12 @@ return [
                 'region' => 'Region',
                 'township' => 'Township',
             ],
+            'cod' => [
+                'label' => 'Cash on Delivery',
+                'helper_text' => 'Order will be delivered and payment collected upon delivery',
+            ],
             'payment' => 'Payment',
+            'payment_account' => 'Payment Account',
             'status' => [
                 'label' => 'Status',
                 'options' => [
@@ -77,6 +82,8 @@ return [
                 'label' => 'Total Price',
                 'helper_text' => 'All total price',
             ],
+            'given_amount' => 'Given Amount',
+            'change_amount' => 'Change Amount',
         ],
         'payment_slip' => 'Payment Slip',
     ],

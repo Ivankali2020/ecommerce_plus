@@ -1,4 +1,4 @@
-<div class="w-full p-4 lg:p-0 lg:w-2/3" x-data="{ showCartItems: true }">
+<div class="w-full p-4 lg:p-0 lg:w-2/3" x-data="{ showCartItems: false }">
     <div class="flex items-center justify-between mb-4 md:mb-6">
         <h2 class="text-2xl md:text-3xl font-bebas ">
             {{ __('messages.cart.shopping_cart') }}

@@ -24,7 +24,7 @@ return new class extends Migration
 
             $table->decimal('price', 15, 2);
             $table->decimal('discount_price', 15, 2)->default(0);
-            $table->integer('discount')->default(0);
+            $table->decimal('discount', 5, 2)->default(0);
             $table->integer('quantity');
 
             $table->decimal('profit', 15, 2);

@@ -20,6 +20,8 @@ use Filament\Pages\Dashboard;
 use Filament\Panel;
 use Filament\PanelProvider;
 use Filament\Support\Colors\Color;
+use Filament\View\PanelsRenderHook;
+use Illuminate\Contracts\View\View;
 use Illuminate\Cookie\Middleware\AddQueuedCookiesToResponse;
 use Illuminate\Cookie\Middleware\EncryptCookies;
 use Illuminate\Foundation\Http\Middleware\VerifyCsrfToken;
@@ -31,8 +33,6 @@ use Illuminate\Support\Facades\Cache;
 use Illuminate\View\Middleware\ShareErrorsFromSession;
 use Stancl\Tenancy\Middleware\InitializeTenancyByDomain;
 use Stancl\Tenancy\Middleware\PreventAccessFromCentralDomains;
-use Filament\View\PanelsRenderHook;
-use Illuminate\Contracts\View\View;
 
 class SellerPanelProvider extends PanelProvider
 {
@@ -112,6 +112,7 @@ class SellerPanelProvider extends PanelProvider
             ->plugins([
                 FilamentShieldPlugin::make(),
             ])
+            ->globalSearch() // only false on mobile view
             ->navigationItems([
                 NavigationItem::make('dashboard')
                     ->label(fn (): string => 'Go to Website')
@@ -133,7 +134,7 @@ class SellerPanelProvider extends PanelProvider
             // ->font('Jost')
             ->databaseTransactions()
             ->renderHook(
-                 PanelsRenderHook::PAGE_FOOTER_WIDGETS_AFTER,
+                PanelsRenderHook::PAGE_FOOTER_WIDGETS_AFTER,
                 fn (): View => view('components.contact-footer'),
             )
             ->authMiddleware([

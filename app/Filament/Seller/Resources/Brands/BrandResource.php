@@ -26,6 +26,8 @@ class BrandResource extends Resource
 
     protected static string|\UnitEnum|null $navigationGroup = 'Business Section';
 
+    protected static ?string $recordTitleAttribute = 'name';
+
     public static function getModelLabel(): string
     {
         return __('filament/resources/brand-resource.navigation.label');
@@ -40,26 +42,26 @@ class BrandResource extends Resource
     {
         return $schema
             ->components([
-               
-                    Section::make()->schema([
 
-                        TextInput::make('name')
-                            ->helperText(__('filament/resources/brand-resource.form.name_helper'))
-                            ->required()
-                            ->maxLength(255)
-                            ->label(__('filament/resources/brand-resource.form.name')),
+                Section::make()->schema([
 
-                        SpatieMediaLibraryFileUpload::make('logo')
-                            ->collection('logos')->imageEditor()
-                            ->image()->rules('required')
-                            ->label(__('filament/resources/brand-resource.form.logo')),
+                    TextInput::make('name')
+                        ->helperText(__('filament/resources/brand-resource.form.name_helper'))
+                        ->required()
+                        ->maxLength(255)
+                        ->label(__('filament/resources/brand-resource.form.name')),
 
-                        Textarea::make('description')
-                            ->maxLength(16777215)
-                            ->columnSpanFull()
-                            ->label(__('filament/resources/brand-resource.form.description')),
-                    ]),
-               
+                    SpatieMediaLibraryFileUpload::make('logo')
+                        ->collection('logos')->imageEditor()
+                        ->image()->rules('required')
+                        ->label(__('filament/resources/brand-resource.form.logo')),
+
+                    Textarea::make('description')
+                        ->maxLength(16777215)
+                        ->columnSpanFull()
+                        ->label(__('filament/resources/brand-resource.form.description')),
+                ]),
+
             ]);
     }
 

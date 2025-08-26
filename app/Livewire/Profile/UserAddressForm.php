@@ -8,8 +8,10 @@ use App\Models\Township;
 use App\Models\UserAddress;
 use Filament\Notifications\Notification;
 use Illuminate\Support\Facades\Auth;
+use Livewire\Attributes\Layout;
 use Livewire\Component;
 
+#[Layout('layouts.app')]
 class UserAddressForm extends Component
 {
     public $selectedRegion = '';
@@ -26,7 +28,7 @@ class UserAddressForm extends Component
 
     public $townships = [];
 
-    public $addresses;
+    public $addresses = [];
 
     protected $rules = [
         'selectedRegion' => 'required|exists:regions,id',
@@ -77,9 +79,13 @@ class UserAddressForm extends Component
             $this->selectedRegion = (string) $address->region_id;
 
             // Load townships for this region
-            $this->townships = Township::where('region_id', $address->region_id)->get();
+            $this->townships = Township::where('region_id', $address->region_id)
+                ->whereHas('deliveries', function ($query) {
+                    $query->where('tenant_id', tenant('id'));
+                })
+                ->get();
 
-            // Set township ID as string to ensure type consistency
+            // Set township ID as string after loading townships
             $this->selectedTownship = (string) $address->township_id;
         }
     }
@@ -118,7 +124,7 @@ class UserAddressForm extends Component
                     'phone' => $this->phone,
                 ]);
         } else {
-            if ($this->addresses->count() >= 3) {
+            if (count($this->addresses) >= 3) {
                 Notification::make()->title('Maximum 3 addresses allowed')->success()->send();
 
                 return;
@@ -140,6 +146,8 @@ class UserAddressForm extends Component
 
     public function render()
     {
-        return view('livewire.profile.user-address-form');
+        return view('livewire.profile.user-address-form', [
+            'townships' => $this->townships,
+        ]);
     }
 }

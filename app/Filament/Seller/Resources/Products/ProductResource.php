@@ -11,6 +11,7 @@ use App\Models\AttributeValue;
 use App\Models\Exchange;
 use App\Models\Product;
 use CodeWithDennis\FilamentSelectTree\SelectTree;
+use Filament\Actions\Action;
 use Filament\Actions\BulkActionGroup;
 use Filament\Actions\DeleteBulkAction;
 use Filament\Actions\EditAction;
@@ -35,7 +36,6 @@ use Filament\Schemas\Components\Utilities\Get;
 use Filament\Schemas\Components\Utilities\Set;
 use Filament\Schemas\Schema;
 use Filament\Tables;
-use Filament\Infolists\Components\TextEntry;
 use Filament\Tables\Columns\IconColumn;
 use Filament\Tables\Columns\TextColumn;
 use Filament\Tables\Enums\FiltersLayout;
@@ -47,7 +47,6 @@ use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\SoftDeletingScope;
 use Illuminate\Support\Str;
-use Filament\Actions\Action;
 
 class ProductResource extends Resource
 {
@@ -125,7 +124,9 @@ class ProductResource extends Resource
                         TextInput::make('sku')
                             ->default(Str::upper(uniqid()))
                             ->required(fn (Get $get) => ! $get('has_variant'))
-                            ->hidden(fn (Get $get) => $get('has_variant'))
+                            ->hiddenJs(<<<'JS'
+                                $get('has_variant')
+                            JS)
                             ->maxLength(255),
 
                         TextInput::make('expired_date')
@@ -204,7 +205,9 @@ class ProductResource extends Resource
                                 TextInput::make('price')
                                     ->label(__('filament/resources/product-resource.form.single_product.price.label'))
                                     ->placeholder(__('filament/resources/product-resource.form.single_product.price.placeholder'))
-                                    ->numeric()->hidden(fn (Get $get) => blank($get('buy_price')))
+                                    ->numeric()->hiddenJs(<<<'JS'
+                                        !$get('buy_price')
+                                    JS)
                                     ->live(onBlur: true, debounce: 200)
                                     ->afterStateUpdated(function (Get $get, Set $set) {
                                         // this is auto change discount price
@@ -246,46 +249,39 @@ class ProductResource extends Resource
                                     ->prefix(fn (Get $get) => blank($get('exchange_id')) ? '' : Exchange::where('id', $get('exchange_id'))->with('currency')->first()->currency->symbol_native)
                                     ->default(0.0000),
 
-                                Grid::make()->schema([
+                                Toggle::make('is_whole_sale')
+                                    ->onIcon('heroicon-m-hand-thumb-up')
+                                    ->offIcon('heroicon-m-hand-thumb-down')
+                                    ->helperText('For your product`s wholesale')
+                                    ->label('WholeSales')
+                                    ->required(),
 
-                                    Group::make()->schema([
+                                Group::make()->schema([
+                                    Section::make('မြန်မာ ကျပ် ပြပုံစံ')
+                                        ->compact()
+                                        ->schema([
+                                            TextInput::make('mmk_buy_price')
+                                                ->label('၀ယ်ရင်းစျေး')
+                                                ->readOnly(),
 
-                                        Toggle::make('is_whole_sale')
-                                            ->onIcon('heroicon-m-hand-thumb-up')
-                                            ->offIcon('heroicon-m-hand-thumb-down')
-                                            ->helperText('For your product`s wholesale')
-                                            ->label('WholeSales')
-                                            ->required(),
-                                    ]),
+                                            TextInput::make('mmk_price')
+                                                ->label('ရောင်းစျေး')
+                                                ->readOnly(),
 
-                                    Group::make()->schema([
-                                        Section::make('မြန်မာ ကျပ် ပြပုံစံ')
-                                            ->compact()
-                                            ->schema([
-                                                TextInput::make('mmk_buy_price')
-                                                    ->label('၀ယ်ရင်းစျေး')
-                                                    ->readOnly(),
+                                            TextInput::make('mmk_discount_price')
+                                                ->readOnly()->label('လျော့စျေး'),
 
-                                                TextInput::make('mmk_price')
-                                                    ->label('ရောင်းစျေး')
-                                                    ->readOnly(),
-
-                                                TextInput::make('mmk_discount_price')
-                                                    ->readOnly()->label('လျော့စျေး'),
-
-                                            ])->columns(3)->visible(function (Get $get) {
-                                                if (! blank($get('exchange_id'))) {
-                                                    $exchange = Exchange::where('id', $get('exchange_id'))->with('currency:id,code')->first();
-                                                    if ($exchange->currency->code != 'MMK') {
-                                                        return true;
-                                                    }
+                                        ])->columns(3)->visible(function (Get $get) {
+                                            if (! blank($get('exchange_id'))) {
+                                                $exchange = Exchange::where('id', $get('exchange_id'))->with('currency:id,code')->first();
+                                                if ($exchange->currency->code != 'MMK') {
+                                                    return true;
                                                 }
+                                            }
 
-                                                return false;
-                                            }),
-                                    ])->columnSpan(2),
-
-                                ])->columns(3),
+                                            return false;
+                                        }),
+                                ])->columnSpanFull(),
 
                                 Repeater::make('attributes')
                                     ->label(__('filament/resources/product-resource.form.variants.attributes.label'))
@@ -311,7 +307,9 @@ class ProductResource extends Resource
                                                 ->multiple()
                                                 ->label(__('filament/resources/product-resource.form.variants.attributes.value.label'))
                                                 ->placeholder(__('filament/resources/product-resource.form.variants.attributes.value.placeholder'))
-                                                ->hidden(fn (Get $get) => blank($get('attribute_id')))
+                                                ->hiddenJs(<<<'JS'
+                                                    !$get('attribute_id')
+                                                JS)
                                                 ->required()->searchable()->preload()
                                                 ->options(fn (Get $get) => AttributeValue::where('attribute_id', $get('attribute_id'))->pluck('value', 'id')),
 
@@ -327,23 +325,27 @@ class ProductResource extends Resource
                                     ->image()->rules('required|image|max:512')->columnSpanFull(),
 
                                 Section::make()->description('500 kb ထက် များနေပါက Optimize လုပ်ပေးပါရန် ')
-                                                ->afterHeader([
-                                                    Action::make('optimize image')
-                                                        ->size('sm')
-                                                        ->color('green')
-                                                        ->url('https://saruwakakun.com/tools/png-jpeg-to-webp/')
-                                                        ->openUrlInNewTab()
-                                                ])->columnSpanFull()
+                                    ->afterHeader([
+                                        Action::make('optimize image')
+                                            ->size('sm')
+                                            ->color('green')
+                                            ->url('https://saruwakakun.com/tools/png-jpeg-to-webp/')
+                                            ->openUrlInNewTab(),
+                                    ])->columnSpanFull(),
 
                             ])->columns(2),
 
-                    ])->hidden(fn (Get $get) => $get('has_variant') || blank($get('exchange_id'))),
+                    ])->hiddenJs(<<<'JS'
+                        $get('has_variant') || !$get('exchange_id')
+                    JS),
 
                     Group::make()->schema([
                         RichEditor::make('description')
                             ->required()
                             ->columnSpanFull(),
-                    ])->hidden(fn (Get $get) => ! $get('has_variant') || blank($get('exchange_id'))),
+                    ])->hiddenJs(<<<'JS'
+                        !$get('has_variant') || !$get('exchange_id')
+                    JS),
 
                     Group::make()->schema([
 
@@ -485,7 +487,9 @@ class ProductResource extends Resource
                                                         ->label(__('filament/resources/product-resource.form.variants.attributes.value.label'))
                                                         ->placeholder(__('filament/resources/product-resource.form.variants.attributes.value.placeholder'))
                                                         ->multiple()
-                                                        ->hidden(fn (Get $get) => blank($get('attribute_id')))
+                                                        ->hiddenJs(<<<'JS'
+                                                            !$get('attribute_id')
+                                                        JS)
                                                         ->required()->searchable()->preload()->label('Value')->placeholder('Select')
                                                         ->options(fn (Get $get) => AttributeValue::where('attribute_id', $get('attribute_id'))->pluck('value', 'id')),
 
@@ -505,22 +509,20 @@ class ProductResource extends Resource
                                     //    ->helperText('Clone Action လုပ်ပါက images ကို နောက်ဆုံးမှ ထည့်ပေးပါရန် (သို့) edit မှာ clone ပေးပါရန်')
                                     ->rules('required')->columnSpanFull(),
 
-
                             ])
                             ->columnSpanFull()
                             ->columns(3)
                             ->grid(2)
                             ->visible(fn (Get $get) => $get('has_variant') && ! blank($get('exchange_id'))),
 
-
-                                Section::make()->description('500 kb ထက် များနေပါက Optimize လုပ်ပေးပါရန် ')
-                                                ->afterHeader([
-                                                    Action::make('optimize image')
-                                                        ->size('sm')
-                                                        ->color('green')
-                                                        ->url('https://saruwakakun.com/tools/png-jpeg-to-webp/')
-                                                        ->openUrlInNewTab()
-                                                ])->columnSpanFull()->visible(fn (Get $get) => $get('has_variant') && ! blank($get('exchange_id'))),
+                        Section::make()->description('500 kb ထက် များနေပါက Optimize လုပ်ပေးပါရန် ')
+                            ->afterHeader([
+                                Action::make('optimize image')
+                                    ->size('sm')
+                                    ->color('green')
+                                    ->url('https://saruwakakun.com/tools/png-jpeg-to-webp/')
+                                    ->openUrlInNewTab(),
+                            ])->columnSpanFull()->visible(fn (Get $get) => $get('has_variant') && ! blank($get('exchange_id'))),
                     ])->columnSpanFull(),
 
                 ])->columnSpanFull(),
@@ -583,15 +585,11 @@ class ProductResource extends Resource
         if ($exchangeID) {
             $exchange = Exchange::where('id', $exchangeID)->with('currency:id,code')->first();
             if ($exchange->currency->code != 'MMK') {
-                $getMMKExchange = Exchange::whereHas('currency', function ($q) {
-                    return $q->where('code', 'MMK');
-                })->first();
-
-                $getBuyMMKPriceFromSelectedCurrency = ($getMMKExchange->rate / $exchange->rate) * $get('buy_price');
+                $getBuyMMKPriceFromSelectedCurrency = $get('buy_price') * $exchange->rate;
                 $removeLastTowDigitsToZeroForBuyPrice = self::modifyPrice($getBuyMMKPriceFromSelectedCurrency);
                 $set('mmk_buy_price', $removeLastTowDigitsToZeroForBuyPrice);
 
-                $getMMKPriceFromSelectedCurrency = ($getMMKExchange->rate / $exchange->rate) * $get('price');
+                $getMMKPriceFromSelectedCurrency = $get('price') * $exchange->rate;
                 $removeLastTowDigitsToZero = self::modifyPrice($getMMKPriceFromSelectedCurrency);
                 $set('mmk_price', $removeLastTowDigitsToZero);
 

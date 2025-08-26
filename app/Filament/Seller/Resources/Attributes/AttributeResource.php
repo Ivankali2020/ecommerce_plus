@@ -19,6 +19,8 @@ class AttributeResource extends Resource
 
     //    protected static ?string $navigationIcon = 'heroicon-o-rectangle-stack';
 
+    protected static ?string $recordTitleAttribute = 'name';
+
     protected static string|\UnitEnum|null $navigationGroup = 'Business Section';
 
     public static function getNavigationLabel(): string

@@ -6,10 +6,10 @@
             {{ __('messages.cart.payment_options') }}
         </h3>
         
-        <div class="flex items-center p-3 bg-blue-50 border border-blue-200 rounded-lg">
+        <div class="flex items-center p-3 bg-slate-50 border border-slate-200 rounded-lg">
             <input id="cod_option" wire:model.live="isCod" type="checkbox"
-                class="h-4 w-4 text-blue-600 border-gray-300 rounded focus:ring-0 ring-0">
-            <label for="cod_option" class="ml-3 block text-sm font-medium text-blue-700 ">
+                class="h-4 w-4 text-slate-600 border-gray-300 rounded focus:ring-0 ring-0">
+            <label for="cod_option" class="ml-3 block text-sm font-medium text-slate-700 ">
                 {{ __('messages.cart.cash_on_delivery') }}
             </label>
         </div>
@@ -159,7 +159,7 @@
                 @error('paymentSlip') border-red-300 bg-red-50 @else
                 {{ $paymentSlip ? 'border-green-300 bg-green-50' : 'border-gray-300 hover:border-gray-400' }}
                 @enderror"
-                :class="{ 'border-blue-400 bg-blue-50': isDragging }"
+                :class="{ 'border-slate-400 bg-slate-50': isDragging }"
                 @dragover.prevent="isDragging = true"
                 @dragleave.prevent="isDragging = false"
                 @drop.prevent="isDragging = false">

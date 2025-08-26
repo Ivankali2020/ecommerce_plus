@@ -17,13 +17,13 @@ return [
         ],
         'rate' => [
             'label' => 'Exchange Rate',
-            'helper' => 'Calculate based on 1 USD',
+            'helper' => 'Calculate based on 1 MMK',
         ],
     ],
     'table' => [
         'seller_name' => 'Seller',
         'currency_code' => 'Currency',
         'rate' => 'Rate',
-        'rate_description' => 'Calculated based on 1 USD',
+        'rate_description' => 'Calculated based on 1 MMK',
     ],
 ];
