@@ -45,6 +45,7 @@ class CartItems extends Component
 
         // Dispatch event to update other components
         $this->dispatch('cart-updated');
+        $this->dispatch('cartUpdated');
     }
 
     public function updateQuantity(int $cartItemId, int $quantity): void
@@ -92,6 +93,7 @@ class CartItems extends Component
 
         // Dispatch event to update other components
         $this->dispatch('cart-updated');
+        $this->dispatch('cartUpdated');
     }
 
     public function render()

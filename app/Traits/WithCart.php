@@ -40,15 +40,12 @@ trait WithCart
 
             $newQuantity = $existingCart ? $existingCart->quantity + 1 : $quantity;
 
-            $this->dispatch('cartUpdated');
-            // Dispatch custom event for image refresh after cart update
-            $this->dispatch('product-image-refresh');
             // Check MOQ
             if ($newQuantity < ($variant?->MOQ ?? $product->MOQ)) {
                 Notification::make()
                     ->title(__('messages.cart.min_order_not_met'))
                     ->body(__('messages.cart.min_order_quantity', ['quantity' => $product->MOQ]))
-                    ->warning()
+                    ->warning()->duration(500)
                     ->send();
 
                 return;
@@ -58,7 +55,7 @@ trait WithCart
                 Notification::make()
                     ->title(__('messages.cart.out_of_stock'))
                     ->body(__('messages.cart.limited_stock', ['quantity' => $product->quantity]))
-                    ->warning()
+                    ->warning()->duration(500)
                     ->send();
 
                 return;
@@ -81,7 +78,10 @@ trait WithCart
                 ]
             );
 
-            $this->dispatch('cart-updated');
+            $this->dispatch('cartUpdated');
+            // $this->dispatch('cart-updated');
+            // Dispatch custom event for image refresh after cart update
+            // $this->dispatch('product-image-refresh');
 
             if ($existingCart) {
                 Notification::make()
@@ -93,6 +93,8 @@ trait WithCart
                     ->title(__('messages.cart.product_added'))
                     ->success()
                     ->duration(500)->send();
+
+                return;
             }
         } catch (Exception $e) {
             logger()->error('Error adding to cart: '.$e->getMessage());
