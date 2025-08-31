@@ -15,7 +15,7 @@ return [
             'name' => 'Product Name',
             'category' => 'Category',
         ],
-        'attributes' => 'Attributes',
+        'attributes' => 'Unit',
         'original_buy_price' => 'Buy Price',
         'original_price' => 'Original Price',
         'selling_price' => 'Selling Price',
@@ -37,5 +37,6 @@ return [
         'created_from' => 'From',
         'created_until' => 'Until',
         'product' => 'Product',
+        'order' => 'Order',
     ],
 ];

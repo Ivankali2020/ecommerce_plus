@@ -92,11 +92,9 @@ class OrderByRegion extends ChartWidget
                     'label' => __('filament/widgets/order-by-region.revenue_label'),
                     'data' => $data->map(fn ($r) => $r->orders_sum_total_price ?? 0),
                     'backgroundColor' => [
-                        '#4e79a7', '#f28e2c', '#e15759', '#76b7b2',
-                        '#59a14f', '#edc949', '#af7aa1', '#ff9da7',
-                        '#9c755f', '#bab0ab', '#5f4690', '#1d91c0',
+                        '#edc949',
                     ],
-                    'borderColor' => '#9BD0F5',
+                    'borderColor' => '#edc949',
                 ],
             ],
             'labels' => $data->map(fn ($r) => $r->mm_name),

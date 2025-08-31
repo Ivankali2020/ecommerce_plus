@@ -2,16 +2,18 @@
 
 namespace App\Providers;
 
+use App\Listeners\AwardReferralPoints;
 use App\Models\Exchange;
 use App\Models\Order;
+use App\Models\OrderReturnProduct;
 use App\Observers\ExchangeObserver;
 use App\Observers\OrderObserver;
+use App\Observers\OrderReturnProductObserver;
 use Illuminate\Auth\Events\Registered;
 use Illuminate\Auth\Events\Verified;
 use Illuminate\Auth\Listeners\SendEmailVerificationNotification;
 use Illuminate\Foundation\Support\Providers\EventServiceProvider as ServiceProvider;
 use Illuminate\Support\Facades\Event;
-use App\Listeners\AwardReferralPoints;
 
 class EventServiceProvider extends ServiceProvider
 {
@@ -32,6 +34,7 @@ class EventServiceProvider extends ServiceProvider
     protected $observers = [
         Exchange::class => [ExchangeObserver::class],
         Order::class => [OrderObserver::class],
+        OrderReturnProduct::class => [OrderReturnProductObserver::class],
     ];
 
     /**

@@ -13,8 +13,7 @@ use Stancl\Tenancy\Database\Concerns\BelongsToTenant;
 
 class Order extends Model implements HasMedia
 {
-    use HasFactory, InteractsWithMedia, SoftDeletes, BelongsToTenant;
-
+    use BelongsToTenant, HasFactory, InteractsWithMedia, SoftDeletes;
 
     protected $casts = [
         'status' => OrderStatus::class,
@@ -55,6 +54,11 @@ class Order extends Model implements HasMedia
         return $this->hasMany(OrderProduct::class);
     }
 
+    public function returns()
+    {
+        return $this->hasMany(OrderReturn::class);
+    }
+
     public function pointTransactions()
     {
         return $this->hasMany(PointTransaction::class, 'reference_id')
@@ -64,5 +68,43 @@ class Order extends Model implements HasMedia
     public function scopeGetOnlyConfirm($q)
     {
         return $q->whereIn('status', [OrderStatus::Processing, OrderStatus::Delivered, OrderStatus::Shipped]);
+    }
+
+    /**
+     * Check if this order can be returned
+     */
+    public function canDoRet(): bool
+    {
+        // Check if order is delivered
+        if ($this->status->value !== OrderStatus::Delivered->value) {
+            return false;
+        }
+
+        // Check if order return can be only 24 hours
+        $hoursSinceDelivery = $this->updated_at->diffInHours(now());
+
+        if ($hoursSinceDelivery > 24) {
+            return false;
+        }
+
+        // Check if all products are returnable
+        $returnableProductsCount = $this->products()->whereHas('product', function ($query) {
+            $query->where('is_return', true);
+        })->count();
+
+        return $returnableProductsCount > 0;
+    }
+
+    /**
+     * Check if this order has an active return request
+     */
+    public function hasActiveReturn(): bool
+    {
+        return $this->returns()->whereIn('status', [
+            \App\Helper\ReturnStatus::Pending,
+            \App\Helper\ReturnStatus::UnderReview,
+            \App\Helper\ReturnStatus::Approved,
+            \App\Helper\ReturnStatus::Processing,
+        ])->exists();
     }
 }

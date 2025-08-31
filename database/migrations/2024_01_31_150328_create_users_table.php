@@ -31,11 +31,14 @@ return new class extends Migration
             $table->string('google_id')->nullable();
 
             $table->text('fmc_token')->nullable();
+
             $table->string('referral_code')->nullable();
+            $table->foreignId('referred_by')->nullable()->constrained('users')->nullOnDelete();
+
             $table->bigInteger('points')->default();
             $table->rememberToken();
             $table->timestamps();
-            
+
             // Performance indexes
             $table->index(['seller_id', 'created_at'], 'users_seller_created_idx');
             $table->index(['tenant_id', 'created_at'], 'users_tenant_created_idx');

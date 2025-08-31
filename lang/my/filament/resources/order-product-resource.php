@@ -15,7 +15,7 @@ return [
             'name' => 'ပစ္စည်းအမည်',
             'category' => 'အမျိုးအစား',
         ],
-        'attributes' => 'အရည်အသွေးများ',
+        'attributes' => 'ယူနစ်',
         'original_buy_price' => '၀ယ်ရင်းစျေး',
         'original_price' => 'မူလစျေး',
         'selling_price' => 'ရောင်းစျေး',
@@ -37,5 +37,6 @@ return [
         'created_from' => 'စတင်ရက်',
         'created_until' => 'ပြီးဆုံးရက်',
         'product' => 'ပစ္စည်း',
+        'order' => 'အော်ဒါ နံပါတ်',
     ],
 ];

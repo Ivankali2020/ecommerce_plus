@@ -412,7 +412,10 @@ class OrderResource extends Resource
 
                 TextColumn::make('status')
                     ->badge()->description(fn (Order $order) => 'Deli '.$order->delivery_fees.' ks')
-                    ->searchable()
+                    ->searchable([
+                        'invoice_number',
+                        'status',
+                    ])
                     ->sortable(),
 
                 TextColumn::make('tax_price')->alignEnd()

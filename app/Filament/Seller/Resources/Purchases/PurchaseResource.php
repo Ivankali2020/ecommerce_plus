@@ -18,7 +18,6 @@ use Filament\Actions\BulkActionGroup;
 use Filament\Actions\DeleteBulkAction;
 use Filament\Actions\EditAction;
 use Filament\Forms;
-use Filament\Forms\Components\Hidden;
 use Filament\Forms\Components\Repeater;
 use Filament\Forms\Components\Select;
 use Filament\Forms\Components\TextInput;
@@ -29,7 +28,6 @@ use Filament\Resources\Pages\Page;
 use Filament\Resources\Resource;
 use Filament\Schemas\Components\Grid;
 use Filament\Schemas\Components\Group;
-use Filament\Schemas\Components\Section;
 use Filament\Schemas\Components\Utilities\Get;
 use Filament\Schemas\Components\Utilities\Set;
 use Filament\Schemas\Schema;
@@ -73,7 +71,7 @@ class PurchaseResource extends Resource
     {
         return $schema
             ->components([
-                Grid::make()->schema([
+                Grid::make(4)->schema([
 
                     Group::make()->schema([
 
@@ -122,6 +120,7 @@ class PurchaseResource extends Resource
                                                             ];
 
                                                         }
+                                                        // dd($data);
 
                                                         $set('attributes', $data);
                                                     }
@@ -155,7 +154,6 @@ class PurchaseResource extends Resource
                                                         ];
 
                                                     }
-
                                                     $set('attributes', $data);
                                                 }
                                             })
@@ -196,7 +194,7 @@ class PurchaseResource extends Resource
                                             ->schema([
 
                                                 Group::make()->schema([
-                                                    Hidden::make('attribute')
+                                                    TextInput::make('attribute')
                                                         ->label(__('filament/resources/purchase-resource.form.products.item.attributes.attribute'))
                                                         ->required()
                                                         ->label('Attribute'),
@@ -205,10 +203,12 @@ class PurchaseResource extends Resource
                                                         ->label(__('filament/resources/purchase-resource.form.products.item.attributes.value'))
                                                         ->placeholder(__('filament/resources/purchase-resource.form.products.item.attributes.select'))
                                                         ->multiple()
-                                                        ->hidden(fn (Get $get) => blank($get('attribute')))
+                                                        ->hiddenJs(<<<'JS'
+                                                            !$get('attribute')
+                                                        JS)
                                                         ->required()->searchable()->preload()->label('Value')->placeholder('Select')
                                                         //                                                           ->default(fn(Forms\Get $get) => AttributeValue::pluck('value','id'))
-                                                        ->options(fn (Get $get) => AttributeValue::pluck('value', 'id')),
+                                                        ->options(fn (Get $get) => AttributeValue::pluck('value', 'value')),
 
                                                 ])->columns(columns: 1),
 
@@ -218,50 +218,48 @@ class PurchaseResource extends Resource
 
                                 ])->columns(6),
 
-                            ])->columns(columns: 6)->columnSpanFull(),
+                            ])->columnSpanFull(),
 
-                    ])->columnSpan(3)->columns(2),
+                    ])->columnSpan(3),
 
                     Group::make()->schema([
-                        Section::make()->schema([
 
-                            Select::make('supplier_id')
-                                ->searchable()->preload()
-                                ->relationship('supplier', 'name', modifyQueryUsing: fn ($query) => $query->when(CheckFilamentSellerUser::getSellerId() != null, function ($q) {
-                                    $q->where('seller_id', CheckFilamentSellerUser::getSellerId());
-                                }))
-                                ->label(__('filament/resources/purchase-resource.form.supplier_id'))
-                                ->required(),
+                        Select::make('supplier_id')
+                            ->searchable()->preload()
+                            ->relationship('supplier', 'name', modifyQueryUsing: fn ($query) => $query->when(CheckFilamentSellerUser::getSellerId() != null, function ($q) {
+                                $q->where('seller_id', CheckFilamentSellerUser::getSellerId());
+                            }))
+                            ->label(__('filament/resources/purchase-resource.form.supplier_id'))
+                            ->required(),
 
-                            ToggleButtons::make('status')
-                                ->inline()
-                                ->required()->options(PurchaseStatus::class)
-                                ->label(__('filament/resources/purchase-resource.form.status'))
-                                ->default('processing'),
+                        ToggleButtons::make('status')
+                            ->inline()
+                            ->required()->options(PurchaseStatus::class)
+                            ->label(__('filament/resources/purchase-resource.form.status'))
+                            ->default('processing'),
 
-                            TextInput::make('total_amount')
-                                ->placeholder(function (Get $get, Set $set) {
-                                    self::getTotalPrice($get, $set);
-                                })
-                                ->label(__('filament/resources/purchase-resource.form.total_amount'))
-                                ->required()
-                                ->numeric(),
+                        TextInput::make('total_amount')
+                            ->placeholder(function (Get $get, Set $set) {
+                                self::getTotalPrice($get, $set);
+                            })
+                            ->label(__('filament/resources/purchase-resource.form.total_amount'))
+                            ->required()
+                            ->numeric(),
 
-                            TextInput::make('paid_amount')
-                                ->label(__('filament/resources/purchase-resource.form.paid_amount'))
-                                ->required()
-                                ->numeric()
-                                ->default(0.00),
+                        TextInput::make('paid_amount')
+                            ->label(__('filament/resources/purchase-resource.form.paid_amount'))
+                            ->required()
+                            ->numeric()
+                            ->default(0.00),
 
-                            TextInput::make('remaining_amount')
-                                ->label(__('filament/resources/purchase-resource.form.remaining_amount'))
-                                ->required()
-                                ->numeric()
-                                ->default(0.00),
-                        ]),
+                        TextInput::make('remaining_amount')
+                            ->label(__('filament/resources/purchase-resource.form.remaining_amount'))
+                            ->required()
+                            ->numeric()
+                            ->default(0.00),
                     ]),
 
-                ])->columns(4),
+                ])->columnSpanFull(),
 
             ]);
     }

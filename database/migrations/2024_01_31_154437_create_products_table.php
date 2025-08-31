@@ -53,7 +53,7 @@ return new class extends Migration
             $table->boolean('is_whole_sale')->default(false);
 
             $table->boolean('is_return')->default(false);
-            $table->boolean('is_shipped')->default(false);
+            $table->boolean('is_shipped')->default(true);
 
             $table->dateTime('expired_date')->nullable();
 
@@ -62,7 +62,7 @@ return new class extends Migration
 
             // Make SKU unique per tenant
             $table->unique(['sku', 'tenant_id']);
-            
+
             // Performance indexes
             $table->index(['seller_id', 'is_public', 'deleted_at'], 'products_seller_public_deleted_idx');
             $table->index(['category_id', 'is_public', 'deleted_at'], 'products_category_public_deleted_idx');
