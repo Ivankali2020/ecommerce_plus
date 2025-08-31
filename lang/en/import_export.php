@@ -22,6 +22,9 @@ return [
         'variants_imported_success' => 'Variants imported successfully!',
         'error_importing_products' => 'Error importing products',
         'error_importing_variants' => 'Error importing variants',
+        'import_queued' => 'Import queued successfully',
+        'import_processing_message' => 'Your import is being processed in the background. You will receive a notification when complete.',
+        'error_queuing_import' => 'Error queuing import',
     ],
 
     'file_names' => [

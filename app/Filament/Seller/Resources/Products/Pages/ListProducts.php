@@ -7,10 +7,9 @@ use App\Exports\ProductTemplateExport;
 use App\Exports\VariantExport;
 use App\Exports\VariantTemplateExport;
 use App\Filament\Seller\Resources\Products\ProductResource;
+use Exception;
 use App\Imports\ProductImport;
 use App\Imports\VariantImport;
-use Exception;
-use Filament\Actions;
 use Filament\Actions\Action;
 use Filament\Actions\ActionGroup;
 use Filament\Actions\CreateAction;
@@ -81,15 +80,25 @@ class ListProducts extends ListRecords
                             ->label(__('import_export.form.select_excel_file'))
                             ->acceptedFileTypes(['application/vnd.openxmlformats-officedocument.spreadsheetml.sheet', 'application/vnd.ms-excel', 'text/csv'])
                             ->helperText(__('import_export.form.download_template_first'))
-                            ->directory('imports')
+                            ->directory('public/imports')
                             ->required(),
                     ])
                     ->action(function (array $data) {
                         try {
                             // Get the uploaded file from storage
                             $file = $data['file'];
-                            $filePath = Storage::disk('public')->path($file);
 
+                            // Remove any "public/" prefix if it exists (Filament sometimes adds this)
+                            $cleanFile = str_replace('public/', '', $file);
+
+                            // Ensure the file path includes imports/ directory
+                            if (! str_starts_with($cleanFile, 'imports/')) {
+                                $cleanFile = 'imports/'.$cleanFile;
+                            }
+
+                            $filePath = Storage::disk('public')->path($cleanFile);
+
+                            // Dispatch the import job
                             Excel::import(new ProductImport, $filePath);
 
                             // Clean up uploaded file
@@ -106,9 +115,7 @@ class ListProducts extends ListRecords
                                 ->danger()
                                 ->send();
                         }
-                    }),
-
-                Action::make('import_variants')
+                    }),                Action::make('import_variants')
                     ->label(__('import_export.actions.import_variants'))
                     ->icon('heroicon-o-arrow-up-tray')
                     ->color('gray')
@@ -117,27 +124,36 @@ class ListProducts extends ListRecords
                             ->label(__('import_export.form.select_excel_file'))
                             ->acceptedFileTypes(['application/vnd.openxmlformats-officedocument.spreadsheetml.sheet', 'application/vnd.ms-excel', 'text/csv'])
                             ->helperText(__('import_export.form.ensure_products_exist'))
-                            ->directory('imports')
+                            ->directory('public/imports')
                             ->required(),
                     ])
                     ->action(function (array $data) {
                         try {
                             // Get the uploaded file from storage
                             $file = $data['file'];
-                            $filePath = Storage::disk('public')->path($file);
 
+                            // Remove any "public/" prefix if it exists (Filament sometimes adds this)
+                            $cleanFile = str_replace('public/', '', $file);
+
+                            // Ensure the file path includes imports/ directory
+                            if (! str_starts_with($cleanFile, 'imports/')) {
+                                $cleanFile = 'imports/'.$cleanFile;
+                            }
+
+                            $filePath = Storage::disk('public')->path($cleanFile);
+
+                             // Dispatch the import job
                             Excel::import(new VariantImport, $filePath);
-
                             // Clean up uploaded file
                             Storage::disk('public')->delete($file);
 
                             Notification::make()
-                                ->title(__('import_export.notifications.variants_imported_success'))
+                               ->title(__('import_export.notifications.products_imported_success'))
                                 ->success()
                                 ->send();
                         } catch (Exception $e) {
                             Notification::make()
-                                ->title(__('import_export.notifications.error_importing_variants'))
+                                ->title(__('import_export.notifications.error_importing_products'))
                                 ->body($e->getMessage())
                                 ->danger()
                                 ->send();
