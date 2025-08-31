@@ -393,7 +393,7 @@ class MultiStoreSeeder extends Seeder
                     'mmk_discount_price' => $product['price'] - $product['price'] / 100 * 10,
                     'category_id' => $product['categories'],
                     'sku' => $product['code'],
-                    'quantity' => $product['stock'],
+                    'quantity' => 100,
                     'description' => fake()->paragraph(),
                     'has_variant' => false,
                     'is_public' => fake()->boolean(),
