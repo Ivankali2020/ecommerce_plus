@@ -36,6 +36,13 @@ return new class extends Migration
             $table->decimal('exchange_rate')->nullable();
 
             $table->decimal('sub_price', 15, 2);
+
+            $table->boolean('is_returned')->default(false)->after('sub_price');
+            $table->integer('returned_quantity')->default(0)->after('is_returned');
+            $table->decimal('total_refunded_amount', 15, 2)->default(0)->after('returned_quantity');
+
+            // Performance index for return queries
+            $table->index(['is_returned', 'returned_quantity'], 'order_products_return_idx');
             $table->timestamps();
         });
     }
