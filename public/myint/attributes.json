@@ -1,0 +1,614 @@
+[
+  {
+    "id": 1,
+    "seller_id": 1,
+    "name": "Color",
+    "type": "text",
+    "deleted_at": null,
+    "created_at": "2025-04-23 21:34:07",
+    "updated_at": "2025-04-23 21:34:07"
+  },
+  {
+    "id": 2,
+    "seller_id": 1,
+    "name": "Color",
+    "type": "text",
+    "deleted_at": null,
+    "created_at": "2025-04-23 21:34:07",
+    "updated_at": "2025-04-23 21:34:07"
+  },
+  {
+    "id": 3,
+    "seller_id": 1,
+    "name": "Color",
+    "type": "text",
+    "deleted_at": null,
+    "created_at": "2025-04-23 21:34:07",
+    "updated_at": "2025-04-23 21:34:07"
+  },
+  {
+    "id": 4,
+    "seller_id": 2,
+    "name": "Dosage Form",
+    "type": "text",
+    "deleted_at": "2025-05-10 10:11:58",
+    "created_at": "2025-04-23 21:34:07",
+    "updated_at": "2025-05-10 10:11:58"
+  },
+  {
+    "id": 5,
+    "seller_id": 2,
+    "name": "Strength",
+    "type": "text",
+    "deleted_at": "2025-05-10 10:11:58",
+    "created_at": "2025-04-23 21:34:07",
+    "updated_at": "2025-05-10 10:11:58"
+  },
+  {
+    "id": 6,
+    "seller_id": 2,
+    "name": "Manufacturer",
+    "type": "text",
+    "deleted_at": "2025-05-10 10:11:58",
+    "created_at": "2025-04-23 21:34:07",
+    "updated_at": "2025-05-10 10:11:58"
+  },
+  {
+    "id": 7,
+    "seller_id": 2,
+    "name": "Packaging",
+    "type": "text",
+    "deleted_at": "2025-05-10 10:11:58",
+    "created_at": "2025-04-23 21:34:07",
+    "updated_at": "2025-05-10 10:11:58"
+  },
+  {
+    "id": 8,
+    "seller_id": 2,
+    "name": "Prescription Required",
+    "type": "text",
+    "deleted_at": "2025-05-10 10:11:58",
+    "created_at": "2025-04-23 21:34:07",
+    "updated_at": "2025-05-10 10:11:58"
+  },
+  {
+    "id": 9,
+    "seller_id": 2,
+    "name": "Route of Administration",
+    "type": "text",
+    "deleted_at": "2025-05-10 10:11:58",
+    "created_at": "2025-04-23 21:34:07",
+    "updated_at": "2025-05-10 10:11:58"
+  },
+  {
+    "id": 10,
+    "seller_id": 2,
+    "name": "Active Ingredient",
+    "type": "text",
+    "deleted_at": "2025-05-10 10:11:58",
+    "created_at": "2025-04-23 21:34:07",
+    "updated_at": "2025-05-10 10:11:58"
+  },
+  {
+    "id": 11,
+    "seller_id": 2,
+    "name": "Storage Conditions",
+    "type": "text",
+    "deleted_at": "2025-05-10 10:11:58",
+    "created_at": "2025-04-23 21:34:07",
+    "updated_at": "2025-05-10 10:11:58"
+  },
+  {
+    "id": 12,
+    "seller_id": 2,
+    "name": "Category",
+    "type": "text",
+    "deleted_at": "2025-05-10 10:11:58",
+    "created_at": "2025-04-23 21:34:07",
+    "updated_at": "2025-05-10 10:11:58"
+  },
+  {
+    "id": 13,
+    "seller_id": 2,
+    "name": "Side Effects",
+    "type": "text",
+    "deleted_at": "2025-05-10 10:11:58",
+    "created_at": "2025-04-23 21:34:07",
+    "updated_at": "2025-05-10 10:11:58"
+  },
+  {
+    "id": 14,
+    "seller_id": 2,
+    "name": " Tablet",
+    "type": "text",
+    "deleted_at": null,
+    "created_at": "2025-05-10 10:15:24",
+    "updated_at": "2025-05-10 10:15:24"
+  },
+  {
+    "id": 15,
+    "seller_id": 2,
+    "name": "Syrup",
+    "type": "text",
+    "deleted_at": null,
+    "created_at": "2025-05-10 15:48:57",
+    "updated_at": "2025-05-11 13:13:11"
+  },
+  {
+    "id": 16,
+    "seller_id": 2,
+    "name": "Suspension",
+    "type": "text",
+    "deleted_at": null,
+    "created_at": "2025-05-10 19:38:38",
+    "updated_at": "2025-05-10 19:38:38"
+  },
+  {
+    "id": 17,
+    "seller_id": 2,
+    "name": "Sachet",
+    "type": "text",
+    "deleted_at": null,
+    "created_at": "2025-05-10 19:51:47",
+    "updated_at": "2025-05-10 19:51:47"
+  },
+  {
+    "id": 18,
+    "seller_id": 2,
+    "name": "Drip",
+    "type": "text",
+    "deleted_at": null,
+    "created_at": "2025-05-11 07:33:21",
+    "updated_at": "2025-05-11 07:33:21"
+  },
+  {
+    "id": 19,
+    "seller_id": 2,
+    "name": "Drip Set",
+    "type": "text",
+    "deleted_at": null,
+    "created_at": "2025-05-11 11:00:17",
+    "updated_at": "2025-05-11 11:00:17"
+  },
+  {
+    "id": 20,
+    "seller_id": 2,
+    "name": "Syringe",
+    "type": "text",
+    "deleted_at": null,
+    "created_at": "2025-05-11 11:11:07",
+    "updated_at": "2025-05-11 11:11:07"
+  },
+  {
+    "id": 21,
+    "seller_id": 2,
+    "name": "Gauge",
+    "type": "text",
+    "deleted_at": null,
+    "created_at": "2025-05-11 11:25:55",
+    "updated_at": "2025-05-11 11:25:55"
+  },
+  {
+    "id": 22,
+    "seller_id": 2,
+    "name": "Capsule",
+    "type": "text",
+    "deleted_at": null,
+    "created_at": "2025-05-11 13:12:18",
+    "updated_at": "2025-05-11 13:13:30"
+  },
+  {
+    "id": 23,
+    "seller_id": 2,
+    "name": "Lozenges",
+    "type": "text",
+    "deleted_at": null,
+    "created_at": "2025-05-11 13:18:15",
+    "updated_at": "2025-05-11 13:18:15"
+  },
+  {
+    "id": 24,
+    "seller_id": 2,
+    "name": "Cooling Patch",
+    "type": "text",
+    "deleted_at": null,
+    "created_at": "2025-05-11 13:20:11",
+    "updated_at": "2025-05-19 13:43:00"
+  },
+  {
+    "id": 25,
+    "seller_id": 2,
+    "name": "Drop",
+    "type": "text",
+    "deleted_at": null,
+    "created_at": "2025-05-11 16:15:24",
+    "updated_at": "2025-05-11 16:15:24"
+  },
+  {
+    "id": 26,
+    "seller_id": 2,
+    "name": "Cream",
+    "type": "text",
+    "deleted_at": null,
+    "created_at": "2025-05-11 16:37:20",
+    "updated_at": "2025-05-11 16:37:20"
+  },
+  {
+    "id": 27,
+    "seller_id": 2,
+    "name": "Soft Cap",
+    "type": "text",
+    "deleted_at": null,
+    "created_at": "2025-05-12 20:18:07",
+    "updated_at": "2025-05-12 20:18:07"
+  },
+  {
+    "id": 28,
+    "seller_id": 2,
+    "name": "Liquid",
+    "type": "text",
+    "deleted_at": null,
+    "created_at": "2025-05-12 20:22:30",
+    "updated_at": "2025-05-12 20:22:30"
+  },
+  {
+    "id": 29,
+    "seller_id": 2,
+    "name": "Lotion",
+    "type": "text",
+    "deleted_at": null,
+    "created_at": "2025-05-12 20:55:49",
+    "updated_at": "2025-05-12 20:55:49"
+  },
+  {
+    "id": 30,
+    "seller_id": 2,
+    "name": "အမှုန့်",
+    "type": "text",
+    "deleted_at": null,
+    "created_at": "2025-05-13 08:16:01",
+    "updated_at": "2025-05-13 08:16:01"
+  },
+  {
+    "id": 31,
+    "seller_id": 2,
+    "name": "ငန်းဆေး",
+    "type": "text",
+    "deleted_at": null,
+    "created_at": "2025-05-13 08:24:25",
+    "updated_at": "2025-05-13 08:24:25"
+  },
+  {
+    "id": 32,
+    "seller_id": 2,
+    "name": "ချွဲပျော်ဆေး",
+    "type": "text",
+    "deleted_at": null,
+    "created_at": "2025-05-13 08:32:16",
+    "updated_at": "2025-05-15 12:57:01"
+  },
+  {
+    "id": 33,
+    "seller_id": 2,
+    "name": "အပူငြိမ်းဆေး",
+    "type": "text",
+    "deleted_at": null,
+    "created_at": "2025-05-13 08:38:02",
+    "updated_at": "2025-05-13 08:38:02"
+  },
+  {
+    "id": 34,
+    "seller_id": 2,
+    "name": "သွေးသန့်ဆေး",
+    "type": "text",
+    "deleted_at": null,
+    "created_at": "2025-05-13 08:39:06",
+    "updated_at": "2025-05-13 08:39:06"
+  },
+  {
+    "id": 35,
+    "seller_id": 2,
+    "name": "သွေးတိုးကျဆေး",
+    "type": "text",
+    "deleted_at": null,
+    "created_at": "2025-05-13 08:59:52",
+    "updated_at": "2025-05-13 08:59:52"
+  },
+  {
+    "id": 36,
+    "seller_id": 2,
+    "name": "နှလုံးဆေး",
+    "type": "text",
+    "deleted_at": null,
+    "created_at": "2025-05-13 09:12:50",
+    "updated_at": "2025-05-13 09:12:50"
+  },
+  {
+    "id": 37,
+    "seller_id": 2,
+    "name": "သွေးဆေး",
+    "type": "text",
+    "deleted_at": null,
+    "created_at": "2025-05-13 09:23:27",
+    "updated_at": "2025-05-13 09:23:27"
+  },
+  {
+    "id": 38,
+    "seller_id": 2,
+    "name": "အစာအိမ်ဆေး",
+    "type": "text",
+    "deleted_at": null,
+    "created_at": "2025-05-13 09:28:23",
+    "updated_at": "2025-05-13 09:28:23"
+  },
+  {
+    "id": 39,
+    "seller_id": 2,
+    "name": "အစာကြေဆေး",
+    "type": "text",
+    "deleted_at": null,
+    "created_at": "2025-05-13 09:32:42",
+    "updated_at": "2025-05-13 09:32:42"
+  },
+  {
+    "id": 40,
+    "seller_id": 2,
+    "name": "ချောင်းဆိုးပျောက်ဆေး",
+    "type": "text",
+    "deleted_at": null,
+    "created_at": "2025-05-13 09:37:07",
+    "updated_at": "2025-05-13 09:37:07"
+  },
+  {
+    "id": 41,
+    "seller_id": 2,
+    "name": "အနာလိမ်းဆေ:",
+    "type": "text",
+    "deleted_at": null,
+    "created_at": "2025-05-13 09:43:33",
+    "updated_at": "2025-05-13 09:43:33"
+  },
+  {
+    "id": 42,
+    "seller_id": 2,
+    "name": "လိမ်းဆေး",
+    "type": "text",
+    "deleted_at": null,
+    "created_at": "2025-05-13 10:18:08",
+    "updated_at": "2025-05-13 10:18:08"
+  },
+  {
+    "id": 43,
+    "seller_id": 2,
+    "name": "ရင်လူးဆေး",
+    "type": "text",
+    "deleted_at": null,
+    "created_at": "2025-05-13 10:19:37",
+    "updated_at": "2025-05-13 10:19:37"
+  },
+  {
+    "id": 44,
+    "seller_id": 2,
+    "name": "ဒါဏ်ကြေ လိမ်းဆေး",
+    "type": "text",
+    "deleted_at": null,
+    "created_at": "2025-05-13 10:25:57",
+    "updated_at": "2025-05-13 10:26:42"
+  },
+  {
+    "id": 45,
+    "seller_id": 2,
+    "name": "ရှူဆေး",
+    "type": "text",
+    "deleted_at": null,
+    "created_at": "2025-05-13 10:44:27",
+    "updated_at": "2025-05-13 10:44:27"
+  },
+  {
+    "id": 46,
+    "seller_id": 2,
+    "name": "စားဆေး",
+    "type": "text",
+    "deleted_at": null,
+    "created_at": "2025-05-13 10:51:11",
+    "updated_at": "2025-05-13 10:51:11"
+  },
+  {
+    "id": 47,
+    "seller_id": 2,
+    "name": "အစာကြေလေဆေး",
+    "type": "text",
+    "deleted_at": null,
+    "created_at": "2025-05-13 10:55:00",
+    "updated_at": "2025-05-13 10:55:00"
+  },
+  {
+    "id": 48,
+    "seller_id": 2,
+    "name": "ဇက်ကြောပြေ",
+    "type": "text",
+    "deleted_at": null,
+    "created_at": "2025-05-13 12:21:01",
+    "updated_at": "2025-05-13 12:21:01"
+  },
+  {
+    "id": 49,
+    "seller_id": 2,
+    "name": "ဆားခါး",
+    "type": "text",
+    "deleted_at": null,
+    "created_at": "2025-05-13 12:37:08",
+    "updated_at": "2025-05-13 12:37:08"
+  },
+  {
+    "id": 50,
+    "seller_id": 2,
+    "name": "Plaster",
+    "type": "text",
+    "deleted_at": null,
+    "created_at": "2025-05-13 12:53:28",
+    "updated_at": "2025-05-13 12:53:28"
+  },
+  {
+    "id": 51,
+    "seller_id": 2,
+    "name": "အားတိုးဆေး",
+    "type": "text",
+    "deleted_at": null,
+    "created_at": "2025-05-13 13:16:16",
+    "updated_at": "2025-05-13 13:16:16"
+  },
+  {
+    "id": 52,
+    "seller_id": 2,
+    "name": "အဆီကျဆေး",
+    "type": "text",
+    "deleted_at": null,
+    "created_at": "2025-05-13 13:36:05",
+    "updated_at": "2025-05-13 13:36:05"
+  },
+  {
+    "id": 53,
+    "seller_id": 2,
+    "name": "ဖြေဆေး",
+    "type": "text",
+    "deleted_at": null,
+    "created_at": "2025-05-13 13:47:53",
+    "updated_at": "2025-05-13 13:47:53"
+  },
+  {
+    "id": 54,
+    "seller_id": 2,
+    "name": "လိပ်ခေါင်းဆေး",
+    "type": "text",
+    "deleted_at": null,
+    "created_at": "2025-05-13 14:01:44",
+    "updated_at": "2025-05-13 14:01:44"
+  },
+  {
+    "id": 55,
+    "seller_id": 2,
+    "name": "သလိပ်ပျော်ဆေး",
+    "type": "text",
+    "deleted_at": null,
+    "created_at": "2025-05-13 14:05:18",
+    "updated_at": "2025-05-13 14:05:18"
+  },
+  {
+    "id": 56,
+    "seller_id": 2,
+    "name": "သွေးပုတ်ချဆေး",
+    "type": "text",
+    "deleted_at": null,
+    "created_at": "2025-05-13 14:35:22",
+    "updated_at": "2025-05-13 14:35:22"
+  },
+  {
+    "id": 57,
+    "seller_id": 2,
+    "name": "ကျောက်ကပ်ဆေး",
+    "type": "text",
+    "deleted_at": null,
+    "created_at": "2025-05-13 17:25:01",
+    "updated_at": "2025-05-13 17:25:01"
+  },
+  {
+    "id": 58,
+    "seller_id": 2,
+    "name": "Softsule",
+    "type": "text",
+    "deleted_at": null,
+    "created_at": "2025-05-15 15:50:44",
+    "updated_at": "2025-05-15 15:50:44"
+  },
+  {
+    "id": 59,
+    "seller_id": 2,
+    "name": "IV",
+    "type": "text",
+    "deleted_at": null,
+    "created_at": "2025-05-16 16:18:50",
+    "updated_at": "2025-05-16 16:18:50"
+  },
+  {
+    "id": 60,
+    "seller_id": 2,
+    "name": "Injection",
+    "type": "text",
+    "deleted_at": null,
+    "created_at": "2025-05-19 10:27:49",
+    "updated_at": "2025-05-19 10:27:49"
+  },
+  {
+    "id": 61,
+    "seller_id": 2,
+    "name": "သူငယ်နာပေါင်းချုပ်",
+    "type": "text",
+    "deleted_at": null,
+    "created_at": "2025-05-19 10:53:18",
+    "updated_at": "2025-05-19 10:53:18"
+  },
+  {
+    "id": 62,
+    "seller_id": 2,
+    "name": "ကြောကပ်",
+    "type": "text",
+    "deleted_at": null,
+    "created_at": "2025-05-19 11:08:56",
+    "updated_at": "2025-05-19 11:08:56"
+  },
+  {
+    "id": 63,
+    "seller_id": 2,
+    "name": "Cotton Swabs",
+    "type": "text",
+    "deleted_at": null,
+    "created_at": "2025-05-19 11:18:49",
+    "updated_at": "2025-05-19 11:18:49"
+  },
+  {
+    "id": 64,
+    "seller_id": 2,
+    "name": "Tub",
+    "type": "text",
+    "deleted_at": null,
+    "created_at": "2025-05-21 16:39:11",
+    "updated_at": "2025-05-21 16:39:11"
+  },
+  {
+    "id": 65,
+    "seller_id": 2,
+    "name": "Roll",
+    "type": "text",
+    "deleted_at": null,
+    "created_at": "2025-05-21 19:38:57",
+    "updated_at": "2025-05-21 19:38:57"
+  },
+  {
+    "id": 66,
+    "seller_id": 2,
+    "name": "Pill",
+    "type": "text",
+    "deleted_at": null,
+    "created_at": "2025-05-21 20:26:44",
+    "updated_at": "2025-05-21 20:26:44"
+  },
+  {
+    "id": 67,
+    "seller_id": 2,
+    "name": "Amp",
+    "type": "text",
+    "deleted_at": null,
+    "created_at": "2025-05-22 06:56:55",
+    "updated_at": "2025-05-22 06:56:55"
+  },
+  {
+    "id": 68,
+    "seller_id": 2,
+    "name": "Power",
+    "type": "text",
+    "deleted_at": null,
+    "created_at": "2025-05-23 08:53:40",
+    "updated_at": "2025-05-23 08:53:40"
+  }
+]

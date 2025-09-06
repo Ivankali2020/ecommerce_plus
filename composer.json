@@ -23,9 +23,12 @@
         "livewire/livewire": "^3.6",
         "livewire/volt": "^1.0",
         "maatwebsite/excel": "^3.1",
+        "mike42/escpos-php": "^4.0",
         "milon/barcode": "^12.0",
         "pusher/pusher-php-server": "^7.2",
         "ryangjchandler/laravel-cloudflare-turnstile": "^2.0",
+        "spatie/laravel-pdf": "^1.7",
+        "spatie/pdf-to-image": "^3.1",
         "stancl/tenancy": "^3.9",
         "symfony/http-client": "^7.3",
         "symfony/mailgun-mailer": "^7.3"

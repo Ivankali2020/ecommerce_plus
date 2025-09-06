@@ -76,12 +76,12 @@
                 </div>
                 
                 <!-- Modal Actions -->
-                <div class="flex space-x-2 mt-6 print-hide" x-data="print">
+                <div class="flex space-x-2 mt-6 print-hide">
                     <button wire:click="closeReceipt" 
                             class="flex-1 px-4 py-2 bg-gray-200 dark:bg-gray-600 text-gray-700 dark:text-gray-300 rounded-lg hover:bg-gray-300 dark:hover:bg-gray-500">
                         Close
                     </button>
-                    <button @click="printDoc('receipt-content')" 
+                    <button wire:click="generateReceiptPdf({{ $lastOrder->id }})" 
                             class="flex-1 px-4 py-2 bg-success-600 text-white rounded-lg hover:bg-success-500">
                         <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 inline mr-2" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 17h2a2 2 0 002-2v-4a2 2 0 00-2-2H3a2 2 0 00-2 2v4a2 2 0 002 2h2m2 4h6a2 2 0 002-2v-1a2 2 0 00-2-2H7a2 2 0 00-2 2v1a2 2 0 002 2z" />
@@ -92,34 +92,3 @@
             </div>
         </div>
     @endif
-
-    @script
-<script>
-    Alpine.data('print', () => {
-        return {
-            printDoc(id) {
-                var prtContent = document.getElementById(id);
-                var WinPrint = window.open('', '', 'left=0,top=0,width=800,height=900,toolbar=0,scrollbars=0,status=0');
-
-                WinPrint.document.write(
-                   "<link href='https://cdnjs.cloudflare.com/ajax/libs/flowbite/2.2.1/flowbite.min.css' rel='stylesheet'>"
-                );
-                WinPrint.document.write(
-                    "<style> table,.header_invoice{font-size: 10px !important;} .above_margin{margin-top: 20px .receipt-print{padding: 20px}}   </style>"
-                );
-                WinPrint.document.write(prtContent.innerHTML);
-                // WinPrint.document.body.style.fontSize = '10px !important';
-
-                WinPrint.document.close();
-
-                setTimeout(()=>{
-                    WinPrint.print();
-                    WinPrint.focus();
-                    WinPrint.close();
-                },300)
-
-            },
-        }
-    })
-</script>
-@endscript

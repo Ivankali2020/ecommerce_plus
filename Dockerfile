@@ -13,7 +13,13 @@ RUN apk add --no-cache \
     zip \
     unzip \
     git \
-    curl
+    curl \
+    # For PDF->Image conversion
+    ghostscript \
+    imagemagick \
+    imagemagick-dev \
+    fontconfig \
+    ttf-dejavu
 
 # Install PHP extensions
 RUN docker-php-ext-configure gd --with-freetype --with-jpeg \
@@ -27,6 +33,22 @@ RUN docker-php-ext-configure gd --with-freetype --with-jpeg \
     zip \
     intl \
     xml
+
+# Install Imagick PHP extension (depends on ImageMagick & Ghostscript)
+RUN printf "\n" | pecl install imagick || true \
+        && docker-php-ext-enable imagick || true
+
+# Allow ImageMagick to read PDFs (Alpine packages often disable by default)
+RUN if [ -f /etc/ImageMagick-7/policy.xml ]; then \
+            sed -i 's/<policy domain="coder" rights="none" pattern="PDF"\/>/<policy domain="coder" rights="read|write" pattern="PDF"\/>/g' /etc/ImageMagick-7/policy.xml; \
+            sed -i 's/<policy domain="coder" rights="none" pattern="PS"\/>/<policy domain="coder" rights="read|write" pattern="PS"\/>/g' /etc/ImageMagick-7/policy.xml; \
+            sed -i 's/<policy domain="coder" rights="none" pattern="EPS"\/>/<policy domain="coder" rights="read|write" pattern="EPS"\/>/g' /etc/ImageMagick-7/policy.xml; \
+        fi; \
+        if [ -f /etc/ImageMagick-6/policy.xml ]; then \
+            sed -i 's/<policy domain="coder" rights="none" pattern="PDF"\/>/<policy domain="coder" rights="read|write" pattern="PDF"\/>/g' /etc/ImageMagick-6/policy.xml; \
+            sed -i 's/<policy domain="coder" rights="none" pattern="PS"\/>/<policy domain="coder" rights="read|write" pattern="PS"\/>/g' /etc/ImageMagick-6/policy.xml; \
+            sed -i 's/<policy domain="coder" rights="none" pattern="EPS"\/>/<policy domain="coder" rights="read|write" pattern="EPS"\/>/g' /etc/ImageMagick-6/policy.xml; \
+        fi
 
 # Get latest Composer
 COPY --from=composer:latest /usr/bin/composer /usr/bin/composer
