@@ -744,33 +744,31 @@ class Pos extends Component implements HasActions, HasForms
             // Generate PDF for 3-inch thermal printer (75mm width, dynamic height)
             $pdf = Pdf::view('pdf.receipt', ['order' => $order])
                 ->paperSize(70, $finalHeight, 'mm')
-                ->margins(0, 0, 0, 0);
-
-            // Configure Browsershot for Docker environment
-            $pdf->configure(function (\Spatie\Browsershot\Browsershot $browsershot) {
-                $browsershot
-                    ->setNodeBinary('/usr/bin/node')
-                    ->setNpmBinary('/usr/bin/npm')
-                   ->setIncludePath(getenv('PATH') . ':/usr/bin')
-                    ->setChromePath('/usr/bin/chromium-browser')
-                    ->setNodeModulePath('/usr/local/lib/node_modules')
-                    ->setBinPath('/var/www/vendor/spatie/browsershot/bin/browser.cjs')
-                    ->addChromiumArguments([
-                        '--no-sandbox',
-                        '--disable-setuid-sandbox',
-                        '--disable-dev-shm-usage',
-                        '--disable-extensions',
-                        '--disable-plugins',
-                        '--disable-gpu',
-                        '--disable-web-security',
-                        '--disable-features=VizDisplayCompositor',
-                        '--run-all-compositor-stages-before-draw',
-                        '--disable-background-timer-throttling',
-                        '--disable-renderer-backgrounding',
-                        '--disable-backgrounding-occluded-windows',
-                        '--disable-ipc-flooding-protection',
-                        '--single-process',
-                    ]);
+                ->margins(0, 0, 0, 0) 
+                ->withBrowsershot(function (\Spatie\Browsershot\Browsershot $browsershot) {
+                    $browsershot
+                        ->setNodeBinary('/usr/bin/node')
+                        ->setNpmBinary('/usr/bin/npm')
+                        ->setIncludePath(getenv('PATH') . ':/usr/bin')
+                        ->setChromePath('/usr/bin/chromium-browser')
+                        ->setNodeModulePath('/usr/local/lib/node_modules')
+                        ->setBinPath('/var/www/vendor/spatie/browsershot/bin/browser.cjs')
+                        ->addChromiumArguments([
+                            '--no-sandbox',
+                            '--disable-setuid-sandbox',
+                            '--disable-dev-shm-usage',
+                            '--disable-extensions',
+                            '--disable-plugins',
+                            '--disable-gpu',
+                            '--disable-web-security',
+                            '--disable-features=VizDisplayCompositor',
+                            '--run-all-compositor-stages-before-draw',
+                            '--disable-background-timer-throttling',
+                            '--disable-renderer-backgrounding',
+                            '--disable-backgrounding-occluded-windows',
+                            '--disable-ipc-flooding-protection',
+                            '--single-process',
+                        ]);
             });
             
             // Save PDF to file
