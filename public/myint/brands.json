@@ -1,0 +1,1757 @@
+[
+  {
+    "id": 1,
+    "seller_id": 1,
+    "name": "Best",
+    "description": null,
+    "deleted_at": null,
+    "created_at": "2025-04-23 21:34:07",
+    "updated_at": "2025-04-23 21:34:07"
+  },
+  {
+    "id": 2,
+    "seller_id": 1,
+    "name": "Ready",
+    "description": null,
+    "deleted_at": null,
+    "created_at": "2025-04-23 21:34:07",
+    "updated_at": "2025-04-23 21:34:07"
+  },
+  {
+    "id": 3,
+    "seller_id": 1,
+    "name": "အိမ်ချက်",
+    "description": null,
+    "deleted_at": null,
+    "created_at": "2025-04-23 21:34:07",
+    "updated_at": "2025-04-23 21:34:07"
+  },
+  {
+    "id": 4,
+    "seller_id": 1,
+    "name": "ထိုင်း",
+    "description": null,
+    "deleted_at": null,
+    "created_at": "2025-04-23 21:34:07",
+    "updated_at": "2025-04-23 21:34:07"
+  },
+  {
+    "id": 5,
+    "seller_id": 1,
+    "name": "လက်ဖက်နှင့်အကြော်စုံ",
+    "description": null,
+    "deleted_at": null,
+    "created_at": "2025-04-23 21:34:07",
+    "updated_at": "2025-04-23 21:34:07"
+  },
+  {
+    "id": 6,
+    "seller_id": 1,
+    "name": "ငါးပိငါးခြောက်",
+    "description": null,
+    "deleted_at": null,
+    "created_at": "2025-04-23 21:34:07",
+    "updated_at": "2025-04-23 21:34:07"
+  },
+  {
+    "id": 7,
+    "seller_id": 1,
+    "name": "Noodle",
+    "description": null,
+    "deleted_at": null,
+    "created_at": "2025-04-23 21:34:07",
+    "updated_at": "2025-04-23 21:34:07"
+  },
+  {
+    "id": 8,
+    "seller_id": 1,
+    "name": "မီးဖိုချောင်သုံးပစ္စည်းနဲ့ဟင်းခက်အမွှေးအကြိုင်",
+    "description": null,
+    "deleted_at": null,
+    "created_at": "2025-04-23 21:34:07",
+    "updated_at": "2025-04-23 21:34:07"
+  },
+  {
+    "id": 9,
+    "seller_id": 1,
+    "name": "အလှကုန်ဆေးများ",
+    "description": null,
+    "deleted_at": null,
+    "created_at": "2025-04-23 21:34:07",
+    "updated_at": "2025-04-23 21:34:07"
+  },
+  {
+    "id": 10,
+    "seller_id": 1,
+    "name": "အခြား",
+    "description": null,
+    "deleted_at": null,
+    "created_at": "2025-04-23 21:34:07",
+    "updated_at": "2025-04-23 21:34:07"
+  },
+  {
+    "id": 11,
+    "seller_id": 2,
+    "name": "ensure",
+    "description": null,
+    "deleted_at": "2025-05-10 10:11:52",
+    "created_at": "2025-04-23 21:34:07",
+    "updated_at": "2025-05-10 10:11:52"
+  },
+  {
+    "id": 12,
+    "seller_id": 2,
+    "name": "Diclofenac",
+    "description": null,
+    "deleted_at": null,
+    "created_at": "2025-05-10 10:13:26",
+    "updated_at": "2025-05-10 15:44:39"
+  },
+  {
+    "id": 13,
+    "seller_id": 2,
+    "name": "Paracetamol ",
+    "description": null,
+    "deleted_at": null,
+    "created_at": "2025-05-10 15:46:03",
+    "updated_at": "2025-05-11 13:10:27"
+  },
+  {
+    "id": 14,
+    "seller_id": 2,
+    "name": "Ciprofloxacin500",
+    "description": null,
+    "deleted_at": null,
+    "created_at": "2025-05-10 16:05:38",
+    "updated_at": "2025-05-10 16:05:38"
+  },
+  {
+    "id": 15,
+    "seller_id": 2,
+    "name": "Ciprofloxacin250",
+    "description": null,
+    "deleted_at": null,
+    "created_at": "2025-05-10 16:06:07",
+    "updated_at": "2025-05-10 16:06:07"
+  },
+  {
+    "id": 16,
+    "seller_id": 2,
+    "name": "Levofloxacin250",
+    "description": null,
+    "deleted_at": null,
+    "created_at": "2025-05-10 16:19:34",
+    "updated_at": "2025-05-10 16:19:59"
+  },
+  {
+    "id": 17,
+    "seller_id": 2,
+    "name": "Levofloxacin500",
+    "description": null,
+    "deleted_at": null,
+    "created_at": "2025-05-10 16:26:11",
+    "updated_at": "2025-05-10 16:26:11"
+  },
+  {
+    "id": 18,
+    "seller_id": 2,
+    "name": "Ofloxacin200",
+    "description": null,
+    "deleted_at": null,
+    "created_at": "2025-05-10 16:31:50",
+    "updated_at": "2025-05-10 16:31:50"
+  },
+  {
+    "id": 19,
+    "seller_id": 2,
+    "name": "Metronidazole ",
+    "description": null,
+    "deleted_at": null,
+    "created_at": "2025-05-10 16:48:32",
+    "updated_at": "2025-05-21 18:48:04"
+  },
+  {
+    "id": 20,
+    "seller_id": 2,
+    "name": "Paracetamol Tab",
+    "description": null,
+    "deleted_at": null,
+    "created_at": "2025-05-10 16:54:26",
+    "updated_at": "2025-05-10 16:54:26"
+  },
+  {
+    "id": 21,
+    "seller_id": 2,
+    "name": "ORS ဓာတ်ဆား",
+    "description": null,
+    "deleted_at": null,
+    "created_at": "2025-05-10 19:53:43",
+    "updated_at": "2025-05-11 11:59:31"
+  },
+  {
+    "id": 22,
+    "seller_id": 2,
+    "name": "Carvedilol",
+    "description": null,
+    "deleted_at": null,
+    "created_at": "2025-05-10 20:11:07",
+    "updated_at": "2025-05-10 20:20:21"
+  },
+  {
+    "id": 23,
+    "seller_id": 2,
+    "name": "DW",
+    "description": null,
+    "deleted_at": null,
+    "created_at": "2025-05-11 07:33:57",
+    "updated_at": "2025-05-11 07:33:57"
+  },
+  {
+    "id": 24,
+    "seller_id": 2,
+    "name": "DNS",
+    "description": null,
+    "deleted_at": null,
+    "created_at": "2025-05-11 07:40:35",
+    "updated_at": "2025-05-11 07:40:35"
+  },
+  {
+    "id": 25,
+    "seller_id": 2,
+    "name": "RL",
+    "description": null,
+    "deleted_at": null,
+    "created_at": "2025-05-11 07:45:20",
+    "updated_at": "2025-05-11 07:45:20"
+  },
+  {
+    "id": 26,
+    "seller_id": 2,
+    "name": "Allopurinol",
+    "description": null,
+    "deleted_at": null,
+    "created_at": "2025-05-11 07:50:33",
+    "updated_at": "2025-05-11 07:50:33"
+  },
+  {
+    "id": 27,
+    "seller_id": 2,
+    "name": "Aspirin",
+    "description": null,
+    "deleted_at": null,
+    "created_at": "2025-05-11 07:58:34",
+    "updated_at": "2025-05-11 07:58:57"
+  },
+  {
+    "id": 28,
+    "seller_id": 2,
+    "name": "Losartan",
+    "description": null,
+    "deleted_at": null,
+    "created_at": "2025-05-11 10:14:58",
+    "updated_at": "2025-05-11 10:14:58"
+  },
+  {
+    "id": 29,
+    "seller_id": 2,
+    "name": "Gliclazide",
+    "description": null,
+    "deleted_at": null,
+    "created_at": "2025-05-11 10:24:04",
+    "updated_at": "2025-05-11 10:24:04"
+  },
+  {
+    "id": 30,
+    "seller_id": 2,
+    "name": "Metformin",
+    "description": null,
+    "deleted_at": null,
+    "created_at": "2025-05-11 10:28:28",
+    "updated_at": "2025-05-11 10:28:28"
+  },
+  {
+    "id": 31,
+    "seller_id": 2,
+    "name": "Drip Set",
+    "description": null,
+    "deleted_at": null,
+    "created_at": "2025-05-11 11:02:39",
+    "updated_at": "2025-05-11 11:02:39"
+  },
+  {
+    "id": 32,
+    "seller_id": 2,
+    "name": "Syringe",
+    "description": null,
+    "deleted_at": null,
+    "created_at": "2025-05-11 11:12:17",
+    "updated_at": "2025-05-11 11:12:17"
+  },
+  {
+    "id": 33,
+    "seller_id": 2,
+    "name": "Cannula",
+    "description": null,
+    "deleted_at": null,
+    "created_at": "2025-05-11 11:26:27",
+    "updated_at": "2025-05-11 11:27:11"
+  },
+  {
+    "id": 34,
+    "seller_id": 2,
+    "name": "Cooling Patch",
+    "description": null,
+    "deleted_at": null,
+    "created_at": "2025-05-11 13:21:42",
+    "updated_at": "2025-05-19 13:43:18"
+  },
+  {
+    "id": 35,
+    "seller_id": 2,
+    "name": "1,6,12",
+    "description": null,
+    "deleted_at": null,
+    "created_at": "2025-05-11 14:36:24",
+    "updated_at": "2025-05-11 14:36:24"
+  },
+  {
+    "id": 36,
+    "seller_id": 2,
+    "name": "Vitamin ,Minaral",
+    "description": null,
+    "deleted_at": null,
+    "created_at": "2025-05-11 16:16:27",
+    "updated_at": "2025-05-11 16:16:27"
+  },
+  {
+    "id": 37,
+    "seller_id": 2,
+    "name": "Amlodipine",
+    "description": null,
+    "deleted_at": null,
+    "created_at": "2025-05-11 16:22:48",
+    "updated_at": "2025-05-11 16:22:48"
+  },
+  {
+    "id": 38,
+    "seller_id": 2,
+    "name": "Gentamycin",
+    "description": null,
+    "deleted_at": null,
+    "created_at": "2025-05-11 16:29:00",
+    "updated_at": "2025-05-11 16:29:00"
+  },
+  {
+    "id": 39,
+    "seller_id": 2,
+    "name": "Ciprofloxacin",
+    "description": null,
+    "deleted_at": null,
+    "created_at": "2025-05-11 16:34:35",
+    "updated_at": "2025-05-11 16:34:35"
+  },
+  {
+    "id": 40,
+    "seller_id": 2,
+    "name": "Cream",
+    "description": null,
+    "deleted_at": null,
+    "created_at": "2025-05-11 16:37:40",
+    "updated_at": "2025-05-11 16:37:40"
+  },
+  {
+    "id": 41,
+    "seller_id": 2,
+    "name": "Cetiricin",
+    "description": null,
+    "deleted_at": null,
+    "created_at": "2025-05-11 16:47:06",
+    "updated_at": "2025-05-11 16:48:43"
+  },
+  {
+    "id": 42,
+    "seller_id": 2,
+    "name": "Omega 3",
+    "description": null,
+    "deleted_at": null,
+    "created_at": "2025-05-12 20:18:30",
+    "updated_at": "2025-05-12 20:18:30"
+  },
+  {
+    "id": 43,
+    "seller_id": 2,
+    "name": "Spirit",
+    "description": null,
+    "deleted_at": null,
+    "created_at": "2025-05-12 20:23:09",
+    "updated_at": "2025-05-12 20:23:09"
+  },
+  {
+    "id": 44,
+    "seller_id": 2,
+    "name": "Calamine",
+    "description": null,
+    "deleted_at": null,
+    "created_at": "2025-05-12 20:54:43",
+    "updated_at": "2025-05-12 20:54:43"
+  },
+  {
+    "id": 45,
+    "seller_id": 2,
+    "name": "Betadine",
+    "description": null,
+    "deleted_at": null,
+    "created_at": "2025-05-13 08:07:51",
+    "updated_at": "2025-05-13 08:07:51"
+  },
+  {
+    "id": 46,
+    "seller_id": 2,
+    "name": "Anti-Coughing",
+    "description": null,
+    "deleted_at": null,
+    "created_at": "2025-05-13 08:17:19",
+    "updated_at": "2025-05-19 13:52:11"
+  },
+  {
+    "id": 47,
+    "seller_id": 2,
+    "name": "ငန်းဆေး",
+    "description": null,
+    "deleted_at": null,
+    "created_at": "2025-05-13 08:24:46",
+    "updated_at": "2025-05-13 08:24:46"
+  },
+  {
+    "id": 48,
+    "seller_id": 2,
+    "name": "ချွဲဆေး",
+    "description": null,
+    "deleted_at": null,
+    "created_at": "2025-05-13 08:32:38",
+    "updated_at": "2025-05-13 08:32:38"
+  },
+  {
+    "id": 49,
+    "seller_id": 2,
+    "name": "သွေးသန့်ဆေး",
+    "description": null,
+    "deleted_at": null,
+    "created_at": "2025-05-13 08:39:34",
+    "updated_at": "2025-05-13 08:39:34"
+  },
+  {
+    "id": 50,
+    "seller_id": 2,
+    "name": "အပူငြိမ်းဆေး",
+    "description": null,
+    "deleted_at": null,
+    "created_at": "2025-05-13 08:39:48",
+    "updated_at": "2025-05-13 08:39:48"
+  },
+  {
+    "id": 51,
+    "seller_id": 2,
+    "name": "သွေးတိုးကျဆေး",
+    "description": null,
+    "deleted_at": null,
+    "created_at": "2025-05-13 09:00:29",
+    "updated_at": "2025-05-13 09:00:29"
+  },
+  {
+    "id": 52,
+    "seller_id": 2,
+    "name": "နှလုံးဆေး",
+    "description": null,
+    "deleted_at": null,
+    "created_at": "2025-05-13 09:13:03",
+    "updated_at": "2025-05-13 09:13:03"
+  },
+  {
+    "id": 53,
+    "seller_id": 2,
+    "name": "သွေးဆေး",
+    "description": null,
+    "deleted_at": null,
+    "created_at": "2025-05-13 09:23:42",
+    "updated_at": "2025-05-13 09:23:42"
+  },
+  {
+    "id": 54,
+    "seller_id": 2,
+    "name": "အစာအိမ်ဆေး",
+    "description": null,
+    "deleted_at": null,
+    "created_at": "2025-05-13 09:28:45",
+    "updated_at": "2025-05-13 09:28:45"
+  },
+  {
+    "id": 55,
+    "seller_id": 2,
+    "name": "အစာကြေဆေး",
+    "description": null,
+    "deleted_at": null,
+    "created_at": "2025-05-13 09:33:04",
+    "updated_at": "2025-05-13 09:33:04"
+  },
+  {
+    "id": 56,
+    "seller_id": 2,
+    "name": "အနာလိမ်းဆေ:",
+    "description": null,
+    "deleted_at": null,
+    "created_at": "2025-05-13 09:43:47",
+    "updated_at": "2025-05-13 09:43:47"
+  },
+  {
+    "id": 57,
+    "seller_id": 2,
+    "name": "ရင်လူးဆေး",
+    "description": null,
+    "deleted_at": null,
+    "created_at": "2025-05-13 10:18:59",
+    "updated_at": "2025-05-13 10:18:59"
+  },
+  {
+    "id": 58,
+    "seller_id": 2,
+    "name": "ဒါဏ်ကြေ လိမ်းဆေး",
+    "description": null,
+    "deleted_at": null,
+    "created_at": "2025-05-13 10:27:10",
+    "updated_at": "2025-05-13 10:27:10"
+  },
+  {
+    "id": 59,
+    "seller_id": 2,
+    "name": "ရှူဆေး",
+    "description": null,
+    "deleted_at": null,
+    "created_at": "2025-05-13 10:44:44",
+    "updated_at": "2025-05-13 10:44:44"
+  },
+  {
+    "id": 60,
+    "seller_id": 2,
+    "name": "နနွင်းလုံး",
+    "description": null,
+    "deleted_at": null,
+    "created_at": "2025-05-13 10:51:43",
+    "updated_at": "2025-05-13 10:51:43"
+  },
+  {
+    "id": 61,
+    "seller_id": 2,
+    "name": "အစာကြေလေဆေး",
+    "description": null,
+    "deleted_at": null,
+    "created_at": "2025-05-13 10:55:38",
+    "updated_at": "2025-05-13 10:55:38"
+  },
+  {
+    "id": 62,
+    "seller_id": 2,
+    "name": "ဇက်ကြောပြေ",
+    "description": null,
+    "deleted_at": null,
+    "created_at": "2025-05-13 12:21:18",
+    "updated_at": "2025-05-13 12:21:18"
+  },
+  {
+    "id": 63,
+    "seller_id": 2,
+    "name": "ဆားခါး",
+    "description": null,
+    "deleted_at": null,
+    "created_at": "2025-05-13 12:37:23",
+    "updated_at": "2025-05-13 12:37:23"
+  },
+  {
+    "id": 64,
+    "seller_id": 2,
+    "name": "ကျီးပေါင်း ",
+    "description": null,
+    "deleted_at": null,
+    "created_at": "2025-05-13 12:54:24",
+    "updated_at": "2025-05-13 13:26:33"
+  },
+  {
+    "id": 65,
+    "seller_id": 2,
+    "name": "အားတိုးဆေး",
+    "description": null,
+    "deleted_at": null,
+    "created_at": "2025-05-13 13:16:32",
+    "updated_at": "2025-05-13 13:16:32"
+  },
+  {
+    "id": 66,
+    "seller_id": 2,
+    "name": "အဆီကျ ဆေး",
+    "description": null,
+    "deleted_at": null,
+    "created_at": "2025-05-13 13:36:34",
+    "updated_at": "2025-05-13 13:36:34"
+  },
+  {
+    "id": 67,
+    "seller_id": 2,
+    "name": "ပွေးလိမ်းဆေး",
+    "description": null,
+    "deleted_at": null,
+    "created_at": "2025-05-13 13:40:26",
+    "updated_at": "2025-05-13 13:40:26"
+  },
+  {
+    "id": 68,
+    "seller_id": 2,
+    "name": "မဟာဖြေဆေး ",
+    "description": null,
+    "deleted_at": null,
+    "created_at": "2025-05-13 13:48:14",
+    "updated_at": "2025-05-13 13:59:33"
+  },
+  {
+    "id": 69,
+    "seller_id": 2,
+    "name": "မဟာဖြေဆေး ထုပ်",
+    "description": null,
+    "deleted_at": "2025-05-13 13:59:49",
+    "created_at": "2025-05-13 13:56:50",
+    "updated_at": "2025-05-13 13:59:49"
+  },
+  {
+    "id": 70,
+    "seller_id": 2,
+    "name": "မှန်ချို",
+    "description": null,
+    "deleted_at": null,
+    "created_at": "2025-05-13 14:02:12",
+    "updated_at": "2025-05-13 14:02:12"
+  },
+  {
+    "id": 71,
+    "seller_id": 2,
+    "name": "တို့ကျောင်းသား",
+    "description": null,
+    "deleted_at": null,
+    "created_at": "2025-05-13 14:25:41",
+    "updated_at": "2025-05-13 14:25:41"
+  },
+  {
+    "id": 72,
+    "seller_id": 2,
+    "name": "ကေသီပန်",
+    "description": null,
+    "deleted_at": null,
+    "created_at": "2025-05-13 14:35:48",
+    "updated_at": "2025-05-13 14:35:48"
+  },
+  {
+    "id": 73,
+    "seller_id": 2,
+    "name": "အောင်တံခွန်",
+    "description": null,
+    "deleted_at": null,
+    "created_at": "2025-05-13 17:14:25",
+    "updated_at": "2025-05-13 17:14:25"
+  },
+  {
+    "id": 74,
+    "seller_id": 2,
+    "name": "ဖြူစင်မေတ္တာ ကျောက်ကပ်ဆေး",
+    "description": null,
+    "deleted_at": null,
+    "created_at": "2025-05-13 17:25:59",
+    "updated_at": "2025-05-13 17:25:59"
+  },
+  {
+    "id": 75,
+    "seller_id": 2,
+    "name": "ရှယ်ပြုံး",
+    "description": null,
+    "deleted_at": null,
+    "created_at": "2025-05-13 17:29:36",
+    "updated_at": "2025-05-13 17:29:36"
+  },
+  {
+    "id": 76,
+    "seller_id": 2,
+    "name": "Cold ,Flu",
+    "description": null,
+    "deleted_at": null,
+    "created_at": "2025-05-14 15:53:17",
+    "updated_at": "2025-05-14 15:53:17"
+  },
+  {
+    "id": 77,
+    "seller_id": 2,
+    "name": "Para+Ibu",
+    "description": null,
+    "deleted_at": null,
+    "created_at": "2025-05-14 16:34:10",
+    "updated_at": "2025-05-14 16:34:10"
+  },
+  {
+    "id": 78,
+    "seller_id": 2,
+    "name": "Bromhexin",
+    "description": null,
+    "deleted_at": null,
+    "created_at": "2025-05-15 12:57:38",
+    "updated_at": "2025-05-15 12:57:38"
+  },
+  {
+    "id": 79,
+    "seller_id": 2,
+    "name": "Lozenges",
+    "description": null,
+    "deleted_at": null,
+    "created_at": "2025-05-15 15:21:20",
+    "updated_at": "2025-05-15 15:21:20"
+  },
+  {
+    "id": 80,
+    "seller_id": 2,
+    "name": "Burmeton",
+    "description": null,
+    "deleted_at": null,
+    "created_at": "2025-05-15 15:30:58",
+    "updated_at": "2025-05-15 15:30:58"
+  },
+  {
+    "id": 81,
+    "seller_id": 2,
+    "name": "Supplement",
+    "description": null,
+    "deleted_at": null,
+    "created_at": "2025-05-15 15:35:11",
+    "updated_at": "2025-05-15 15:35:11"
+  },
+  {
+    "id": 82,
+    "seller_id": 2,
+    "name": "Aminoacid",
+    "description": null,
+    "deleted_at": null,
+    "created_at": "2025-05-16 16:19:50",
+    "updated_at": "2025-05-16 16:19:50"
+  },
+  {
+    "id": 83,
+    "seller_id": 2,
+    "name": "Vitamin ,Minaral & DHA",
+    "description": null,
+    "deleted_at": null,
+    "created_at": "2025-05-16 16:25:37",
+    "updated_at": "2025-05-16 16:25:53"
+  },
+  {
+    "id": 84,
+    "seller_id": 2,
+    "name": "Vitamin ,Minaral & lysine",
+    "description": null,
+    "deleted_at": null,
+    "created_at": "2025-05-16 16:30:01",
+    "updated_at": "2025-05-16 16:30:01"
+  },
+  {
+    "id": 85,
+    "seller_id": 2,
+    "name": "သူငယ်နာပေါင်းချုပ်",
+    "description": null,
+    "deleted_at": null,
+    "created_at": "2025-05-19 10:53:38",
+    "updated_at": "2025-05-19 10:53:38"
+  },
+  {
+    "id": 86,
+    "seller_id": 2,
+    "name": "ဆူဒီ",
+    "description": null,
+    "deleted_at": null,
+    "created_at": "2025-05-19 11:09:24",
+    "updated_at": "2025-05-19 11:09:24"
+  },
+  {
+    "id": 87,
+    "seller_id": 2,
+    "name": "Cotton Swabs",
+    "description": null,
+    "deleted_at": null,
+    "created_at": "2025-05-19 11:20:54",
+    "updated_at": "2025-05-19 11:20:54"
+  },
+  {
+    "id": 88,
+    "seller_id": 2,
+    "name": "Aceclofenac",
+    "description": null,
+    "deleted_at": null,
+    "created_at": "2025-05-19 12:56:59",
+    "updated_at": "2025-05-19 12:56:59"
+  },
+  {
+    "id": 89,
+    "seller_id": 2,
+    "name": "Ibuprofen",
+    "description": null,
+    "deleted_at": null,
+    "created_at": "2025-05-19 13:04:23",
+    "updated_at": "2025-05-19 13:04:23"
+  },
+  {
+    "id": 90,
+    "seller_id": 2,
+    "name": "Fexofenadine",
+    "description": null,
+    "deleted_at": null,
+    "created_at": "2025-05-19 16:24:05",
+    "updated_at": "2025-05-19 16:24:05"
+  },
+  {
+    "id": 91,
+    "seller_id": 2,
+    "name": "Levocetiricin",
+    "description": null,
+    "deleted_at": null,
+    "created_at": "2025-05-19 16:29:23",
+    "updated_at": "2025-05-19 16:29:23"
+  },
+  {
+    "id": 92,
+    "seller_id": 2,
+    "name": "Loratadine",
+    "description": null,
+    "deleted_at": null,
+    "created_at": "2025-05-19 16:44:37",
+    "updated_at": "2025-05-19 16:44:37"
+  },
+  {
+    "id": 93,
+    "seller_id": 2,
+    "name": "vitamin c",
+    "description": null,
+    "deleted_at": null,
+    "created_at": "2025-05-20 14:46:26",
+    "updated_at": "2025-05-20 14:46:26"
+  },
+  {
+    "id": 94,
+    "seller_id": 2,
+    "name": "Telmisartan",
+    "description": null,
+    "deleted_at": null,
+    "created_at": "2025-05-21 08:36:30",
+    "updated_at": "2025-05-21 08:37:04"
+  },
+  {
+    "id": 95,
+    "seller_id": 2,
+    "name": "Trimetazidine",
+    "description": null,
+    "deleted_at": null,
+    "created_at": "2025-05-21 12:21:35",
+    "updated_at": "2025-05-21 12:21:35"
+  },
+  {
+    "id": 96,
+    "seller_id": 2,
+    "name": "Atorvastatin",
+    "description": null,
+    "deleted_at": null,
+    "created_at": "2025-05-21 12:30:59",
+    "updated_at": "2025-05-21 12:30:59"
+  },
+  {
+    "id": 97,
+    "seller_id": 2,
+    "name": "Rosuvastatin",
+    "description": null,
+    "deleted_at": null,
+    "created_at": "2025-05-21 12:43:29",
+    "updated_at": "2025-05-21 12:43:29"
+  },
+  {
+    "id": 98,
+    "seller_id": 2,
+    "name": "Macronazole",
+    "description": null,
+    "deleted_at": null,
+    "created_at": "2025-05-21 12:59:58",
+    "updated_at": "2025-05-21 12:59:58"
+  },
+  {
+    "id": 99,
+    "seller_id": 2,
+    "name": "Oral Paste",
+    "description": null,
+    "deleted_at": null,
+    "created_at": "2025-05-21 13:03:09",
+    "updated_at": "2025-05-21 13:03:09"
+  },
+  {
+    "id": 100,
+    "seller_id": 2,
+    "name": "Amoxicilin",
+    "description": null,
+    "deleted_at": null,
+    "created_at": "2025-05-21 13:22:02",
+    "updated_at": "2025-05-21 13:22:02"
+  },
+  {
+    "id": 101,
+    "seller_id": 2,
+    "name": "Ampicilin",
+    "description": null,
+    "deleted_at": null,
+    "created_at": "2025-05-21 15:09:42",
+    "updated_at": "2025-05-21 15:09:49"
+  },
+  {
+    "id": 102,
+    "seller_id": 2,
+    "name": "Ampicilin & Cloxacilin",
+    "description": null,
+    "deleted_at": null,
+    "created_at": "2025-05-21 15:13:23",
+    "updated_at": "2025-05-21 15:13:23"
+  },
+  {
+    "id": 103,
+    "seller_id": 2,
+    "name": "Flucloxacilin",
+    "description": null,
+    "deleted_at": null,
+    "created_at": "2025-05-21 15:15:19",
+    "updated_at": "2025-05-21 15:15:19"
+  },
+  {
+    "id": 104,
+    "seller_id": 2,
+    "name": "Azithromycin",
+    "description": null,
+    "deleted_at": null,
+    "created_at": "2025-05-21 16:16:31",
+    "updated_at": "2025-05-21 16:16:31"
+  },
+  {
+    "id": 105,
+    "seller_id": 2,
+    "name": "Plaster",
+    "description": null,
+    "deleted_at": null,
+    "created_at": "2025-05-21 16:24:21",
+    "updated_at": "2025-05-21 16:24:21"
+  },
+  {
+    "id": 106,
+    "seller_id": 2,
+    "name": "Kemose",
+    "description": null,
+    "deleted_at": null,
+    "created_at": "2025-05-21 16:33:25",
+    "updated_at": "2025-05-21 16:33:25"
+  },
+  {
+    "id": 107,
+    "seller_id": 2,
+    "name": "Suppository",
+    "description": null,
+    "deleted_at": null,
+    "created_at": "2025-05-21 16:38:14",
+    "updated_at": "2025-05-21 16:38:14"
+  },
+  {
+    "id": 108,
+    "seller_id": 2,
+    "name": "Omeprazole",
+    "description": null,
+    "deleted_at": null,
+    "created_at": "2025-05-21 16:45:43",
+    "updated_at": "2025-05-21 16:45:43"
+  },
+  {
+    "id": 109,
+    "seller_id": 2,
+    "name": "Ranitidine",
+    "description": null,
+    "deleted_at": null,
+    "created_at": "2025-05-21 16:45:57",
+    "updated_at": "2025-05-21 16:45:57"
+  },
+  {
+    "id": 110,
+    "seller_id": 2,
+    "name": "Pantoprazole",
+    "description": null,
+    "deleted_at": null,
+    "created_at": "2025-05-21 16:46:15",
+    "updated_at": "2025-05-21 16:46:15"
+  },
+  {
+    "id": 111,
+    "seller_id": 2,
+    "name": "Esomeprazole",
+    "description": null,
+    "deleted_at": null,
+    "created_at": "2025-05-21 16:59:35",
+    "updated_at": "2025-05-21 16:59:35"
+  },
+  {
+    "id": 112,
+    "seller_id": 2,
+    "name": "Digestive ",
+    "description": null,
+    "deleted_at": null,
+    "created_at": "2025-05-21 17:06:50",
+    "updated_at": "2025-05-21 17:06:50"
+  },
+  {
+    "id": 113,
+    "seller_id": 2,
+    "name": "Enema ball",
+    "description": null,
+    "deleted_at": null,
+    "created_at": "2025-05-21 17:18:48",
+    "updated_at": "2025-05-21 17:18:48"
+  },
+  {
+    "id": 114,
+    "seller_id": 2,
+    "name": "Biscodyl",
+    "description": null,
+    "deleted_at": null,
+    "created_at": "2025-05-21 17:25:32",
+    "updated_at": "2025-05-21 17:25:32"
+  },
+  {
+    "id": 115,
+    "seller_id": 2,
+    "name": "Latulose",
+    "description": null,
+    "deleted_at": null,
+    "created_at": "2025-05-21 17:28:07",
+    "updated_at": "2025-05-21 17:28:07"
+  },
+  {
+    "id": 116,
+    "seller_id": 2,
+    "name": "Probiotic",
+    "description": null,
+    "deleted_at": null,
+    "created_at": "2025-05-21 17:32:59",
+    "updated_at": "2025-05-21 17:32:59"
+  },
+  {
+    "id": 117,
+    "seller_id": 2,
+    "name": "Loparamide",
+    "description": null,
+    "deleted_at": null,
+    "created_at": "2025-05-21 18:33:53",
+    "updated_at": "2025-05-21 18:33:53"
+  },
+  {
+    "id": 118,
+    "seller_id": 2,
+    "name": "Dimenhydrinate",
+    "description": null,
+    "deleted_at": null,
+    "created_at": "2025-05-21 18:50:32",
+    "updated_at": "2025-05-21 18:50:32"
+  },
+  {
+    "id": 119,
+    "seller_id": 2,
+    "name": "Cinnarizine",
+    "description": null,
+    "deleted_at": null,
+    "created_at": "2025-05-21 19:10:31",
+    "updated_at": "2025-05-21 19:10:31"
+  },
+  {
+    "id": 120,
+    "seller_id": 2,
+    "name": "Domperidone",
+    "description": null,
+    "deleted_at": null,
+    "created_at": "2025-05-21 19:18:53",
+    "updated_at": "2025-05-21 19:18:53"
+  },
+  {
+    "id": 121,
+    "seller_id": 2,
+    "name": "Metoclopramide",
+    "description": null,
+    "deleted_at": null,
+    "created_at": "2025-05-21 19:22:22",
+    "updated_at": "2025-05-21 19:22:22"
+  },
+  {
+    "id": 122,
+    "seller_id": 2,
+    "name": "Prochlorperazine",
+    "description": null,
+    "deleted_at": null,
+    "created_at": "2025-05-21 19:30:22",
+    "updated_at": "2025-05-21 19:30:22"
+  },
+  {
+    "id": 123,
+    "seller_id": 2,
+    "name": "Cotton",
+    "description": null,
+    "deleted_at": null,
+    "created_at": "2025-05-21 19:38:22",
+    "updated_at": "2025-05-21 19:38:22"
+  },
+  {
+    "id": 124,
+    "seller_id": 2,
+    "name": "Bandage",
+    "description": null,
+    "deleted_at": null,
+    "created_at": "2025-05-21 19:58:49",
+    "updated_at": "2025-05-21 19:58:49"
+  },
+  {
+    "id": 125,
+    "seller_id": 2,
+    "name": "Paper Tabe",
+    "description": null,
+    "deleted_at": null,
+    "created_at": "2025-05-21 20:05:42",
+    "updated_at": "2025-05-21 20:05:42"
+  },
+  {
+    "id": 126,
+    "seller_id": 2,
+    "name": "Sildenafil",
+    "description": null,
+    "deleted_at": null,
+    "created_at": "2025-05-21 20:16:24",
+    "updated_at": "2025-05-21 20:16:24"
+  },
+  {
+    "id": 127,
+    "seller_id": 2,
+    "name": "Pill",
+    "description": null,
+    "deleted_at": null,
+    "created_at": "2025-05-21 20:26:12",
+    "updated_at": "2025-05-21 20:26:12"
+  },
+  {
+    "id": 128,
+    "seller_id": 2,
+    "name": "HCG test",
+    "description": null,
+    "deleted_at": null,
+    "created_at": "2025-05-21 20:42:18",
+    "updated_at": "2025-05-21 20:42:18"
+  },
+  {
+    "id": 129,
+    "seller_id": 2,
+    "name": "Ovulation Test",
+    "description": null,
+    "deleted_at": null,
+    "created_at": "2025-05-22 06:49:27",
+    "updated_at": "2025-05-22 06:49:27"
+  },
+  {
+    "id": 130,
+    "seller_id": 2,
+    "name": "Condon",
+    "description": null,
+    "deleted_at": null,
+    "created_at": "2025-05-22 06:52:48",
+    "updated_at": "2025-05-22 06:52:48"
+  },
+  {
+    "id": 131,
+    "seller_id": 2,
+    "name": "Injection",
+    "description": null,
+    "deleted_at": null,
+    "created_at": "2025-05-22 06:56:04",
+    "updated_at": "2025-05-22 06:56:04"
+  },
+  {
+    "id": 132,
+    "seller_id": 2,
+    "name": "Fly",
+    "description": null,
+    "deleted_at": null,
+    "created_at": "2025-05-22 15:23:07",
+    "updated_at": "2025-05-22 15:23:07"
+  },
+  {
+    "id": 133,
+    "seller_id": 2,
+    "name": "Tegaderm",
+    "description": null,
+    "deleted_at": null,
+    "created_at": "2025-05-22 16:38:53",
+    "updated_at": "2025-05-22 16:38:53"
+  },
+  {
+    "id": 134,
+    "seller_id": 2,
+    "name": "Fame",
+    "description": null,
+    "deleted_at": null,
+    "created_at": "2025-05-22 16:59:37",
+    "updated_at": "2025-05-22 16:59:49"
+  },
+  {
+    "id": 135,
+    "seller_id": 2,
+    "name": "Infant milk power",
+    "description": null,
+    "deleted_at": null,
+    "created_at": "2025-05-23 08:53:09",
+    "updated_at": "2025-05-23 08:53:09"
+  },
+  {
+    "id": 136,
+    "seller_id": 2,
+    "name": "Montelukast",
+    "description": null,
+    "deleted_at": null,
+    "created_at": "2025-05-23 09:36:33",
+    "updated_at": "2025-05-23 09:36:33"
+  },
+  {
+    "id": 137,
+    "seller_id": 2,
+    "name": "nifedipine",
+    "description": null,
+    "deleted_at": null,
+    "created_at": "2025-05-23 09:54:24",
+    "updated_at": "2025-05-23 09:54:24"
+  },
+  {
+    "id": 138,
+    "seller_id": 2,
+    "name": "Nystatin",
+    "description": null,
+    "deleted_at": null,
+    "created_at": "2025-05-23 10:00:30",
+    "updated_at": "2025-05-23 10:00:30"
+  },
+  {
+    "id": 139,
+    "seller_id": 2,
+    "name": "Thermometer",
+    "description": null,
+    "deleted_at": null,
+    "created_at": "2025-05-23 10:01:37",
+    "updated_at": "2025-05-23 10:01:37"
+  },
+  {
+    "id": 140,
+    "seller_id": 2,
+    "name": "Melatonin",
+    "description": null,
+    "deleted_at": null,
+    "created_at": "2025-05-23 10:09:45",
+    "updated_at": "2025-05-23 10:09:45"
+  },
+  {
+    "id": 141,
+    "seller_id": 2,
+    "name": "Glove ",
+    "description": null,
+    "deleted_at": null,
+    "created_at": "2025-05-23 10:24:13",
+    "updated_at": "2025-05-23 10:24:13"
+  },
+  {
+    "id": 142,
+    "seller_id": 2,
+    "name": "Tissue",
+    "description": null,
+    "deleted_at": null,
+    "created_at": "2025-05-23 10:26:16",
+    "updated_at": "2025-05-23 10:26:16"
+  },
+  {
+    "id": 143,
+    "seller_id": 2,
+    "name": "Alcohol Pad",
+    "description": null,
+    "deleted_at": null,
+    "created_at": "2025-05-23 10:37:09",
+    "updated_at": "2025-05-23 10:37:09"
+  },
+  {
+    "id": 144,
+    "seller_id": 2,
+    "name": "cefixime",
+    "description": null,
+    "deleted_at": null,
+    "created_at": "2025-05-23 10:46:01",
+    "updated_at": "2025-05-23 10:46:01"
+  },
+  {
+    "id": 145,
+    "seller_id": 2,
+    "name": "Norfloxacin",
+    "description": null,
+    "deleted_at": null,
+    "created_at": "2025-05-23 10:52:22",
+    "updated_at": "2025-05-23 10:52:22"
+  },
+  {
+    "id": 146,
+    "seller_id": 2,
+    "name": "Dexametasone",
+    "description": null,
+    "deleted_at": null,
+    "created_at": "2025-05-23 10:54:21",
+    "updated_at": "2025-05-23 10:54:21"
+  },
+  {
+    "id": 147,
+    "seller_id": 2,
+    "name": "Tetracycline",
+    "description": null,
+    "deleted_at": null,
+    "created_at": "2025-05-23 10:57:42",
+    "updated_at": "2025-05-23 10:58:26"
+  },
+  {
+    "id": 148,
+    "seller_id": 2,
+    "name": "Doxicycline",
+    "description": null,
+    "deleted_at": null,
+    "created_at": "2025-05-23 10:58:47",
+    "updated_at": "2025-05-23 10:58:47"
+  },
+  {
+    "id": 149,
+    "seller_id": 2,
+    "name": "Piroxicam",
+    "description": null,
+    "deleted_at": null,
+    "created_at": "2025-05-23 11:03:41",
+    "updated_at": "2025-05-23 11:03:41"
+  },
+  {
+    "id": 150,
+    "seller_id": 2,
+    "name": "Pad",
+    "description": null,
+    "deleted_at": null,
+    "created_at": "2025-05-23 11:54:44",
+    "updated_at": "2025-05-23 11:54:44"
+  },
+  {
+    "id": 151,
+    "seller_id": 2,
+    "name": "Diaper ",
+    "description": null,
+    "deleted_at": null,
+    "created_at": "2025-05-23 12:01:19",
+    "updated_at": "2025-05-23 12:01:19"
+  },
+  {
+    "id": 152,
+    "seller_id": 2,
+    "name": "Burplex ",
+    "description": null,
+    "deleted_at": null,
+    "created_at": "2025-05-24 08:15:03",
+    "updated_at": "2025-05-24 08:15:03"
+  },
+  {
+    "id": 153,
+    "seller_id": 2,
+    "name": "NS",
+    "description": null,
+    "deleted_at": null,
+    "created_at": "2025-05-24 09:44:50",
+    "updated_at": "2025-05-24 09:44:50"
+  },
+  {
+    "id": 154,
+    "seller_id": 2,
+    "name": "Prednisolone",
+    "description": null,
+    "deleted_at": null,
+    "created_at": "2025-05-27 10:20:21",
+    "updated_at": "2025-05-27 10:20:21"
+  },
+  {
+    "id": 155,
+    "seller_id": 2,
+    "name": "zinc",
+    "description": null,
+    "deleted_at": null,
+    "created_at": "2025-05-27 10:23:01",
+    "updated_at": "2025-05-27 10:23:01"
+  },
+  {
+    "id": 156,
+    "seller_id": 2,
+    "name": "Deriphyllin 150",
+    "description": null,
+    "deleted_at": null,
+    "created_at": "2025-05-27 10:30:54",
+    "updated_at": "2025-05-27 10:30:54"
+  },
+  {
+    "id": 157,
+    "seller_id": 2,
+    "name": "aciclovir",
+    "description": null,
+    "deleted_at": null,
+    "created_at": "2025-05-27 10:48:35",
+    "updated_at": "2025-05-27 10:48:35"
+  },
+  {
+    "id": 158,
+    "seller_id": 2,
+    "name": "co trimmoxazole",
+    "description": null,
+    "deleted_at": null,
+    "created_at": "2025-05-27 10:50:56",
+    "updated_at": "2025-05-27 10:50:56"
+  },
+  {
+    "id": 159,
+    "seller_id": 2,
+    "name": "mefenamic acid",
+    "description": null,
+    "deleted_at": null,
+    "created_at": "2025-05-27 11:33:47",
+    "updated_at": "2025-05-27 11:33:47"
+  },
+  {
+    "id": 160,
+    "seller_id": 2,
+    "name": "Enalapril",
+    "description": null,
+    "deleted_at": null,
+    "created_at": "2025-05-27 11:51:47",
+    "updated_at": "2025-05-27 11:51:47"
+  },
+  {
+    "id": 161,
+    "seller_id": 2,
+    "name": "Propranolol",
+    "description": null,
+    "deleted_at": null,
+    "created_at": "2025-05-27 11:57:47",
+    "updated_at": "2025-05-27 11:57:47"
+  },
+  {
+    "id": 162,
+    "seller_id": 2,
+    "name": "Mask",
+    "description": null,
+    "deleted_at": null,
+    "created_at": "2025-05-27 12:06:11",
+    "updated_at": "2025-05-27 12:06:11"
+  },
+  {
+    "id": 163,
+    "seller_id": 2,
+    "name": "Para +Orphenadrine",
+    "description": null,
+    "deleted_at": null,
+    "created_at": "2025-05-27 12:25:46",
+    "updated_at": "2025-05-27 12:25:46"
+  },
+  {
+    "id": 164,
+    "seller_id": 2,
+    "name": "sodamint",
+    "description": null,
+    "deleted_at": null,
+    "created_at": "2025-05-27 12:43:49",
+    "updated_at": "2025-05-27 12:43:49"
+  },
+  {
+    "id": 165,
+    "seller_id": 2,
+    "name": "Etoricoxib",
+    "description": null,
+    "deleted_at": null,
+    "created_at": "2025-05-27 12:52:44",
+    "updated_at": "2025-05-27 12:52:44"
+  },
+  {
+    "id": 166,
+    "seller_id": 2,
+    "name": "Gabapentin ",
+    "description": null,
+    "deleted_at": null,
+    "created_at": "2025-05-27 12:56:01",
+    "updated_at": "2025-05-27 12:56:01"
+  },
+  {
+    "id": 167,
+    "seller_id": 2,
+    "name": "cafalexin",
+    "description": null,
+    "deleted_at": null,
+    "created_at": "2025-05-27 13:02:19",
+    "updated_at": "2025-05-27 13:02:19"
+  },
+  {
+    "id": 168,
+    "seller_id": 2,
+    "name": "cafalexin",
+    "description": null,
+    "deleted_at": null,
+    "created_at": "2025-05-27 13:02:19",
+    "updated_at": "2025-05-27 13:02:19"
+  },
+  {
+    "id": 169,
+    "seller_id": 2,
+    "name": "pregabalin",
+    "description": null,
+    "deleted_at": null,
+    "created_at": "2025-05-27 15:07:08",
+    "updated_at": "2025-05-27 15:07:08"
+  },
+  {
+    "id": 170,
+    "seller_id": 2,
+    "name": "မုန်ညင်းဆီ",
+    "description": null,
+    "deleted_at": null,
+    "created_at": "2025-05-27 19:53:08",
+    "updated_at": "2025-05-27 19:53:08"
+  },
+  {
+    "id": 171,
+    "seller_id": 2,
+    "name": "spironolactone",
+    "description": null,
+    "deleted_at": null,
+    "created_at": "2025-05-27 20:09:18",
+    "updated_at": "2025-05-27 20:09:18"
+  },
+  {
+    "id": 172,
+    "seller_id": 2,
+    "name": "furosemide ",
+    "description": null,
+    "deleted_at": null,
+    "created_at": "2025-05-27 20:10:58",
+    "updated_at": "2025-05-27 20:10:58"
+  },
+  {
+    "id": 173,
+    "seller_id": 2,
+    "name": "colchicine ",
+    "description": null,
+    "deleted_at": null,
+    "created_at": "2025-05-27 20:31:14",
+    "updated_at": "2025-05-27 20:31:47"
+  },
+  {
+    "id": 174,
+    "seller_id": 2,
+    "name": "eye drop",
+    "description": null,
+    "deleted_at": null,
+    "created_at": "2025-05-27 20:53:53",
+    "updated_at": "2025-05-27 20:53:53"
+  },
+  {
+    "id": 175,
+    "seller_id": 2,
+    "name": "support",
+    "description": null,
+    "deleted_at": null,
+    "created_at": "2025-05-27 20:56:38",
+    "updated_at": "2025-05-27 20:56:38"
+  },
+  {
+    "id": 176,
+    "seller_id": 2,
+    "name": "Prenura M",
+    "description": null,
+    "deleted_at": null,
+    "created_at": "2025-05-29 19:46:47",
+    "updated_at": "2025-05-29 19:46:47"
+  },
+  {
+    "id": 177,
+    "seller_id": 2,
+    "name": "rabeprazole",
+    "description": null,
+    "deleted_at": null,
+    "created_at": "2025-05-29 20:23:31",
+    "updated_at": "2025-05-29 20:23:31"
+  },
+  {
+    "id": 178,
+    "seller_id": 2,
+    "name": "perindopril",
+    "description": null,
+    "deleted_at": null,
+    "created_at": "2025-05-29 20:31:18",
+    "updated_at": "2025-05-29 20:31:18"
+  },
+  {
+    "id": 179,
+    "seller_id": 2,
+    "name": "Detergent",
+    "description": null,
+    "deleted_at": null,
+    "created_at": "2025-05-30 09:53:30",
+    "updated_at": "2025-05-30 09:54:54"
+  },
+  {
+    "id": 180,
+    "seller_id": 2,
+    "name": "Coffee",
+    "description": null,
+    "deleted_at": null,
+    "created_at": "2025-05-30 09:55:19",
+    "updated_at": "2025-05-30 09:55:19"
+  },
+  {
+    "id": 181,
+    "seller_id": 2,
+    "name": "ခြင်ဆေးခွေ",
+    "description": null,
+    "deleted_at": null,
+    "created_at": "2025-05-30 10:05:52",
+    "updated_at": "2025-05-30 10:05:52"
+  },
+  {
+    "id": 182,
+    "seller_id": 2,
+    "name": "ဆီးဝမ်းလေကြေဆေး",
+    "description": null,
+    "deleted_at": null,
+    "created_at": "2025-06-02 15:36:36",
+    "updated_at": "2025-06-02 15:36:36"
+  },
+  {
+    "id": 183,
+    "seller_id": 2,
+    "name": "လေးဖက်နာ",
+    "description": null,
+    "deleted_at": null,
+    "created_at": "2025-06-02 16:03:32",
+    "updated_at": "2025-06-02 16:03:32"
+  },
+  {
+    "id": 184,
+    "seller_id": 2,
+    "name": "လျှာပွတ်ဆေး",
+    "description": null,
+    "deleted_at": null,
+    "created_at": "2025-06-02 16:19:59",
+    "updated_at": "2025-06-02 16:19:59"
+  },
+  {
+    "id": 185,
+    "seller_id": 2,
+    "name": "Albendazole",
+    "description": null,
+    "deleted_at": null,
+    "created_at": "2025-06-02 16:47:13",
+    "updated_at": "2025-06-02 16:47:13"
+  },
+  {
+    "id": 186,
+    "seller_id": 2,
+    "name": "Penicilin",
+    "description": null,
+    "deleted_at": null,
+    "created_at": "2025-06-11 15:23:53",
+    "updated_at": "2025-06-11 15:23:53"
+  },
+  {
+    "id": 187,
+    "seller_id": 2,
+    "name": "Piracetam",
+    "description": null,
+    "deleted_at": null,
+    "created_at": "2025-06-11 17:49:10",
+    "updated_at": "2025-06-11 17:49:10"
+  },
+  {
+    "id": 188,
+    "seller_id": 2,
+    "name": "Cyprocal tab",
+    "description": null,
+    "deleted_at": null,
+    "created_at": "2025-06-11 18:04:53",
+    "updated_at": "2025-06-11 18:04:53"
+  },
+  {
+    "id": 189,
+    "seller_id": 2,
+    "name": "ဆီးချို",
+    "description": null,
+    "deleted_at": null,
+    "created_at": "2025-06-16 13:32:33",
+    "updated_at": "2025-06-16 13:32:33"
+  },
+  {
+    "id": 190,
+    "seller_id": 2,
+    "name": "Rowatinex",
+    "description": null,
+    "deleted_at": null,
+    "created_at": "2025-06-16 13:53:24",
+    "updated_at": "2025-06-16 13:53:24"
+  },
+  {
+    "id": 191,
+    "seller_id": 2,
+    "name": "Glucose",
+    "description": null,
+    "deleted_at": null,
+    "created_at": "2025-07-02 10:00:47",
+    "updated_at": "2025-07-02 10:00:47"
+  },
+  {
+    "id": 192,
+    "seller_id": 2,
+    "name": "Shwe Sar",
+    "description": null,
+    "deleted_at": null,
+    "created_at": "2025-07-02 10:09:10",
+    "updated_at": "2025-07-02 10:09:10"
+  },
+  {
+    "id": 193,
+    "seller_id": 2,
+    "name": "Hyosine",
+    "description": null,
+    "deleted_at": null,
+    "created_at": "2025-07-02 10:25:54",
+    "updated_at": "2025-07-02 10:25:54"
+  },
+  {
+    "id": 194,
+    "seller_id": 2,
+    "name": "ဆီးဆေး",
+    "description": null,
+    "deleted_at": null,
+    "created_at": "2025-07-02 10:37:51",
+    "updated_at": "2025-07-02 10:37:51"
+  },
+  {
+    "id": 195,
+    "seller_id": 2,
+    "name": "Fiber",
+    "description": null,
+    "deleted_at": null,
+    "created_at": "2025-07-14 17:08:28",
+    "updated_at": "2025-07-14 17:08:28"
+  }
+]

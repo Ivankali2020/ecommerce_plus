@@ -198,6 +198,16 @@ class Seller extends Authenticatable implements FilamentUser, HasMedia // , Must
         return $this->hasMany(Gift::class);
     }
 
+    public function printers()
+    {
+        return $this->hasMany(Printer::class);
+    }
+
+    public function defaultPrinter()
+    {
+        return $this->hasOne(Printer::class)->where('is_default', true)->where('is_active', true);
+    }
+
     public function giftExchanges()
     {
         return $this->hasMany(GiftExchange::class);

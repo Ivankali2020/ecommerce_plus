@@ -2,26 +2,30 @@
 
 namespace App\Livewire\Seller;
 
-use App\Helper\OrderStatus;
+use Exception;
 use App\Livewire\Order;
-use App\Models\Category;
-use App\Models\Order as ModelsOrder;
 use App\Models\Product;
 use App\Models\Variant;
-use Exception;
+use Livewire\Component;
+use App\Models\Category;
+use App\Helper\OrderStatus;
 use Filament\Actions\Action;
-use Filament\Actions\Concerns\InteractsWithActions;
-use Filament\Actions\Contracts\HasActions;
-use Filament\Forms\Concerns\InteractsWithForms;
+use Livewire\WithPagination;
+use Livewire\Attributes\Layout;
+use Livewire\Attributes\Computed;
+use Illuminate\Support\Facades\DB;
+use Spatie\LaravelPdf\Facades\Pdf;
+use Illuminate\Support\Facades\Log;
+use Spatie\LaravelPdf\Enums\Format;
+use App\Models\Order as ModelsOrder;
+use Illuminate\Support\Facades\Auth;
 use Filament\Forms\Contracts\HasForms;
 use Filament\Notifications\Notification;
+use Spatie\PdfToImage\Enums\OutputFormat;
+use Filament\Actions\Contracts\HasActions;
 use Illuminate\Database\Eloquent\Collection;
-use Illuminate\Support\Facades\Auth;
-use Illuminate\Support\Facades\DB;
-use Livewire\Attributes\Computed;
-use Livewire\Attributes\Layout;
-use Livewire\Component;
-use Livewire\WithPagination;
+use Filament\Forms\Concerns\InteractsWithForms;
+use Filament\Actions\Concerns\InteractsWithActions;
 
 #[Layout('layouts.pos')]
 class Pos extends Component implements HasActions, HasForms
@@ -703,4 +707,212 @@ class Pos extends Component implements HasActions, HasForms
             }
         }
     }
+
+    public function generateReceiptPdf($orderId)
+    {
+        try {
+            // Find the order
+            $order = ModelsOrder::with(['products', 'products.variant', 'products.product'])
+                ->where('id', $orderId)
+                ->first();
+
+            if (!$order) {
+                Notification::make()
+                    ->title('Order not found')
+                    ->danger()
+                    ->send();
+                return;
+            }
+
+            // Ensure receipts directory exists
+            $receiptsDir = public_path('receipts');
+            if (!file_exists($receiptsDir)) {
+                mkdir($receiptsDir, 0755, true);
+            }
+
+            // Calculate dynamic height based on products count
+            $baseHeight = 70; // Base height in mm (reduced from 150)
+            $itemHeight = 9; // Height per item in mm (reduced from 12)
+            $productCount = $order->products->count();
+            $dynamicHeight = $baseHeight + ($productCount * $itemHeight);
+            
+            // Minimum and maximum height constraints
+            $minHeight = 80; // Reduced minimum height
+            $maxHeight = 300; // Reduced maximum height
+            $finalHeight = max($minHeight, min($maxHeight, $dynamicHeight));
+
+            // Generate PDF for 3-inch thermal printer (75mm width, dynamic height)
+            $pdf = Pdf::view('pdf.receipt', ['order' => $order])
+                ->paperSize(70, $finalHeight, 'mm')
+                ->margins(0, 0, 0, 0);
+
+            // Save PDF to file
+            $pdfPath = public_path("receipts/receipt-{$order->invoice_number}.pdf");
+            $pdf->save($pdfPath);
+
+            // Return PDF for download/print
+            if (file_exists($pdfPath)) {
+                // Attempt to print the PDF directly to the thermal printer
+                $this->printReceiptFallback($order, $pdfPath, null);
+                
+                // Optionally, you can also return the PDF for download
+                // return response()->download($pdfPath);
+            } else {
+                Notification::make()
+                    ->title('PDF generation failed')
+                    ->body('Could not generate receipt PDF.')
+                    ->danger()
+                    ->send();
+            }
+
+        } catch (Exception $e) {
+            logger()->error('Error generating PDF: ' . $e->getMessage());
+            
+            Notification::make()
+                ->title('Failed to generate PDF')
+                ->body($e->getMessage())
+                ->danger()
+                ->send();
+        }
+    }
+
+
+    private function printReceiptFallback($order, $pdfPath, $primaryError)
+    {
+        try {
+            // Get the seller's default printer configuration
+            $user = Auth::guard('seller')->user();
+            if (!$user) {
+                throw new Exception('No authenticated seller user found');
+            }
+
+            $sellerId = $user->parent_id ?? $user->id;
+            $printerConfig = \App\Models\Printer::where('seller_id', $sellerId)
+                ->where('is_default', true)
+                ->where('is_active', true)
+                ->first();
+
+            if (!$printerConfig) {
+                Notification::make()
+                    ->title('No printer configured')
+                    ->body('Please configure a default printer in settings.')
+                    ->warning()
+                    ->send();
+                return;
+            }
+
+            // Create printer connector based on configuration
+            $connector = $this->createPrinterConnector($printerConfig);
+            if (!$connector) {
+                throw new Exception('Could not create printer connector');
+            }
+
+            if(env('APP_ENV') !== 'production'){
+                // Set Ghostscript path for ImageMagick
+                putenv('PATH=/opt/homebrew/bin:' . getenv('PATH'));
+                
+                // Also try setting GS_PROG for ImageMagick
+                putenv('GS_PROG=/opt/homebrew/bin/gs');
+            }
+
+            // Try PDF-to-image conversion first for better quality printing
+            $imagePath = $this->convertPdfToImage($pdfPath, $order);
+            
+            if ($imagePath && file_exists($imagePath)) {
+                $printer = new \Mike42\Escpos\Printer($connector);
+
+                // Load and print the converted image
+                $img = \Mike42\Escpos\EscposImage::load($imagePath);
+                $printer->bitImageColumnFormat($img);
+                
+                usleep(500000); // 0.5 seconds
+                
+                // Ensure the device finishes raster processing
+                $printer->text("\n");
+                usleep(300000); // 300 ms
+
+                // Some models need re-init before cut after graphics
+                $printer->initialize();
+
+                // Advance to cutter and try both cut modes
+                $printer->feed(3);
+                $printer->cut(\Mike42\Escpos\Printer::CUT_FULL);
+
+                usleep(200000); // let the cut execute
+                $printer->close();
+
+                // Clean up temporary image file
+                if (file_exists($imagePath)) {
+                    unlink($imagePath);
+                }
+
+                //remove pdf after printing
+                if (file_exists($pdfPath)) {
+                    unlink($pdfPath);
+                }
+
+                Notification::make()
+                    ->title('Receipt printed successfully')
+                    ->body("Printed to: {$printerConfig->name}")
+                    ->success()
+                    ->send();
+                    
+                return;
+            }
+
+            throw new Exception('PDF-to-image conversion failed');
+
+        } catch (Exception $fallbackError) {
+            logger()->error('Printing failed: ' . $fallbackError->getMessage());
+            
+            Notification::make()
+                ->title('Printing failed')
+                ->body('Could not print receipt. Please check printer configuration.')
+                ->danger()
+                ->send();
+        }
+    }
+
+    private function createPrinterConnector($printerConfig)
+    {
+        try {
+            return match ($printerConfig->connection_type) {
+                'network' => new \Mike42\Escpos\PrintConnectors\NetworkPrintConnector(
+                    $printerConfig->ip_address,
+                    $printerConfig->port
+                ),
+                'usb' => new \Mike42\Escpos\PrintConnectors\FilePrintConnector($printerConfig->usb_path),
+                default => throw new Exception('Unsupported printer connection type'),
+            };
+        } catch (Exception $e) {
+            logger()->error('Error creating printer connector: ' . $e->getMessage());
+            return null;
+        }
+    }
+
+    private function convertPdfToImage($pdfPath, $order)
+    {
+        try {
+            if (!file_exists($pdfPath)) {
+                return null;
+            }
+
+            // Convert PDF to image using Spatie package
+            $imagePath = storage_path("app/temp-receipt-{$order->id}.png"); // Changed from .png 
+            
+            $pdfToImage = new \Spatie\PdfToImage\Pdf($pdfPath);
+            $pdfToImage
+                ->format(OutputFormat::Png)
+                ->resolution(203)
+                ->quality(10)
+                ->save($imagePath);
+
+            return $imagePath;
+
+        } catch (Exception $e) {
+            logger()->error('PDF to image conversion failed: ' . $e->getMessage());
+            return null;
+        }
+    }
+
 }
