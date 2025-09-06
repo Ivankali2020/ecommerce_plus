@@ -28,7 +28,31 @@ RUN apk add --no-cache \
     freetype \
     harfbuzz \
     ca-certificates \
-    ttf-freefont
+    ttf-freefont\
+    # Additional Chromium dependencies for Alpine
+    libx11 \
+    libxcomposite \
+    libxcursor \
+    libxdamage \
+    libxext \
+    libxfixes \
+    libxi \
+    libxrandr \
+    libxrender \
+    libxss \
+    libxtst \
+    alsa-lib \
+    at-spi2-atk \
+    at-spi2-core \
+    cairo \
+    cups-libs \
+    dbus-libs \
+    expat \
+    glib \
+    gtk+3.0 \
+    libdrm \
+    mesa-gbm \
+    pango
 
 RUN pecl install imagick \
     && docker-php-ext-enable imagick
