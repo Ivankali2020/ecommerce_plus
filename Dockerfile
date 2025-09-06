@@ -2,6 +2,8 @@ FROM php:8.4-fpm-alpine
 
 # Install dependencies
 RUN apk add --no-cache \
+    autoconf \
+    automake \
     build-base \
     freetype-dev \
     libjpeg-turbo-dev \
@@ -20,6 +22,11 @@ RUN apk add --no-cache \
     imagemagick-dev \
     fontconfig \
     ttf-dejavu
+    
+RUN pecl install imagick \
+    && docker-php-ext-enable imagick
+
+RUN php -m | grep imagick
 
 # Install PHP extensions
 RUN docker-php-ext-configure gd --with-freetype --with-jpeg \
