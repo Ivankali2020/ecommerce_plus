@@ -22,7 +22,7 @@ RUN apk add --no-cache \
     imagemagick-dev \
     fontconfig \
     ttf-dejavu
-    
+
 RUN pecl install imagick \
     && docker-php-ext-enable imagick
 
@@ -65,6 +65,19 @@ WORKDIR /var/www
 
 # Only if app source code changed
 COPY . /var/www/
+
+# Copy package.json and package-lock.json first for better caching
+COPY package*.json ./
+
+# Install Node.js dependencies
+RUN npm ci --only=production
+
+# Install Puppeteer globally for PDF generation
+RUN npm install -g puppeteer
+
+# Tell Puppeteer to use the installed Chromium package
+ENV PUPPETEER_SKIP_CHROMIUM_DOWNLOAD=true \
+    PUPPETEER_EXECUTABLE_PATH=/usr/bin/chromium-browser
 
 # Only if composer.lock changed
 COPY composer.json composer.lock /var/www/
