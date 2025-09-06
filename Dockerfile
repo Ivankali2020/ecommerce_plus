@@ -21,7 +21,14 @@ RUN apk add --no-cache \
     imagemagick \
     imagemagick-dev \
     fontconfig \
-    ttf-dejavu
+    ttf-dejavu \
+     # For Puppeteer/Chromium in Alpine
+    chromium \
+    nss \
+    freetype \
+    harfbuzz \
+    ca-certificates \
+    ttf-freefont
 
 RUN pecl install imagick \
     && docker-php-ext-enable imagick
@@ -66,11 +73,14 @@ WORKDIR /var/www
 # Only if app source code changed
 COPY . /var/www/
 
+# Install Node.js and npm
+RUN apk add --no-cache nodejs npm
+
+# Install cron
+RUN apk add --no-cache busybox-suid
+
 # Copy package.json and package-lock.json first for better caching
 COPY package*.json ./
-
-# Install Node.js dependencies
-RUN npm ci --only=production
 
 # Install Puppeteer globally for PDF generation
 RUN npm install -g puppeteer
@@ -91,11 +101,6 @@ RUN chown -R www-data:www-data /var/www
 EXPOSE 9000
 # CMD [ "php-fpm"]
 
-# Install Node.js and npm
-RUN apk add --no-cache nodejs npm
-
-# Install cron
-RUN apk add --no-cache busybox-suid
 
 # Add Laravel scheduler cron entry
 # RUN echo "* * * * * /usr/local/bin/php /var/www/artisan schedule:run >> /dev/null 2>&1" > /etc/crontabs/root

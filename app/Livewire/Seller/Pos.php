@@ -746,23 +746,6 @@ class Pos extends Component implements HasActions, HasForms
                 ->paperSize(70, $finalHeight, 'mm')
                 ->margins(0, 0, 0, 0);
             
-            // Configure for production environment
-            if (app()->environment('production')) {
-                $pdf->configure(function (\Spatie\Browsershot\Browsershot $browsershot) {
-                    $browsershot
-                        ->setNodeBinary('/usr/bin/node')
-                        ->setNpmBinary('/usr/bin/npm')
-                        ->addChromiumArguments([
-                            '--no-sandbox',
-                            '--disable-setuid-sandbox',
-                            '--disable-dev-shm-usage',
-                            '--disable-extensions',
-                            '--disable-plugins',
-                            '--disable-gpu',
-                        ]);
-                });
-            }
-
             // Save PDF to file
             $pdfPath = public_path("receipts/receipt-{$order->invoice_number}.pdf");
             $pdf->save($pdfPath);
