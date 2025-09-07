@@ -744,12 +744,12 @@ class Pos extends Component implements HasActions, HasForms
             // Generate PDF for 3-inch thermal printer (75mm width, dynamic height)
             $pdf = Pdf::view('pdf.receipt', ['order' => $order])
                 ->paperSize(70, $finalHeight, 'mm')
-                ->margins(0, 0, 0, 0) 
-                ->withBrowsershot(function (\Spatie\Browsershot\Browsershot $browsershot) {
+                ->margins(0, 0, 0, 0)
+                ->withBrowsershot(function (\Spatie\Browsershot\Browsershot $browsershot) use ($order) {
                     $browsershot
                         ->setNodeBinary('/usr/bin/node')
                         ->setNpmBinary('/usr/bin/npm')
-                        ->setIncludePath(getenv('PATH') . ':/usr/bin')
+                        ->setIncludePath(getenv('PATH'))
                         ->setChromePath('/usr/bin/chromium-browser')
                         ->setNodeModulePath('/usr/local/lib/node_modules')
                         ->setBinPath('/var/www/vendor/spatie/browsershot/bin/browser.cjs')
@@ -768,8 +768,29 @@ class Pos extends Component implements HasActions, HasForms
                             '--disable-backgrounding-occluded-windows',
                             '--disable-ipc-flooding-protection',
                             '--single-process',
-                        ]);
-            });
+                            '--headless=new',
+                             // Additional Alpine/Docker flags
+                            '--disable-namespace-sandbox',
+                            '--disable-zygote',
+                            '--no-zygote',
+                            '--disable-background-networking',
+                            '--disable-default-apps',
+                            '--disable-sync',
+                            '--disable-translate',
+                            '--hide-scrollbars',
+                            '--metrics-recording-only',
+                            '--mute-audio',
+                            '--no-first-run',
+                            '--safebrowsing-disable-auto-update',
+                            '--ignore-certificate-errors',
+                            '--ignore-ssl-errors',
+                            '--ignore-certificate-errors-spki-list',
+                            '--user-data-dir=/tmp/chromium-user-data',
+                            '--data-path=/tmp/chromium-data',
+                            '--homedir=/tmp',
+                            '--disk-cache-dir=/tmp/chromium-cache',
+                        ])->setHtml(view('pdf.receipt', ['order' => $order])->render());
+                });
             
             // Save PDF to file
             $pdfPath = public_path("receipts/receipt-{$order->invoice_number}.pdf");
@@ -868,12 +889,12 @@ class Pos extends Component implements HasActions, HasForms
 
                 // Clean up temporary image file
                 if (file_exists($imagePath)) {
-                    unlink($imagePath);
+                    // unlink($imagePath);
                 }
 
                 //remove pdf after printing
                 if (file_exists($pdfPath)) {
-                    unlink($pdfPath);
+                    // unlink($pdfPath);
                 }
 
                 Notification::make()

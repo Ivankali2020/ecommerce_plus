@@ -2,7 +2,9 @@
 
 use App\Http\Controllers\ProductImportExportController;
 use App\Livewire\Profile\UserAddressForm;
+use App\Models\Order;
 use App\Models\Seller;
+use Illuminate\Support\Facades\Request;
 use Illuminate\Support\Facades\Route;
 
 
@@ -70,10 +72,17 @@ Route::get('language/{locale}', function ($locale) {
 })->name('language.switch');
 
 // Tailwind test route
-Route::get('/tailwind-test', function () {
+Route::get('/tailwind-test/{order}', function (Request $request,$order) {
+    // dd(Order::pluck('id')->toArray());
+    $order = App\Models\Order::find($order);
+    return view('pdf.receipt', compact('order'));
     return view('tailwind-test');
 })->name('tailwind.test');
 
+// receipt preview
+Route::get('/receipt-preview/{order}', function (App\Models\Order $order) {
+    return view('pdf.receipt', compact('order'));
+})->name('receipt.preview');
 
 
 // Central domain routes - Will only work on padaung.test, etc.
