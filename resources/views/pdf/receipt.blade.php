@@ -5,16 +5,8 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Receipt - {{ $order->invoice_number }}</title>
     <style>
-        @font-face {
-            font-family: "mm";
-            src: url("/fonts/mm.ttf") format("truetype");
-            /* src: url("/fonts/KT_03.ttf") format('truetype');  */
-            font-style: normal;
-            font-display: swap;
-            font-weight: normal;
-        }
         body {
-            font-family: 'mm', 'DejaVu Sans Mono', 'Courier New', monospace, 'DejaVu Sans', sans-serif;
+            font-family: 'Noto Sans Myanmar', 'DejaVu Sans Mono', 'Courier New', monospace, 'DejaVu Sans', sans-serif;
             font-size: 10px;
             margin: 0;
             padding: 0;

@@ -2,30 +2,28 @@
 
 namespace App\Livewire\Seller;
 
-use Exception;
+use App\Helper\OrderStatus;
 use App\Livewire\Order;
+use App\Models\Category;
+use App\Models\Order as ModelsOrder;
 use App\Models\Product;
 use App\Models\Variant;
-use Livewire\Component;
-use App\Models\Category;
-use App\Helper\OrderStatus;
+use Exception;
 use Filament\Actions\Action;
-use Livewire\WithPagination;
-use Livewire\Attributes\Layout;
-use Livewire\Attributes\Computed;
-use Illuminate\Support\Facades\DB;
-use Spatie\LaravelPdf\Facades\Pdf;
-use Illuminate\Support\Facades\Log;
-use Spatie\LaravelPdf\Enums\Format;
-use App\Models\Order as ModelsOrder;
-use Illuminate\Support\Facades\Auth;
+use Filament\Actions\Concerns\InteractsWithActions;
+use Filament\Actions\Contracts\HasActions;
+use Filament\Forms\Concerns\InteractsWithForms;
 use Filament\Forms\Contracts\HasForms;
 use Filament\Notifications\Notification;
-use Spatie\PdfToImage\Enums\OutputFormat;
-use Filament\Actions\Contracts\HasActions;
 use Illuminate\Database\Eloquent\Collection;
-use Filament\Forms\Concerns\InteractsWithForms;
-use Filament\Actions\Concerns\InteractsWithActions;
+use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\DB;
+use Livewire\Attributes\Computed;
+use Livewire\Attributes\Layout;
+use Livewire\Component;
+use Livewire\WithPagination;
+use Spatie\LaravelPdf\Facades\Pdf;
+use Spatie\PdfToImage\Enums\OutputFormat;
 
 #[Layout('layouts.pos')]
 class Pos extends Component implements HasActions, HasForms
@@ -708,7 +706,7 @@ class Pos extends Component implements HasActions, HasForms
         }
     }
 
-    public function generateReceiptPdf($orderId)
+    public function generateReceiptPdf($orderId): void
     {
         try {
             // Find the order
@@ -716,17 +714,18 @@ class Pos extends Component implements HasActions, HasForms
                 ->where('id', $orderId)
                 ->first();
 
-            if (!$order) {
+            if (! $order) {
                 Notification::make()
                     ->title('Order not found')
                     ->danger()
                     ->send();
+
                 return;
             }
 
             // Ensure receipts directory exists
             $receiptsDir = public_path('receipts');
-            if (!file_exists($receiptsDir)) {
+            if (! file_exists($receiptsDir)) {
                 mkdir($receiptsDir, 0755, true);
             }
 
@@ -735,44 +734,52 @@ class Pos extends Component implements HasActions, HasForms
             $itemHeight = 9; // Height per item in mm (reduced from 12)
             $productCount = $order->products->count();
             $dynamicHeight = $baseHeight + ($productCount * $itemHeight);
-            
+
             // Minimum and maximum height constraints
             $minHeight = 80; // Reduced minimum height
             $maxHeight = 300; // Reduced maximum height
             $finalHeight = max($minHeight, min($maxHeight, $dynamicHeight));
 
-            // Generate PDF for 3-inch thermal printer (75mm width, dynamic height)
+            // Generate PDF for 3-inch thermal printer (70mm width, dynamic height)
             $pdf = Pdf::view('pdf.receipt', ['order' => $order])
                 ->paperSize(70, $finalHeight, 'mm')
                 ->margins(0, 0, 0, 0)
-                ->withBrowsershot(function (\Spatie\Browsershot\Browsershot $browsershot) use ($order) {
+                ->withBrowsershot(function (\Spatie\Browsershot\Browsershot $browsershot) {
                     $browsershot
                         ->setNodeBinary('/usr/bin/node')
                         ->setNpmBinary('/usr/bin/npm')
-                        ->setIncludePath(getenv('PATH'))
+                        ->setIncludePath('/usr/local/bin:/usr/bin:/bin')
                         ->setChromePath('/usr/bin/chromium-browser')
                         ->setNodeModulePath('/usr/local/lib/node_modules')
-                        ->setBinPath('/var/www/vendor/spatie/browsershot/bin/browser.cjs')
+                        ->timeout(60)
                         ->addChromiumArguments([
+                            // Core security flags
                             '--no-sandbox',
                             '--disable-setuid-sandbox',
                             '--disable-dev-shm-usage',
-                            '--disable-extensions',
-                            '--disable-plugins',
-                            '--disable-gpu',
-                            '--disable-web-security',
-                            '--disable-features=VizDisplayCompositor',
-                            '--run-all-compositor-stages-before-draw',
+
+                            // Namespace and process isolation
+                            '--disable-namespace-sandbox',
+                            '--disable-zygote',
+                            '--no-zygote',
+                            '--single-process',
+
+                            // Memory and resource management
                             '--disable-background-timer-throttling',
                             '--disable-renderer-backgrounding',
                             '--disable-backgrounding-occluded-windows',
                             '--disable-ipc-flooding-protection',
-                            '--single-process',
+
+                            // Display and rendering
+                            '--disable-gpu',
+                            '--disable-extensions',
+                            '--disable-plugins',
+                            '--disable-web-security',
+                            '--disable-features=VizDisplayCompositor',
+                            '--run-all-compositor-stages-before-draw',
                             '--headless=new',
-                             // Additional Alpine/Docker flags
-                            '--disable-namespace-sandbox',
-                            '--disable-zygote',
-                            '--no-zygote',
+
+                            // Alpine/Production specific
                             '--disable-background-networking',
                             '--disable-default-apps',
                             '--disable-sync',
@@ -785,13 +792,19 @@ class Pos extends Component implements HasActions, HasForms
                             '--ignore-certificate-errors',
                             '--ignore-ssl-errors',
                             '--ignore-certificate-errors-spki-list',
+
+                            // Temporary directories for Alpine
                             '--user-data-dir=/tmp/chromium-user-data',
                             '--data-path=/tmp/chromium-data',
                             '--homedir=/tmp',
                             '--disk-cache-dir=/tmp/chromium-cache',
-                        ])->setHtml(view('pdf.receipt', ['order' => $order])->render());
+
+                            // Font configuration for Myanmar
+                            '--font-render-hinting=none',
+                            '--disable-font-subpixel-positioning',
+                        ]);
                 });
-            
+
             // Save PDF to file
             $pdfPath = public_path("receipts/receipt-{$order->invoice_number}.pdf");
             $pdf->save($pdfPath);
@@ -800,7 +813,7 @@ class Pos extends Component implements HasActions, HasForms
             if (file_exists($pdfPath)) {
                 // Attempt to print the PDF directly to the thermal printer
                 $this->printReceiptFallback($order, $pdfPath, null);
-                
+
                 // Optionally, you can also return the PDF for download
                 // return response()->download($pdfPath);
             } else {
@@ -812,8 +825,11 @@ class Pos extends Component implements HasActions, HasForms
             }
 
         } catch (Exception $e) {
-            logger()->error('Error generating PDF: ' . $e->getMessage());
-            
+            logger()->error('Error generating PDF: '.$e->getMessage(), [
+                'trace' => $e->getTraceAsString(),
+                'order_id' => $orderId,
+            ]);
+
             Notification::make()
                 ->title('Failed to generate PDF')
                 ->body($e->getMessage())
@@ -822,13 +838,12 @@ class Pos extends Component implements HasActions, HasForms
         }
     }
 
-
     private function printReceiptFallback($order, $pdfPath, $primaryError)
     {
         try {
             // Get the seller's default printer configuration
             $user = Auth::guard('seller')->user();
-            if (!$user) {
+            if (! $user) {
                 throw new Exception('No authenticated seller user found');
             }
 
@@ -838,41 +853,42 @@ class Pos extends Component implements HasActions, HasForms
                 ->where('is_active', true)
                 ->first();
 
-            if (!$printerConfig) {
+            if (! $printerConfig) {
                 Notification::make()
                     ->title('No printer configured')
                     ->body('Please configure a default printer in settings.')
                     ->warning()
                     ->send();
+
                 return;
             }
 
             // Create printer connector based on configuration
             $connector = $this->createPrinterConnector($printerConfig);
-            if (!$connector) {
+            if (! $connector) {
                 throw new Exception('Could not create printer connector');
             }
 
-            if(env('APP_ENV') !== 'production'){
+            if (env('APP_ENV') !== 'production') {
                 // Set Ghostscript path for ImageMagick
-                putenv('PATH=/opt/homebrew/bin:' . getenv('PATH'));
-                
+                putenv('PATH=/opt/homebrew/bin:'.getenv('PATH'));
+
                 // Also try setting GS_PROG for ImageMagick
                 putenv('GS_PROG=/opt/homebrew/bin/gs');
             }
 
             // Try PDF-to-image conversion first for better quality printing
             $imagePath = $this->convertPdfToImage($pdfPath, $order);
-            
+
             if ($imagePath && file_exists($imagePath)) {
                 $printer = new \Mike42\Escpos\Printer($connector);
 
                 // Load and print the converted image
                 $img = \Mike42\Escpos\EscposImage::load($imagePath);
                 $printer->bitImageColumnFormat($img);
-                
+
                 usleep(500000); // 0.5 seconds
-                
+
                 // Ensure the device finishes raster processing
                 $printer->text("\n");
                 usleep(300000); // 300 ms
@@ -892,7 +908,7 @@ class Pos extends Component implements HasActions, HasForms
                     // unlink($imagePath);
                 }
 
-                //remove pdf after printing
+                // remove pdf after printing
                 if (file_exists($pdfPath)) {
                     // unlink($pdfPath);
                 }
@@ -902,15 +918,14 @@ class Pos extends Component implements HasActions, HasForms
                     ->body("Printed to: {$printerConfig->name}")
                     ->success()
                     ->send();
-                    
+
                 return;
             }
 
             throw new Exception('PDF-to-image conversion failed');
-
         } catch (Exception $fallbackError) {
-            logger()->error('Printing failed: ' . $fallbackError->getMessage());
-            
+            logger()->error('Printing failed: '.$fallbackError->getMessage());
+
             Notification::make()
                 ->title('Printing failed')
                 ->body('Could not print receipt. Please check printer configuration.')
@@ -931,7 +946,8 @@ class Pos extends Component implements HasActions, HasForms
                 default => throw new Exception('Unsupported printer connection type'),
             };
         } catch (Exception $e) {
-            logger()->error('Error creating printer connector: ' . $e->getMessage());
+            logger()->error('Error creating printer connector: '.$e->getMessage());
+
             return null;
         }
     }
@@ -939,13 +955,13 @@ class Pos extends Component implements HasActions, HasForms
     private function convertPdfToImage($pdfPath, $order)
     {
         try {
-            if (!file_exists($pdfPath)) {
+            if (! file_exists($pdfPath)) {
                 return null;
             }
 
             // Convert PDF to image using Spatie package
-            $imagePath = storage_path("app/temp-receipt-{$order->id}.png"); // Changed from .png 
-            
+            $imagePath = storage_path("app/temp-receipt-{$order->id}.png"); // Changed from .png
+
             $pdfToImage = new \Spatie\PdfToImage\Pdf($pdfPath);
             $pdfToImage
                 ->format(OutputFormat::Png)
@@ -956,9 +972,9 @@ class Pos extends Component implements HasActions, HasForms
             return $imagePath;
 
         } catch (Exception $e) {
-            logger()->error('PDF to image conversion failed: ' . $e->getMessage());
+            logger()->error('PDF to image conversion failed: '.$e->getMessage());
+
             return null;
         }
     }
-
 }

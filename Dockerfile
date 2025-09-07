@@ -85,9 +85,23 @@ COPY package*.json ./
 # Install Puppeteer globally for PDF generation
 RUN npm install -g puppeteer
 
+# Install Myanmar fonts for proper text rendering
+RUN mkdir -p /usr/share/fonts/truetype/myanmar && \
+    wget -O /usr/share/fonts/truetype/myanmar/NotoSansMyanmar-Regular.ttf \
+    "https://github.com/googlefonts/noto-fonts/raw/main/hinted/ttf/NotoSansMyanmar/NotoSansMyanmar-Regular.ttf" && \
+    wget -O /usr/share/fonts/truetype/myanmar/NotoSansMyanmar-Bold.ttf \
+    "https://github.com/googlefonts/noto-fonts/raw/main/hinted/ttf/NotoSansMyanmar/NotoSansMyanmar-Bold.ttf" && \
+    fc-cache -fv
+
+# Create directories for Chromium data in production
+RUN mkdir -p /tmp/chromium-user-data /tmp/chromium-data /tmp/chromium-cache && \
+    chmod 1777 /tmp/chromium-user-data /tmp/chromium-data /tmp/chromium-cache
+
 # Tell Puppeteer to use the installed Chromium package
 ENV PUPPETEER_SKIP_CHROMIUM_DOWNLOAD=true \
-    PUPPETEER_EXECUTABLE_PATH=/usr/bin/chromium-browser
+    PUPPETEER_EXECUTABLE_PATH=/usr/bin/chromium-browser \
+    CHROME_BIN=/usr/bin/chromium-browser \
+    CHROME_PATH=/usr/bin/chromium-browser
 
 # Only if composer.lock changed
 COPY composer.json composer.lock /var/www/
