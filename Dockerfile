@@ -16,6 +16,7 @@ RUN apk add --no-cache \
     unzip \
     git \
     curl \
+    fontconfig \
     # For PDF->Image conversion
     ghostscript \
     imagemagick \
@@ -96,6 +97,8 @@ RUN mkdir -p /usr/share/fonts/truetype/myanmar && \
 # Create directories for Chromium data in production
 RUN mkdir -p /tmp/chromium-user-data /tmp/chromium-data /tmp/chromium-cache && \
     chmod 1777 /tmp/chromium-user-data /tmp/chromium-data /tmp/chromium-cache
+
+#check fc-list | grep -i myanmar
 
 # Tell Puppeteer to use the installed Chromium package
 ENV PUPPETEER_SKIP_CHROMIUM_DOWNLOAD=true \
