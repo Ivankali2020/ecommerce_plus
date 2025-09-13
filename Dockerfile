@@ -71,9 +71,6 @@ COPY --from=composer:latest /usr/bin/composer /usr/bin/composer
 # Set working directory
 WORKDIR /var/www
 
-# Only if app source code changed
-COPY . /var/www/
-
 # Install Node.js and npm
 RUN apk add --no-cache nodejs npm
 
@@ -111,21 +108,23 @@ ENV PUPPETEER_SKIP_CHROMIUM_DOWNLOAD=true \
     CHROME_PATH=/usr/bin/chromium-browser \
     NODE_OPTIONS="--max-old-space-size=4096"
 
-# Only if composer.lock changed
+# Copy composer files first for better caching
 COPY composer.json composer.lock /var/www/
-RUN composer install --prefer-dist  --no-scripts --no-interaction
+
+# Install composer dependencies without running scripts to avoid Laravel booting
+RUN composer install --prefer-dist --no-scripts --no-interaction --no-dev
+
+# Copy application files
+COPY . /var/www/
+
+# Run composer scripts after all files are in place
+RUN composer dump-autoload --optimize
 
 # Set permissions
 RUN chown -R www-data:www-data /var/www
 
-
 # Expose port 9000 and start php-fpm server
 EXPOSE 9000
-# CMD [ "php-fpm"]
-
-
-# Add Laravel scheduler cron entry
-# RUN echo "* * * * * /usr/local/bin/php /var/www/artisan schedule:run >> /dev/null 2>&1" > /etc/crontabs/root
 
 # Start cron service
 CMD ["sh", "-c", "crond -f & docker-php-entrypoint php-fpm"]

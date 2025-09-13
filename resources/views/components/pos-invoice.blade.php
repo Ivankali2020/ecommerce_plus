@@ -96,7 +96,7 @@
                        RAW Print 
                     </button>
                 </div>
-                <p clastt="text-xs mt-4 "> IF YOUR PRINTER DOES NOT SUPPORT UNICODE, PLEASE USE RAW PRINT </p>
+                <p clastt="text-xs mt-4 "> IF YOUR PRINTER SUPPORT UNICODE, PLEASE USE RAW PRINT </p>
             </div>
         </div>
     @endif
