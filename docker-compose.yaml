@@ -4,6 +4,16 @@ services:
     build:
       context: .
       dockerfile: Dockerfile
+    security_opt:
+      - seccomp:unconfined
+      - apparmor:unconfined
+    cap_add:
+      - SYS_ADMIN
+      - NET_ADMIN
+    environment:
+      - NODE_OPTIONS=--max-old-space-size=4096
+    privileged: false  # Ensure this is explicitly set
+    user: "1000:1000"  # Set explicit user/group
     container_name: app
     restart: unless-stopped
     working_dir: /var/www

@@ -740,6 +740,7 @@ class Pos extends Component implements HasActions, HasForms
             $maxHeight = 300; // Reduced maximum height
             $finalHeight = max($minHeight, min($maxHeight, $dynamicHeight));
 
+
             // Generate PDF for 3-inch thermal printer (70mm width, dynamic height)
             $pdf = Pdf::view('pdf.receipt', ['order' => $order])
                 ->paperSize(70, $finalHeight, 'mm')
@@ -751,57 +752,81 @@ class Pos extends Component implements HasActions, HasForms
                         ->setIncludePath('/usr/local/bin:/usr/bin:/bin')
                         ->setChromePath('/usr/bin/chromium-browser')
                         ->setNodeModulePath('/usr/local/lib/node_modules')
-                        ->timeout(60)
+                        ->timeout(120) // Increased timeout for production
                         ->addChromiumArguments([
-                            // Core security flags
+                            // Critical security flags for production containers
                             '--no-sandbox',
                             '--disable-setuid-sandbox',
                             '--disable-dev-shm-usage',
-
-                            // Namespace and process isolation
                             '--disable-namespace-sandbox',
+                            '--disable-seccomp-filter-sandbox',
+                            '--disable-sandbox',
+                            
+                            // Process management for restricted environments
                             '--disable-zygote',
                             '--no-zygote',
                             '--single-process',
-
-                            // Memory and resource management
                             '--disable-background-timer-throttling',
                             '--disable-renderer-backgrounding',
                             '--disable-backgrounding-occluded-windows',
                             '--disable-ipc-flooding-protection',
 
-                            // Display and rendering
-                            '--disable-gpu',
-                            '--disable-extensions',
-                            '--disable-plugins',
-                            '--disable-web-security',
-                            '--disable-features=VizDisplayCompositor',
-                            '--run-all-compositor-stages-before-draw',
-                            '--headless=new',
-
-                            // Alpine/Production specific
+                            // System service disabling for containerized environments
+                            '--disable-dbus',
+                            '--disable-audio-service-sandbox',
                             '--disable-background-networking',
+                            '--disable-breakpad',
+                            '--disable-client-side-phishing-detection',
+                            '--disable-component-extensions-with-background-pages',
+                            '--disable-component-update',
                             '--disable-default-apps',
+                            '--disable-hang-monitor',
+                            '--disable-popup-blocking',
+                            '--disable-prompt-on-repost',
                             '--disable-sync',
                             '--disable-translate',
+                            '--disable-web-security',
+
+                            // GPU and rendering optimization
+                            '--disable-gpu',
+                            '--disable-gpu-sandbox',
+                            '--disable-software-rasterizer',
+                            '--disable-extensions',
+                            '--disable-plugins',
+                            '--disable-features=VizDisplayCompositor,AudioServiceOutOfProcess',
+                            '--run-all-compositor-stages-before-draw',
+
+                            // Headless configuration
+                            '--headless=new',
+                            '--virtual-time-budget=5000',
+
+                            // Memory optimization for production
+                            '--memory-pressure-off',
+                            '--max_old_space_size=4096',
+
+                            // Performance optimization
                             '--hide-scrollbars',
                             '--metrics-recording-only',
                             '--mute-audio',
                             '--no-first-run',
                             '--safebrowsing-disable-auto-update',
+                            
+                            // SSL/Certificate handling
                             '--ignore-certificate-errors',
                             '--ignore-ssl-errors',
                             '--ignore-certificate-errors-spki-list',
+                            '--allow-running-insecure-content',
 
-                            // Temporary directories for Alpine
+                            // Temporary directories optimized for containers
                             '--user-data-dir=/tmp/chromium-user-data',
                             '--data-path=/tmp/chromium-data',
                             '--homedir=/tmp',
                             '--disk-cache-dir=/tmp/chromium-cache',
 
-                            // Font configuration for Myanmar
+                            // Font configuration for Myanmar text
                             '--font-render-hinting=none',
                             '--disable-font-subpixel-positioning',
+                            '--disable-lcd-text',
                         ]);
                 });
 

@@ -98,13 +98,12 @@ RUN mkdir -p /usr/share/fonts/truetype/myanmar && \
 RUN mkdir -p /tmp/chromium-user-data /tmp/chromium-data /tmp/chromium-cache && \
     chmod 1777 /tmp/chromium-user-data /tmp/chromium-data /tmp/chromium-cache
 
-#check fc-list | grep -i myanmar
-
 # Tell Puppeteer to use the installed Chromium package
 ENV PUPPETEER_SKIP_CHROMIUM_DOWNLOAD=true \
     PUPPETEER_EXECUTABLE_PATH=/usr/bin/chromium-browser \
     CHROME_BIN=/usr/bin/chromium-browser \
-    CHROME_PATH=/usr/bin/chromium-browser
+    CHROME_PATH=/usr/bin/chromium-browser \
+    NODE_OPTIONS="--max-old-space-size=4096"
 
 # Only if composer.lock changed
 COPY composer.json composer.lock /var/www/
