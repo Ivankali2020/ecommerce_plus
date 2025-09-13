@@ -709,7 +709,6 @@ class Pos extends Component implements HasActions, HasForms
     public function generateReceiptPdf($orderId): void
     {
         try {
-            // Find the order
             $order = ModelsOrder::with(['products', 'products.variant', 'products.product'])
                 ->where('id', $orderId)
                 ->first();
@@ -723,46 +722,51 @@ class Pos extends Component implements HasActions, HasForms
                 return;
             }
 
-            // Ensure receipts directory exists
+            // Ensure receipts directory exists with proper permissions
             $receiptsDir = public_path('receipts');
             if (! file_exists($receiptsDir)) {
                 mkdir($receiptsDir, 0755, true);
             }
 
-            // Calculate dynamic height based on products count
-            $baseHeight = 70; // Base height in mm (reduced from 150)
-            $itemHeight = 9; // Height per item in mm (reduced from 12)
+            // Calculate dynamic height
+            $baseHeight = 70;
+            $itemHeight = 9;
             $productCount = $order->products->count();
             $dynamicHeight = $baseHeight + ($productCount * $itemHeight);
-
-            // Minimum and maximum height constraints
-            $minHeight = 80; // Reduced minimum height
-            $maxHeight = 300; // Reduced maximum height
+            $minHeight = 80;
+            $maxHeight = 300;
             $finalHeight = max($minHeight, min($maxHeight, $dynamicHeight));
 
-
-            // Generate PDF for 3-inch thermal printer (70mm width, dynamic height)
+            // Generate PDF using environment variables
             $pdf = Pdf::view('pdf.receipt', ['order' => $order])
                 ->paperSize(70, $finalHeight, 'mm')
                 ->margins(0, 0, 0, 0)
                 ->withBrowsershot(function (\Spatie\Browsershot\Browsershot $browsershot) {
                     $browsershot
-                        ->setNodeBinary('/usr/bin/node')
-                        ->setNpmBinary('/usr/bin/npm')
-                        ->setIncludePath('/usr/local/bin:/usr/bin:/bin')
-                        ->setChromePath('/usr/bin/chromium-browser')
-                        ->setNodeModulePath('/usr/local/lib/node_modules')
-                        ->timeout(120) // Increased timeout for production
+                        ->setNodeBinary(config('laravel-pdf.node_binary', '/usr/bin/node'))
+                        ->setNpmBinary(config('laravel-pdf.npm_binary', '/usr/bin/npm'))
+                        ->setIncludePath(config('laravel-pdf.include_path', '/usr/local/bin:/usr/bin:/bin'))
+                        ->setChromePath(config('laravel-pdf.chrome_path', '/usr/bin/chromium-browser'))
+                        ->setNodeModulePath(config('laravel-pdf.node_modules_path', '/usr/local/lib/node_modules'))
+                        ->timeout(120)
                         ->addChromiumArguments([
-                            // Critical security flags for production containers
+                            // Critical crashpad fix - prevents database required error
+                            '--disable-crashpad',
+                            '--disable-crash-reporter',
+                            '--disable-breakpad',
+                            '--no-crash-upload',
+                            '--disable-crash-handler',
+                            '--crash-dumps-dir=/tmp',
+
+                            // Essential security flags for production
                             '--no-sandbox',
                             '--disable-setuid-sandbox',
                             '--disable-dev-shm-usage',
                             '--disable-namespace-sandbox',
                             '--disable-seccomp-filter-sandbox',
                             '--disable-sandbox',
-                            
-                            // Process management for restricted environments
+
+                            // Process management
                             '--disable-zygote',
                             '--no-zygote',
                             '--single-process',
@@ -771,11 +775,10 @@ class Pos extends Component implements HasActions, HasForms
                             '--disable-backgrounding-occluded-windows',
                             '--disable-ipc-flooding-protection',
 
-                            // System service disabling for containerized environments
+                            // System service disabling
                             '--disable-dbus',
                             '--disable-audio-service-sandbox',
                             '--disable-background-networking',
-                            '--disable-breakpad',
                             '--disable-client-side-phishing-detection',
                             '--disable-component-extensions-with-background-pages',
                             '--disable-component-update',
@@ -787,20 +790,20 @@ class Pos extends Component implements HasActions, HasForms
                             '--disable-translate',
                             '--disable-web-security',
 
-                            // GPU and rendering optimization
+                            // GPU and rendering
                             '--disable-gpu',
                             '--disable-gpu-sandbox',
                             '--disable-software-rasterizer',
                             '--disable-extensions',
                             '--disable-plugins',
-                            '--disable-features=VizDisplayCompositor,AudioServiceOutOfProcess',
+                            '--disable-features=VizDisplayCompositor,AudioServiceOutOfProcess,TranslateUI',
                             '--run-all-compositor-stages-before-draw',
 
                             // Headless configuration
                             '--headless=new',
                             '--virtual-time-budget=5000',
 
-                            // Memory optimization for production
+                            // Memory optimization
                             '--memory-pressure-off',
                             '--max_old_space_size=4096',
 
@@ -810,14 +813,17 @@ class Pos extends Component implements HasActions, HasForms
                             '--mute-audio',
                             '--no-first-run',
                             '--safebrowsing-disable-auto-update',
-                            
+                            '--disable-logging',
+                            '--disable-metrics',
+                            '--disable-metrics-reporting',
+
                             // SSL/Certificate handling
                             '--ignore-certificate-errors',
                             '--ignore-ssl-errors',
                             '--ignore-certificate-errors-spki-list',
                             '--allow-running-insecure-content',
 
-                            // Temporary directories optimized for containers
+                            // Temporary directories
                             '--user-data-dir=/tmp/chromium-user-data',
                             '--data-path=/tmp/chromium-data',
                             '--homedir=/tmp',
@@ -827,6 +833,11 @@ class Pos extends Component implements HasActions, HasForms
                             '--font-render-hinting=none',
                             '--disable-font-subpixel-positioning',
                             '--disable-lcd-text',
+
+                            // Additional stability flags
+                            '--disable-field-trial-config',
+                            '--disable-back-forward-cache',
+                            '--no-default-browser-check',
                         ]);
                 });
 

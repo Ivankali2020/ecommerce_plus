@@ -94,6 +94,12 @@ RUN mkdir -p /usr/share/fonts/truetype/myanmar && \
     "https://github.com/googlefonts/noto-fonts/raw/main/hinted/ttf/NotoSansMyanmar/NotoSansMyanmar-Bold.ttf" && \
     fc-cache -fv
 
+# CRITICAL FIX: Create Chrome directories to prevent crashpad handler error
+RUN CHROME_DIRS="/var/www/.local /var/www/.config /var/www/.cache /var/www/.pki" && \
+    mkdir -p ${CHROME_DIRS} && \
+    mkdir -p /var/www/.config/google-chrome/Crashpad && \
+    chown -R www-data:www-data ${CHROME_DIRS}
+
 # Create directories for Chromium data in production
 RUN mkdir -p /tmp/chromium-user-data /tmp/chromium-data /tmp/chromium-cache && \
     chmod 1777 /tmp/chromium-user-data /tmp/chromium-data /tmp/chromium-cache
