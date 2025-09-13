@@ -77,10 +77,10 @@
                 
                 <!-- Modal Actions -->
                 <div class="flex space-x-2 mt-6 print-hide">
-                    <button wire:click="closeReceipt" 
+                    {{-- <button wire:click="closeReceipt" 
                             class="flex-1 px-4 py-2 bg-gray-200 dark:bg-gray-600 text-gray-700 dark:text-gray-300 rounded-lg hover:bg-gray-300 dark:hover:bg-gray-500">
                         Close
-                    </button>
+                    </button> --}}
                     <button wire:click="generateReceiptPdf({{ $lastOrder->id }})" 
                             class="flex-1 px-4 py-2 bg-success-600 text-white rounded-lg hover:bg-success-500">
                         <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 inline mr-2" fill="none" viewBox="0 0 24 24" stroke="currentColor">
@@ -88,7 +88,15 @@
                         </svg>
                         Print Receipt
                     </button>
+                    <button wire:click="generateRawReceiptPrint({{ $lastOrder->id }})" 
+                            class="flex-1 px-4 py-2 bg-primary-600 text-white rounded-lg hover:bg-primary-500">
+                        <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 inline mr-2" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 17h2a2 2 0 002-2v-4a2 2 0 00-2-2H3a2 2 0 00-2 2v4a2 2 0 002 2h2m2 4h6a2 2 0 002-2v-1a2 2 0 00-2-2H7a2 2 0 00-2 2v1a2 2 0 002 2z" />
+                        </svg>
+                       RAW Print 
+                    </button>
                 </div>
+                <p clastt="text-xs mt-4 "> IF YOUR PRINTER DOES NOT SUPPORT UNICODE, PLEASE USE RAW PRINT </p>
             </div>
         </div>
     @endif

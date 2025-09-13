@@ -24,6 +24,7 @@ use Livewire\Component;
 use Livewire\WithPagination;
 use Spatie\LaravelPdf\Facades\Pdf;
 use Spatie\PdfToImage\Enums\OutputFormat;
+use Illuminate\Support\Str;
 
 #[Layout('layouts.pos')]
 class Pos extends Component implements HasActions, HasForms
@@ -704,6 +705,286 @@ class Pos extends Component implements HasActions, HasForms
                 $this->searchProducts();
             }
         }
+    }
+
+    /**
+     * Generate raw receipt for direct thermal printer printing
+     * Full width design with clean layout
+     */
+    public function generateRawReceiptPrint($orderId): void
+    {
+        try {
+            $order = ModelsOrder::with(['products', 'products.variant', 'products.product', 'seller'])
+                ->where('id', $orderId)
+                ->first();
+
+            if (! $order) {
+                Notification::make()
+                    ->title('Order not found')
+                    ->danger()
+                    ->send();
+
+                return;
+            }
+
+            // Get the seller's default printer configuration
+            $user = Auth::guard('seller')->user();
+            if (! $user) {
+                throw new Exception('No authenticated seller user found');
+            }
+
+            $sellerId = $user->parent_id ?? $user->id;
+            $printerConfig = \App\Models\Printer::where('seller_id', $sellerId)
+                ->where('is_default', true)
+                ->where('is_active', true)
+                ->first();
+
+            if (! $printerConfig) {
+                Notification::make()
+                    ->title('No Printer Found')
+                    ->body('Please configure a default printer first.')
+                    ->warning()
+                    ->send();
+
+                return;
+            }
+
+            // Create printer connector
+            $connector = $this->createPrinterConnector($printerConfig);
+            if (! $connector) {
+                throw new Exception('Could not create printer connector');
+            }
+
+            $printer = new \Mike42\Escpos\Printer($connector);
+
+            // Initialize printer
+            $printer->initialize();
+            $printer->selectPrintMode(\Mike42\Escpos\Printer::MODE_FONT_A);
+
+            // Print receipt header
+            $this->printReceiptHeader($printer, $order);
+
+            // Print invoice information
+            $this->printInvoiceInfo($printer, $order);
+
+            // Print separator
+            $this->printSeparator($printer);
+
+            // Print items
+            $this->printReceiptItems($printer, $order);
+
+            // Print totals
+            $this->printReceiptTotals($printer, $order);
+
+            // Print payment info
+            if ($order->given_amount > 0) {
+                $this->printPaymentInfo($printer, $order);
+            }
+
+            // Print footer
+            $this->printReceiptFooter($printer);
+
+            // Feed and cut
+            $printer->feed(3);
+            $printer->cut(\Mike42\Escpos\Printer::CUT_FULL);
+            $printer->close();
+
+            Notification::make()
+                ->title('Receipt printed successfully')
+                ->success()
+                ->send();
+
+        } catch (Exception $e) {
+            logger()->error('Error generating raw receipt print: '.$e->getMessage(), [
+                'trace' => $e->getTraceAsString(),
+                'order_id' => $orderId,
+            ]);
+
+            Notification::make()
+                ->title('Failed to print receipt')
+                ->body($e->getMessage())
+                ->danger()
+                ->send();
+        }
+    }
+
+    /**
+     * Print receipt header with store information
+     */
+    private function printReceiptHeader($printer, $order): void
+    {
+        // Store name - centered and bold
+        $printer->selectPrintMode(\Mike42\Escpos\Printer::MODE_FONT_A | \Mike42\Escpos\Printer::MODE_EMPHASIZED);
+        $printer->setJustification(\Mike42\Escpos\Printer::JUSTIFY_CENTER);
+        $printer->text($this->convertMyanmarToEnglish($order->seller->name) . "\n");
+
+        // Store address
+        $printer->selectPrintMode(\Mike42\Escpos\Printer::MODE_FONT_A);
+        if ($order->seller->addresses->count() > 0) {
+            $address = $order->seller->addresses->first()->modAddress ?? '';
+            $printer->text($this->convertMyanmarToEnglish($address) . "\n");
+        }
+
+        // Contact info
+        $contactInfo = '';
+        if ($order->seller->phone) {
+            $contactInfo .= $order->seller->phone;
+        }
+        if ($order->seller->email) {
+            $contactInfo .= ($contactInfo ? ' , ' : '') . $order->seller->email;
+        }
+        if ($contactInfo) {
+            $printer->text($contactInfo . "\n");
+        }
+
+        $printer->feed(1);
+    }
+
+    /**
+     * Print invoice information
+     */
+    private function printInvoiceInfo($printer, $order): void
+    {
+        $printer->setJustification(\Mike42\Escpos\Printer::JUSTIFY_LEFT);
+        $printer->selectPrintMode(\Mike42\Escpos\Printer::MODE_FONT_A);
+
+        $printer->text("Invoice: " . $order->invoice_number . "\n");
+        $printer->text("Date: " . $order->created_at->format('M d, Y H:i') . "\n");
+        $printer->text("Cashier: " . ($order->staff->name ?? 'POS Staff') . "\n");
+    }
+
+    /**
+     * Print separator line
+     */
+    private function printSeparator($printer): void
+    {
+        $printer->text(str_repeat('-', 48) . "\n");
+    }
+
+    /**
+     * Print receipt items with clean formatting
+     */
+    private function printReceiptItems($printer, $order): void
+    {
+        $printer->selectPrintMode(\Mike42\Escpos\Printer::MODE_FONT_A | \Mike42\Escpos\Printer::MODE_EMPHASIZED);
+        $printer->text("ITEMS:\n");
+        $printer->selectPrintMode(\Mike42\Escpos\Printer::MODE_FONT_A);
+        $printer->feed(1);
+
+        foreach ($order->products as $item) {
+            // Product name - convert Myanmar to English
+            $productName = $this->convertMyanmarToEnglish($item->product->name);
+            $printer->selectPrintMode(\Mike42\Escpos\Printer::MODE_FONT_A | \Mike42\Escpos\Printer::MODE_EMPHASIZED);
+            $printer->text($productName . "\n");
+
+            // Variant info if exists
+            if ($item->variant) {
+                $printer->selectPrintMode(\Mike42\Escpos\Printer::MODE_FONT_B);
+                $variantName = $this->convertMyanmarToEnglish($item->variant->name);
+                $printer->text("Variant: " . $variantName . "\n");
+            }
+
+            // Price and quantity line
+            $printer->selectPrintMode(\Mike42\Escpos\Printer::MODE_FONT_A);
+            
+            if ($item->discount > 0) {
+                $priceLine = sprintf(
+                    "%d x %s MMK (%d%% off)",
+                    $item->quantity,
+                    number_format($item->discount_price),
+                    $item->discount
+                );
+            } else {
+                $priceLine = sprintf(
+                    "%d x %s MMK",
+                    $item->quantity,
+                    number_format($item->price)
+                );
+            }
+
+            // Format price line with total on the right
+            $totalPrice = number_format($item->sub_price) . " MMK";
+            $spacePadding = 48 - strlen($priceLine) - strlen($totalPrice);
+            $spacePadding = max(1, $spacePadding); // At least 1 space
+
+            $printer->text($priceLine . str_repeat(' ', $spacePadding) . $totalPrice . "\n");
+            $printer->feed(1);
+        }
+    }
+
+    /**
+     * Print receipt totals section
+     */
+    private function printReceiptTotals($printer, $order): void
+    {
+        $printer->text(str_repeat('-', 48) . "\n");
+
+        // Subtotal
+        $this->printRightAlignedRow($printer, "Subtotal:", number_format($order->sub_total) . " MMK");
+
+        // Tax if applicable
+        if ($order->tax_price > 0) {
+            $this->printRightAlignedRow($printer, "Tax ({$order->tax}%):", number_format($order->tax_price) . " MMK");
+        }
+
+        // Grand total
+        $printer->selectPrintMode(\Mike42\Escpos\Printer::MODE_FONT_A | \Mike42\Escpos\Printer::MODE_EMPHASIZED);
+        $this->printRightAlignedRow($printer, "TOTAL:", number_format($order->total_price) . " MMK");
+        $printer->selectPrintMode(\Mike42\Escpos\Printer::MODE_FONT_A);
+    }
+
+    /**
+     * Print payment information
+     */
+    private function printPaymentInfo($printer, $order): void
+    {
+        $printer->feed(1);
+        $this->printRightAlignedRow($printer, "Given Amount:", "- " . number_format($order->given_amount) . " MMK");
+        $this->printRightAlignedRow($printer, "Change:", number_format($order->change_amount) . " MMK");
+    }
+
+    /**
+     * Print receipt footer
+     */
+    private function printReceiptFooter($printer): void
+    {
+        $printer->feed(2);
+        $printer->setJustification(\Mike42\Escpos\Printer::JUSTIFY_CENTER);
+        $printer->selectPrintMode(\Mike42\Escpos\Printer::MODE_FONT_A);
+        
+        $printer->text("Thank You!\n");
+        $printer->text("Please come back again\n");
+        $printer->feed(1);
+        $printer->setJustification(\Mike42\Escpos\Printer::JUSTIFY_LEFT);
+    }
+
+    /**
+     * Print right-aligned row with label and value
+     */
+    private function printRightAlignedRow($printer, $label, $value): void
+    {
+        $totalWidth = 48;
+        $spacePadding = $totalWidth - strlen($label) - strlen($value);
+        $spacePadding = max(1, $spacePadding);
+        
+        $printer->text($label . str_repeat(' ', $spacePadding) . $value . "\n");
+    }
+
+    /**
+     * Convert Myanmar text to English using Str::slug without hyphens
+     * Example: 'သံပုရာသီး' becomes 'orange' (transliterated/slugified)
+     */
+    private function convertMyanmarToEnglish($text): string
+    {
+        // For other Myanmar text, use Str::slug and remove hyphens
+        $slugged = Str::slug($text, ' ');
+        
+        // If slug is empty or just spaces, return original text
+        if (empty(trim($slugged))) {
+            return $text;
+        }
+
+        return $slugged;
     }
 
     public function generateReceiptPdf($orderId): void
