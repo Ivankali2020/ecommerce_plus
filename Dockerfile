@@ -77,10 +77,20 @@ RUN apk add --no-cache nodejs npm
 # Install cron
 RUN apk add --no-cache busybox-suid
 
-# Copy package.json and package-lock.json first for better caching
-COPY package*.json ./
+# Create the working directory and set proper ownership early
+RUN mkdir -p /var/www && chown -R www-data:www-data /var/www
 
-# Install Puppeteer globally for PDF generation
+# Switch to www-data user for npm operations
+USER www-data
+
+# Copy package.json and package-lock.json with proper ownership
+COPY --chown=www-data:www-data package*.json ./
+
+# Install npm dependencies as www-data user
+RUN npm ci --only=production
+
+# Install Puppeteer globally (switch back to root for global install)
+USER root
 RUN npm install -g puppeteer
 
 # Install Myanmar fonts for proper text rendering
@@ -109,18 +119,29 @@ ENV PUPPETEER_SKIP_CHROMIUM_DOWNLOAD=true \
     NODE_OPTIONS="--max-old-space-size=4096"
 
 # Copy composer files first for better caching
-COPY composer.json composer.lock /var/www/
+COPY --chown=www-data:www-data composer.json composer.lock /var/www/
 
 # Install composer dependencies without running scripts to avoid Laravel booting
-RUN composer install --prefer-dist --no-scripts --no-interaction --no-dev
+RUN composer install --prefer-dist --no-scripts --no-interaction --no-dev --ignore-platform-reqs
 
-# Copy application files
-COPY . /var/www/
+# Copy application files with proper ownership
+COPY --chown=www-data:www-data . /var/www/
+
+# Clear any cached config and regenerate (run as root to ensure proper permissions)
+RUN php artisan config:clear || true
+RUN php artisan cache:clear || true
 
 # Run composer scripts after all files are in place
 RUN composer dump-autoload --optimize
 
-# Set permissions
+# Build frontend assets as www-data user
+USER www-data
+RUN npm run build
+
+# Switch back to root for final setup
+USER root
+
+# Set final permissions
 RUN chown -R www-data:www-data /var/www
 
 # Expose port 9000 and start php-fpm server
