@@ -15,11 +15,11 @@ return [
 
     'tenant_model' => null,
 
-    'auth_provider_model' => 'App\Models\Seller',
+    // 'auth_provider_model' => 'App\Models\Seller',
 
-    // 'auth_provider_model' => [
-    //     'fqcn' => 'App\Models\Seller',
-    // ],
+    'auth_provider_model' => [
+        'fqcn' => 'App\Models\Seller',
+    ],
 
     'super_admin' => [
         'enabled' => true,
