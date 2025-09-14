@@ -75,7 +75,7 @@ jobs:
             else
               echo 'No configuration changes detected, just restarting services...'
               docker-compose down --remove-orphans
-              docker-compose build --parallel --no-cache
+              # docker-compose build --parallel --no-cache
               docker-compose up -d
             fi
 
