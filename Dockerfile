@@ -132,7 +132,7 @@ RUN php artisan config:clear || true
 RUN php artisan cache:clear || true
 
 # Run composer scripts after all files are in place
-RUN composer dump-autoload --optimize
+# RUN composer dump-autoload --optimize
 
 # Build frontend assets as www-data user
 USER www-data

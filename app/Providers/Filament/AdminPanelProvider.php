@@ -5,6 +5,7 @@ namespace App\Providers\Filament;
 use App\Http\Middleware\CentralDomainOnly;
 use App\Http\Middleware\SuperAdmin;
 use BezhanSalleh\FilamentShield\FilamentShieldPlugin;
+use Filament\FontProviders\LocalFontProvider;
 use Filament\Http\Middleware\Authenticate;
 use Filament\Http\Middleware\DisableBladeIconComponents;
 use Filament\Http\Middleware\DispatchServingFilamentEvent;
@@ -68,6 +69,7 @@ class AdminPanelProvider extends PanelProvider
             ->plugins([
                 FilamentShieldPlugin::make(),
             ])
+            ->font('mm', url: asset('css/admin-font.css'), provider: LocalFontProvider::class)
             ->authMiddleware([
                 Authenticate::class,
             ]);

@@ -27,6 +27,11 @@ class StatsOverview extends BaseWidget
 
     public $month = null;
 
+    public function getHeading(): string
+    {
+        return __('filament/widgets/stats-overview.heading');
+    }
+
     public function mount(): void
     {
         // $this->year = Carbon::now()->format('Y');

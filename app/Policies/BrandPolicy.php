@@ -1,108 +1,69 @@
 <?php
 
+declare(strict_types=1);
+
 namespace App\Policies;
 
-use App\Models\Seller;
 use App\Models\Brand;
 use Illuminate\Auth\Access\HandlesAuthorization;
+use Illuminate\Foundation\Auth\User as AuthUser;
 
 class BrandPolicy extends BasePolicy
 {
     use HandlesAuthorization;
 
-    /**
-     * Determine whether the seller can view any models.
-     */
-    public function viewAny(Seller $seller): bool
+    public function viewAny(AuthUser $authUser): bool
     {
-        return $seller->can('view_any_brands::brand');
+        return $authUser->can('ViewAny:Brand');
     }
 
-    /**
-     * Determine whether the seller can view the model.
-     */
-    public function view(Seller $seller, Brand $brand): bool
+    public function view(AuthUser $authUser, Brand $brand): bool
     {
-        return $seller->can('view_brands::brand');
+        return $authUser->can('View:Brand');
     }
 
-    /**
-     * Determine whether the seller can create models.
-     */
-    public function create(Seller $seller): bool
+    public function create(AuthUser $authUser): bool
     {
-        return $seller->can('create_brands::brand');
+        return $authUser->can('Create:Brand');
     }
 
-    /**
-     * Determine whether the seller can update the model.
-     */
-    public function update(Seller $seller, Brand $brand): bool
+    public function update(AuthUser $authUser, Brand $brand): bool
     {
-        return $seller->can('update_brands::brand');
+        return $authUser->can('Update:Brand');
     }
 
-    /**
-     * Determine whether the seller can delete the model.
-     */
-    public function delete(Seller $seller, Brand $brand): bool
+    public function delete(AuthUser $authUser, Brand $brand): bool
     {
-        return $seller->can('delete_brands::brand');
+        return $authUser->can('Delete:Brand');
     }
 
-    /**
-     * Determine whether the seller can bulk delete.
-     */
-    public function deleteAny(Seller $seller): bool
+    public function restore(AuthUser $authUser, Brand $brand): bool
     {
-        return $seller->can('delete_any_brands::brand');
+        return $authUser->can('Restore:Brand');
     }
 
-    /**
-     * Determine whether the seller can permanently delete.
-     */
-    public function forceDelete(Seller $seller, Brand $brand): bool
+    public function forceDelete(AuthUser $authUser, Brand $brand): bool
     {
-        return $seller->can('force_delete_brands::brand');
+        return $authUser->can('ForceDelete:Brand');
     }
 
-    /**
-     * Determine whether the seller can permanently bulk delete.
-     */
-    public function forceDeleteAny(Seller $seller): bool
+    public function forceDeleteAny(AuthUser $authUser): bool
     {
-        return $seller->can('force_delete_any_brands::brand');
+        return $authUser->can('ForceDeleteAny:Brand');
     }
 
-    /**
-     * Determine whether the seller can restore.
-     */
-    public function restore(Seller $seller, Brand $brand): bool
+    public function restoreAny(AuthUser $authUser): bool
     {
-        return $seller->can('restore_brands::brand');
+        return $authUser->can('RestoreAny:Brand');
     }
 
-    /**
-     * Determine whether the seller can bulk restore.
-     */
-    public function restoreAny(Seller $seller): bool
+    public function replicate(AuthUser $authUser, Brand $brand): bool
     {
-        return $seller->can('restore_any_brands::brand');
+        return $authUser->can('Replicate:Brand');
     }
 
-    /**
-     * Determine whether the seller can replicate.
-     */
-    public function replicate(Seller $seller, Brand $brand): bool
+    public function reorder(AuthUser $authUser): bool
     {
-        return $seller->can('replicate_brands::brand');
-    }
-
-    /**
-     * Determine whether the seller can reorder.
-     */
-    public function reorder(Seller $seller): bool
-    {
-        return $seller->can('reorder_brands::brand');
+        return $authUser->can('Reorder:Brand');
     }
 }

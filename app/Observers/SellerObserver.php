@@ -57,7 +57,7 @@ class SellerObserver
             ]
         );
 
-        $seller->assignRole(['panel_user', 'super_admin']);
+        $seller->assignRole(['super_admin']); // 'panel_user',
     }
 
     /**

@@ -1,108 +1,69 @@
 <?php
 
+declare(strict_types=1);
+
 namespace App\Policies;
 
-use App\Models\Seller;
 use App\Models\ReferralHistory;
 use Illuminate\Auth\Access\HandlesAuthorization;
+use Illuminate\Foundation\Auth\User as AuthUser;
 
-class ReferralHistoryPolicy
+class ReferralHistoryPolicy extends BasePolicy
 {
     use HandlesAuthorization;
 
-    /**
-     * Determine whether the seller can view any models.
-     */
-    public function viewAny(Seller $seller): bool
+    public function viewAny(AuthUser $authUser): bool
     {
-        return $seller->can('view_any_referral::history');
+        return $authUser->can('ViewAny:ReferralHistory');
     }
 
-    /**
-     * Determine whether the seller can view the model.
-     */
-    public function view(Seller $seller, ReferralHistory $referralHistory): bool
+    public function view(AuthUser $authUser, ReferralHistory $referralHistory): bool
     {
-        return $seller->can('view_referral::history');
+        return $authUser->can('View:ReferralHistory');
     }
 
-    /**
-     * Determine whether the seller can create models.
-     */
-    public function create(Seller $seller): bool
+    public function create(AuthUser $authUser): bool
     {
-        return $seller->can('create_referral::history');
+        return $authUser->can('Create:ReferralHistory');
     }
 
-    /**
-     * Determine whether the seller can update the model.
-     */
-    public function update(Seller $seller, ReferralHistory $referralHistory): bool
+    public function update(AuthUser $authUser, ReferralHistory $referralHistory): bool
     {
-        return $seller->can('update_referral::history');
+        return $authUser->can('Update:ReferralHistory');
     }
 
-    /**
-     * Determine whether the seller can delete the model.
-     */
-    public function delete(Seller $seller, ReferralHistory $referralHistory): bool
+    public function delete(AuthUser $authUser, ReferralHistory $referralHistory): bool
     {
-        return $seller->can('delete_referral::history');
+        return $authUser->can('Delete:ReferralHistory');
     }
 
-    /**
-     * Determine whether the seller can bulk delete.
-     */
-    public function deleteAny(Seller $seller): bool
+    public function restore(AuthUser $authUser, ReferralHistory $referralHistory): bool
     {
-        return $seller->can('delete_any_referral::history');
+        return $authUser->can('Restore:ReferralHistory');
     }
 
-    /**
-     * Determine whether the seller can permanently delete.
-     */
-    public function forceDelete(Seller $seller, ReferralHistory $referralHistory): bool
+    public function forceDelete(AuthUser $authUser, ReferralHistory $referralHistory): bool
     {
-        return $seller->can('force_delete_referral::history');
+        return $authUser->can('ForceDelete:ReferralHistory');
     }
 
-    /**
-     * Determine whether the seller can permanently bulk delete.
-     */
-    public function forceDeleteAny(Seller $seller): bool
+    public function forceDeleteAny(AuthUser $authUser): bool
     {
-        return $seller->can('force_delete_any_referral::history');
+        return $authUser->can('ForceDeleteAny:ReferralHistory');
     }
 
-    /**
-     * Determine whether the seller can restore.
-     */
-    public function restore(Seller $seller, ReferralHistory $referralHistory): bool
+    public function restoreAny(AuthUser $authUser): bool
     {
-        return $seller->can('restore_referral::history');
+        return $authUser->can('RestoreAny:ReferralHistory');
     }
 
-    /**
-     * Determine whether the seller can bulk restore.
-     */
-    public function restoreAny(Seller $seller): bool
+    public function replicate(AuthUser $authUser, ReferralHistory $referralHistory): bool
     {
-        return $seller->can('restore_any_referral::history');
+        return $authUser->can('Replicate:ReferralHistory');
     }
 
-    /**
-     * Determine whether the seller can replicate.
-     */
-    public function replicate(Seller $seller, ReferralHistory $referralHistory): bool
+    public function reorder(AuthUser $authUser): bool
     {
-        return $seller->can('replicate_referral::history');
-    }
-
-    /**
-     * Determine whether the seller can reorder.
-     */
-    public function reorder(Seller $seller): bool
-    {
-        return $seller->can('reorder_referral::history');
+        return $authUser->can('Reorder:ReferralHistory');
     }
 }

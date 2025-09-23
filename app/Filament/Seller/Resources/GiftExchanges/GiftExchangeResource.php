@@ -10,7 +10,6 @@ use App\Models\GiftExchange;
 use Filament\Actions\Action;
 use Filament\Actions\BulkAction;
 use Filament\Actions\BulkActionGroup;
-use Filament\Actions\CreateAction;
 use Filament\Actions\DeleteBulkAction;
 use Filament\Actions\EditAction;
 use Filament\Actions\ViewAction;
@@ -309,11 +308,6 @@ class GiftExchangeResource extends Resource
                     DeleteBulkAction::make()
                         ->label(__('filament/resources/gift-exchange-resource.actions.delete')),
                 ]),
-            ])
-            ->emptyStateActions([
-                CreateAction::make()
-                    ->label(__('filament/resources/gift-exchange-resource.actions.create_first'))
-                    ->icon('heroicon-m-plus'),
             ]);
     }
 

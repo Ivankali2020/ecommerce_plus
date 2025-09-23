@@ -1,6 +1,7 @@
 <?php
 
 return [
+    'heading' => 'Statistics Overview',
     'unique_products' => 'Unique products',
     'pcs' => 'pcs',
     'total_products' => 'your total products',

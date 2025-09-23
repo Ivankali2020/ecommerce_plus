@@ -1,6 +1,7 @@
 <?php
 
 return [
+    'heading' => 'စစ်ထုတ်မှုများ',
     'admin_label' => '၀န်ထမ်း (သို့) ဆိုင်ခွဲ',
     'year_label' => 'နှစ်',
     'month_label' => 'လ',

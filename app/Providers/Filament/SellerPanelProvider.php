@@ -12,6 +12,7 @@ use App\Http\Middleware\SetLocale;
 use App\Http\Middleware\ShareTenantData;
 use App\Models\Seller;
 use BezhanSalleh\FilamentShield\FilamentShieldPlugin;
+use Filament\FontProviders\LocalFontProvider;
 use Filament\Http\Middleware\Authenticate;
 use Filament\Http\Middleware\DisableBladeIconComponents;
 use Filament\Http\Middleware\DispatchServingFilamentEvent;
@@ -100,6 +101,9 @@ class SellerPanelProvider extends PanelProvider
                 SetLocale::class,
                 ShareTenantData::class,
             ], true)
+            ->plugins([
+                FilamentShieldPlugin::make(),
+            ])
             //            ->spa(fn()=>  Str::contains(request()->userAgent(),'Chrome'))
             ->sidebarWidth('17rem')
             ->brandLogoHeight(fn () => Auth::guard('seller')->check() ? '3rem' : '5rem')
@@ -109,9 +113,6 @@ class SellerPanelProvider extends PanelProvider
             ->databaseNotifications()
             ->databaseNotificationsPolling(null) // this is testing purpose
             // ->maxContentWidth('full')
-            ->plugins([
-                FilamentShieldPlugin::make(),
-            ])
             ->globalSearch() // only false on mobile view
             ->navigationItems([
                 NavigationItem::make('dashboard')
@@ -130,7 +131,7 @@ class SellerPanelProvider extends PanelProvider
                     ->sort(sort: -1)
                     ->icon('heroicon-o-computer-desktop'),
             ])
-            // ->font('mm',url: asset('css/admin-font.css'), provider: LocalFontProvider::class)
+            ->font('mm', url: asset('css/admin-font.css'), provider: LocalFontProvider::class)
             // ->font('Jost')
             ->databaseTransactions()
             ->renderHook(
@@ -140,7 +141,6 @@ class SellerPanelProvider extends PanelProvider
             ->authMiddleware([
                 // RedirectIfUnauthenticated::class,
                 Authenticate::class,
-
             ]);
     }
 }

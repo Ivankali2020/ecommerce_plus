@@ -3,8 +3,10 @@
 namespace Database\Seeders;
 
 // use Illuminate\Database\Console\Seeds\WithoutModelEvents;
+
 use App\Models\Region;
 use App\Models\Township;
+use App\Models\User;
 use Illuminate\Database\Seeder;
 
 class DatabaseSeeder extends Seeder
@@ -46,7 +48,7 @@ class DatabaseSeeder extends Seeder
             AdminSeeder::class,
             CurrencySeeder::class,
             MyintDataSeeder::class,
-            // MultiStoreSeeder::class,
+            MultiStoreSeeder::class,
             // MedicineStoreSeeder::class,
             SubscriptionPlanSeeder::class,
             // OrderSeeder::class,

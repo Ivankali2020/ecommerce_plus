@@ -2,143 +2,65 @@
 
 namespace App\Policies;
 
-use App\Models\Seller;
-
 use Illuminate\Auth\Access\HandlesAuthorization;
+use Illuminate\Foundation\Auth\User as AuthUser;
 
 class SellerPolicy extends BasePolicy
 {
     use HandlesAuthorization;
 
-    /**
-     * Determine whether the seller can view any models.
-     *
-     * @param  \App\Models\Seller  $seller
-     * @return bool
-     */
-    public function viewAny(Seller $seller): bool
+    public function viewAny(AuthUser $authUser): bool
     {
-        return $seller->can('view_any_staff::staff');
+        return $authUser->can('ViewAny:Seller');
     }
 
-    /**
-     * Determine whether the seller can view the model.
-     *
-     * @param  \App\Models\Seller  $seller
-     * @return bool
-     */
-    public function view(Seller $seller): bool
+    public function view(AuthUser $authUser): bool
     {
-        return $seller->can('view_staff::staff');
+        return $authUser->can('View:Seller');
     }
 
-    /**
-     * Determine whether the seller can create models.
-     *
-     * @param  \App\Models\Seller  $seller
-     * @return bool
-     */
-    public function create(Seller $seller): bool
+    public function create(AuthUser $authUser): bool
     {
-        return $seller->can('create_staff::staff');
+        return $authUser->can('Create:Seller');
     }
 
-    /**
-     * Determine whether the seller can update the model.
-     *
-     * @param  \App\Models\Seller  $seller
-     * @return bool
-     */
-    public function update(Seller $seller): bool
+    public function update(AuthUser $authUser): bool
     {
-        return $seller->can('update_staff::staff');
+        return $authUser->can('Update:Seller');
     }
 
-    /**
-     * Determine whether the seller can delete the model.
-     *
-     * @param  \App\Models\Seller  $seller
-     * @return bool
-     */
-    public function delete(Seller $seller): bool
+    public function delete(AuthUser $authUser): bool
     {
-        return $seller->can('delete_staff::staff');
+        return $authUser->can('Delete:Seller');
     }
 
-    /**
-     * Determine whether the seller can bulk delete.
-     *
-     * @param  \App\Models\Seller  $seller
-     * @return bool
-     */
-    public function deleteAny(Seller $seller): bool
+    public function restore(AuthUser $authUser): bool
     {
-        return $seller->can('delete_any_staff::staff');
+        return $authUser->can('Restore:Seller');
     }
 
-    /**
-     * Determine whether the seller can permanently delete.
-     *
-     * @param  \App\Models\Seller  $seller
-     * @return bool
-     */
-    public function forceDelete(Seller $seller): bool
+    public function forceDelete(AuthUser $authUser): bool
     {
-        return $seller->can('force_delete_staff::staff');
+        return $authUser->can('ForceDelete:Seller');
     }
 
-    /**
-     * Determine whether the seller can permanently bulk delete.
-     *
-     * @param  \App\Models\Seller  $seller
-     * @return bool
-     */
-    public function forceDeleteAny(Seller $seller): bool
+    public function forceDeleteAny(AuthUser $authUser): bool
     {
-        return $seller->can('force_delete_any_staff::staff');
+        return $authUser->can('ForceDeleteAny:Seller');
     }
 
-    /**
-     * Determine whether the seller can restore.
-     *
-     * @param  \App\Models\Seller  $seller
-     * @return bool
-     */
-    public function restore(Seller $seller): bool
+    public function restoreAny(AuthUser $authUser): bool
     {
-        return $seller->can('restore_staff::staff');
+        return $authUser->can('RestoreAny:Seller');
     }
 
-    /**
-     * Determine whether the seller can bulk restore.
-     *
-     * @param  \App\Models\Seller  $seller
-     * @return bool
-     */
-    public function restoreAny(Seller $seller): bool
+    public function replicate(AuthUser $authUser): bool
     {
-        return $seller->can('restore_any_staff::staff');
+        return $authUser->can('Replicate:Seller');
     }
 
-    /**
-     * Determine whether the seller can bulk restore.
-     *
-     * @param  \App\Models\Seller  $seller
-     * @return bool
-     */
-    public function replicate(Seller $seller): bool
+    public function reorder(AuthUser $authUser): bool
     {
-        return $seller->can('replicate_staff::staff');
-    }
-
-    /**
-     * Determine whether the seller can reorder.
-     *
-     * @param  \App\Models\Seller  $seller
-     * @return bool
-     */
-    public function reorder(Seller $seller): bool
-    {
-        return $seller->can('reorder_staff::staff');
+        return $authUser->can('Reorder:Seller');
     }
 }

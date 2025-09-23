@@ -19,7 +19,8 @@
             <a href="/">
                 <img class="mx-auto h-20 w-auto" src="{{ asset('assets/logo.png') }}" alt="Your Logo">
             </a>
-            <h2 class="mt-6 text-3xl font-extrabold text-gray-900 dark:text-white ">
+
+            <h2 class="mt-6 text-3xl font-extrabold text-gray-900 dark:text-white font-square_mm">
                 {{ __('messages.auth.seller_register_page.title') }}
             </h2>
             <p class="mt-2 text-sm text-gray-600 dark:text-gray-400 ">

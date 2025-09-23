@@ -32,6 +32,11 @@ class Filters extends Widget implements HasForms
 
     public $month = null;
 
+    public function getHeading(): string
+    {
+        return __('filament/widgets/filters.heading');
+    }
+
     public function mount(): void
     {
         // $this->year = Carbon::now()->format('Y');

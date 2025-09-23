@@ -1,108 +1,69 @@
 <?php
 
+declare(strict_types=1);
+
 namespace App\Policies;
 
-use App\Models\Seller;
 use App\Models\Supplier;
 use Illuminate\Auth\Access\HandlesAuthorization;
+use Illuminate\Foundation\Auth\User as AuthUser;
 
 class SupplierPolicy extends BasePolicy
 {
     use HandlesAuthorization;
 
-    /**
-     * Determine whether the seller can view any models.
-     */
-    public function viewAny(Seller $seller): bool
+    public function viewAny(AuthUser $authUser): bool
     {
-        return $seller->can('view_any_suppliers::supplier');
+        return $authUser->can('ViewAny:Supplier');
     }
 
-    /**
-     * Determine whether the seller can view the model.
-     */
-    public function view(Seller $seller, Supplier $supplier): bool
+    public function view(AuthUser $authUser, Supplier $supplier): bool
     {
-        return $seller->can('view_suppliers::supplier');
+        return $authUser->can('View:Supplier');
     }
 
-    /**
-     * Determine whether the seller can create models.
-     */
-    public function create(Seller $seller): bool
+    public function create(AuthUser $authUser): bool
     {
-        return $seller->can('create_suppliers::supplier');
+        return $authUser->can('Create:Supplier');
     }
 
-    /**
-     * Determine whether the seller can update the model.
-     */
-    public function update(Seller $seller, Supplier $supplier): bool
+    public function update(AuthUser $authUser, Supplier $supplier): bool
     {
-        return $seller->can('update_suppliers::supplier');
+        return $authUser->can('Update:Supplier');
     }
 
-    /**
-     * Determine whether the seller can delete the model.
-     */
-    public function delete(Seller $seller, Supplier $supplier): bool
+    public function delete(AuthUser $authUser, Supplier $supplier): bool
     {
-        return $seller->can('delete_suppliers::supplier');
+        return $authUser->can('Delete:Supplier');
     }
 
-    /**
-     * Determine whether the seller can bulk delete.
-     */
-    public function deleteAny(Seller $seller): bool
+    public function restore(AuthUser $authUser, Supplier $supplier): bool
     {
-        return $seller->can('delete_any_suppliers::supplier');
+        return $authUser->can('Restore:Supplier');
     }
 
-    /**
-     * Determine whether the seller can permanently delete.
-     */
-    public function forceDelete(Seller $seller, Supplier $supplier): bool
+    public function forceDelete(AuthUser $authUser, Supplier $supplier): bool
     {
-        return $seller->can('force_delete_suppliers::supplier');
+        return $authUser->can('ForceDelete:Supplier');
     }
 
-    /**
-     * Determine whether the seller can permanently bulk delete.
-     */
-    public function forceDeleteAny(Seller $seller): bool
+    public function forceDeleteAny(AuthUser $authUser): bool
     {
-        return $seller->can('force_delete_any_suppliers::supplier');
+        return $authUser->can('ForceDeleteAny:Supplier');
     }
 
-    /**
-     * Determine whether the seller can restore.
-     */
-    public function restore(Seller $seller, Supplier $supplier): bool
+    public function restoreAny(AuthUser $authUser): bool
     {
-        return $seller->can('restore_suppliers::supplier');
+        return $authUser->can('RestoreAny:Supplier');
     }
 
-    /**
-     * Determine whether the seller can bulk restore.
-     */
-    public function restoreAny(Seller $seller): bool
+    public function replicate(AuthUser $authUser, Supplier $supplier): bool
     {
-        return $seller->can('restore_any_suppliers::supplier');
+        return $authUser->can('Replicate:Supplier');
     }
 
-    /**
-     * Determine whether the seller can replicate.
-     */
-    public function replicate(Seller $seller, Supplier $supplier): bool
+    public function reorder(AuthUser $authUser): bool
     {
-        return $seller->can('replicate_suppliers::supplier');
-    }
-
-    /**
-     * Determine whether the seller can reorder.
-     */
-    public function reorder(Seller $seller): bool
-    {
-        return $seller->can('reorder_suppliers::supplier');
+        return $authUser->can('Reorder:Supplier');
     }
 }

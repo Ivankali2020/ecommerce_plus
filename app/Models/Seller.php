@@ -223,7 +223,6 @@ class Seller extends Authenticatable implements FilamentUser, HasMedia // , Must
         // First, check tenant access - if we're in a tenant context
         if (tenant()) {
             $currentTenantId = tenant('id');
-
             // Check if seller belongs to current tenant using the many-to-many relationship
             if (! $this->tenants()->where('tenant_id', $currentTenantId)->exists()) {
                 Notification::make()

@@ -4,6 +4,24 @@
 
 @font-face {
     font-family: "mm";
+    src: url("/public/fonts/Futura100MYA-Regular.woff2") format("woff2");
+    /* src: url("/fonts/KT_03.ttf") format('truetype');  */
+    font-style: normal;
+    font-display: swap;
+    font-weight: normal;
+}
+
+@font-face {
+    font-family: 'mm';
+    /* src: url("/fonts/mm.ttf") format('truetype'); */
+    src: url("/fonts/Futura100MYA-Bold.woff2") format("woff2");
+    font-style: bold;
+    font-display: swap;
+    font-weight: bold;
+}
+
+@font-face {
+    font-family: "square_mm";
     src: url("/public/fonts/mm.ttf") format("truetype");
     /* src: url("/fonts/KT_03.ttf") format('truetype');  */
     font-style: normal;
@@ -29,6 +47,7 @@
     --font-bebas: "Bebas Neue", "mm", "Jost", sans-serif, "cursive";
     --font-jost: "Jost", "mm", sans-serif;
     --font-mm: "mm", "Jost", sans-serif;
+    --font-square_mm: "square_mm", "Jost", sans-serif;
 }
 
 /* Required by all components */
@@ -155,6 +174,10 @@ html:lang(my) .font-sans.prose {
 
 html:lang(my) .prose * {
     font-family: "Jost", sans-serif !important;
+}
+
+html:lang(my) .font-square_mm {
+    font-family: "square_mm", "jost", "mm", sans-serif !important;
 }
 
 /* Utility class for explicit Myanmar text (optional) */

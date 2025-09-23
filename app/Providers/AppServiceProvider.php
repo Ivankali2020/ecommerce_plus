@@ -3,7 +3,9 @@
 namespace App\Providers;
 
 use App\Models\Cart;
+use App\Models\Permission;
 use App\Models\Product;
+use App\Models\Role;
 use App\Models\Seller;
 use App\Models\Variant;
 use App\Observers\CartObserver;
@@ -39,6 +41,10 @@ class AppServiceProvider extends ServiceProvider
      */
     public function boot(): void
     {
+        app(\Spatie\Permission\PermissionRegistrar::class)
+            ->setPermissionClass(Permission::class)
+            ->setRoleClass(Role::class);
+
         // Set Livewire update route with conditional tenant middleware
         Livewire::setUpdateRoute(function ($handle) {
             return Route::post('/livewire/update', $handle)
@@ -48,10 +54,8 @@ class AppServiceProvider extends ServiceProvider
                 ]);
         });
 
-
         // Update the middleware used by the asset controller
         TenantAssetsController::$tenancyMiddleware = InitializeTenancyByDomainOrSubdomain::class;
-
 
         // Register observers
         Cart::observe(CartObserver::class);
@@ -107,6 +111,19 @@ class AppServiceProvider extends ServiceProvider
         FilamentView::registerRenderHook(
             PanelsRenderHook::USER_MENU_PROFILE_AFTER,
             fn (): string => Blade::render('@if(request()->routeIs(\'filament.seller.*\')) @livewire(\'seller.subscription-info-card\') @endif'),
+        );
+
+        // Register custom Filament scripts only for order-products page
+        \Filament\Support\Facades\FilamentView::registerRenderHook(
+            \Filament\View\PanelsRenderHook::SCRIPTS_AFTER,
+            function () {
+                // Only load script on order-products page
+                if (request()->is('*/order-products*')) {
+                    return '<script src="'.asset('js/filament-table-sorting.js').'"></script>';
+                }
+
+                return '';
+            }
         );
     }
 }

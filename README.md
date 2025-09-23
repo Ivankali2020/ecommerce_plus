@@ -11,7 +11,8 @@
 # carefully migrate
 
 + အရင် ဆုံး php artisan migrate 
++ php artisan shield:generate --all seller permission only
 + php artisan db:seed
-+ php artisan shield:super-admin --user=1
+
 
 

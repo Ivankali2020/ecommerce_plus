@@ -1,108 +1,69 @@
 <?php
 
+declare(strict_types=1);
+
 namespace App\Policies;
 
-use App\Models\Seller;
 use App\Models\Setting;
 use Illuminate\Auth\Access\HandlesAuthorization;
+use Illuminate\Foundation\Auth\User as AuthUser;
 
 class SettingPolicy extends BasePolicy
 {
     use HandlesAuthorization;
 
-    /**
-     * Determine whether the seller can view any models.
-     */
-    public function viewAny(Seller $seller): bool
+    public function viewAny(AuthUser $authUser): bool
     {
-        return $seller->can('view_any_settings::setting');
+        return $authUser->can('ViewAny:Setting');
     }
 
-    /**
-     * Determine whether the seller can view the model.
-     */
-    public function view(Seller $seller, Setting $setting): bool
+    public function view(AuthUser $authUser, Setting $setting): bool
     {
-        return $seller->can('view_settings::setting');
+        return $authUser->can('View:Setting');
     }
 
-    /**
-     * Determine whether the seller can create models.
-     */
-    public function create(Seller $seller): bool
+    public function create(AuthUser $authUser): bool
     {
-        return $seller->can('create_settings::setting');
+        return $authUser->can('Create:Setting');
     }
 
-    /**
-     * Determine whether the seller can update the model.
-     */
-    public function update(Seller $seller, Setting $setting): bool
+    public function update(AuthUser $authUser, Setting $setting): bool
     {
-        return $seller->can('update_settings::setting');
+        return $authUser->can('Update:Setting');
     }
 
-    /**
-     * Determine whether the seller can delete the model.
-     */
-    public function delete(Seller $seller, Setting $setting): bool
+    public function delete(AuthUser $authUser, Setting $setting): bool
     {
-        return $seller->can('delete_settings::setting');
+        return $authUser->can('Delete:Setting');
     }
 
-    /**
-     * Determine whether the seller can bulk delete.
-     */
-    public function deleteAny(Seller $seller): bool
+    public function restore(AuthUser $authUser, Setting $setting): bool
     {
-        return $seller->can('delete_any_settings::setting');
+        return $authUser->can('Restore:Setting');
     }
 
-    /**
-     * Determine whether the seller can permanently delete.
-     */
-    public function forceDelete(Seller $seller, Setting $setting): bool
+    public function forceDelete(AuthUser $authUser, Setting $setting): bool
     {
-        return $seller->can('force_delete_settings::setting');
+        return $authUser->can('ForceDelete:Setting');
     }
 
-    /**
-     * Determine whether the seller can permanently bulk delete.
-     */
-    public function forceDeleteAny(Seller $seller): bool
+    public function forceDeleteAny(AuthUser $authUser): bool
     {
-        return $seller->can('force_delete_any_settings::setting');
+        return $authUser->can('ForceDeleteAny:Setting');
     }
 
-    /**
-     * Determine whether the seller can restore.
-     */
-    public function restore(Seller $seller, Setting $setting): bool
+    public function restoreAny(AuthUser $authUser): bool
     {
-        return $seller->can('restore_settings::setting');
+        return $authUser->can('RestoreAny:Setting');
     }
 
-    /**
-     * Determine whether the seller can bulk restore.
-     */
-    public function restoreAny(Seller $seller): bool
+    public function replicate(AuthUser $authUser, Setting $setting): bool
     {
-        return $seller->can('restore_any_settings::setting');
+        return $authUser->can('Replicate:Setting');
     }
 
-    /**
-     * Determine whether the seller can replicate.
-     */
-    public function replicate(Seller $seller, Setting $setting): bool
+    public function reorder(AuthUser $authUser): bool
     {
-        return $seller->can('replicate_settings::setting');
-    }
-
-    /**
-     * Determine whether the seller can reorder.
-     */
-    public function reorder(Seller $seller): bool
-    {
-        return $seller->can('reorder_settings::setting');
+        return $authUser->can('Reorder:Setting');
     }
 }

@@ -41,9 +41,7 @@ class MultiStoreSeeder extends Seeder
 
             // create tenant
             $tenant = Tenant::create([
-                'data' => [
-                    'domain' => 'store',
-                ],
+                'domain' => 'store',
             ]);
 
             $user = Seller::factory(1)
@@ -61,8 +59,9 @@ class MultiStoreSeeder extends Seeder
                 ->create()->toArray()[0];
 
             // create domains
+            $centralDomainIndex = config('app.env') === 'local' ? 1 : 0;
             $domain = Domain::create([
-                'domain' => 'store'.'.'.config('tenancy.central_domains')[0],
+                'domain' => 'store'.'.'.config('tenancy.central_domains')[$centralDomainIndex],
                 'tenant_id' => $tenant->id,
             ]);
 
@@ -119,12 +118,15 @@ class MultiStoreSeeder extends Seeder
                 'ရွှေတောမှထုတ်ကုန်များ',
             ];
 
-            foreach ($categories as $cat) {
+            $createdCategories = [];
+            foreach ($categories as $index => $cat) {
                 $category = new Category;
                 $category->seller_id = $user['id'];
                 $category->tenant_id = $tenant->id;
                 $category->name = $cat;
                 $category->save();
+                // Store category ID with 1-based index to match products array
+                $createdCategories[$index + 1] = $category->id;
             }
 
             $brands = [
@@ -140,12 +142,15 @@ class MultiStoreSeeder extends Seeder
                 'အခြား',
             ];
 
-            foreach ($brands as $cat) {
+            $createdBrands = [];
+            foreach ($brands as $index => $cat) {
                 $brand = new Brand;
                 $brand->name = $cat;
                 $brand->seller_id = $user['id'];
                 $brand->tenant_id = $tenant->id;
                 $brand->save();
+                // Store brand ID with 1-based index to match products array
+                $createdBrands[$index + 1] = $brand->id;
                 //                $brand->addMediaFromUrl(fake()->imageUrl(width: 200,height: 200,randomize: false,word: 'Brand',gray: true))
                 //                ->toMediaCollection('logos');
             }
@@ -386,12 +391,12 @@ class MultiStoreSeeder extends Seeder
                     'name' => $product['name'],
                     'buy_price' => $product['price'] - $product['price'] / 100 * 10,
                     'price' => $product['price'],
-                    'brand_id' => $product['brand_id'],
+                    'brand_id' => $createdBrands[$product['brand_id']],
                     'mmk_buy_price' => $product['price'] - $product['price'] / 100 * 10,
                     'mmk_price' => $product['price'],
                     'discount_price' => 0,
                     'mmk_discount_price' => $product['price'] - $product['price'] / 100 * 10,
-                    'category_id' => $product['categories'],
+                    'category_id' => $createdCategories[$product['categories']],
                     'sku' => $product['code'],
                     'quantity' => 100,
                     'description' => fake()->paragraph(),

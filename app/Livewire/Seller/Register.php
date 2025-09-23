@@ -80,9 +80,7 @@ class Register extends Component
 
         // Create tenant
         $tenant = Tenant::create([
-            'data' => [
-                'domain' => $domain,
-            ],
+            'domain' => $domain,
         ]);
 
         // Set tenant ID for the seller

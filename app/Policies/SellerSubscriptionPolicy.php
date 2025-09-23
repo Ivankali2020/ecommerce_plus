@@ -1,108 +1,69 @@
 <?php
 
+declare(strict_types=1);
+
 namespace App\Policies;
 
-use App\Models\Seller;
 use App\Models\SellerSubscription;
 use Illuminate\Auth\Access\HandlesAuthorization;
+use Illuminate\Foundation\Auth\User as AuthUser;
 
 class SellerSubscriptionPolicy extends BasePolicy
 {
     use HandlesAuthorization;
 
-    /**
-     * Determine whether the seller can view any models.
-     */
-    public function viewAny(Seller $seller): bool
+    public function viewAny(AuthUser $authUser): bool
     {
-        return $seller->can('view_any_seller::subscriptions::seller::subscription');
+        return $authUser->can('ViewAny:SellerSubscription');
     }
 
-    /**
-     * Determine whether the seller can view the model.
-     */
-    public function view(Seller $seller, SellerSubscription $sellerSubscription): bool
+    public function view(AuthUser $authUser, SellerSubscription $sellerSubscription): bool
     {
-        return $seller->can('view_seller::subscriptions::seller::subscription');
+        return $authUser->can('View:SellerSubscription');
     }
 
-    /**
-     * Determine whether the seller can create models.
-     */
-    public function create(Seller $seller): bool
+    public function create(AuthUser $authUser): bool
     {
-        return $seller->can('create_seller::subscriptions::seller::subscription');
+        return $authUser->can('Create:SellerSubscription');
     }
 
-    /**
-     * Determine whether the seller can update the model.
-     */
-    public function update(Seller $seller, SellerSubscription $sellerSubscription): bool
+    public function update(AuthUser $authUser, SellerSubscription $sellerSubscription): bool
     {
-        return $seller->can('update_seller::subscriptions::seller::subscription');
+        return $authUser->can('Update:SellerSubscription');
     }
 
-    /**
-     * Determine whether the seller can delete the model.
-     */
-    public function delete(Seller $seller, SellerSubscription $sellerSubscription): bool
+    public function delete(AuthUser $authUser, SellerSubscription $sellerSubscription): bool
     {
-        return $seller->can('delete_seller::subscriptions::seller::subscription');
+        return $authUser->can('Delete:SellerSubscription');
     }
 
-    /**
-     * Determine whether the seller can bulk delete.
-     */
-    public function deleteAny(Seller $seller): bool
+    public function restore(AuthUser $authUser, SellerSubscription $sellerSubscription): bool
     {
-        return $seller->can('delete_any_seller::subscriptions::seller::subscription');
+        return $authUser->can('Restore:SellerSubscription');
     }
 
-    /**
-     * Determine whether the seller can permanently delete.
-     */
-    public function forceDelete(Seller $seller, SellerSubscription $sellerSubscription): bool
+    public function forceDelete(AuthUser $authUser, SellerSubscription $sellerSubscription): bool
     {
-        return $seller->can('force_delete_seller::subscriptions::seller::subscription');
+        return $authUser->can('ForceDelete:SellerSubscription');
     }
 
-    /**
-     * Determine whether the seller can permanently bulk delete.
-     */
-    public function forceDeleteAny(Seller $seller): bool
+    public function forceDeleteAny(AuthUser $authUser): bool
     {
-        return $seller->can('force_delete_any_seller::subscriptions::seller::subscription');
+        return $authUser->can('ForceDeleteAny:SellerSubscription');
     }
 
-    /**
-     * Determine whether the seller can restore.
-     */
-    public function restore(Seller $seller, SellerSubscription $sellerSubscription): bool
+    public function restoreAny(AuthUser $authUser): bool
     {
-        return $seller->can('restore_seller::subscriptions::seller::subscription');
+        return $authUser->can('RestoreAny:SellerSubscription');
     }
 
-    /**
-     * Determine whether the seller can bulk restore.
-     */
-    public function restoreAny(Seller $seller): bool
+    public function replicate(AuthUser $authUser, SellerSubscription $sellerSubscription): bool
     {
-        return $seller->can('restore_any_seller::subscriptions::seller::subscription');
+        return $authUser->can('Replicate:SellerSubscription');
     }
 
-    /**
-     * Determine whether the seller can replicate.
-     */
-    public function replicate(Seller $seller, SellerSubscription $sellerSubscription): bool
+    public function reorder(AuthUser $authUser): bool
     {
-        return $seller->can('replicate_seller::subscriptions::seller::subscription');
-    }
-
-    /**
-     * Determine whether the seller can reorder.
-     */
-    public function reorder(Seller $seller): bool
-    {
-        return $seller->can('reorder_seller::subscriptions::seller::subscription');
+        return $authUser->can('Reorder:SellerSubscription');
     }
 }

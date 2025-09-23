@@ -1,7 +1,17 @@
 @font-face {
     font-family: 'mm';
-    src: url("/fonts/mm.ttf") format('truetype');
+    /* src: url("/fonts/mm.ttf") format('truetype'); */
+    src: url("/fonts/Futura100MYA-Regular.woff2") format("woff2");
     font-style: normal;
     font-display: swap;
     font-weight: normal;
+}
+
+@font-face {
+    font-family: 'mm';
+    /* src: url("/fonts/mm.ttf") format('truetype'); */
+    src: url("/fonts/Futura100MYA-Bold.woff2") format("woff2");
+    font-style: bold;
+    font-display: swap;
+    font-weight: bold;
 }

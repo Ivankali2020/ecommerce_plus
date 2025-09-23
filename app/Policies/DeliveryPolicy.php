@@ -1,108 +1,69 @@
 <?php
 
+declare(strict_types=1);
+
 namespace App\Policies;
 
-use App\Models\Seller;
 use App\Models\Delivery;
 use Illuminate\Auth\Access\HandlesAuthorization;
+use Illuminate\Foundation\Auth\User as AuthUser;
 
 class DeliveryPolicy extends BasePolicy
 {
     use HandlesAuthorization;
 
-    /**
-     * Determine whether the seller can view any models.
-     */
-    public function viewAny(Seller $seller): bool
+    public function viewAny(AuthUser $authUser): bool
     {
-        return $seller->can('view_any_deliveries::delivery');
+        return $authUser->can('ViewAny:Delivery');
     }
 
-    /**
-     * Determine whether the seller can view the model.
-     */
-    public function view(Seller $seller, Delivery $delivery): bool
+    public function view(AuthUser $authUser, Delivery $delivery): bool
     {
-        return $seller->can('view_deliveries::delivery');
+        return $authUser->can('View:Delivery');
     }
 
-    /**
-     * Determine whether the seller can create models.
-     */
-    public function create(Seller $seller): bool
+    public function create(AuthUser $authUser): bool
     {
-        return $seller->can('create_deliveries::delivery');
+        return $authUser->can('Create:Delivery');
     }
 
-    /**
-     * Determine whether the seller can update the model.
-     */
-    public function update(Seller $seller, Delivery $delivery): bool
+    public function update(AuthUser $authUser, Delivery $delivery): bool
     {
-        return $seller->can('update_deliveries::delivery');
+        return $authUser->can('Update:Delivery');
     }
 
-    /**
-     * Determine whether the seller can delete the model.
-     */
-    public function delete(Seller $seller, Delivery $delivery): bool
+    public function delete(AuthUser $authUser, Delivery $delivery): bool
     {
-        return $seller->can('delete_deliveries::delivery');
+        return $authUser->can('Delete:Delivery');
     }
 
-    /**
-     * Determine whether the seller can bulk delete.
-     */
-    public function deleteAny(Seller $seller): bool
+    public function restore(AuthUser $authUser, Delivery $delivery): bool
     {
-        return $seller->can('delete_any_deliveries::delivery');
+        return $authUser->can('Restore:Delivery');
     }
 
-    /**
-     * Determine whether the seller can permanently delete.
-     */
-    public function forceDelete(Seller $seller, Delivery $delivery): bool
+    public function forceDelete(AuthUser $authUser, Delivery $delivery): bool
     {
-        return $seller->can('force_delete_deliveries::delivery');
+        return $authUser->can('ForceDelete:Delivery');
     }
 
-    /**
-     * Determine whether the seller can permanently bulk delete.
-     */
-    public function forceDeleteAny(Seller $seller): bool
+    public function forceDeleteAny(AuthUser $authUser): bool
     {
-        return $seller->can('force_delete_any_deliveries::delivery');
+        return $authUser->can('ForceDeleteAny:Delivery');
     }
 
-    /**
-     * Determine whether the seller can restore.
-     */
-    public function restore(Seller $seller, Delivery $delivery): bool
+    public function restoreAny(AuthUser $authUser): bool
     {
-        return $seller->can('restore_deliveries::delivery');
+        return $authUser->can('RestoreAny:Delivery');
     }
 
-    /**
-     * Determine whether the seller can bulk restore.
-     */
-    public function restoreAny(Seller $seller): bool
+    public function replicate(AuthUser $authUser, Delivery $delivery): bool
     {
-        return $seller->can('restore_any_deliveries::delivery');
+        return $authUser->can('Replicate:Delivery');
     }
 
-    /**
-     * Determine whether the seller can replicate.
-     */
-    public function replicate(Seller $seller, Delivery $delivery): bool
+    public function reorder(AuthUser $authUser): bool
     {
-        return $seller->can('replicate_deliveries::delivery');
-    }
-
-    /**
-     * Determine whether the seller can reorder.
-     */
-    public function reorder(Seller $seller): bool
-    {
-        return $seller->can('reorder_deliveries::delivery');
+        return $authUser->can('Reorder:Delivery');
     }
 }

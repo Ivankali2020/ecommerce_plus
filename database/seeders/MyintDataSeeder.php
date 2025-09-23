@@ -19,7 +19,6 @@ use App\Models\Seller;
 use App\Models\Tenant;
 use App\Models\User;
 use App\Models\UserAddress;
-use Illuminate\Database\Console\Seeds\WithoutModelEvents;
 use Illuminate\Database\Seeder;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Log;
@@ -38,11 +37,9 @@ class MyintDataSeeder extends Seeder
 
         try {
 
-             // create tenant
+            // create tenant
             $tenant = Tenant::create([
-                'data' => [
-                    'domain' => 'ab',
-                ],
+                'domain' => 'ab',
             ]);
 
             $user = Seller::factory(1)
@@ -76,53 +73,54 @@ class MyintDataSeeder extends Seeder
 
             $currency = Currency::where('code', 'MMK')->first();
 
-            $exchange = new Exchange();
+            $exchange = new Exchange;
             $exchange->currency_id = $currency->id;
             $exchange->rate = '4500';
             $exchange->seller_id = $user['id'];
             $exchange->tenant_id = $tenant->id;
             $exchange->save();
             // Import in order of dependencies
-            $this->importAttributes();
-            $this->importAttributeValues();
-            $this->importBrands();
-            $this->importCategories();
-            $this->importProducts();
-            $this->importOrders();
-            $this->importOrderProducts();
-            // $this->importPurchases();
-            // $this->importPurchaseProducts();
+            $this->importAttributes($user['id'], $tenant->id);
+            $this->importAttributeValues($user['id'], $tenant->id);
+            $this->importBrands($user['id'], $tenant->id);
+            $this->importCategories($user['id'], $tenant->id);
+            $this->importProducts($user['id'], $tenant->id, $exchange->id);
+            $this->importOrders($user['id'], $tenant->id);
+            $this->importOrderProducts($user['id'], $tenant->id);
+            // $this->importPurchases($user['id'], $tenant->id);
+            // $this->importPurchaseProducts($user['id'], $tenant->id);
 
             DB::commit();
             $this->command->info('Myint data import completed successfully!');
         } catch (\Exception $e) {
             DB::rollBack();
-            $this->command->error('Import failed: ' . $e->getMessage());
+            $this->command->error('Import failed: '.$e->getMessage());
             Log::error('Myint data import failed', ['error' => $e->getMessage()]);
             throw $e;
         }
     }
 
-    private function importAttributes(): void
+    private function importAttributes(int $sellerId, int $tenantId): void
     {
         $this->command->info('Importing attributes...');
-        
+
         $attributesData = json_decode(file_get_contents(public_path('myint/attributes.json')), true);
         $imported = 0;
         $skipped = 0;
 
         foreach ($attributesData as $attributeData) {
             // Skip records with deleted_at not null
-            if (!is_null($attributeData['deleted_at'])) {
+            if (! is_null($attributeData['deleted_at'])) {
                 $skipped++;
+
                 continue;
             }
 
             try {
                 Attribute::create([
                     'id' => $attributeData['id'],
-                    'seller_id' => 1,
-                    'tenant_id' => 1, // Default tenant_id
+                    'seller_id' => $sellerId,
+                    'tenant_id' => $tenantId,
                     'name' => $attributeData['name'],
                     'type' => $attributeData['type'],
                     'created_at' => $attributeData['created_at'],
@@ -130,31 +128,32 @@ class MyintDataSeeder extends Seeder
                 ]);
                 $imported++;
             } catch (\Exception $e) {
-                $this->command->warn("Failed to import attribute ID {$attributeData['id']}: " . $e->getMessage());
+                $this->command->warn("Failed to import attribute ID {$attributeData['id']}: ".$e->getMessage());
             }
         }
 
         $this->command->info("Attributes: {$imported} imported, {$skipped} skipped");
     }
 
-    private function importAttributeValues(): void
+    private function importAttributeValues(int $sellerId, int $tenantId): void
     {
         $this->command->info('Importing attribute values...');
-        
+
         // Get list of imported attribute IDs to check foreign key constraints
         $importedAttributeIds = Attribute::pluck('id')->toArray();
-        
+
         $attributeValuesData = json_decode(file_get_contents(public_path('myint/attribute_values.json')), true);
         $imported = 0;
         $skipped = 0;
 
         foreach ($attributeValuesData as $attributeValueData) {
             // Skip records with deleted_at not null, incomplete data, or invalid attribute_id reference
-            if (!is_null($attributeValueData['deleted_at'] ?? null) || 
-                !isset($attributeValueData['id']) || 
-                !isset($attributeValueData['attribute_id']) ||
-                !in_array($attributeValueData['attribute_id'], $importedAttributeIds)) {
+            if (! is_null($attributeValueData['deleted_at'] ?? null) ||
+                ! isset($attributeValueData['id']) ||
+                ! isset($attributeValueData['attribute_id']) ||
+                ! in_array($attributeValueData['attribute_id'], $importedAttributeIds)) {
                 $skipped++;
+
                 continue;
             }
 
@@ -169,33 +168,34 @@ class MyintDataSeeder extends Seeder
                 ]);
                 $imported++;
             } catch (\Exception $e) {
-                $this->command->warn("Failed to import attribute value ID {$attributeValueData['id']}: " . $e->getMessage());
+                $this->command->warn("Failed to import attribute value ID {$attributeValueData['id']}: ".$e->getMessage());
             }
         }
 
         $this->command->info("Attribute values: {$imported} imported, {$skipped} skipped");
     }
 
-    private function importBrands(): void
+    private function importBrands(int $sellerId, int $tenantId): void
     {
         $this->command->info('Importing brands...');
-        
+
         $brandsData = json_decode(file_get_contents(public_path('myint/brands.json')), true);
         $imported = 0;
         $skipped = 0;
 
         foreach ($brandsData as $brandData) {
             // Skip records with deleted_at not null
-            if (!is_null($brandData['deleted_at']) || $brandData['seller_id'] == 1) {
+            if (! is_null($brandData['deleted_at']) || $brandData['seller_id'] == 1) {
                 $skipped++;
+
                 continue;
             }
 
             try {
                 Brand::create([
                     'id' => $brandData['id'],
-                    'seller_id' => 1,
-                    'tenant_id' => 1, // Default tenant_id
+                    'seller_id' => $sellerId,
+                    'tenant_id' => $tenantId,
                     'name' => $brandData['name'],
                     'description' => $brandData['description'],
                     'created_at' => $brandData['created_at'],
@@ -203,33 +203,34 @@ class MyintDataSeeder extends Seeder
                 ]);
                 $imported++;
             } catch (\Exception $e) {
-                $this->command->warn("Failed to import brand ID {$brandData['id']}: " . $e->getMessage());
+                $this->command->warn("Failed to import brand ID {$brandData['id']}: ".$e->getMessage());
             }
         }
 
         $this->command->info("Brands: {$imported} imported, {$skipped} skipped");
     }
 
-    private function importCategories(): void
+    private function importCategories(int $sellerId, int $tenantId): void
     {
         $this->command->info('Importing categories...');
-        
+
         $categoriesData = json_decode(file_get_contents(public_path('myint/categories.json')), true);
         $imported = 0;
         $skipped = 0;
 
         foreach ($categoriesData as $categoryData) {
             // Skip records with deleted_at not null
-            if (!is_null($categoryData['deleted_at']) || $categoryData['seller_id'] == 1) {
+            if (! is_null($categoryData['deleted_at']) || $categoryData['seller_id'] == 1) {
                 $skipped++;
+
                 continue;
             }
 
             try {
                 Category::create([
                     'id' => $categoryData['id'],
-                    'seller_id' => 1,
-                    'tenant_id' => 1, // Default tenant_id
+                    'seller_id' => $sellerId,
+                    'tenant_id' => $tenantId,
                     'parent_id' => $categoryData['parent_id'],
                     'description' => $categoryData['description'],
                     'name' => $categoryData['name'],
@@ -239,44 +240,45 @@ class MyintDataSeeder extends Seeder
                 ]);
                 $imported++;
             } catch (\Exception $e) {
-                $this->command->warn("Failed to import category ID {$categoryData['id']}: " . $e->getMessage());
+                $this->command->warn("Failed to import category ID {$categoryData['id']}: ".$e->getMessage());
             }
         }
 
         $this->command->info("Categories: {$imported} imported, {$skipped} skipped");
     }
 
-    private function importProducts(): void
+    private function importProducts(int $sellerId, int $tenantId, int $exchangeId): void
     {
         $this->command->info('Importing products...');
-        
+
         // Get list of imported IDs to check foreign key constraints
         $importedBrandIds = Brand::pluck('id')->toArray();
         $importedCategoryIds = Category::pluck('id')->toArray();
-        
+
         $productsData = json_decode(file_get_contents(public_path('myint/products.json')), true);
         $imported = 0;
         $skipped = 0;
 
         foreach ($productsData as $productData) {
             // Skip records with deleted_at not null or invalid foreign key references
-            if (!is_null($productData['deleted_at']) ||
+            if (! is_null($productData['deleted_at']) ||
                 $productData['seller_id'] == 1 ||
-                ($productData['brand_id'] && !in_array($productData['brand_id'], $importedBrandIds)) ||
-                !in_array($productData['category_id'], $importedCategoryIds)) {
+                ($productData['brand_id'] && ! in_array($productData['brand_id'], $importedBrandIds)) ||
+                ! in_array($productData['category_id'], $importedCategoryIds)) {
                 $skipped++;
+
                 continue;
             }
 
             try {
                 Product::create([
                     'id' => $productData['id'],
-                    'seller_id' => 1,
-                    'tenant_id' => 1, // Default tenant_id
+                    'seller_id' => $sellerId,
+                    'tenant_id' => $tenantId,
                     'supplier_id' => $productData['supplier_id'],
                     'brand_id' => $productData['brand_id'],
                     'category_id' => $productData['category_id'],
-                    'exchange_id' => 1, // Default exchange_id
+                    'exchange_id' => $exchangeId,
                     'name' => $productData['name'],
                     'description' => $productData['description'],
                     'attributes' => $productData['attributes'] ? json_decode($productData['attributes'], true) : null,
@@ -302,17 +304,17 @@ class MyintDataSeeder extends Seeder
                 ]);
                 $imported++;
             } catch (\Exception $e) {
-                $this->command->warn("Failed to import product ID {$productData['id']}: " . $e->getMessage());
+                $this->command->warn("Failed to import product ID {$productData['id']}: ".$e->getMessage());
             }
         }
 
         $this->command->info("Products: {$imported} imported, {$skipped} skipped");
     }
 
-    private function importPurchases(): void
+    private function importPurchases(int $sellerId, int $tenantId): void
     {
         $this->command->info('Importing purchases...');
-        
+
         $purchasesData = json_decode(file_get_contents(public_path('myint/purchases.json')), true);
         $imported = 0;
 
@@ -320,8 +322,8 @@ class MyintDataSeeder extends Seeder
             try {
                 Purchase::create([
                     'id' => $purchaseData['id'],
-                    'seller_id' => 1,
-                    'tenant_id' => 1, // Default tenant_id
+                    'seller_id' => $sellerId,
+                    'tenant_id' => $tenantId,
                     'supplier_id' => $purchaseData['supplier_id'],
                     'status' => $purchaseData['status'],
                     'total_amount' => $purchaseData['total_amount'],
@@ -332,17 +334,17 @@ class MyintDataSeeder extends Seeder
                 ]);
                 $imported++;
             } catch (\Exception $e) {
-                $this->command->warn("Failed to import purchase ID {$purchaseData['id']}: " . $e->getMessage());
+                $this->command->warn("Failed to import purchase ID {$purchaseData['id']}: ".$e->getMessage());
             }
         }
 
         $this->command->info("Purchases: {$imported} imported");
     }
 
-    private function importPurchaseProducts(): void
+    private function importPurchaseProducts(int $sellerId, int $tenantId): void
     {
         $this->command->info('Importing purchase products...');
-        
+
         $purchaseProductsData = json_decode(file_get_contents(public_path('myint/purchase_products.json')), true);
         $imported = 0;
 
@@ -350,8 +352,9 @@ class MyintDataSeeder extends Seeder
 
         foreach ($purchaseProductsData as $purchaseProductData) {
             try {
-                if (!in_array($purchaseProductData['purchase_id'], $purchaseProductsDataIDs)) {
+                if (! in_array($purchaseProductData['purchase_id'], $purchaseProductsDataIDs)) {
                     $this->command->warn("Skipping purchase product ID {$purchaseProductData['id']} due to missing purchase ID {$purchaseProductData['purchase_id']}");
+
                     continue;
                 }
                 PurchaseProduct::create([
@@ -369,25 +372,26 @@ class MyintDataSeeder extends Seeder
                 ]);
                 $imported++;
             } catch (\Exception $e) {
-                $this->command->warn("Failed to import purchase product ID {$purchaseProductData['id']}: " . $e->getMessage());
+                $this->command->warn("Failed to import purchase product ID {$purchaseProductData['id']}: ".$e->getMessage());
             }
         }
 
         $this->command->info("Purchase products: {$imported} imported");
     }
 
-    private function importOrders(): void
+    private function importOrders(int $sellerId, int $tenantId): void
     {
         $this->command->info('Importing orders...');
-        
+
         $ordersData = json_decode(file_get_contents(public_path('myint/orders.json')), true);
         $imported = 0;
         $skipped = 0;
 
         foreach ($ordersData as $orderData) {
             // Skip records with deleted_at not null
-            if (!is_null($orderData['deleted_at'])) {
+            if (! is_null($orderData['deleted_at'])) {
                 $skipped++;
+
                 continue;
             }
 
@@ -395,9 +399,9 @@ class MyintDataSeeder extends Seeder
                 Order::create([
                     'id' => $orderData['id'],
                     'invoice_number' => $orderData['invoice_number'],
-                    'seller_id' => 1, // Default seller_id
-                    'tenant_id' => 1, // Default tenant_id
-                    'staff_id' => $orderData['staff_id'] ? 1 : null, // Default staff_id or null
+                    'seller_id' => $sellerId,
+                    'tenant_id' => $tenantId,
+                    'staff_id' => null, // Use seller_id as staff_id or null
                     'walk_in_customer' => (bool) $orderData['walk_in_customer'],
                     'is_cod' => (bool) $orderData['is_cod'],
                     'user_id' => $orderData['user_id'],
@@ -419,30 +423,31 @@ class MyintDataSeeder extends Seeder
                 ]);
                 $imported++;
             } catch (\Exception $e) {
-                $this->command->warn("Failed to import order ID {$orderData['id']}: " . $e->getMessage());
+                $this->command->warn("Failed to import order ID {$orderData['id']}: ".$e->getMessage());
             }
         }
 
         $this->command->info("Orders: {$imported} imported, {$skipped} skipped");
     }
 
-    private function importOrderProducts(): void
+    private function importOrderProducts(int $sellerId, int $tenantId): void
     {
         $this->command->info('Importing order products...');
-        
+
         // Get list of imported order IDs to check foreign key constraints
         $importedOrderIds = Order::pluck('id')->toArray();
         $importedProductIds = Product::pluck('id')->toArray();
-        
+
         $orderProductsData = json_decode(file_get_contents(public_path('myint/order_products.json')), true);
         $imported = 0;
         $skipped = 0;
 
         foreach ($orderProductsData as $orderProductData) {
             // Skip records with invalid foreign key references
-            if (!in_array($orderProductData['order_id'], $importedOrderIds) ||
-                !in_array($orderProductData['product_id'], $importedProductIds)) {
+            if (! in_array($orderProductData['order_id'], $importedOrderIds) ||
+                ! in_array($orderProductData['product_id'], $importedProductIds)) {
                 $skipped++;
+
                 continue;
             }
 
@@ -472,7 +477,7 @@ class MyintDataSeeder extends Seeder
                 ]);
                 $imported++;
             } catch (\Exception $e) {
-                $this->command->warn("Failed to import order product ID {$orderProductData['id']}: " . $e->getMessage());
+                $this->command->warn("Failed to import order product ID {$orderProductData['id']}: ".$e->getMessage());
             }
         }
 

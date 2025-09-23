@@ -1,108 +1,69 @@
 <?php
 
+declare(strict_types=1);
+
 namespace App\Policies;
 
-use App\Models\Seller;
 use App\Models\Expanse;
 use Illuminate\Auth\Access\HandlesAuthorization;
+use Illuminate\Foundation\Auth\User as AuthUser;
 
 class ExpansePolicy extends BasePolicy
 {
     use HandlesAuthorization;
 
-    /**
-     * Determine whether the seller can view any models.
-     */
-    public function viewAny(Seller $seller): bool
+    public function viewAny(AuthUser $authUser): bool
     {
-        return $seller->can('view_any_expanses::expanse');
+        return $authUser->can('ViewAny:Expanse');
     }
 
-    /**
-     * Determine whether the seller can view the model.
-     */
-    public function view(Seller $seller, Expanse $expanse): bool
+    public function view(AuthUser $authUser, Expanse $expanse): bool
     {
-        return $seller->can('view_expanses::expanse');
+        return $authUser->can('View:Expanse');
     }
 
-    /**
-     * Determine whether the seller can create models.
-     */
-    public function create(Seller $seller): bool
+    public function create(AuthUser $authUser): bool
     {
-        return $seller->can('create_expanses::expanse');
+        return $authUser->can('Create:Expanse');
     }
 
-    /**
-     * Determine whether the seller can update the model.
-     */
-    public function update(Seller $seller, Expanse $expanse): bool
+    public function update(AuthUser $authUser, Expanse $expanse): bool
     {
-        return $seller->can('update_expanses::expanse');
+        return $authUser->can('Update:Expanse');
     }
 
-    /**
-     * Determine whether the seller can delete the model.
-     */
-    public function delete(Seller $seller, Expanse $expanse): bool
+    public function delete(AuthUser $authUser, Expanse $expanse): bool
     {
-        return $seller->can('delete_expanses::expanse');
+        return $authUser->can('Delete:Expanse');
     }
 
-    /**
-     * Determine whether the seller can bulk delete.
-     */
-    public function deleteAny(Seller $seller): bool
+    public function restore(AuthUser $authUser, Expanse $expanse): bool
     {
-        return $seller->can('delete_any_expanses::expanse');
+        return $authUser->can('Restore:Expanse');
     }
 
-    /**
-     * Determine whether the seller can permanently delete.
-     */
-    public function forceDelete(Seller $seller, Expanse $expanse): bool
+    public function forceDelete(AuthUser $authUser, Expanse $expanse): bool
     {
-        return $seller->can('force_delete_expanses::expanse');
+        return $authUser->can('ForceDelete:Expanse');
     }
 
-    /**
-     * Determine whether the seller can permanently bulk delete.
-     */
-    public function forceDeleteAny(Seller $seller): bool
+    public function forceDeleteAny(AuthUser $authUser): bool
     {
-        return $seller->can('force_delete_any_expanses::expanse');
+        return $authUser->can('ForceDeleteAny:Expanse');
     }
 
-    /**
-     * Determine whether the seller can restore.
-     */
-    public function restore(Seller $seller, Expanse $expanse): bool
+    public function restoreAny(AuthUser $authUser): bool
     {
-        return $seller->can('restore_expanses::expanse');
+        return $authUser->can('RestoreAny:Expanse');
     }
 
-    /**
-     * Determine whether the seller can bulk restore.
-     */
-    public function restoreAny(Seller $seller): bool
+    public function replicate(AuthUser $authUser, Expanse $expanse): bool
     {
-        return $seller->can('restore_any_expanses::expanse');
+        return $authUser->can('Replicate:Expanse');
     }
 
-    /**
-     * Determine whether the seller can replicate.
-     */
-    public function replicate(Seller $seller, Expanse $expanse): bool
+    public function reorder(AuthUser $authUser): bool
     {
-        return $seller->can('replicate_expanses::expanse');
-    }
-
-    /**
-     * Determine whether the seller can reorder.
-     */
-    public function reorder(Seller $seller): bool
-    {
-        return $seller->can('reorder_expanses::expanse');
+        return $authUser->can('Reorder:Expanse');
     }
 }

@@ -1,108 +1,69 @@
 <?php
 
+declare(strict_types=1);
+
 namespace App\Policies;
 
-use App\Models\Seller;
 use App\Models\Currency;
 use Illuminate\Auth\Access\HandlesAuthorization;
+use Illuminate\Foundation\Auth\User as AuthUser;
 
 class CurrencyPolicy extends BasePolicy
 {
     use HandlesAuthorization;
 
-    /**
-     * Determine whether the seller can view any models.
-     */
-    public function viewAny(Seller $seller): bool
+    public function viewAny(AuthUser $authUser): bool
     {
-        return $seller->can('view_any_currencies::currency');
+        return $authUser->can('ViewAny:Currency');
     }
 
-    /**
-     * Determine whether the seller can view the model.
-     */
-    public function view(Seller $seller, Currency $currency): bool
+    public function view(AuthUser $authUser, Currency $currency): bool
     {
-        return $seller->can('view_currencies::currency');
+        return $authUser->can('View:Currency');
     }
 
-    /**
-     * Determine whether the seller can create models.
-     */
-    public function create(Seller $seller): bool
+    public function create(AuthUser $authUser): bool
     {
-        return $seller->can('create_currencies::currency');
+        return $authUser->can('Create:Currency');
     }
 
-    /**
-     * Determine whether the seller can update the model.
-     */
-    public function update(Seller $seller, Currency $currency): bool
+    public function update(AuthUser $authUser, Currency $currency): bool
     {
-        return $seller->can('update_currencies::currency');
+        return $authUser->can('Update:Currency');
     }
 
-    /**
-     * Determine whether the seller can delete the model.
-     */
-    public function delete(Seller $seller, Currency $currency): bool
+    public function delete(AuthUser $authUser, Currency $currency): bool
     {
-        return $seller->can('delete_currencies::currency');
+        return $authUser->can('Delete:Currency');
     }
 
-    /**
-     * Determine whether the seller can bulk delete.
-     */
-    public function deleteAny(Seller $seller): bool
+    public function restore(AuthUser $authUser, Currency $currency): bool
     {
-        return $seller->can('delete_any_currencies::currency');
+        return $authUser->can('Restore:Currency');
     }
 
-    /**
-     * Determine whether the seller can permanently delete.
-     */
-    public function forceDelete(Seller $seller, Currency $currency): bool
+    public function forceDelete(AuthUser $authUser, Currency $currency): bool
     {
-        return $seller->can('force_delete_currencies::currency');
+        return $authUser->can('ForceDelete:Currency');
     }
 
-    /**
-     * Determine whether the seller can permanently bulk delete.
-     */
-    public function forceDeleteAny(Seller $seller): bool
+    public function forceDeleteAny(AuthUser $authUser): bool
     {
-        return $seller->can('force_delete_any_currencies::currency');
+        return $authUser->can('ForceDeleteAny:Currency');
     }
 
-    /**
-     * Determine whether the seller can restore.
-     */
-    public function restore(Seller $seller, Currency $currency): bool
+    public function restoreAny(AuthUser $authUser): bool
     {
-        return $seller->can('restore_currencies::currency');
+        return $authUser->can('RestoreAny:Currency');
     }
 
-    /**
-     * Determine whether the seller can bulk restore.
-     */
-    public function restoreAny(Seller $seller): bool
+    public function replicate(AuthUser $authUser, Currency $currency): bool
     {
-        return $seller->can('restore_any_currencies::currency');
+        return $authUser->can('Replicate:Currency');
     }
 
-    /**
-     * Determine whether the seller can replicate.
-     */
-    public function replicate(Seller $seller, Currency $currency): bool
+    public function reorder(AuthUser $authUser): bool
     {
-        return $seller->can('replicate_currencies::currency');
-    }
-
-    /**
-     * Determine whether the seller can reorder.
-     */
-    public function reorder(Seller $seller): bool
-    {
-        return $seller->can('reorder_currencies::currency');
+        return $authUser->can('Reorder:Currency');
     }
 }

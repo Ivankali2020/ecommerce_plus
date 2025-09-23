@@ -1,108 +1,69 @@
 <?php
 
+declare(strict_types=1);
+
 namespace App\Policies;
 
-use App\Models\Seller;
 use App\Models\Township;
 use Illuminate\Auth\Access\HandlesAuthorization;
+use Illuminate\Foundation\Auth\User as AuthUser;
 
 class TownshipPolicy extends BasePolicy
 {
     use HandlesAuthorization;
 
-    /**
-     * Determine whether the seller can view any models.
-     */
-    public function viewAny(Seller $seller): bool
+    public function viewAny(AuthUser $authUser): bool
     {
-        return $seller->can('view_any_townships::township');
+        return $authUser->can('ViewAny:Township');
     }
 
-    /**
-     * Determine whether the seller can view the model.
-     */
-    public function view(Seller $seller, Township $township): bool
+    public function view(AuthUser $authUser, Township $township): bool
     {
-        return $seller->can('view_townships::township');
+        return $authUser->can('View:Township');
     }
 
-    /**
-     * Determine whether the seller can create models.
-     */
-    public function create(Seller $seller): bool
+    public function create(AuthUser $authUser): bool
     {
-        return $seller->can('create_townships::township');
+        return $authUser->can('Create:Township');
     }
 
-    /**
-     * Determine whether the seller can update the model.
-     */
-    public function update(Seller $seller, Township $township): bool
+    public function update(AuthUser $authUser, Township $township): bool
     {
-        return $seller->can('update_townships::township');
+        return $authUser->can('Update:Township');
     }
 
-    /**
-     * Determine whether the seller can delete the model.
-     */
-    public function delete(Seller $seller, Township $township): bool
+    public function delete(AuthUser $authUser, Township $township): bool
     {
-        return $seller->can('delete_townships::township');
+        return $authUser->can('Delete:Township');
     }
 
-    /**
-     * Determine whether the seller can bulk delete.
-     */
-    public function deleteAny(Seller $seller): bool
+    public function restore(AuthUser $authUser, Township $township): bool
     {
-        return $seller->can('delete_any_townships::township');
+        return $authUser->can('Restore:Township');
     }
 
-    /**
-     * Determine whether the seller can permanently delete.
-     */
-    public function forceDelete(Seller $seller, Township $township): bool
+    public function forceDelete(AuthUser $authUser, Township $township): bool
     {
-        return $seller->can('force_delete_townships::township');
+        return $authUser->can('ForceDelete:Township');
     }
 
-    /**
-     * Determine whether the seller can permanently bulk delete.
-     */
-    public function forceDeleteAny(Seller $seller): bool
+    public function forceDeleteAny(AuthUser $authUser): bool
     {
-        return $seller->can('force_delete_any_townships::township');
+        return $authUser->can('ForceDeleteAny:Township');
     }
 
-    /**
-     * Determine whether the seller can restore.
-     */
-    public function restore(Seller $seller, Township $township): bool
+    public function restoreAny(AuthUser $authUser): bool
     {
-        return $seller->can('restore_townships::township');
+        return $authUser->can('RestoreAny:Township');
     }
 
-    /**
-     * Determine whether the seller can bulk restore.
-     */
-    public function restoreAny(Seller $seller): bool
+    public function replicate(AuthUser $authUser, Township $township): bool
     {
-        return $seller->can('restore_any_townships::township');
+        return $authUser->can('Replicate:Township');
     }
 
-    /**
-     * Determine whether the seller can replicate.
-     */
-    public function replicate(Seller $seller, Township $township): bool
+    public function reorder(AuthUser $authUser): bool
     {
-        return $seller->can('replicate_townships::township');
-    }
-
-    /**
-     * Determine whether the seller can reorder.
-     */
-    public function reorder(Seller $seller): bool
-    {
-        return $seller->can('reorder_townships::township');
+        return $authUser->can('Reorder:Township');
     }
 }

@@ -1,108 +1,69 @@
 <?php
 
+declare(strict_types=1);
+
 namespace App\Policies;
 
-use App\Models\Seller;
 use App\Models\GiftExchange;
 use Illuminate\Auth\Access\HandlesAuthorization;
+use Illuminate\Foundation\Auth\User as AuthUser;
 
 class GiftExchangePolicy extends BasePolicy
 {
     use HandlesAuthorization;
 
-    /**
-     * Determine whether the seller can view any models.
-     */
-    public function viewAny(Seller $seller): bool
+    public function viewAny(AuthUser $authUser): bool
     {
-        return $seller->can('view_any_gift::exchanges::gift::exchange');
+        return $authUser->can('ViewAny:GiftExchange');
     }
 
-    /**
-     * Determine whether the seller can view the model.
-     */
-    public function view(Seller $seller, GiftExchange $giftExchange): bool
+    public function view(AuthUser $authUser, GiftExchange $giftExchange): bool
     {
-        return $seller->can('view_gift::exchanges::gift::exchange');
+        return $authUser->can('View:GiftExchange');
     }
 
-    /**
-     * Determine whether the seller can create models.
-     */
-    public function create(Seller $seller): bool
+    public function create(AuthUser $authUser): bool
     {
-        return $seller->can('create_gift::exchanges::gift::exchange');
+        return $authUser->can('Create:GiftExchange');
     }
 
-    /**
-     * Determine whether the seller can update the model.
-     */
-    public function update(Seller $seller, GiftExchange $giftExchange): bool
+    public function update(AuthUser $authUser, GiftExchange $giftExchange): bool
     {
-        return $seller->can('update_gift::exchanges::gift::exchange');
+        return $authUser->can('Update:GiftExchange');
     }
 
-    /**
-     * Determine whether the seller can delete the model.
-     */
-    public function delete(Seller $seller, GiftExchange $giftExchange): bool
+    public function delete(AuthUser $authUser, GiftExchange $giftExchange): bool
     {
-        return $seller->can('delete_gift::exchanges::gift::exchange');
+        return $authUser->can('Delete:GiftExchange');
     }
 
-    /**
-     * Determine whether the seller can bulk delete.
-     */
-    public function deleteAny(Seller $seller): bool
+    public function restore(AuthUser $authUser, GiftExchange $giftExchange): bool
     {
-        return $seller->can('delete_any_gift::exchanges::gift::exchange');
+        return $authUser->can('Restore:GiftExchange');
     }
 
-    /**
-     * Determine whether the seller can permanently delete.
-     */
-    public function forceDelete(Seller $seller, GiftExchange $giftExchange): bool
+    public function forceDelete(AuthUser $authUser, GiftExchange $giftExchange): bool
     {
-        return $seller->can('force_delete_gift::exchanges::gift::exchange');
+        return $authUser->can('ForceDelete:GiftExchange');
     }
 
-    /**
-     * Determine whether the seller can permanently bulk delete.
-     */
-    public function forceDeleteAny(Seller $seller): bool
+    public function forceDeleteAny(AuthUser $authUser): bool
     {
-        return $seller->can('force_delete_any_gift::exchanges::gift::exchange');
+        return $authUser->can('ForceDeleteAny:GiftExchange');
     }
 
-    /**
-     * Determine whether the seller can restore.
-     */
-    public function restore(Seller $seller, GiftExchange $giftExchange): bool
+    public function restoreAny(AuthUser $authUser): bool
     {
-        return $seller->can('restore_gift::exchanges::gift::exchange');
+        return $authUser->can('RestoreAny:GiftExchange');
     }
 
-    /**
-     * Determine whether the seller can bulk restore.
-     */
-    public function restoreAny(Seller $seller): bool
+    public function replicate(AuthUser $authUser, GiftExchange $giftExchange): bool
     {
-        return $seller->can('restore_any_gift::exchanges::gift::exchange');
+        return $authUser->can('Replicate:GiftExchange');
     }
 
-    /**
-     * Determine whether the seller can replicate.
-     */
-    public function replicate(Seller $seller, GiftExchange $giftExchange): bool
+    public function reorder(AuthUser $authUser): bool
     {
-        return $seller->can('replicate_gift::exchanges::gift::exchange');
-    }
-
-    /**
-     * Determine whether the seller can reorder.
-     */
-    public function reorder(Seller $seller): bool
-    {
-        return $seller->can('reorder_gift::exchanges::gift::exchange');
+        return $authUser->can('Reorder:GiftExchange');
     }
 }
