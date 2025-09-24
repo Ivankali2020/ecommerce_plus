@@ -4,6 +4,7 @@ namespace App\Filament\Seller\Widgets;
 
 use App\Helper\CheckFilamentSellerUser;
 use App\Models\Product;
+use BezhanSalleh\FilamentShield\Traits\HasWidgetShield;
 use Filament\Support\RawJs;
 use Filament\Widgets\ChartWidget;
 use Illuminate\Support\Carbon;
@@ -11,6 +12,8 @@ use Livewire\Attributes\On;
 
 class BestSellerProduct extends ChartWidget
 {
+    use HasWidgetShield;
+
     protected int|string|array $columnSpan = '1';
 
     // Add filter properties

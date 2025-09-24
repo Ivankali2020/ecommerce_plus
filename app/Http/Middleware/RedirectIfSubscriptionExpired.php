@@ -19,8 +19,9 @@ class RedirectIfSubscriptionExpired
             session()->forget('subscription_expired');
 
             // Only redirect if not already on the subscription page
-            if (! $request->routeIs('seller.subscription.*')) {
-                return redirect()->route('seller.subscription.plans');
+            if (! $request->routeIs('filament.seller.pages.billing')) {
+                // return redirect()->route('seller.subscription.plans');
+                return redirect()->route('filament.seller.pages.billing');
             }
         }
 

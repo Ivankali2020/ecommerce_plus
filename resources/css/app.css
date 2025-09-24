@@ -56,6 +56,12 @@
 /* Required by notifications */
 @import "../../vendor/filament/notifications/resources/css/index.css";
 
+/* Required by actions, forms and tables */
+@import '../../vendor/filament/forms/resources/css/index.css';
+
+/* Required by actions, infolists, forms, schemas and tables */
+@import '../../vendor/filament/schemas/resources/css/index.css';
+
 @variant dark (&:where(.dark, .dark *));
 
 /* Define keyframes for animations */

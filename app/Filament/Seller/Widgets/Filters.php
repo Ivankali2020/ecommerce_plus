@@ -4,6 +4,7 @@ namespace App\Filament\Seller\Widgets;
 
 use App\Helper\CheckFilamentSellerUser;
 use App\Models\Seller;
+use BezhanSalleh\FilamentShield\Traits\HasWidgetShield;
 use Filament\Actions\Action;
 use Filament\Forms\Components\Select;
 use Filament\Forms\Concerns\InteractsWithForms;
@@ -16,7 +17,7 @@ use Illuminate\Support\Carbon;
 
 class Filters extends Widget implements HasForms
 {
-    use InteractsWithForms;
+    use InteractsWithForms,HasWidgetShield;
 
     protected string $view = 'filament.seller.widgets.filters';
 

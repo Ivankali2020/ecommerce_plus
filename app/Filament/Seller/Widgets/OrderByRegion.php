@@ -4,6 +4,7 @@ namespace App\Filament\Seller\Widgets;
 
 use App\Helper\CheckFilamentSellerUser;
 use App\Models\Region;
+use BezhanSalleh\FilamentShield\Traits\HasWidgetShield;
 use Filament\Support\RawJs;
 use Filament\Widgets\ChartWidget;
 use Illuminate\Support\Carbon;
@@ -11,6 +12,8 @@ use Livewire\Attributes\On;
 
 class OrderByRegion extends ChartWidget
 {
+    use HasWidgetShield;
+
     protected ?string $heading = null;
 
     protected static ?int $sort = 2;

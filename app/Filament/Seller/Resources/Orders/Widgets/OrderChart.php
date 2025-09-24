@@ -6,6 +6,7 @@ use App\Helper\CheckFilamentSellerUser;
 use App\Helper\OrderStatus;
 use App\Models\Order;
 use App\Models\OrderProduct;
+use BezhanSalleh\FilamentShield\Traits\HasWidgetShield;
 use Carbon\Carbon;
 use Filament\Support\RawJs;
 use Filament\Widgets\ChartWidget;
@@ -15,6 +16,8 @@ use Livewire\Attributes\On;
 
 class OrderChart extends ChartWidget
 {
+    use HasWidgetShield;
+
     // Add filter properties
     public $admin_id = null;
 

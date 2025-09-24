@@ -9,6 +9,7 @@ use App\Models\Order;
 use App\Models\OrderProduct;
 use App\Models\Product;
 use App\Models\Variant;
+use BezhanSalleh\FilamentShield\Traits\HasWidgetShield;
 use Filament\Widgets\StatsOverviewWidget as BaseWidget;
 use Filament\Widgets\StatsOverviewWidget\Stat;
 use Illuminate\Support\Carbon;
@@ -16,6 +17,7 @@ use Livewire\Attributes\On;
 
 class StatsOverview extends BaseWidget
 {
+    use HasWidgetShield;
     // protected int | string | array $columnSpan = 3;
 
     protected ?string $pollingInterval = null;

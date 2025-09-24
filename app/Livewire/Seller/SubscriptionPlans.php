@@ -131,6 +131,6 @@ class SubscriptionPlans extends Component implements HasForms
 
         return view('livewire.seller.subscription-plans', [
             'plans' => $plans,
-        ])->layout('layouts.guest');
+        ]); //->layout('layouts.guest')
     }
 }
