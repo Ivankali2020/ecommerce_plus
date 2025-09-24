@@ -5,6 +5,7 @@ namespace App\Observers;
 use App\Models\Seller;
 use Carbon\Carbon;
 use Illuminate\Support\Facades\Cache;
+use Illuminate\Support\Facades\DB;
 
 class SellerObserver
 {
@@ -57,7 +58,15 @@ class SellerObserver
             ]
         );
 
-        $seller->assignRole(['super_admin']); // 'panel_user',
+        // Attach tenant to seller
+        DB::table('tenant_seller')->insert([
+            'tenant_id' => $seller->tenant_id,
+            'seller_id' => $seller->id,
+            'created_at' => now(),
+            'updated_at' => now(),
+        ]);
+
+        $seller->assignRole(['super_admin']); // 
     }
 
     /**
