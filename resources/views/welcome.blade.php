@@ -186,7 +186,7 @@
                                             <h2 class=" font-bold mb-2 header_invoice">{{ __('messages.addresses') }}</h2>
                                             @forelse ($seller->addresses as $index=>$address)
                                                 <div class="mt-2 text-xs">
-                                                    <p class=" text-xs">{{ $address->address }}</p>
+                                                    <p class=" text-xs">{{ $address->modAddress }}</p>
                                                 </div>
                                             @empty
                                             @endforelse

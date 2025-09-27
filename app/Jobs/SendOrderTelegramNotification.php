@@ -60,13 +60,9 @@ class SendOrderTelegramNotification implements ShouldQueue
     {
         $customerName = $order->walk_in_customer ? 'Walk-in Customer' : $order->user->name;
         
-        // Fresh query to get the actual item count from database
-        $itemCount = $order->products()->sum('quantity') ?: 0;
-        
         $message = "🛍️ New Order Received!\n\n" .
                    "📋 Order #: {$order->invoice_number}\n" .
                    "👤 Customer: {$customerName}\n" .
-                   "📦 Items: {$itemCount} item(s)\n" .
                    "💰 Total: " . number_format($order->total_price, 0) . " MMK\n" .
                    "🕐 Time: " . $order->created_at->format('M d, Y h:i A');
         
