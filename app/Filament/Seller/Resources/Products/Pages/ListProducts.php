@@ -80,7 +80,7 @@ class ListProducts extends ListRecords
                             ->label(__('import_export.form.select_excel_file'))
                             ->acceptedFileTypes(['application/vnd.openxmlformats-officedocument.spreadsheetml.sheet', 'application/vnd.ms-excel', 'text/csv'])
                             ->helperText(__('import_export.form.download_template_first'))
-                            ->directory('public/imports')
+                            ->directory('imports')
                             ->required(),
                     ])
                     ->action(function (array $data) {
@@ -89,14 +89,14 @@ class ListProducts extends ListRecords
                             $file = $data['file'];
 
                             // Remove any "public/" prefix if it exists (Filament sometimes adds this)
-                            $cleanFile = str_replace('public/', '', $file);
+                            // $cleanFile = str_replace('public/', '', $file);
 
-                            // Ensure the file path includes imports/ directory
-                            if (! str_starts_with($cleanFile, 'imports/')) {
-                                $cleanFile = 'imports/'.$cleanFile;
-                            }
+                            // // Ensure the file path includes imports/ directory
+                            // if (! str_starts_with($cleanFile, 'imports/')) {
+                            //     $cleanFile = 'imports/'.$cleanFile;
+                            // }
 
-                            $filePath = Storage::disk('public')->path($cleanFile);
+                            $filePath = Storage::disk('public')->path($file);
 
                             // Dispatch the import job
                             Excel::import(new ProductImport, $filePath);
@@ -124,7 +124,7 @@ class ListProducts extends ListRecords
                             ->label(__('import_export.form.select_excel_file'))
                             ->acceptedFileTypes(['application/vnd.openxmlformats-officedocument.spreadsheetml.sheet', 'application/vnd.ms-excel', 'text/csv'])
                             ->helperText(__('import_export.form.ensure_products_exist'))
-                            ->directory('public/imports')
+                            ->directory('imports')
                             ->required(),
                     ])
                     ->action(function (array $data) {
@@ -132,15 +132,15 @@ class ListProducts extends ListRecords
                             // Get the uploaded file from storage
                             $file = $data['file'];
 
-                            // Remove any "public/" prefix if it exists (Filament sometimes adds this)
-                            $cleanFile = str_replace('public/', '', $file);
+                            // // Remove any "public/" prefix if it exists (Filament sometimes adds this)
+                            // $cleanFile = str_replace('public/', '', $file);
 
-                            // Ensure the file path includes imports/ directory
-                            if (! str_starts_with($cleanFile, 'imports/')) {
-                                $cleanFile = 'imports/'.$cleanFile;
-                            }
+                            // // Ensure the file path includes imports/ directory
+                            // if (! str_starts_with($cleanFile, 'imports/')) {
+                            //     $cleanFile = 'imports/'.$cleanFile;
+                            // }
 
-                            $filePath = Storage::disk('public')->path($cleanFile);
+                            $filePath = Storage::disk('public')->path($file);
 
                              // Dispatch the import job
                             Excel::import(new VariantImport, $filePath);
