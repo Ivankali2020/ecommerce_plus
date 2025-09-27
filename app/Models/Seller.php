@@ -20,6 +20,7 @@ use Laravel\Sanctum\HasApiTokens;
 use Spatie\MediaLibrary\HasMedia;
 use Spatie\MediaLibrary\InteractsWithMedia;
 use Spatie\Permission\Traits\HasRoles;
+use Stancl\Tenancy\Database\Models\Domain;
 
 #[ObservedBy([SellerObserver::class])]
 class Seller extends Authenticatable implements FilamentUser, HasMedia // , MustVerifyEmail
@@ -216,6 +217,16 @@ class Seller extends Authenticatable implements FilamentUser, HasMedia // , Must
     public function addresses()
     {
         return $this->hasMany(SellerAddress::class);
+    }
+
+    public function tenant()
+    {
+        return $this->belongsTo(Tenant::class);
+    }
+
+    public function domain()
+    {
+        return $this->hasOneThrough(Domain::class, Tenant::class, 'id', 'tenant_id', 'tenant_id', 'id');
     }
 
     public function canAccessPanel(Panel $panel): bool

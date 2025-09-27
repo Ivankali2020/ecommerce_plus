@@ -174,7 +174,7 @@
                     <div class="grid gap-6 lg:grid-cols-2 lg:gap-8 mb-4 ">
                         @foreach ($sellers as $seller)  
                             {{-- their domain --}}
-                            <a href="http://{{ $seller->tenants->first()->domain->domain ?? '#' }}" target="_blank"
+                            <a href="http://{{ $seller->domain->domain ?? '#' }}" target="_blank"
                                 class="flex items-start gap-4 rounded-lg bg-white p-6 animate-fade-in  shadow-[0px_14px_34px_0px_rgba(0,0,0,0.08)] ring-1 ring-white/5 transition duration-300 hover:text-black/70 hover:ring-black/20 focus:outline-none focus-visible:ring-[#FF2D20] lg:pb-10 dark:bg-zinc-900 dark:ring-zinc-800 dark:hover:text-white/70 dark:hover:ring-zinc-700 dark:focus-visible:ring-[#FF2D20]">
                                 <img src="{{ $seller->getFirstMediaUrl('logos') }}" alt="{{ $seller->name }}"
                                     class="w-16 h-16 rounded-full object-cover">
