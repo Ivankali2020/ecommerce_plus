@@ -61,8 +61,16 @@ class EditProfile extends \Filament\Auth\Pages\EditProfile implements HasForms
 
                 SpatieMediaLibraryFileUpload::make('logo')
                     ->collection('logos')->imageEditor()
+                    ->imageEditorAspectRatios([
+                        '1:1',   // Square (most common for logos)
+                        '3:2',   // Traditional photo ratio
+                        '4:3',   // Classic computer screen ratio
+                        '16:9',  // Modern widescreen ratio
+                        '21:9',  // Ultra-wide ratio
+                        null,    // Allow free cropping
+                    ])
                     ->image()
-                    ->rules('required|mimes:jpeg,png,jpg,svg,webp,avif|dimensions:ratio=1/1|max:512'),
+                    ->rules('required|mimes:jpeg,png,jpg,svg,webp,avif|max:512'),
 
                 SpatieMediaLibraryFileUpload::make('cover_photo')
                     ->multiple()->maxFiles(5)

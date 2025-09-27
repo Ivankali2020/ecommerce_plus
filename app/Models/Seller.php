@@ -229,6 +229,12 @@ class Seller extends Authenticatable implements FilamentUser, HasMedia // , Must
         return $this->hasOneThrough(Domain::class, Tenant::class, 'id', 'tenant_id', 'tenant_id', 'id');
     }
 
+    public function domains()
+    {
+        // Get domains for all tenants this seller belongs to (via many-to-many relationship)
+        return $this->belongsToMany(Domain::class, 'tenant_seller', 'seller_id', 'tenant_id', 'id', 'tenant_id');
+    }
+
     public function canAccessPanel(Panel $panel): bool
     {
         // First, check tenant access - if we're in a tenant context
