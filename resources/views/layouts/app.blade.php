@@ -66,7 +66,7 @@
 
     <x-footer />
     @livewire('notifications')
-    {{-- @filamentScripts --}}
+    @filamentScripts
     {{-- @livewireScripts --}}
     <script>
         // Add error handling for Livewire

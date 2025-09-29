@@ -26,6 +26,6 @@ class SellerAddress extends Model
 
     public function getModAddressAttribute() : string
     {
-        return $this->address . ', ' . ($this->township ? $this->township->name . ', ' : '') . ($this->region ? $this->region->name : '');
+        return $this->address . ', ' . ($this->township ? $this->township->mm_name . ', ' : '') . ($this->region ? $this->region->mm_name : '');
     }
 }
