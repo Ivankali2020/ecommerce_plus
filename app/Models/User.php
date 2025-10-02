@@ -110,4 +110,19 @@ class User extends Authenticatable implements HasMedia, MustVerifyEmail
     {
         return $this->hasMany(ReferralHistory::class,'referrer_id','id');
     }
+
+    public static function booted()
+    {
+        static::created(function ($user) {
+            // check user have referral_code generated or not
+            if (empty($user->referral_code)) {
+                // generate unique referral code
+                do {
+                    $code = strtoupper(substr(md5(uniqid(rand(), true)), 0, 8));
+                } while (self::where('referral_code', $code)->exists());
+                $user->referral_code = $code;
+                $user->save();
+            }
+        });
+    }
 }
