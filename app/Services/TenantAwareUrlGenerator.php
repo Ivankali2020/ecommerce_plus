@@ -9,11 +9,13 @@ class TenantAwareUrlGenerator extends DefaultUrlGenerator
 {
     public function getUrl(): string
     {
-        $url = asset('storage/'.$this->getPathRelativeToRoot());
-
-        // $url = $this->versionUrl($this->getPathRelativeToRoot());
-        // dd($url);
-
-        return $url;
+        $path = $this->getPathRelativeToRoot();
+        
+        // If path is null (during upload processing), fall back to parent behavior
+        if ($path === null) {
+            return parent::getUrl();
+        }
+        
+        return asset('storage/'.$path);
     }
 }
