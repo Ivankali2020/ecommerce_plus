@@ -437,7 +437,7 @@ return [
         'terms_service' => 'Terms of Service',
         'payment_methods' => 'Payment Methods',
         'language' => 'Language',
-        'all_rights_reserved' => '❤ Ivan\'s Love',
+        'all_rights_reserved' => 'Powered by Padaung. All rights reserved.',
         'default_description' => 'Your trusted online shopping destination with quality products and excellent service.',
     ],
 

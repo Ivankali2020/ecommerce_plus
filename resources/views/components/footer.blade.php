@@ -69,7 +69,7 @@
 
         <!-- Bottom Bar -->
         <div class="border-t border-gray-300 mt-8 pt-8 pb-16 lg:pb-0 flex flex-col sm:flex-row justify-between items-center">
-            <a href="https://ivankali2020.github.io/porfolio/" class="text-gray-400 text-sm underline decoration-gray-200 underline-offset-7 hover:text-red-500">
+            <a href="https://t.me/aphroditejr" class="text-gray-400 text-sm underline decoration-gray-200 underline-offset-7 hover:text-red-500">
                 {{-- © {{ date('Y') }} {{ $tenantSeller ? $tenantSeller->name : __('messages.footer.company_info') }}.  --}}
                 {{ __('messages.footer.all_rights_reserved') }}
             </a>
