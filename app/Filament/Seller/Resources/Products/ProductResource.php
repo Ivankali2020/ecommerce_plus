@@ -557,7 +557,7 @@ class ProductResource extends Resource
             $discountPercentage = (int) max(0, min(100, round($discountPercentage, 2)));
 
             // remain discount percentage
-            $set('discount', 100 - $discountPercentage);
+            $set('discount', $discountPercentage);
         }
 
         if ($get('discount_price') == 0 || $get('discount_price') >= $get('price')) {
