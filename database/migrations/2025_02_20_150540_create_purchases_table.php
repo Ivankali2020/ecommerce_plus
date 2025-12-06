@@ -21,9 +21,9 @@ return new class extends Migration
             $table->foreignIdFor(Tenant::class)->constrained()->cascadeOnDelete()->cascadeOnUpdate();
             $table->foreignIdFor(Supplier::class)->constrained()->cascadeOnDelete()->cascadeOnUpdate();
             $table->string('status')->default(PurchaseStatus::Waiting);
-            $table->decimal('total_amount');
-            $table->decimal('paid_amount')->default(0);
-            $table->decimal('remaining_amount')->default(0);
+            $table->decimal('total_amount', 18, 2);
+            $table->decimal('paid_amount', 18, 2)->default(0);
+            $table->decimal('remaining_amount', 18, 2)->default(0);
             $table->timestamps();
         });
     }

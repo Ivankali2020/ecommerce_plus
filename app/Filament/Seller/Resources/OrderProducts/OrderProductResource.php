@@ -204,11 +204,11 @@ class OrderProductResource extends Resource
                         return $query
                             ->when(
                                 $data['created_from'],
-                                fn (Builder $query, $date): Builder => $query->whereDate('created_at', '>=', $date),
+                                fn (Builder $query, $date): Builder => $query->whereDate('order_products.created_at', '>=', $date),
                             )
                             ->when(
                                 $data['created_until'],
-                                fn (Builder $query, $date): Builder => $query->whereDate('created_at', '<=', $date),
+                                fn (Builder $query, $date): Builder => $query->whereDate('order_products.created_at', '<=', $date),
                             );
                     })->columnSpan(2),
 
@@ -221,7 +221,7 @@ class OrderProductResource extends Resource
 
                 Filter::make('today')
                     ->label('Today')
-                    ->query(fn (Builder $query) => $query->whereDate('created_at', today()))
+                    ->query(fn (Builder $query) => $query->whereDate('order_products.created_at', today()))
                     ->indicator('Filter by today\'s date')
                     ->toggle(),
 

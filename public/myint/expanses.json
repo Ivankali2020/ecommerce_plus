@@ -1,0 +1,622 @@
+[
+  {
+    "id": 1,
+    "expanse_category_id": 1,
+    "amount": 14700.00,
+    "description": "ကြွပ်ကြွပ်အိတ်, စျေးနှုန်းကပ်တိပ်, ဘောပင် , ဖိုင်တွဲ , ",
+    "payment_method": "cash",
+    "seller_id": 2,
+    "created_at": "2025-05-31 15:47:34",
+    "updated_at": "2025-05-31 15:47:34"
+  },
+  {
+    "id": 2,
+    "expanse_category_id": 2,
+    "amount": 10000.00,
+    "description": "ကား ခ ပေး ",
+    "payment_method": "cash",
+    "seller_id": 2,
+    "created_at": "2025-05-31 15:48:11",
+    "updated_at": "2025-07-03 16:07:12"
+  },
+  {
+    "id": 3,
+    "expanse_category_id": 2,
+    "amount": 14000.00,
+    "description": "ပို့ဆောင်ခ  ",
+    "payment_method": "cash",
+    "seller_id": 2,
+    "created_at": "2025-05-31 15:49:45",
+    "updated_at": "2025-06-16 15:05:27"
+  },
+  {
+    "id": 4,
+    "expanse_category_id": 3,
+    "amount": 22700.00,
+    "description": null,
+    "payment_method": "cash",
+    "seller_id": 2,
+    "created_at": "2025-10-03 11:02:38",
+    "updated_at": "2025-10-03 11:02:38"
+  },
+  {
+    "id": 5,
+    "expanse_category_id": 4,
+    "amount": 50000.00,
+    "description": " ကြက်ကြော်, ဆီကြက် , apple , orange ",
+    "payment_method": "cash",
+    "seller_id": 2,
+    "created_at": "2025-10-04 18:24:57",
+    "updated_at": "2025-10-04 18:24:57"
+  },
+  {
+    "id": 6,
+    "expanse_category_id": 2,
+    "amount": 10000.00,
+    "description": "တောင်ပေါ် အသွားအပြန် ကားခ ဖိုး",
+    "payment_method": "cash",
+    "seller_id": 2,
+    "created_at": "2025-10-04 18:25:55",
+    "updated_at": "2025-10-04 18:25:55"
+  },
+  {
+    "id": 7,
+    "expanse_category_id": 5,
+    "amount": 53000.00,
+    "description": "ကာကွယ် ဆေးထိုး ဆေးဖိုး ",
+    "payment_method": "cash",
+    "seller_id": 2,
+    "created_at": "2025-10-04 18:26:36",
+    "updated_at": "2025-10-04 18:26:36"
+  },
+  {
+    "id": 8,
+    "expanse_category_id": 6,
+    "amount": 10000.00,
+    "description": null,
+    "payment_method": "cash",
+    "seller_id": 2,
+    "created_at": "2025-10-05 11:12:10",
+    "updated_at": "2025-10-05 11:12:10"
+  },
+  {
+    "id": 9,
+    "expanse_category_id": 4,
+    "amount": 1000.00,
+    "description": "p\n",
+    "payment_method": "cash",
+    "seller_id": 2,
+    "created_at": "2025-10-05 16:06:56",
+    "updated_at": "2025-10-05 16:06:56"
+  },
+  {
+    "id": 10,
+    "expanse_category_id": 4,
+    "amount": 7500.00,
+    "description": "bella  မုန့်ကျွေး \n",
+    "payment_method": "cash",
+    "seller_id": 2,
+    "created_at": "2025-10-07 17:59:23",
+    "updated_at": "2025-10-07 17:59:23"
+  },
+  {
+    "id": 11,
+    "expanse_category_id": 6,
+    "amount": 300000.00,
+    "description": "ကန်တော့ သီတင်းကျွတ်\n",
+    "payment_method": "cash",
+    "seller_id": 2,
+    "created_at": "2025-10-07 18:00:29",
+    "updated_at": "2025-10-07 18:00:29"
+  },
+  {
+    "id": 12,
+    "expanse_category_id": 4,
+    "amount": 10000.00,
+    "description": "b",
+    "payment_method": "cash",
+    "seller_id": 2,
+    "created_at": "2025-10-09 10:34:32",
+    "updated_at": "2025-10-09 10:34:32"
+  },
+  {
+    "id": 13,
+    "expanse_category_id": 2,
+    "amount": 5000.00,
+    "description": "coffee",
+    "payment_method": "cash",
+    "seller_id": 2,
+    "created_at": "2025-10-10 08:20:44",
+    "updated_at": "2025-10-10 08:20:44"
+  },
+  {
+    "id": 14,
+    "expanse_category_id": 4,
+    "amount": 5000.00,
+    "description": "moke hin khar",
+    "payment_method": "cash",
+    "seller_id": 2,
+    "created_at": "2025-10-10 08:21:58",
+    "updated_at": "2025-10-10 08:21:58"
+  },
+  {
+    "id": 15,
+    "expanse_category_id": 3,
+    "amount": 3000.00,
+    "description": "kkh",
+    "payment_method": "cash",
+    "seller_id": 2,
+    "created_at": "2025-10-11 10:13:53",
+    "updated_at": "2025-10-11 10:13:53"
+  },
+  {
+    "id": 16,
+    "expanse_category_id": 4,
+    "amount": 25000.00,
+    "description": "cgg",
+    "payment_method": "cash",
+    "seller_id": 2,
+    "created_at": "2025-10-12 17:43:41",
+    "updated_at": "2025-10-12 17:43:41"
+  },
+  {
+    "id": 17,
+    "expanse_category_id": 4,
+    "amount": 2000.00,
+    "description": "mc",
+    "payment_method": "cash",
+    "seller_id": 2,
+    "created_at": "2025-10-14 10:07:44",
+    "updated_at": "2025-10-14 10:07:44"
+  },
+  {
+    "id": 18,
+    "expanse_category_id": 3,
+    "amount": 7000.00,
+    "description": "ccc",
+    "payment_method": "cash",
+    "seller_id": 2,
+    "created_at": "2025-10-16 12:21:19",
+    "updated_at": "2025-10-16 12:21:19"
+  },
+  {
+    "id": 19,
+    "expanse_category_id": 2,
+    "amount": 168000.00,
+    "description": "General (18 oct to 24 oct)",
+    "payment_method": "cash",
+    "seller_id": 2,
+    "created_at": "2025-10-24 14:46:51",
+    "updated_at": "2025-10-24 14:46:51"
+  },
+  {
+    "id": 20,
+    "expanse_category_id": 7,
+    "amount": 72000.00,
+    "description": "dress for me",
+    "payment_method": "cash",
+    "seller_id": 2,
+    "created_at": "2025-10-24 14:50:15",
+    "updated_at": "2025-10-24 14:50:15"
+  },
+  {
+    "id": 21,
+    "expanse_category_id": 4,
+    "amount": 2000.00,
+    "description": "milk",
+    "payment_method": "cash",
+    "seller_id": 2,
+    "created_at": "2025-10-25 11:10:17",
+    "updated_at": "2025-10-25 11:10:17"
+  },
+  {
+    "id": 22,
+    "expanse_category_id": 4,
+    "amount": 15000.00,
+    "description": "25 oct 2025",
+    "payment_method": "cash",
+    "seller_id": 2,
+    "created_at": "2025-10-26 10:05:18",
+    "updated_at": "2025-10-26 10:05:18"
+  },
+  {
+    "id": 23,
+    "expanse_category_id": 4,
+    "amount": 5000.00,
+    "description": "မုန်ညင်း ခေါက်ဆွဲ နွားနို့",
+    "payment_method": "cash",
+    "seller_id": 2,
+    "created_at": "2025-10-26 10:56:25",
+    "updated_at": "2025-10-26 10:56:25"
+  },
+  {
+    "id": 24,
+    "expanse_category_id": 4,
+    "amount": 10600.00,
+    "description": "yogut",
+    "payment_method": "cash",
+    "seller_id": 2,
+    "created_at": "2025-10-26 13:57:04",
+    "updated_at": "2025-10-26 13:57:04"
+  },
+  {
+    "id": 25,
+    "expanse_category_id": 3,
+    "amount": 12000.00,
+    "description": "milk ,fish and vegetables ",
+    "payment_method": "cash",
+    "seller_id": 2,
+    "created_at": "2025-10-27 15:16:35",
+    "updated_at": "2025-10-27 15:16:35"
+  },
+  {
+    "id": 26,
+    "expanse_category_id": 4,
+    "amount": 7000.00,
+    "description": "milk and yesterday marlarhin",
+    "payment_method": "cash",
+    "seller_id": 2,
+    "created_at": "2025-10-28 14:42:58",
+    "updated_at": "2025-10-28 14:42:58"
+  },
+  {
+    "id": 27,
+    "expanse_category_id": 3,
+    "amount": 4500.00,
+    "description": "water",
+    "payment_method": "cash",
+    "seller_id": 2,
+    "created_at": "2025-10-29 09:47:09",
+    "updated_at": "2025-10-29 09:47:09"
+  },
+  {
+    "id": 28,
+    "expanse_category_id": 3,
+    "amount": 38000.00,
+    "description": "pork potato  vegetables ",
+    "payment_method": "cash",
+    "seller_id": 2,
+    "created_at": "2025-10-30 10:37:11",
+    "updated_at": "2025-10-30 10:37:11"
+  },
+  {
+    "id": 29,
+    "expanse_category_id": 2,
+    "amount": 222000.00,
+    "description": "ovan ,sushi ,motor oil,delivery fees and donations ",
+    "payment_method": "cash",
+    "seller_id": 2,
+    "created_at": "2025-10-31 15:13:11",
+    "updated_at": "2025-10-31 15:13:11"
+  },
+  {
+    "id": 30,
+    "expanse_category_id": 2,
+    "amount": 3500.00,
+    "description": "water and milk",
+    "payment_method": "cash",
+    "seller_id": 2,
+    "created_at": "2025-11-01 14:11:33",
+    "updated_at": "2025-11-01 14:11:33"
+  },
+  {
+    "id": 31,
+    "expanse_category_id": 2,
+    "amount": 18500.00,
+    "description": "milk , red bull , plastic ,snack",
+    "payment_method": "cash",
+    "seller_id": 2,
+    "created_at": "2025-11-02 16:52:33",
+    "updated_at": "2025-11-02 16:52:33"
+  },
+  {
+    "id": 32,
+    "expanse_category_id": 3,
+    "amount": 600000.00,
+    "description": "oct, nov kitchen fees",
+    "payment_method": "cash",
+    "seller_id": 2,
+    "created_at": "2025-11-03 18:15:16",
+    "updated_at": "2025-11-03 18:15:16"
+  },
+  {
+    "id": 33,
+    "expanse_category_id": 4,
+    "amount": 3500.00,
+    "description": "mik and banana",
+    "payment_method": "cash",
+    "seller_id": 2,
+    "created_at": "2025-11-03 18:15:44",
+    "updated_at": "2025-11-03 18:15:44"
+  },
+  {
+    "id": 34,
+    "expanse_category_id": 2,
+    "amount": 63900.00,
+    "description": "apple, milk,lunch ,lotion, bus fees, lip stick,snacks ",
+    "payment_method": "cash",
+    "seller_id": 2,
+    "created_at": "2025-11-05 18:04:39",
+    "updated_at": "2025-11-05 18:04:39"
+  },
+  {
+    "id": 35,
+    "expanse_category_id": 7,
+    "amount": 25000.00,
+    "description": "Clinic ",
+    "payment_method": "cash",
+    "seller_id": 2,
+    "created_at": "2025-11-05 18:05:15",
+    "updated_at": "2025-11-05 18:05:15"
+  },
+  {
+    "id": 36,
+    "expanse_category_id": 2,
+    "amount": 20000.00,
+    "description": "nov 6,7  milk,snacks,cleaner detergent ,water",
+    "payment_method": "cash",
+    "seller_id": 2,
+    "created_at": "2025-11-07 17:02:28",
+    "updated_at": "2025-11-07 17:02:28"
+  },
+  {
+    "id": 37,
+    "expanse_category_id": 4,
+    "amount": 4500.00,
+    "description": "goog",
+    "payment_method": "cash",
+    "seller_id": 2,
+    "created_at": "2025-11-08 15:50:52",
+    "updated_at": "2025-11-08 15:50:52"
+  },
+  {
+    "id": 38,
+    "expanse_category_id": 2,
+    "amount": 38000.00,
+    "description": "samatam , water, milk, vegetables ",
+    "payment_method": "cash",
+    "seller_id": 2,
+    "created_at": "2025-11-09 12:58:44",
+    "updated_at": "2025-11-09 12:58:44"
+  },
+  {
+    "id": 39,
+    "expanse_category_id": 7,
+    "amount": 25000.00,
+    "description": "medicine",
+    "payment_method": "cash",
+    "seller_id": 2,
+    "created_at": "2025-11-10 12:59:24",
+    "updated_at": "2025-11-10 12:59:24"
+  },
+  {
+    "id": 40,
+    "expanse_category_id": 2,
+    "amount": 15000.00,
+    "description": "nov 11,12  ",
+    "payment_method": "cash",
+    "seller_id": 2,
+    "created_at": "2025-11-13 11:29:31",
+    "updated_at": "2025-11-13 11:29:31"
+  },
+  {
+    "id": 41,
+    "expanse_category_id": 3,
+    "amount": 3500.00,
+    "description": "milk and nodle",
+    "payment_method": "cash",
+    "seller_id": 2,
+    "created_at": "2025-11-13 11:30:28",
+    "updated_at": "2025-11-13 11:30:28"
+  },
+  {
+    "id": 42,
+    "expanse_category_id": 3,
+    "amount": 8500.00,
+    "description": "paoh kimchi, milk,snack",
+    "payment_method": "cash",
+    "seller_id": 2,
+    "created_at": "2025-11-14 15:39:51",
+    "updated_at": "2025-11-14 15:39:51"
+  },
+  {
+    "id": 43,
+    "expanse_category_id": 2,
+    "amount": 3000.00,
+    "description": "water",
+    "payment_method": "cash",
+    "seller_id": 2,
+    "created_at": "2025-11-14 15:47:16",
+    "updated_at": "2025-11-14 15:47:16"
+  },
+  {
+    "id": 44,
+    "expanse_category_id": 3,
+    "amount": 4500.00,
+    "description": "milk,snack,banana",
+    "payment_method": "cash",
+    "seller_id": 2,
+    "created_at": "2025-11-15 11:40:21",
+    "updated_at": "2025-11-15 11:40:57"
+  },
+  {
+    "id": 45,
+    "expanse_category_id": 4,
+    "amount": 24000.00,
+    "description": "Yogurt ,snack,milk",
+    "payment_method": "cash",
+    "seller_id": 2,
+    "created_at": "2025-11-16 15:10:57",
+    "updated_at": "2025-11-16 15:10:57"
+  },
+  {
+    "id": 46,
+    "expanse_category_id": 4,
+    "amount": 30000.00,
+    "description": "mango,milk,rice roll ,yogurt ",
+    "payment_method": "cash",
+    "seller_id": 2,
+    "created_at": "2025-11-17 09:56:47",
+    "updated_at": "2025-11-17 09:56:47"
+  },
+  {
+    "id": 47,
+    "expanse_category_id": 4,
+    "amount": 5000.00,
+    "description": "milk ,avocado",
+    "payment_method": "cash",
+    "seller_id": 2,
+    "created_at": "2025-11-18 11:22:58",
+    "updated_at": "2025-11-18 11:22:58"
+  },
+  {
+    "id": 48,
+    "expanse_category_id": 4,
+    "amount": 15000.00,
+    "description": "malar, milk, subuu",
+    "payment_method": "cash",
+    "seller_id": 2,
+    "created_at": "2025-11-20 18:35:24",
+    "updated_at": "2025-11-20 18:35:24"
+  },
+  {
+    "id": 49,
+    "expanse_category_id": 3,
+    "amount": 27200.00,
+    "description": "Avocado ,noodle ,milk,one tea",
+    "payment_method": "cash",
+    "seller_id": 2,
+    "created_at": "2025-11-22 17:49:13",
+    "updated_at": "2025-11-22 17:49:13"
+  },
+  {
+    "id": 50,
+    "expanse_category_id": 3,
+    "amount": 5000.00,
+    "description": "milk,noodle ",
+    "payment_method": "cash",
+    "seller_id": 2,
+    "created_at": "2025-11-24 17:29:36",
+    "updated_at": "2025-11-24 17:29:36"
+  },
+  {
+    "id": 51,
+    "expanse_category_id": 3,
+    "amount": 15000.00,
+    "description": "milk, curry , bill",
+    "payment_method": "cash",
+    "seller_id": 2,
+    "created_at": "2025-11-25 15:43:32",
+    "updated_at": "2025-11-25 15:43:32"
+  },
+  {
+    "id": 52,
+    "expanse_category_id": 3,
+    "amount": 3000.00,
+    "description": "water",
+    "payment_method": "cash",
+    "seller_id": 2,
+    "created_at": "2025-11-25 16:47:08",
+    "updated_at": "2025-11-25 16:47:08"
+  },
+  {
+    "id": 53,
+    "expanse_category_id": 3,
+    "amount": 7200.00,
+    "description": "milk,curry,",
+    "payment_method": "cash",
+    "seller_id": 2,
+    "created_at": "2025-11-26 18:08:54",
+    "updated_at": "2025-11-26 18:08:54"
+  },
+  {
+    "id": 54,
+    "expanse_category_id": 4,
+    "amount": 3000.00,
+    "description": "bill",
+    "payment_method": "bank",
+    "seller_id": 2,
+    "created_at": "2025-11-26 18:10:11",
+    "updated_at": "2025-11-26 18:10:11"
+  },
+  {
+    "id": 55,
+    "expanse_category_id": 4,
+    "amount": 2000.00,
+    "description": "milk",
+    "payment_method": "cash",
+    "seller_id": 2,
+    "created_at": "2025-11-27 16:19:33",
+    "updated_at": "2025-11-27 16:19:33"
+  },
+  {
+    "id": 56,
+    "expanse_category_id": 7,
+    "amount": 90000.00,
+    "description": "Medicine ",
+    "payment_method": "cash",
+    "seller_id": 2,
+    "created_at": "2025-11-27 18:44:49",
+    "updated_at": "2025-11-27 18:44:49"
+  },
+  {
+    "id": 57,
+    "expanse_category_id": 3,
+    "amount": 10000.00,
+    "description": "milk, noodle ",
+    "payment_method": "cash",
+    "seller_id": 2,
+    "created_at": "2025-11-28 17:40:53",
+    "updated_at": "2025-11-28 17:40:53"
+  },
+  {
+    "id": 58,
+    "expanse_category_id": 3,
+    "amount": 8500.00,
+    "description": "bill milk, vegetable ",
+    "payment_method": "cash",
+    "seller_id": 2,
+    "created_at": "2025-11-29 18:15:35",
+    "updated_at": "2025-11-29 18:15:35"
+  },
+  {
+    "id": 59,
+    "expanse_category_id": 2,
+    "amount": 15000.00,
+    "description": "1,12,2025 \nmilk, 3d,bill,motorcycles oil,vegetable ",
+    "payment_method": "cash",
+    "seller_id": 2,
+    "created_at": "2025-12-02 08:29:24",
+    "updated_at": "2025-12-02 08:29:24"
+  },
+  {
+    "id": 60,
+    "expanse_category_id": 3,
+    "amount": 300000.00,
+    "description": "Kitchen fees",
+    "payment_method": "cash",
+    "seller_id": 2,
+    "created_at": "2025-12-02 08:33:00",
+    "updated_at": "2025-12-02 08:33:00"
+  },
+  {
+    "id": 61,
+    "expanse_category_id": 4,
+    "amount": 5000.00,
+    "description": "bread, molk",
+    "payment_method": "cash",
+    "seller_id": 2,
+    "created_at": "2025-12-02 16:58:20",
+    "updated_at": "2025-12-02 16:58:20"
+  },
+  {
+    "id": 62,
+    "expanse_category_id": 2,
+    "amount": 3500.00,
+    "description": "milk. water",
+    "payment_method": "cash",
+    "seller_id": 2,
+    "created_at": "2025-12-03 17:14:05",
+    "updated_at": "2025-12-03 17:14:05"
+  }
+]

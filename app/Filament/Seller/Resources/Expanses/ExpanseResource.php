@@ -108,6 +108,7 @@ class ExpanseResource extends Resource
     public static function table(Table $table): Table
     {
         return $table
+            ->defaultSort('created_at', 'desc')
             ->columns([
                 TextColumn::make('category.name')
                     ->label(__('filament/resources/expanse-resource.table.columns.category_name'))
@@ -130,9 +131,8 @@ class ExpanseResource extends Resource
 
                 TextColumn::make('created_at')
                     ->label(__('filament/resources/expanse-resource.table.columns.created_at'))
-                    ->dateTime()
-                    ->sortable()
-                    ->toggleable(isToggledHiddenByDefault: true),
+                    ->dateTime('Y / m / d ')
+                    ->sortable(),
                 TextColumn::make('updated_at')
                     ->label(__('filament/resources/expanse-resource.table.columns.updated_at'))
                     ->dateTime()

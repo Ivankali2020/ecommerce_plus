@@ -48,7 +48,7 @@ class DatabaseSeeder extends Seeder
             AdminSeeder::class,
             CurrencySeeder::class,
             MyintDataSeeder::class,
-            MultiStoreSeeder::class,
+            // MultiStoreSeeder::class,
             // MedicineStoreSeeder::class,
             SubscriptionPlanSeeder::class,
             // OrderSeeder::class,
