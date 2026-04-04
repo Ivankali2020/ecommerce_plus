@@ -2517,5 +2517,16 @@
     "deleted_at": null,
     "created_at": "2025-07-14 17:08:37",
     "updated_at": "2025-07-14 17:08:37"
+  },
+  {
+    "id": 230,
+    "seller_id": 2,
+    "parent_id": null,
+    "description": null,
+    "name": "Strip",
+    "is_sub_category": 0,
+    "deleted_at": null,
+    "created_at": "2025-10-25 15:17:46",
+    "updated_at": "2025-10-25 15:17:46"
   }
 ]

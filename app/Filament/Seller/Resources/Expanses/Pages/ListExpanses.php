@@ -4,6 +4,7 @@ namespace App\Filament\Seller\Resources\Expanses\Pages;
 
 use App\Filament\Seller\Resources\Expanses\ExpanseResource;
 use App\Filament\Seller\Resources\Expanses\Widgets\ExpanseChart;
+use App\Filament\Seller\Resources\Expanses\Widgets\ExpansePieChart;
 use Filament\Actions\CreateAction;
 use Filament\Resources\Pages\ListRecords;
 
@@ -22,6 +23,7 @@ class ListExpanses extends ListRecords
     {
         return [
             (ExpanseChart::class),
+            (ExpansePieChart::class),
         ];
     }
 }

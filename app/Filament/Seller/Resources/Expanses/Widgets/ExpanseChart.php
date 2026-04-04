@@ -16,7 +16,7 @@ class ExpanseChart extends ChartWidget
 
     protected ?string $maxHeight = '300px';
 
-    protected int|string|array $columnSpan = 'full';
+    // protected int|string|array $columnSpan = 'full';
 
     public function getHeading(): string
     {

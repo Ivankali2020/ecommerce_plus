@@ -281,6 +281,7 @@ class PurchaseResource extends Resource
     public static function table(Table $table): Table
     {
         return $table
+            ->defaultSort('created_at', 'desc')
             ->columns([
                 TextColumn::make('seller.name')
                     ->label(__('filament/resources/purchase-resource.table.columns.seller'))

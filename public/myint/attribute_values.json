@@ -1852,5 +1852,14 @@
     "deleted_at": null,
     "created_at": "2025-05-27 20:33:24",
     "updated_at": "2025-05-27 20:33:24"
+  },
+  {
+    "id": 207,
+    "attribute_id": 69,
+    "value": "1 pic",
+    "color_code": null,
+    "deleted_at": null,
+    "created_at": "2025-10-25 15:17:19",
+    "updated_at": "2025-10-25 15:17:19"
   }
 ]

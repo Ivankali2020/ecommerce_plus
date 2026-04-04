@@ -1753,5 +1753,14 @@
     "deleted_at": null,
     "created_at": "2025-07-14 17:08:28",
     "updated_at": "2025-07-14 17:08:28"
+  },
+  {
+    "id": 196,
+    "seller_id": 2,
+    "name": "Strip",
+    "description": null,
+    "deleted_at": null,
+    "created_at": "2025-10-25 15:17:30",
+    "updated_at": "2025-10-25 15:17:30"
   }
 ]

@@ -8,6 +8,8 @@ use App\Models\Brand;
 use App\Models\Category;
 use App\Models\Currency;
 use App\Models\Exchange;
+use App\Models\Expanse;
+use App\Models\ExpanseCategory;
 use App\Models\Order;
 use App\Models\OrderProduct;
 use App\Models\Payment;
@@ -16,6 +18,7 @@ use App\Models\Product;
 use App\Models\Purchase;
 use App\Models\PurchaseProduct;
 use App\Models\Seller;
+use App\Models\Supplier;
 use App\Models\Tenant;
 use App\Models\User;
 use App\Models\UserAddress;
@@ -84,11 +87,14 @@ class MyintDataSeeder extends Seeder
             $this->importAttributeValues($user['id'], $tenant->id);
             $this->importBrands($user['id'], $tenant->id);
             $this->importCategories($user['id'], $tenant->id);
+            $this->importSuppliers($user['id'], $tenant->id);
             $this->importProducts($user['id'], $tenant->id, $exchange->id);
+            $this->importExpanseCategories($user['id'], $tenant->id);
+            $this->importExpanses($user['id'], $tenant->id);
             $this->importOrders($user['id'], $tenant->id);
             $this->importOrderProducts($user['id'], $tenant->id);
-            // $this->importPurchases($user['id'], $tenant->id);
-            // $this->importPurchaseProducts($user['id'], $tenant->id);
+            $this->importPurchases($user['id'], $tenant->id);
+            $this->importPurchaseProducts($user['id'], $tenant->id);
 
             DB::commit();
             $this->command->info('Myint data import completed successfully!');
@@ -117,7 +123,7 @@ class MyintDataSeeder extends Seeder
             }
 
             try {
-                Attribute::create([
+                $attribute = new Attribute([
                     'id' => $attributeData['id'],
                     'seller_id' => $sellerId,
                     'tenant_id' => $tenantId,
@@ -126,6 +132,7 @@ class MyintDataSeeder extends Seeder
                     'created_at' => $attributeData['created_at'],
                     'updated_at' => $attributeData['updated_at'],
                 ]);
+                $attribute->saveQuietly();
                 $imported++;
             } catch (\Exception $e) {
                 $this->command->warn("Failed to import attribute ID {$attributeData['id']}: ".$e->getMessage());
@@ -158,7 +165,7 @@ class MyintDataSeeder extends Seeder
             }
 
             try {
-                AttributeValue::create([
+                $attributeValue = new AttributeValue([
                     'id' => $attributeValueData['id'],
                     'attribute_id' => $attributeValueData['attribute_id'],
                     'value' => $attributeValueData['value'],
@@ -166,6 +173,7 @@ class MyintDataSeeder extends Seeder
                     'created_at' => $attributeValueData['created_at'] ?? now(),
                     'updated_at' => $attributeValueData['updated_at'] ?? now(),
                 ]);
+                $attributeValue->saveQuietly();
                 $imported++;
             } catch (\Exception $e) {
                 $this->command->warn("Failed to import attribute value ID {$attributeValueData['id']}: ".$e->getMessage());
@@ -192,7 +200,7 @@ class MyintDataSeeder extends Seeder
             }
 
             try {
-                Brand::create([
+                $brand = new Brand([
                     'id' => $brandData['id'],
                     'seller_id' => $sellerId,
                     'tenant_id' => $tenantId,
@@ -201,6 +209,7 @@ class MyintDataSeeder extends Seeder
                     'created_at' => $brandData['created_at'],
                     'updated_at' => $brandData['updated_at'],
                 ]);
+                $brand->saveQuietly();
                 $imported++;
             } catch (\Exception $e) {
                 $this->command->warn("Failed to import brand ID {$brandData['id']}: ".$e->getMessage());
@@ -227,7 +236,7 @@ class MyintDataSeeder extends Seeder
             }
 
             try {
-                Category::create([
+                $category = new Category([
                     'id' => $categoryData['id'],
                     'seller_id' => $sellerId,
                     'tenant_id' => $tenantId,
@@ -238,6 +247,7 @@ class MyintDataSeeder extends Seeder
                     'created_at' => $categoryData['created_at'],
                     'updated_at' => $categoryData['updated_at'],
                 ]);
+                $category->saveQuietly();
                 $imported++;
             } catch (\Exception $e) {
                 $this->command->warn("Failed to import category ID {$categoryData['id']}: ".$e->getMessage());
@@ -271,7 +281,7 @@ class MyintDataSeeder extends Seeder
             }
 
             try {
-                Product::create([
+                $product = new Product([
                     'id' => $productData['id'],
                     'seller_id' => $sellerId,
                     'tenant_id' => $tenantId,
@@ -302,6 +312,7 @@ class MyintDataSeeder extends Seeder
                     'created_at' => $productData['created_at'] ?? now(),
                     'updated_at' => $productData['updated_at'] ?? now(),
                 ]);
+                $product->saveQuietly();
                 $imported++;
             } catch (\Exception $e) {
                 $this->command->warn("Failed to import product ID {$productData['id']}: ".$e->getMessage());
@@ -320,7 +331,7 @@ class MyintDataSeeder extends Seeder
 
         foreach ($purchasesData as $purchaseData) {
             try {
-                Purchase::create([
+                $purchase = new Purchase([
                     'id' => $purchaseData['id'],
                     'seller_id' => $sellerId,
                     'tenant_id' => $tenantId,
@@ -332,6 +343,7 @@ class MyintDataSeeder extends Seeder
                     'created_at' => $purchaseData['created_at'],
                     'updated_at' => $purchaseData['updated_at'],
                 ]);
+                $purchase->saveQuietly();
                 $imported++;
             } catch (\Exception $e) {
                 $this->command->warn("Failed to import purchase ID {$purchaseData['id']}: ".$e->getMessage());
@@ -357,7 +369,7 @@ class MyintDataSeeder extends Seeder
 
                     continue;
                 }
-                PurchaseProduct::create([
+                $purchaseProduct = new PurchaseProduct([
                     'id' => $purchaseProductData['id'],
                     'purchase_id' => $purchaseProductData['purchase_id'],
                     'product_id' => $purchaseProductData['product_id'],
@@ -370,6 +382,7 @@ class MyintDataSeeder extends Seeder
                     'created_at' => $purchaseProductData['created_at'],
                     'updated_at' => $purchaseProductData['updated_at'],
                 ]);
+                $purchaseProduct->saveQuietly();
                 $imported++;
             } catch (\Exception $e) {
                 $this->command->warn("Failed to import purchase product ID {$purchaseProductData['id']}: ".$e->getMessage());
@@ -396,7 +409,7 @@ class MyintDataSeeder extends Seeder
             }
 
             try {
-                Order::create([
+                $order = new Order([
                     'id' => $orderData['id'],
                     'invoice_number' => $orderData['invoice_number'],
                     'seller_id' => $sellerId,
@@ -421,6 +434,7 @@ class MyintDataSeeder extends Seeder
                     'created_at' => $orderData['created_at'],
                     'updated_at' => $orderData['updated_at'],
                 ]);
+                $order->saveQuietly();
                 $imported++;
             } catch (\Exception $e) {
                 $this->command->warn("Failed to import order ID {$orderData['id']}: ".$e->getMessage());
@@ -452,7 +466,7 @@ class MyintDataSeeder extends Seeder
             }
 
             try {
-                OrderProduct::create([
+                $orderProduct = new OrderProduct([
                     'id' => $orderProductData['id'],
                     'order_id' => $orderProductData['order_id'],
                     'product_id' => $orderProductData['product_id'],
@@ -475,6 +489,7 @@ class MyintDataSeeder extends Seeder
                     'created_at' => $orderProductData['created_at'],
                     'updated_at' => $orderProductData['updated_at'],
                 ]);
+                $orderProduct->saveQuietly();
                 $imported++;
             } catch (\Exception $e) {
                 $this->command->warn("Failed to import order product ID {$orderProductData['id']}: ".$e->getMessage());
@@ -482,5 +497,114 @@ class MyintDataSeeder extends Seeder
         }
 
         $this->command->info("Order products: {$imported} imported, {$skipped} skipped");
+    }
+
+    private function importSuppliers(int $sellerId, int $tenantId): void
+    {
+        $this->command->info('Importing suppliers...');
+
+        $suppliersData = json_decode(file_get_contents(public_path('myint/suppliers.json')), true);
+        $imported = 0;
+        $skipped = 0;
+
+        foreach ($suppliersData as $supplierData) {
+            // Skip if township_id doesn't exist
+            if (! isset($supplierData['township_id'])) {
+                $skipped++;
+
+                continue;
+            }
+
+            try {
+                $supplier = new Supplier([
+                    'id' => $supplierData['id'],
+                    'seller_id' => $sellerId,
+                    'tenant_id' => $tenantId,
+                    'region_id' => 5,
+                    'township_id' => $supplierData['township_id'],
+                    'name' => $supplierData['name'],
+                    'email' => $supplierData['email'],
+                    'phone' => $supplierData['phone'],
+                    'about' => $supplierData['about'],
+                    'created_at' => $supplierData['created_at'],
+                    'updated_at' => $supplierData['updated_at'],
+                ]);
+                $supplier->saveQuietly();
+                $imported++;
+            } catch (\Exception $e) {
+                $this->command->warn("Failed to import supplier ID {$supplierData['id']}: ".$e->getMessage());
+            }
+        }
+
+        $this->command->info("Suppliers: {$imported} imported, {$skipped} skipped");
+    }
+
+    private function importExpanseCategories(int $sellerId, int $tenantId): void
+    {
+        $this->command->info('Importing expanse categories...');
+
+        $expanseCategoriesData = json_decode(file_get_contents(public_path('myint/expanse_categories.json')), true);
+        $imported = 0;
+
+        foreach ($expanseCategoriesData as $expanseCategoryData) {
+            try {
+                $expanseCategory = new ExpanseCategory([
+                    'id' => $expanseCategoryData['id'],
+                    'name' => $expanseCategoryData['name'],
+                    'icon' => $expanseCategoryData['icon'],
+                    'seller_id' => $sellerId,
+                    'tenant_id' => $tenantId,
+                    'created_at' => $expanseCategoryData['created_at'],
+                    'updated_at' => $expanseCategoryData['updated_at'],
+                ]);
+                $expanseCategory->saveQuietly();
+                $imported++;
+            } catch (\Exception $e) {
+                $this->command->warn("Failed to import expanse category ID {$expanseCategoryData['id']}: ".$e->getMessage());
+            }
+        }
+
+        $this->command->info("Expanse categories: {$imported} imported");
+    }
+
+    private function importExpanses(int $sellerId, int $tenantId): void
+    {
+        $this->command->info('Importing expanses...');
+
+        $expansesData = json_decode(file_get_contents(public_path('myint/expanses.json')), true);
+        $imported = 0;
+        $skipped = 0;
+
+        // Get list of imported expanse category IDs to check foreign key constraints
+        $importedExpanseCategoryIds = ExpanseCategory::pluck('id')->toArray();
+
+        foreach ($expansesData as $expanseData) {
+            // Skip if expanse_category_id doesn't exist in imported data
+            if (! isset($expanseData['expanse_category_id']) || ! in_array($expanseData['expanse_category_id'], $importedExpanseCategoryIds)) {
+                $skipped++;
+
+                continue;
+            }
+
+            try {
+                $expanse = new Expanse([
+                    'id' => $expanseData['id'],
+                    'expanse_category_id' => $expanseData['expanse_category_id'],
+                    'amount' => $expanseData['amount'],
+                    'description' => $expanseData['description'],
+                    'payment_method' => $expanseData['payment_method'],
+                    'seller_id' => $sellerId,
+                    'tenant_id' => $tenantId,
+                    'created_at' => $expanseData['created_at'],
+                    'updated_at' => $expanseData['updated_at'],
+                ]);
+                $expanse->saveQuietly();
+                $imported++;
+            } catch (\Exception $e) {
+                $this->command->warn("Failed to import expanse ID {$expanseData['id']}: ".$e->getMessage());
+            }
+        }
+
+        $this->command->info("Expanses: {$imported} imported, {$skipped} skipped");
     }
 }

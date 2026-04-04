@@ -87,7 +87,7 @@ USER www-data
 COPY --chown=www-data:www-data package*.json ./
 
 # Install npm dependencies as www-data user
-RUN npm ci --only=production
+# RUN npm ci --only=production
 
 # Install Puppeteer globally (switch back to root for global install)
 USER root
@@ -134,9 +134,14 @@ RUN php artisan cache:clear || true
 # Run composer scripts after all files are in place
 # RUN composer dump-autoload --optimize
 
+# COPY --chown=www-data:www-data package*.json ./
+
+# RUN npm ci
+# RUN npm i
+# RUN npm run build
+
 # Build frontend assets as www-data user
 USER www-data
-RUN npm run build
 
 # Switch back to root for final setup
 USER root
