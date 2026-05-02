@@ -76,6 +76,14 @@ class PurchaseResource extends Resource
                     Group::make()->schema([
 
                         Repeater::make('products')
+                            // ->table([
+                                // TextColumn::make('product.name')->label(__('filament/resources/purchase-resource.form.products.item.product')),
+                                // TextColumn::make('variant.sku')->label(__('filament/resources/purchase-resource.form.products.item.variant')),
+                                // TextColumn::make('stocks')->label(__('filament/resources/purchase-resource.form.products.item.stocks')),
+                                // TextColumn::make('buy_price')->label(__('filament/resources/purchase-resource.form.products.item.buy_price')),
+                                // TextColumn::make('sell_price')->label(__('filament/resources/purchase-resource.form.products.item.sell_price')),
+                                // TextColumn::make('total')->label(__('filament/resources/purchase-resource.form.products.item.total'))->suffix(fn (Get $get) => blank($get('product_id')) ? '' : Product::where('id', $get('product_id'))->with('exchange.currency')->first()->exchange->currency->symbol_native),
+                            // ])
                             ->relationship('products')
                             ->collapsible()->reorderable(true)->reorderableWithButtons()
                             ->itemLabel(function (array $state): ?string {

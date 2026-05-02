@@ -1,0 +1,112 @@
+<?php
+
+return [
+    'navigation' => [
+        'label' => 'Order Returns',
+        'group' => 'Order Section',
+        'plural' => 'Order Returns',
+        'single' => 'Order Return',
+    ],
+    'form' => [
+        'order_info' => [
+            'order_number' => 'Order Number',
+            'return_number' => 'Return Number',
+            'customer' => 'Customer',
+            'status' => [
+                'label' => 'Status',
+                'options' => [
+                    'completed' => 'Completed',
+                    'pending' => 'Pending',
+                    'approved' => 'Approved',
+                    'rejected' => 'Rejected',
+                ],
+            ],
+            'return_reason' => 'Return Reason',
+            'admin_notes' => 'Admin Notes',
+            'restocking_decision' => [
+                'label' => 'Restocking Decision',
+                'options' => [
+                    'restock' => 'Restock',
+                    'damage' => 'Damage',
+                    'wrong_product' => 'Wrong Product',
+                    'other' => 'Other',
+                ],
+            ],
+            'payment_slip' => 'Payment Slip',
+            'requested_at' => 'Requested At',
+            'total_refund_amount' => 'Total Refund Amount',
+            'total_refund_amount_suffix' => 'TOTAL ALL REFUNDS',
+        ],
+        'return_products' => [
+            'label' => 'Return Products',
+            'order_product' => 'Order Product',
+            'quantity_requested' => 'Quantity Requested',
+            'quantity_approved' => 'Quantity Approved',
+            'unit_refund_amount' => 'Unit Refund Amount',
+            'total_refund_amount' => 'Total Refund Amount',
+            'is_restocked' => 'Restock Stock',
+            'helper_text' => 'Stock will restock after created',
+        ],
+    ],
+    'table' => [
+        'columns' => [
+            'invoice_number' => 'Return Number',
+            'user_name' => 'Customer',
+            'status' => 'Status',
+            'total_refund_amount' => 'Total Refund Amount',
+            'restocking_decision' => 'Restocking Decision',
+            'should_restock' => 'Should Restock',
+            'requested_at' => 'Requested At',
+            'approved_at' => 'Approved At',
+            'completed_at' => 'Completed At',
+            'deleted_at' => 'Deleted At',
+            'created_at' => 'Created At',
+            'updated_at' => 'Updated At',
+        ],
+        'filters' => [
+            'trashed' => 'Trashed',
+        ],
+        'actions' => [
+            'view' => 'View',
+            'edit' => 'Edit',
+            'delete' => 'Delete',
+            'force_delete' => 'Force Delete',
+            'restore' => 'Restore',
+        ],
+    ],
+    'infolist' => [
+        'sections' => [
+            'order_return_details' => 'Order Return Details',
+            'customer_information' => 'Customer Information',
+            'return_products' => 'Return Products',
+        ],
+        'entries' => [
+            'order_number' => 'Order Number',
+            'return_number' => 'Return Number',
+            'status' => 'Status',
+            'total_refund_amount' => 'Total Refund Amount',
+            'return_reason' => 'Return Reason',
+            'notes' => 'Notes',
+            'customer_name' => 'Customer Name',
+            'email' => 'Email',
+            'order_date' => 'Order Date',
+            'return_date' => 'Return Date',
+            'original_order_total' => 'Original Order Total',
+            'total_refund' => 'Total Refund',
+            'items_returned' => 'Items Returned',
+            'product_name' => 'Product Name',
+            'quantity' => 'Quantity',
+            'refund_amount' => 'Refund Amount',
+            'sku' => 'SKU',
+            'original_price' => 'Original Price',
+            'returnable' => 'Returnable',
+        ],
+        'placeholders' => [
+            'no_notes' => 'No notes provided',
+            'no_specific_reason_provided' => 'No specific reason provided',
+        ],
+        'messages' => [
+            'email_copied' => 'Email copied!',
+        ],
+    ],
+];

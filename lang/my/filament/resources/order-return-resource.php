@@ -1,0 +1,112 @@
+<?php
+
+return [
+    'navigation' => [
+        'label' => 'အော်ဒါ ပြန်လည်ပေးအပ်မှုများ',
+        'group' => 'အော်ဒါ အပိုင်း',
+        'plural' => 'အော်ဒါ ပြန်လည်ပေးအပ်မှုများ',
+        'single' => 'အော်ဒါ ပြန်လည်ပေးအပ်မှု',
+    ],
+    'form' => [
+        'order_info' => [
+            'order_number' => 'အော်ဒါနံပါတ်',
+            'return_number' => 'ပြန်လည်ပေးအပ်မှု နံပါတ်',
+            'customer' => 'ဖောက်သည်',
+            'status' => [
+                'label' => 'အခြေအနေ',
+                'options' => [
+                    'completed' => 'ပြီးဆုံး',
+                    'pending' => 'စောင့်ဆိုင်းနေဆဲ',
+                    'approved' => 'အတည်ပြု',
+                    'rejected' => 'ပယ်ချ',
+                ],
+            ],
+            'return_reason' => 'ပြန်လည်ပေးအပ်ရသည့် အကြောင်းရင်း',
+            'admin_notes' => 'အက်ဒမင် မှတ်စု',
+            'restocking_decision' => [
+                'label' => 'စတော့ ပြန်ထည့်ရန် ဆုံးဖြတ်ချက်',
+                'options' => [
+                    'restock' => 'ပြန်ထည့်မည်',
+                    'damage' => 'ပျက်စီး',
+                    'wrong_product' => 'မှားယွင်းသည့် ပစ္စည်း',
+                    'other' => 'အခြား',
+                ],
+            ],
+            'payment_slip' => 'ငွေပေးချေမှု ပြေစာ',
+            'requested_at' => 'တောင်းဆိုသည့် အချိန်',
+            'total_refund_amount' => 'စုစုပေါင်း ပြန်အမ်းငွေ',
+            'total_refund_amount_suffix' => 'စုစုပေါင်း ပြန်အမ်းငွေအားလုံး',
+        ],
+        'return_products' => [
+            'label' => 'ပြန်လည်ပေးအပ်သည့် ပစ္စည်းများ',
+            'order_product' => 'အော်ဒါ ပစ္စည်း',
+            'quantity_requested' => 'တောင်းဆိုသည့် အရေအတွက်',
+            'quantity_approved' => 'အတည်ပြုသည့် အရေအတွက်',
+            'unit_refund_amount' => 'ယူနစ် ပြန်အမ်းငွေ',
+            'total_refund_amount' => 'စုစုပေါင်း ပြန်အမ်းငွေ',
+            'is_restocked' => 'စတော့ ပြန်ဖြည့်မည်',
+            'helper_text' => 'ဖန်တီးပြီးနောက် စတော့ ပြန်ဖြည့်မည်',
+        ],
+    ],
+    'table' => [
+        'columns' => [
+            'invoice_number' => 'ပြန်လည်ပေးအပ်မှု နံပါတ်',
+            'user_name' => 'ဖောက်သည်',
+            'status' => 'အခြေအနေ',
+            'total_refund_amount' => 'စုစုပေါင်း ပြန်အမ်းငွေ',
+            'restocking_decision' => 'စတော့ ပြန်ထည့်ရန် ဆုံးဖြတ်ချက်',
+            'should_restock' => 'စတော့ ပြန်ဖြည့်မည်',
+            'requested_at' => 'တောင်းဆိုသည့် အချိန်',
+            'approved_at' => 'အတည်ပြုသည့် အချိန်',
+            'completed_at' => 'ပြီးဆုံးသည့် အချိန်',
+            'deleted_at' => 'ဖျက်ထားသည့် အချိန်',
+            'created_at' => 'ဖန်တီးခဲ့သည့် အချိန်',
+            'updated_at' => 'ပြင်ဆင်ခဲ့သည့် အချိန်',
+        ],
+        'filters' => [
+            'trashed' => 'ပယ်ဖျက်ထားသော',
+        ],
+        'actions' => [
+            'view' => 'ကြည့်ရန်',
+            'edit' => 'ပြင်ဆင်ရန်',
+            'delete' => 'ဖျက်ရန်',
+            'force_delete' => 'အပြီးတိုင် ဖျက်ရန်',
+            'restore' => 'ပြန်လည်ရယူရန်',
+        ],
+    ],
+    'infolist' => [
+        'sections' => [
+            'order_return_details' => 'ပြန်လည်ပေးအပ်မှု အသေးစိတ်',
+            'customer_information' => 'ဖောက်သည် အချက်အလက်',
+            'return_products' => 'ပြန်လည်ပေးအပ်သည့် ပစ္စည်းများ',
+        ],
+        'entries' => [
+            'order_number' => 'အော်ဒါနံပါတ်',
+            'return_number' => 'ပြန်လည်ပေးအပ်မှု နံပါတ်',
+            'status' => 'အခြေအနေ',
+            'total_refund_amount' => 'စုစုပေါင်း ပြန်အမ်းငွေ',
+            'return_reason' => 'ပြန်လည်ပေးအပ်ရသည့် အကြောင်းရင်း',
+            'notes' => 'မှတ်စုများ',
+            'customer_name' => 'ဖောက်သည်အမည်',
+            'email' => 'အီးမေးလ်',
+            'order_date' => 'အော်ဒါရက်စွဲ',
+            'return_date' => 'ပြန်လည်ပေးအပ်ရက်စွဲ',
+            'original_order_total' => 'မူလ အော်ဒါ စုစုပေါင်း',
+            'total_refund' => 'စုစုပေါင်း ပြန်အမ်းငွေ',
+            'items_returned' => 'ပြန်လည်ပေးအပ်သည့် ပစ္စည်းအရေအတွက်',
+            'product_name' => 'ပစ္စည်းအမည်',
+            'quantity' => 'အရေအတွက်',
+            'refund_amount' => 'ပြန်အမ်းငွေ ပမာဏ',
+            'sku' => 'SKU',
+            'original_price' => 'မူလစျေးနှုန်း',
+            'returnable' => 'ပြန်လည်လက်ခံနိုင်သည်',
+        ],
+        'placeholders' => [
+            'no_notes' => 'မှတ်စုမရှိပါ',
+            'no_specific_reason_provided' => 'သီးသန့် အကြောင်းရင်း မရှိပါ',
+        ],
+        'messages' => [
+            'email_copied' => 'အီးမေးလ် ကူးယူပြီးပါပြီ!',
+        ],
+    ],
+];
