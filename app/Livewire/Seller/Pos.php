@@ -6,6 +6,7 @@ use App\Helper\OrderStatus;
 use App\Livewire\Order;
 use App\Models\Category;
 use App\Models\Order as ModelsOrder;
+use App\Models\Printer;
 use App\Models\Product;
 use App\Models\Variant;
 use Exception;
@@ -18,13 +19,16 @@ use Filament\Notifications\Notification;
 use Illuminate\Database\Eloquent\Collection;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Str;
 use Livewire\Attributes\Computed;
 use Livewire\Attributes\Layout;
 use Livewire\Component;
 use Livewire\WithPagination;
+use Mike42\Escpos\EscposImage;
+use Mike42\Escpos\PrintConnectors\FilePrintConnector;
+use Mike42\Escpos\PrintConnectors\NetworkPrintConnector;
 use Spatie\LaravelPdf\Facades\Pdf;
 use Spatie\PdfToImage\Enums\OutputFormat;
-use Illuminate\Support\Str;
 
 #[Layout('layouts.pos')]
 class Pos extends Component implements HasActions, HasForms
@@ -457,7 +461,7 @@ class Pos extends Component implements HasActions, HasForms
             $staffId = $user->id;
 
             // Create the order
-            $order = \App\Models\Order::create([
+            $order = ModelsOrder::create([
                 'invoice_number' => 'INV-'.time().'-'.$staffId,
                 'seller_id' => $sellerId,
                 'staff_id' => $staffId, // Current logged in seller as staff
@@ -734,7 +738,7 @@ class Pos extends Component implements HasActions, HasForms
             }
 
             $sellerId = $user->parent_id ?? $user->id;
-            $printerConfig = \App\Models\Printer::where('seller_id', $sellerId)
+            $printerConfig = Printer::where('seller_id', $sellerId)
                 ->where('is_default', true)
                 ->where('is_active', true)
                 ->first();
@@ -816,13 +820,13 @@ class Pos extends Component implements HasActions, HasForms
         // Store name - centered and bold
         $printer->selectPrintMode(\Mike42\Escpos\Printer::MODE_FONT_A | \Mike42\Escpos\Printer::MODE_EMPHASIZED);
         $printer->setJustification(\Mike42\Escpos\Printer::JUSTIFY_CENTER);
-        $printer->text($this->convertMyanmarToEnglish($order->seller->name) . "\n");
+        $printer->text($this->convertMyanmarToEnglish($order->seller->name)."\n");
 
         // Store address
         $printer->selectPrintMode(\Mike42\Escpos\Printer::MODE_FONT_A);
         if ($order->seller->addresses->count() > 0) {
             $address = $order->seller->addresses->first()->modAddress ?? '';
-            $printer->text($this->convertMyanmarToEnglish($address) . "\n");
+            $printer->text($this->convertMyanmarToEnglish($address)."\n");
         }
 
         // Contact info
@@ -831,10 +835,10 @@ class Pos extends Component implements HasActions, HasForms
             $contactInfo .= $order->seller->phone;
         }
         if ($order->seller->email) {
-            $contactInfo .= ($contactInfo ? ' , ' : '') . $order->seller->email;
+            $contactInfo .= ($contactInfo ? ' , ' : '').$order->seller->email;
         }
         if ($contactInfo) {
-            $printer->text($contactInfo . "\n");
+            $printer->text($contactInfo."\n");
         }
 
         $printer->feed(1);
@@ -848,9 +852,9 @@ class Pos extends Component implements HasActions, HasForms
         $printer->setJustification(\Mike42\Escpos\Printer::JUSTIFY_LEFT);
         $printer->selectPrintMode(\Mike42\Escpos\Printer::MODE_FONT_A);
 
-        $printer->text("Invoice: " . $order->invoice_number . "\n");
-        $printer->text("Date: " . $order->created_at->format('M d, Y H:i') . "\n");
-        $printer->text("Cashier: " . ($order->staff->name ?? 'POS Staff') . "\n");
+        $printer->text('Invoice: '.$order->invoice_number."\n");
+        $printer->text('Date: '.$order->created_at->format('M d, Y H:i')."\n");
+        $printer->text('Cashier: '.($order->staff->name ?? 'POS Staff')."\n");
     }
 
     /**
@@ -858,7 +862,7 @@ class Pos extends Component implements HasActions, HasForms
      */
     private function printSeparator($printer): void
     {
-        $printer->text(str_repeat('-', 48) . "\n");
+        $printer->text(str_repeat('-', 48)."\n");
     }
 
     /**
@@ -875,39 +879,39 @@ class Pos extends Component implements HasActions, HasForms
             // Product name - convert Myanmar to English
             $productName = $this->convertMyanmarToEnglish($item->product->name);
             $printer->selectPrintMode(\Mike42\Escpos\Printer::MODE_FONT_A | \Mike42\Escpos\Printer::MODE_EMPHASIZED);
-            $printer->text($productName . "\n");
+            $printer->text($productName."\n");
 
             // Variant info if exists
             if ($item->variant) {
                 $printer->selectPrintMode(\Mike42\Escpos\Printer::MODE_FONT_B);
                 $variantName = $this->convertMyanmarToEnglish($item->variant->name);
-                $printer->text("Variant: " . $variantName . "\n");
+                $printer->text('Variant: '.$variantName."\n");
             }
 
             // Price and quantity line
             $printer->selectPrintMode(\Mike42\Escpos\Printer::MODE_FONT_A);
-            
+
             if ($item->discount > 0) {
                 $priceLine = sprintf(
-                    "%d x %s MMK (%d%% off)",
+                    '%d x %s MMK (%d%% off)',
                     $item->quantity,
                     number_format($item->discount_price),
                     $item->discount
                 );
             } else {
                 $priceLine = sprintf(
-                    "%d x %s MMK",
+                    '%d x %s MMK',
                     $item->quantity,
                     number_format($item->price)
                 );
             }
 
             // Format price line with total on the right
-            $totalPrice = number_format($item->sub_price) . " MMK";
+            $totalPrice = number_format($item->sub_price).' MMK';
             $spacePadding = 48 - strlen($priceLine) - strlen($totalPrice);
             $spacePadding = max(1, $spacePadding); // At least 1 space
 
-            $printer->text($priceLine . str_repeat(' ', $spacePadding) . $totalPrice . "\n");
+            $printer->text($priceLine.str_repeat(' ', $spacePadding).$totalPrice."\n");
             $printer->feed(1);
         }
     }
@@ -917,19 +921,19 @@ class Pos extends Component implements HasActions, HasForms
      */
     private function printReceiptTotals($printer, $order): void
     {
-        $printer->text(str_repeat('-', 48) . "\n");
+        $printer->text(str_repeat('-', 48)."\n");
 
         // Subtotal
-        $this->printRightAlignedRow($printer, "Subtotal:", number_format($order->sub_total) . " MMK");
+        $this->printRightAlignedRow($printer, 'Subtotal:', number_format($order->sub_total).' MMK');
 
         // Tax if applicable
         if ($order->tax_price > 0) {
-            $this->printRightAlignedRow($printer, "Tax ({$order->tax}%):", number_format($order->tax_price) . " MMK");
+            $this->printRightAlignedRow($printer, "Tax ({$order->tax}%):", number_format($order->tax_price).' MMK');
         }
 
         // Grand total
         $printer->selectPrintMode(\Mike42\Escpos\Printer::MODE_FONT_A | \Mike42\Escpos\Printer::MODE_EMPHASIZED);
-        $this->printRightAlignedRow($printer, "TOTAL:", number_format($order->total_price) . " MMK");
+        $this->printRightAlignedRow($printer, 'TOTAL:', number_format($order->total_price).' MMK');
         $printer->selectPrintMode(\Mike42\Escpos\Printer::MODE_FONT_A);
     }
 
@@ -939,8 +943,8 @@ class Pos extends Component implements HasActions, HasForms
     private function printPaymentInfo($printer, $order): void
     {
         $printer->feed(1);
-        $this->printRightAlignedRow($printer, "Given Amount:", "- " . number_format($order->given_amount) . " MMK");
-        $this->printRightAlignedRow($printer, "Change:", number_format($order->change_amount) . " MMK");
+        $this->printRightAlignedRow($printer, 'Given Amount:', '- '.number_format($order->given_amount).' MMK');
+        $this->printRightAlignedRow($printer, 'Change:', number_format($order->change_amount).' MMK');
     }
 
     /**
@@ -951,7 +955,7 @@ class Pos extends Component implements HasActions, HasForms
         $printer->feed(2);
         $printer->setJustification(\Mike42\Escpos\Printer::JUSTIFY_CENTER);
         $printer->selectPrintMode(\Mike42\Escpos\Printer::MODE_FONT_A);
-        
+
         $printer->text("Thank You!\n");
         $printer->text("Please come back again\n");
         $printer->feed(1);
@@ -966,8 +970,8 @@ class Pos extends Component implements HasActions, HasForms
         $totalWidth = 48;
         $spacePadding = $totalWidth - strlen($label) - strlen($value);
         $spacePadding = max(1, $spacePadding);
-        
-        $printer->text($label . str_repeat(' ', $spacePadding) . $value . "\n");
+
+        $printer->text($label.str_repeat(' ', $spacePadding).$value."\n");
     }
 
     /**
@@ -978,7 +982,7 @@ class Pos extends Component implements HasActions, HasForms
     {
         // For other Myanmar text, use Str::slug and remove hyphens
         $slugged = Str::slug($text, ' ');
-        
+
         // If slug is empty or just spaces, return original text
         if (empty(trim($slugged))) {
             return $text;
@@ -1021,111 +1025,113 @@ class Pos extends Component implements HasActions, HasForms
             // Generate PDF using environment variables
             $pdf = Pdf::view('pdf.receipt', ['order' => $order])
                 ->paperSize(70, $finalHeight, 'mm')
-                ->margins(0, 0, 0, 0)
-                ->withBrowsershot(function (\Spatie\Browsershot\Browsershot $browsershot) {
-                    $browsershot
-                        ->setNodeBinary(config('laravel-pdf.node_binary', '/usr/bin/node'))
-                        ->setNpmBinary(config('laravel-pdf.npm_binary', '/usr/bin/npm'))
-                        ->setIncludePath(config('laravel-pdf.include_path', '/usr/local/bin:/usr/bin:/bin'))
-                        ->setChromePath(config('laravel-pdf.chrome_path', '/usr/bin/chromium-browser'))
-                        ->setNodeModulePath(config('laravel-pdf.node_modules_path', '/usr/local/lib/node_modules'))
-                        ->timeout(120)
-                        ->addChromiumArguments([
-                            // Critical crashpad fix - prevents database required error
-                            '--disable-crashpad',
-                            '--disable-crash-reporter',
-                            '--disable-breakpad',
-                            '--no-crash-upload',
-                            '--disable-crash-handler',
-                            '--crash-dumps-dir=/tmp',
+                ->margins(0, 0, 0, 0);
 
-                            // Essential security flags for production
-                            '--no-sandbox',
-                            '--disable-setuid-sandbox',
-                            '--disable-dev-shm-usage',
-                            '--disable-namespace-sandbox',
-                            '--disable-seccomp-filter-sandbox',
-                            '--disable-sandbox',
+            // ->withBrowsershot(function (\Spatie\Browsershot\Browsershot $browsershot) {
+            //     $browsershot
+            //         ->setNodeBinary(config('laravel-pdf.node_binary', '/usr/bin/node'))
+            //         ->setNpmBinary(config('laravel-pdf.npm_binary', '/usr/bin/npm'))
+            //         ->setIncludePath(config('laravel-pdf.include_path', '/usr/local/bin:/usr/bin:/bin'))
+            //         ->setChromePath(config('laravel-pdf.chrome_path', '/usr/bin/chromium-browser'))
+            //         ->setNodeModulePath(config('laravel-pdf.node_modules_path', '/usr/local/lib/node_modules'))
+            //         ->timeout(120)
+            //         ->addChromiumArguments([
+            //             // Critical crashpad fix - prevents database required error
+            //             '--disable-crashpad',
+            //             '--disable-crash-reporter',
+            //             '--disable-breakpad',
+            //             '--no-crash-upload',
+            //             '--disable-crash-handler',
+            //             '--crash-dumps-dir=/tmp',
 
-                            // Process management
-                            '--disable-zygote',
-                            '--no-zygote',
-                            '--single-process',
-                            '--disable-background-timer-throttling',
-                            '--disable-renderer-backgrounding',
-                            '--disable-backgrounding-occluded-windows',
-                            '--disable-ipc-flooding-protection',
+            //             // Essential security flags for production
+            //             '--no-sandbox',
+            //             '--disable-setuid-sandbox',
+            //             '--disable-dev-shm-usage',
+            //             '--disable-namespace-sandbox',
+            //             '--disable-seccomp-filter-sandbox',
+            //             '--disable-sandbox',
 
-                            // System service disabling
-                            '--disable-dbus',
-                            '--disable-audio-service-sandbox',
-                            '--disable-background-networking',
-                            '--disable-client-side-phishing-detection',
-                            '--disable-component-extensions-with-background-pages',
-                            '--disable-component-update',
-                            '--disable-default-apps',
-                            '--disable-hang-monitor',
-                            '--disable-popup-blocking',
-                            '--disable-prompt-on-repost',
-                            '--disable-sync',
-                            '--disable-translate',
-                            '--disable-web-security',
+            //             // Process management
+            //             '--disable-zygote',
+            //             '--no-zygote',
+            //             '--single-process',
+            //             '--disable-background-timer-throttling',
+            //             '--disable-renderer-backgrounding',
+            //             '--disable-backgrounding-occluded-windows',
+            //             '--disable-ipc-flooding-protection',
 
-                            // GPU and rendering
-                            '--disable-gpu',
-                            '--disable-gpu-sandbox',
-                            '--disable-software-rasterizer',
-                            '--disable-extensions',
-                            '--disable-plugins',
-                            '--disable-features=VizDisplayCompositor,AudioServiceOutOfProcess,TranslateUI',
-                            '--run-all-compositor-stages-before-draw',
+            //             // System service disabling
+            //             '--disable-dbus',
+            //             '--disable-audio-service-sandbox',
+            //             '--disable-background-networking',
+            //             '--disable-client-side-phishing-detection',
+            //             '--disable-component-extensions-with-background-pages',
+            //             '--disable-component-update',
+            //             '--disable-default-apps',
+            //             '--disable-hang-monitor',
+            //             '--disable-popup-blocking',
+            //             '--disable-prompt-on-repost',
+            //             '--disable-sync',
+            //             '--disable-translate',
+            //             '--disable-web-security',
 
-                            // Headless configuration
-                            '--headless=new',
-                            '--virtual-time-budget=5000',
+            //             // GPU and rendering
+            //             '--disable-gpu',
+            //             '--disable-gpu-sandbox',
+            //             '--disable-software-rasterizer',
+            //             '--disable-extensions',
+            //             '--disable-plugins',
+            //             '--disable-features=VizDisplayCompositor,AudioServiceOutOfProcess,TranslateUI',
+            //             '--run-all-compositor-stages-before-draw',
 
-                            // Memory optimization
-                            '--memory-pressure-off',
-                            '--max_old_space_size=4096',
+            //             // Headless configuration
+            //             '--headless=new',
+            //             '--virtual-time-budget=5000',
 
-                            // Performance optimization
-                            '--hide-scrollbars',
-                            '--metrics-recording-only',
-                            '--mute-audio',
-                            '--no-first-run',
-                            '--safebrowsing-disable-auto-update',
-                            '--disable-logging',
-                            '--disable-metrics',
-                            '--disable-metrics-reporting',
+            //             // Memory optimization
+            //             '--memory-pressure-off',
+            //             '--max_old_space_size=4096',
 
-                            // SSL/Certificate handling
-                            '--ignore-certificate-errors',
-                            '--ignore-ssl-errors',
-                            '--ignore-certificate-errors-spki-list',
-                            '--allow-running-insecure-content',
+            //             // Performance optimization
+            //             '--hide-scrollbars',
+            //             '--metrics-recording-only',
+            //             '--mute-audio',
+            //             '--no-first-run',
+            //             '--safebrowsing-disable-auto-update',
+            //             '--disable-logging',
+            //             '--disable-metrics',
+            //             '--disable-metrics-reporting',
 
-                            // Temporary directories
-                            '--user-data-dir=/tmp/chromium-user-data',
-                            '--data-path=/tmp/chromium-data',
-                            '--homedir=/tmp',
-                            '--disk-cache-dir=/tmp/chromium-cache',
+            //             // SSL/Certificate handling
+            //             '--ignore-certificate-errors',
+            //             '--ignore-ssl-errors',
+            //             '--ignore-certificate-errors-spki-list',
+            //             '--allow-running-insecure-content',
 
-                            // Font configuration for Myanmar text
-                            '--font-render-hinting=none',
-                            '--disable-font-subpixel-positioning',
-                            '--disable-lcd-text',
+            //             // Temporary directories
+            //             '--user-data-dir=/tmp/chromium-user-data',
+            //             '--data-path=/tmp/chromium-data',
+            //             '--homedir=/tmp',
+            //             '--disk-cache-dir=/tmp/chromium-cache',
 
-                            // Additional stability flags
-                            '--disable-field-trial-config',
-                            '--disable-back-forward-cache',
-                            '--no-default-browser-check',
-                        ]);
-                });
+            //             // Font configuration for Myanmar text
+            //             '--font-render-hinting=none',
+            //             '--disable-font-subpixel-positioning',
+            //             '--disable-lcd-text',
+
+            //             // Additional stability flags
+            //             '--disable-field-trial-config',
+            //             '--disable-back-forward-cache',
+            //             '--no-default-browser-check',
+            //         ]);
+            // });
 
             // Save PDF to file
             $pdfPath = public_path("receipts/receipt-{$order->invoice_number}.pdf");
             $pdf->save($pdfPath);
 
+            return;
             // Return PDF for download/print
             if (file_exists($pdfPath)) {
                 // Attempt to print the PDF directly to the thermal printer
@@ -1165,7 +1171,7 @@ class Pos extends Component implements HasActions, HasForms
             }
 
             $sellerId = $user->parent_id ?? $user->id;
-            $printerConfig = \App\Models\Printer::where('seller_id', $sellerId)
+            $printerConfig = Printer::where('seller_id', $sellerId)
                 ->where('is_default', true)
                 ->where('is_active', true)
                 ->first();
@@ -1201,7 +1207,7 @@ class Pos extends Component implements HasActions, HasForms
                 $printer = new \Mike42\Escpos\Printer($connector);
 
                 // Load and print the converted image
-                $img = \Mike42\Escpos\EscposImage::load($imagePath);
+                $img = EscposImage::load($imagePath);
                 $printer->bitImageColumnFormat($img);
 
                 usleep(500000); // 0.5 seconds
@@ -1255,11 +1261,11 @@ class Pos extends Component implements HasActions, HasForms
     {
         try {
             return match ($printerConfig->connection_type) {
-                'network' => new \Mike42\Escpos\PrintConnectors\NetworkPrintConnector(
+                'network' => new NetworkPrintConnector(
                     $printerConfig->ip_address,
                     $printerConfig->port
                 ),
-                'usb' => new \Mike42\Escpos\PrintConnectors\FilePrintConnector($printerConfig->usb_path),
+                'usb' => new FilePrintConnector($printerConfig->usb_path),
                 default => throw new Exception('Unsupported printer connection type'),
             };
         } catch (Exception $e) {

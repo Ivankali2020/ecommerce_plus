@@ -17,6 +17,7 @@ use Filament\Forms\Components\Toggle;
 use Filament\Schemas\Components\Grid;
 use Filament\Schemas\Components\Group;
 use Filament\Schemas\Schema;
+use Illuminate\Database\Eloquent\Model;
 
 class OrderReturnForm
 {
@@ -31,9 +32,10 @@ class OrderReturnForm
 
                         Select::make('order_id')
                             ->relationship('order', 'invoice_number')
+                            ->label(__('filament/resources/order-return-resource.form.order_info.order_number'))
                             ->live(onBlur: true)
                             ->afterStateUpdated(function ($state, $set, $get) {
-                                $set('invoice_number', 'RET_'.$state);
+                                $set('invoice_number', 'RET_' . $state);
 
                                 $order = Order::find($state);
                                 // update user
@@ -46,9 +48,11 @@ class OrderReturnForm
                             ->preload()->searchable(),
 
                         TextInput::make('invoice_number')
+                            ->label(__('filament/resources/order-return-resource.form.order_info.return_number'))
                             ->required(),
 
                         Select::make('user_id')
+                            ->label(__('filament/resources/order-return-resource.form.order_info.customer'))
                             ->hiddenJs(<<<'JS'
                                 $get('order_id') == null
                             JS)
@@ -56,28 +60,35 @@ class OrderReturnForm
                             ->relationship('user', 'name')->preload()->searchable(),
 
                         Select::make('status')
+                            ->label(__('filament/resources/order-return-resource.form.order_info.status.label'))
                             ->options(ReturnStatus::class)
                             ->default(ReturnStatus::Completed)
                             ->preload()->searchable()
                             ->required(),
 
                         Textarea::make('reason')
+                            ->label(__('filament/resources/order-return-resource.form.order_info.return_reason'))
                             ->required()
                             ->columnSpanFull(),
                         Textarea::make('admin_notes')
+                            ->label(__('filament/resources/order-return-resource.form.order_info.admin_notes'))
                             ->columnSpanFull(),
 
                         Select::make('restocking_decision')
+                            ->label(__('filament/resources/order-return-resource.form.order_info.restocking_decision.label'))
                             ->options([
-                                'restock' => 'Restock',
-                                'damage' => 'Damage',
-                                'wrong_product' => 'Wrong product',
-                                'other' => 'Other',
+                                'restock' => __('filament/resources/order-return-resource.form.order_info.restocking_decision.options.restock'),
+                                'damage' => __('filament/resources/order-return-resource.form.order_info.restocking_decision.options.damage'),
+                                'wrong_product' => __('filament/resources/order-return-resource.form.order_info.restocking_decision.options.wrong_product'),
+                                'other' => __('filament/resources/order-return-resource.form.order_info.restocking_decision.options.other'),
                             ]),
 
-                        FileUpload::make('payment_slip')->columnSpanFull(),
+                        FileUpload::make('payment_slip')
+                            ->label(__('filament/resources/order-return-resource.form.order_info.payment_slip'))
+                            ->columnSpanFull(),
 
                         DateTimePicker::make('requested_at')
+                            ->label(__('filament/resources/order-return-resource.form.order_info.requested_at'))
                             ->required()->default(now()),
                         // Hidden fields
                         Hidden::make('seller_id')
@@ -90,11 +101,12 @@ class OrderReturnForm
                     Group::make()->schema([
 
                         TextInput::make('total_refund_amount')
+                            ->label(__('filament/resources/order-return-resource.form.order_info.total_refund_amount'))
                             ->required()
                             ->numeric()
                             ->default(0.0)
                             ->reactive()
-                            ->suffix('TOTAL ALL REFUNDS')
+                            ->suffix(__('filament/resources/order-return-resource.form.order_info.total_refund_amount_suffix'))
                             ->afterStateHydrated(function ($component, $state, $get) {
                                 // Calculate total from repeater items when form loads
                                 $returnProducts = $get('returnProducts') ?? [];
@@ -104,6 +116,7 @@ class OrderReturnForm
 
                         Repeater::make('returnProducts')
                             ->relationship('returnProducts')
+                            ->label(__('filament/resources/order-return-resource.form.return_products.label'))
                             ->afterStateUpdated(function ($state, $set) {
                                 // Recalculate total when items are added/removed
                                 $total = collect($state ?? [])->sum('total_refund_amount');
@@ -112,14 +125,15 @@ class OrderReturnForm
                             ->live()
                             ->schema([
                                 Select::make('order_product_id')
-                                    ->relationship(name : 'orderProduct', modifyQueryUsing: function ($query, $get) {
+                                    ->relationship(name: 'orderProduct', modifyQueryUsing: function ($query, $get) {
                                         return $query
-                                        //  ->where('is_returned',false)
-                                            ->whereHas('product', fn ($query) => $query->where('is_return', true))
-                                            ->whereHas('order', fn ($query) => $query->where('id', $get('../../order_id')));
+                                            //  ->where('is_returned',false)
+                                            ->whereHas('product', fn($query) => $query->where('is_return', true))
+                                            ->whereHas('order', fn($query) => $query->where('id', $get('../../order_id')));
                                     })
+                                    ->label(__('filament/resources/order-return-resource.form.return_products.order_product'))
                                     ->preload()
-                                    ->getOptionLabelFromRecordUsing(fn (\Illuminate\Database\Eloquent\Model $record) => $record->product?->name ?? 'Product not found')
+                                    ->getOptionLabelFromRecordUsing(fn(Model $record) => $record->product?->name ?? 'Product not found')
                                     ->searchable()
                                     ->disableOptionsWhenSelectedInSiblingRepeaterItems()
                                     ->afterStateUpdated(function ($state, $get, $set) {
@@ -142,11 +156,13 @@ class OrderReturnForm
                                     ->required(),
 
                                 TextInput::make('quantity_requested')
+                                    ->label(__('filament/resources/order-return-resource.form.return_products.quantity_requested'))
                                     ->required()
                                     ->numeric()
                                     ->minValue(1),
 
                                 TextInput::make('quantity_approved')
+                                    ->label(__('filament/resources/order-return-resource.form.return_products.quantity_approved'))
                                     ->numeric()
                                     ->afterStateUpdated(function ($state, $get, $set) {
                                         // Calculate this item's total
@@ -160,10 +176,11 @@ class OrderReturnForm
                                     })
                                     ->live(onBlur: true)
                                     ->minValue(0)
-                                    ->maxValue(fn ($get) => $get('quantity_requested'))
+                                    ->maxValue(fn($get) => $get('quantity_requested'))
                                     ->default(0),
 
                                 TextInput::make('unit_refund_amount')
+                                    ->label(__('filament/resources/order-return-resource.form.return_products.unit_refund_amount'))
                                     ->required()
                                     ->numeric()
                                     ->minValue(0.0)
@@ -181,6 +198,7 @@ class OrderReturnForm
                                     ->live(onBlur: true),
 
                                 TextInput::make('total_refund_amount')
+                                    ->label(__('filament/resources/order-return-resource.form.return_products.total_refund_amount'))
                                     ->required()
                                     ->numeric()
                                     ->minValue(0.0)
@@ -195,7 +213,8 @@ class OrderReturnForm
                                     ->live(onBlur: true),
 
                                 Toggle::make('is_restocked')
-                                    ->helperText('Stock will restock after created')
+                                    ->label(__('filament/resources/order-return-resource.form.return_products.is_restocked'))
+                                    ->helperText(__('filament/resources/order-return-resource.form.return_products.helper_text'))
                                     ->required(),
 
                             ])

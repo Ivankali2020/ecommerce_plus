@@ -255,7 +255,7 @@
     </div>
 
     <!-- Cart Section - Mobile overlay, desktop sidebar -->
-    <div class="lg:w-1/4 w-full bg-white dark:bg-gray-800 shadow-lg flex flex-col 
+    <div class="lg:w-1/4 w-full bg-white dark:bg-gray-800 shadow-lg flex flex-col
                 sm:fixed md:relative z-40 transform transition-transform duration-300 ease-in-out
                 {{ $this->cart && count($this->cart) > 0 ? '' : 'lg:flex' }}"
         :class="{ 'translate-x-0': cartOpen, 'translate-x-full lg:translate-x-0': !cartOpen }"

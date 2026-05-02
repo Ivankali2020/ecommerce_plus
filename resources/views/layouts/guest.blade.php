@@ -13,10 +13,10 @@
 
         <link icon rel="icon" type="image/png" href="{{ asset('assets/logo.png') }}">
         <!-- Scripts -->
-        @turnstileScripts()
+        <x-turnstile.scripts />
         @filamentStyles
         @vite('resources/css/app.css')
-       
+
     </head>
     <body class="antialiased font-jost">
         {{ $slot }}

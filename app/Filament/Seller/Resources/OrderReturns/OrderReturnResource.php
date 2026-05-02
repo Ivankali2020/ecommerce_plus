@@ -10,10 +10,8 @@ use App\Filament\Seller\Resources\OrderReturns\Schemas\OrderReturnForm;
 use App\Filament\Seller\Resources\OrderReturns\Schemas\OrderReturnInfolist;
 use App\Filament\Seller\Resources\OrderReturns\Tables\OrderReturnsTable;
 use App\Models\OrderReturn;
-use BackedEnum;
 use Filament\Resources\Resource;
 use Filament\Schemas\Schema;
-use Filament\Support\Icons\Heroicon;
 use Filament\Tables\Table;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\SoftDeletingScope;
@@ -27,6 +25,21 @@ class OrderReturnResource extends Resource
     // protected static string|BackedEnum|null $navigationIcon = Heroicon::OutlinedRectangleStack;
 
     protected static ?string $recordTitleAttribute = 'invoice_number';
+
+    public static function getNavigationLabel(): string
+    {
+        return __('filament/resources/order-return-resource.navigation.label');
+    }
+
+    public static function getModelLabel(): string
+    {
+        return __('filament/resources/order-return-resource.navigation.single');
+    }
+
+    public static function getPluralModelLabel(): string
+    {
+        return __('filament/resources/order-return-resource.navigation.plural');
+    }
 
     public static function form(Schema $schema): Schema
     {

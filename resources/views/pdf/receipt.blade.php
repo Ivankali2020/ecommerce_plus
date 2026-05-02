@@ -5,8 +5,16 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Receipt - {{ $order->invoice_number }}</title>
     <style>
+        @font-face {
+            font-family: 'Pyidaungsu';
+            src: url("/fonts/Futura100MYA-Regular.woff2") format("woff2");
+            font-style: normal;
+            font-display: swap;
+            font-weight: normal;
+        }
+
         body {
-            font-family: 'Noto Sans Myanmar', 'DejaVu Sans Mono', 'Courier New', monospace, 'DejaVu Sans', sans-serif;
+            font-family: 'Pyidaungsu', sans-serif, 'Noto Sans Myanmar', 'DejaVu Sans Mono', 'Courier New', monospace, 'DejaVu Sans', sans-serif;
             font-size: 10px;
             margin: 0;
             padding: 0;
@@ -127,7 +135,7 @@
         <!-- Items Section -->
         <div class="items-section">
             <div style="font-weight: bold; margin-bottom: 10px;">ITEMS:</div>
-            
+
             @foreach($order->products as $item)
                 <div class="item">
                     <div class="item-details">
@@ -156,14 +164,14 @@
                 <span>Subtotal:</span>
                 <span>{{ number_format($order->sub_total) }} MMK</span>
             </div>
-            
+
             @if($order->tax_price > 0)
                 <div class="total-row">
                     <span>Tax ({{ $order->tax }}%):</span>
                     <span>{{ number_format($order->tax_price) }} MMK</span>
                 </div>
             @endif
-            
+
             <div class="total-row grand-total">
                 <span>TOTAL:</span>
                 <span>{{ number_format($order->total_price) }} MMK</span>

@@ -18,28 +18,28 @@ class OrderReturnInfolist
     {
         return $schema
             ->components([
-                Section::make('Order Return Details')
+                Section::make(__('filament/resources/order-return-resource.infolist.sections.order_return_details'))
                     ->schema([
                         Grid::make(2)
                             ->schema([
                                 TextEntry::make('order.invoice_number')
-                                    ->label('Order Number')
+                                    ->label(__('filament/resources/order-return-resource.infolist.entries.order_number'))
                                     ->weight(FontWeight::SemiBold)
                                     ->color('primary'),
 
                                 TextEntry::make('invoice_number')
-                                    ->label('Return Number')
+                                    ->label(__('filament/resources/order-return-resource.infolist.entries.return_number'))
                                     ->weight(FontWeight::SemiBold)
                                     ->color('warning'),
 
                                 TextEntry::make('status')
-                                    ->label('Status')
+                                    ->label(__('filament/resources/order-return-resource.infolist.entries.status'))
                                     ->badge()
                                     ->color(ReturnStatus::class),
 
                                 TextEntry::make('total_refund_amount')
-                                    ->label('Total Refund Amount')
-                                    ->formatStateUsing(fn ($state) => number_format($state, 2).' MMK')
+                                    ->label(__('filament/resources/order-return-resource.infolist.entries.total_refund_amount'))
+                                    ->formatStateUsing(fn($state) => number_format($state, 2) . ' MMK')
                                     ->weight(FontWeight::Bold)
                                     ->color('success'),
                             ]),
@@ -47,57 +47,57 @@ class OrderReturnInfolist
                         Grid::make(1)
                             ->schema([
                                 TextEntry::make('return_reason')
-                                    ->label('Return Reason')
+                                    ->label(__('filament/resources/order-return-resource.infolist.entries.return_reason'))
                                     ->columnSpanFull(),
 
                                 TextEntry::make('notes')
-                                    ->label('Notes')
+                                    ->label(__('filament/resources/order-return-resource.infolist.entries.notes'))
                                     ->columnSpanFull()
-                                    ->placeholder('No notes provided'),
+                                    ->placeholder(__('filament/resources/order-return-resource.infolist.placeholders.no_notes')),
                             ]),
                     ])
                     ->icon('heroicon-o-document-text')
                     ->collapsible(),
 
-                Section::make('Customer Information')
+                Section::make(__('filament/resources/order-return-resource.infolist.sections.customer_information'))
                     ->schema([
                         Grid::make(2)
                             ->schema([
                                 TextEntry::make('order.user.name')
-                                    ->label('Customer Name')
+                                    ->label(__('filament/resources/order-return-resource.infolist.entries.customer_name'))
                                     ->weight(FontWeight::SemiBold),
 
                                 TextEntry::make('order.user.email')
-                                    ->label('Email')
+                                    ->label(__('filament/resources/order-return-resource.infolist.entries.email'))
                                     ->copyable()
-                                    ->copyMessage('Email copied!')
+                                    ->copyMessage(__('filament/resources/order-return-resource.infolist.messages.email_copied'))
                                     ->color('primary'),
 
                                 TextEntry::make('order.created_at')
-                                    ->label('Order Date')
+                                    ->label(__('filament/resources/order-return-resource.infolist.entries.order_date'))
                                     ->dateTime(),
 
                                 TextEntry::make('created_at')
-                                    ->label('Return Date')
+                                    ->label(__('filament/resources/order-return-resource.infolist.entries.return_date'))
                                     ->dateTime(),
                             ]),
 
                         Grid::make(3)
                             ->schema([
                                 TextEntry::make('order.sub_total')
-                                    ->label('Original Order Total')
-                                    ->formatStateUsing(fn ($state) => number_format($state, 2).' MMK')
+                                    ->label(__('filament/resources/order-return-resource.infolist.entries.original_order_total'))
+                                    ->formatStateUsing(fn($state) => number_format($state, 2) . ' MMK')
                                     ->weight(FontWeight::SemiBold),
 
                                 TextEntry::make('total_refund_amount')
-                                    ->label('Total Refund')
-                                    ->formatStateUsing(fn ($state) => number_format($state, 2).' MMK')
+                                    ->label(__('filament/resources/order-return-resource.infolist.entries.total_refund'))
+                                    ->formatStateUsing(fn($state) => number_format($state, 2) . ' MMK')
                                     ->weight(FontWeight::Bold)
                                     ->color('success'),
 
                                 TextEntry::make('returnProducts')
-                                    ->label('Items Returned')
-                                    ->state(fn ($record) => $record->returnProducts->sum('quantity_approved'))
+                                    ->label(__('filament/resources/order-return-resource.infolist.entries.items_returned'))
+                                    ->state(fn($record) => $record->returnProducts->sum('quantity_approved'))
                                     ->badge()
                                     ->color('info'),
                             ]),
@@ -105,37 +105,37 @@ class OrderReturnInfolist
                     ->icon('heroicon-o-user')
                     ->collapsible(),
 
-                Section::make('Return Products')
+                Section::make(__('filament/resources/order-return-resource.infolist.sections.return_products'))
                     ->schema([
                         RepeatableEntry::make('returnProducts')
                             ->schema([
                                 Flex::make([
                                     TextEntry::make('orderProduct.product.name')
-                                        ->label('Product Name')
+                                        ->label(__('filament/resources/order-return-resource.infolist.entries.product_name'))
                                         ->weight(FontWeight::SemiBold)
                                         ->columnSpan(2),
 
                                     TextEntry::make('quantity_requested')
-                                        ->label('Quantity')
+                                        ->label(__('filament/resources/order-return-resource.infolist.entries.quantity'))
                                         ->badge()
                                         ->color('info'),
 
                                     TextEntry::make('total_refund_amount')
-                                        ->label('Refund Amount')
-                                        ->formatStateUsing(fn ($state) => number_format($state, 2).' MMK')
+                                        ->label(__('filament/resources/order-return-resource.infolist.entries.refund_amount'))
+                                        ->formatStateUsing(fn($state) => number_format($state, 2) . ' MMK')
                                         ->weight(FontWeight::SemiBold)
                                         ->color('success'),
 
                                     TextEntry::make('orderProduct.product.sku')
-                                        ->label('SKU')
+                                        ->label(__('filament/resources/order-return-resource.infolist.entries.sku'))
                                         ->color('gray'),
 
                                     TextEntry::make('unit_refund_amount')
-                                        ->label('Original Price')
-                                        ->formatStateUsing(fn ($state) => number_format($state, 2).' MMK'),
+                                        ->label(__('filament/resources/order-return-resource.infolist.entries.original_price'))
+                                        ->formatStateUsing(fn($state) => number_format($state, 2) . ' MMK'),
 
                                     IconEntry::make('orderProduct.product.is_return')
-                                        ->label('Returnable')
+                                        ->label(__('filament/resources/order-return-resource.infolist.entries.returnable'))
                                         ->boolean()
                                         ->trueIcon('heroicon-o-check-circle')
                                         ->falseIcon('heroicon-o-x-circle')
@@ -144,10 +144,10 @@ class OrderReturnInfolist
                                 ]),
 
                                 TextEntry::make('return_reason')
-                                    ->label('Return Reason')
+                                    ->label(__('filament/resources/order-return-resource.infolist.entries.return_reason'))
                                     ->columnSpanFull()
-                                    ->hidden(fn ($state) => blank($state))
-                                    ->placeholder('No specific reason provided'),
+                                    ->hidden(fn($state) => blank($state))
+                                    ->placeholder(__('filament/resources/order-return-resource.infolist.placeholders.no_specific_reason_provided')),
                             ])
                             ->columns(1)
                             ->contained(false),
