@@ -1,36 +1,35 @@
-<div>
-    <!-- Desktop Cart Link -->
-    <div class="hidden sm:-my-px sm:flex h-full">
-        <x-nav-link :href="route('cart')" :active="request()->routeIs('cart')" class="relative">
-            <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="size-6 w-6 h-6 mb-1">
-                <path stroke-linecap="round" stroke-linejoin="round" d="M15.75 10.5V6a3.75 3.75 0 1 0-7.5 0v4.5m11.356-1.993 1.263 12c.07.665-.45 1.243-1.119 1.243H4.25a1.125 1.125 0 0 1-1.12-1.243l1.264-12A1.125 1.125 0 0 1 5.513 7.5h12.974c.576 0 1.059.435 1.119 1.007ZM8.625 10.5a.375.375 0 1 1-.75 0 .375.375 0 0 1 .75 0Zm7.5 0a.375.375 0 1 1-.75 0 .375.375 0 0 1 .75 0Z" />
-              </svg>
-            @if($this->cartCount > 0)
-                <span 
-                    x-data="{ animate: false }" 
-                    x-on:cart-updated.window="animate = true; setTimeout(() => animate = false, 1000)"
-                    :class="animate ? 'animate-bounce' : ''"
-                    class="absolute top-0 -right-5 inline-flex items-center justify-center px-2 py-1 text-xs font-bold leading-none text-white  bg-red-600 rounded-full">
+@php
+    $isActive = request()->routeIs('cart');
+@endphp
+
+<div @class(['contents' => $variant === 'mobile'])>
+    @if ($variant === 'mobile')
+        <x-shop.bottom-nav-item :href="route('cart')" icon="heroicon-o-shopping-bag"
+            :label="__('messages.navigation.cart')" :active="$isActive">
+            @if ($this->cartCount > 0)
+                <span class="absolute right-1/2 top-1.5 translate-x-4 rounded-full bg-accent px-1.5 text-[10px] font-medium leading-4 text-white tabular-nums">
                     {{ $this->cartCount }}
                 </span>
             @endif
-        </x-nav-link>
-    </div>
+        </x-shop.bottom-nav-item>
+    @else
+        <a href="{{ route('cart') }}" wire:navigate
+            aria-label="{{ __('messages.navigation.cart') }}"
+            @class([
+                'relative flex size-10 items-center justify-center rounded-full transition-colors hover:bg-ink/5',
+                'text-ink' => $isActive,
+                'text-ink-soft hover:text-ink' => ! $isActive,
+            ])>
+            <x-heroicon-o-shopping-bag class="size-[22px]" />
 
-    <!-- Mobile Cart Link -->
-    <a href="{{ route('cart') }}" class="inline-flex md:hidden lg:hidden p-2 flex-col items-center justify-center px-1 hover:bg-gray-50 {{ request()->routeIs('cart') ? 'text-[#c2a03d]' : 'text-gray-500' }} relative">
-        <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="size-6 w-6 h-6 mb-1">
-            <path stroke-linecap="round" stroke-linejoin="round" d="M15.75 10.5V6a3.75 3.75 0 1 0-7.5 0v4.5m11.356-1.993 1.263 12c.07.665-.45 1.243-1.119 1.243H4.25a1.125 1.125 0 0 1-1.12-1.243l1.264-12A1.125 1.125 0 0 1 5.513 7.5h12.974c.576 0 1.059.435 1.119 1.007ZM8.625 10.5a.375.375 0 1 1-.75 0 .375.375 0 0 1 .75 0Zm7.5 0a.375.375 0 1 1-.75 0 .375.375 0 0 1 .75 0Z" />
-          </svg>
-        <span class="text-xs">{{ __('messages.navigation.cart') }}</span>
-        @if($this->cartCount > 0)
-            <span 
-                x-data="{ animate: false }" 
-                x-on:cart-updated.window="animate = true; setTimeout(() => animate = false, 1000)"
-                :class="animate ? 'animate-bounce' : ''"
-                class="absolute top-0 right-0 inline-flex items-center justify-center px-2 py-1 text-xs font-bold leading-none text-white bg-red-600 rounded-full">
-                {{ $this->cartCount }}
-            </span>
-        @endif
-    </a>
+            @if ($this->cartCount > 0)
+                <span x-data="{ bump: false }"
+                    x-on:cart-updated.camel.window="bump = true; setTimeout(() => bump = false, 600)"
+                    :class="bump && 'scale-125'"
+                    class="absolute -right-0.5 -top-0.5 flex h-[18px] min-w-[18px] items-center justify-center rounded-full bg-accent px-1 text-[10px] font-medium text-white tabular-nums transition-transform duration-300">
+                    {{ $this->cartCount }}
+                </span>
+            @endif
+        </a>
+    @endif
 </div>

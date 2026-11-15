@@ -10,6 +10,7 @@ use Illuminate\Support\Facades\Hash;
 use Illuminate\Validation\Rules\Password;
 use Livewire\Attributes\Layout;
 use Livewire\Component;
+use RyanChandler\LaravelCloudflareTurnstile\Rules\Turnstile;
 use Stancl\Tenancy\Database\Models\Domain;
 
 #[Layout('layouts.guest')]
@@ -57,7 +58,7 @@ class Register extends Component
     protected function getTurnstileValidationRules(): array
     {
         return [
-            'cfTurnstileResponse' => ['required', 'turnstile'],
+            'cfTurnstileResponse' => ['required', new Turnstile],
         ];
     }
 

@@ -1,76 +1,48 @@
-<div class="bg-white p-4 lg:p-6 rounded-lg shadow-sm animate-fade-in">
-    <h2 class="text-2xl font-bebas mb-4 ">
-        {{ __('messages.cart.order_summary') }}
-    </h2>
-    
-    <div class="space-y-4">
-        <div class="flex justify-between">
-            <span class="text-gray-600 ">
-                {{ __('messages.cart.subtotal') }}
-            </span>
-            <span class="font-bold">{{ number_format($this->subtotal) }} Ks</span>
-        </div>
-        
-        @if($deliveryFee > 0)
-        <div class="flex justify-between">
-            <span class="text-gray-600 ">
-                {{ __('messages.cart.delivery_fee') }}
-            </span>
-            <span class="font-bold">{{ number_format($deliveryFee) }} Ks</span>
-        </div>
-        @endif
-        
-        <hr>
-        
-        <div class="flex justify-between text-lg font-bold">
-            <span class="">
-                {{ __('messages.cart.total') }}
-            </span>
-            <span>{{ number_format($this->total) }} Ks</span>
+<div>
+    <x-shop.panel :title="__('messages.cart.order_summary')" class="animate-fade-in">
+        <div class="space-y-3">
+            <x-shop.summary-row :label="__('messages.cart.subtotal')">
+                {{ number_format($this->subtotal) }} {{ __('messages.mmk') }}
+            </x-shop.summary-row>
+
+            @if ($deliveryFee > 0)
+                <x-shop.summary-row :label="__('messages.cart.delivery_fee')">
+                    {{ number_format($deliveryFee) }} {{ __('messages.mmk') }}
+                </x-shop.summary-row>
+            @endif
+
+            <x-shop.summary-row :label="__('messages.cart.total')" emphasis class="border-t border-line pt-4">
+                {{ number_format($this->total) }} <span class="font-sans text-xs text-ink-soft">{{ __('messages.mmk') }}</span>
+            </x-shop.summary-row>
         </div>
 
-        {{-- show user can earn points --}}
-        @if($this->pointsToEarn > 0)
-        <div class="bg-linear-to-r from-slate-50 to-emerald-50 border border-slate-200 rounded-lg p-4 animate-fade-in">
-            <div class="flex items-center space-x-3">
-                <div class="flex-1 min-w-0">
-                    <div class="flex items-center justify-between">
-                        <div>
-                            <p class="text-sm mb-2 font-medium text-slate-800 ">
-                                {{ __('messages.cart.earn_points_title') }}
-                            </p>
-                            <p class="text-xs text-slate-600 ">
-                                {{ __('messages.cart.earn_points_subtitle') }}
-                            </p>
-                        </div>
-                        <div class="flex items-center space-x-1 bg-slate-100 px-3 py-1 rounded-full">
-                            <span class="text-lg font-bold text-slate-700">+{{ number_format($this->pointsToEarn) }}</span>
-                            <span class="text-xs text-slate-600 ">{{ __('messages.cart.points') }}</span>
-                        </div>
+        @if ($this->pointsToEarn > 0)
+            <div class="mt-6 rounded-xl bg-accent-soft p-4">
+                <div class="flex items-start justify-between gap-4">
+                    <div>
+                        <p class="text-sm text-ink">{{ __('messages.cart.earn_points_title') }}</p>
+                        <p class="mt-1 text-xs text-ink-soft">{{ __('messages.cart.earn_points_subtitle') }}</p>
                     </div>
-                    
-                    @auth
-                        <div class="mt-2 flex items-center space-x-4 text-xs text-slate-600">
-                            <div class="flex items-center space-x-1">
-                                <span class="">{{ __('messages.cart.current_balance') }}: {{ number_format(auth()->user()->points ?? 0) }}</span>
-                            </div>
-                            <div class="flex items-center space-x-1">
-                                <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="size-4 ">
-                                    path stroke-linecap="round" stroke-linejoin="round" d="M9 12.75 11.25 15 15 9.75m-3-7.036A11.959 11.959 0 0 1 3.598 6 11.99 11.99 0 0 0 3 9.749c0 5.592 3.824 10.29 9 11.623 5.176-1.332 9-6.03 9-11.622 0-1.31-.21-2.571-.598-3.751h-.152c-3.196 0-6.1-1.248-8.25-3.285Z" />
-                                </svg>
-                                <span class="">{{ __('messages.cart.after_order') }}: {{ number_format((auth()->user()->points ?? 0) + $this->pointsToEarn) }}</span>
-                            </div>
-                        </div>
-                    @else
-                        <div class="mt-2">
-                            <a href="{{ route('login') }}" class="text-xs text-slate-700 hover:text-slate-800 underline ">
-                                {{ __('messages.cart.login_to_earn_points') }}
-                            </a>
-                        </div>
-                    @endauth
+                    <p class="shrink-0 font-display text-2xl text-accent-dark">
+                        +{{ number_format($this->pointsToEarn) }}
+                        <span class="font-sans text-[10px] uppercase tracking-[0.15em]">{{ __('messages.cart.points') }}</span>
+                    </p>
                 </div>
+
+                @auth
+                    <div class="mt-3 flex flex-wrap gap-x-4 gap-y-1 border-t border-accent/20 pt-3 text-xs text-ink-soft">
+                        <span>{{ __('messages.cart.current_balance') }}: <span class="tabular-nums">{{ number_format(auth()->user()->points ?? 0) }}</span></span>
+                        <span class="flex items-center gap-1">
+                            <x-heroicon-o-shield-check class="size-4 text-accent" />
+                            {{ __('messages.cart.after_order') }}: <span class="tabular-nums">{{ number_format((auth()->user()->points ?? 0) + $this->pointsToEarn) }}</span>
+                        </span>
+                    </div>
+                @else
+                    <a href="{{ route('login') }}" class="mt-3 inline-block text-xs text-accent-dark underline underline-offset-4">
+                        {{ __('messages.cart.login_to_earn_points') }}
+                    </a>
+                @endauth
             </div>
-        </div>
         @endif
-    </div>
+    </x-shop.panel>
 </div>

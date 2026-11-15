@@ -4,7 +4,6 @@ namespace App\Livewire;
 
 use App\Helper\UserHelper;
 use App\Models\Cart;
-use Filament\Notifications\Notification;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Cache;
 use Livewire\Attributes\Computed;
@@ -13,6 +12,11 @@ use Livewire\Component;
 
 class CartNavItem extends Component
 {
+    /**
+     * Where the cart link is rendered: "desktop" (header icon) or "mobile" (bottom tab bar).
+     */
+    public string $variant = 'desktop';
+
     #[Computed]
     public function cartCount()
     {

@@ -1,410 +1,247 @@
-<div class="lg:mt-10 p-4 md:p-6 lg:p-0 max-w-7xl mx-auto">
-    <div x-data="productDetail({{ json_encode($product) }}, {{ json_encode($product->variants) }})" class="space-y-4 grid grid-cols-1 md:grid-cols-2 gap-6">
-        <!-- Image Gallery -->
-        <div class="space-y-4">
-            <div class="aspect-w-1 aspect-h-1 w-full overflow-hidden rounded-lg relative lg:p-8 ">
-                <!-- Discount Tag -->
-                <template x-if="selectedVariant?.discount > 0 ">
-                    <div class="absolute top-5 right-5 z-10">
-                        <div
-                            class="bg-red-500 text-white px-3 py-1 rounded-full shadow-md transform transition-transform duration-300 hover:scale-105 flex items-center gap-1">
-                            <span class="font-bold " x-text="selectedVariant?.discount + ' %'">
-                            </span>
-                            <span class="text-xs ">
-                                {{ __('messages.off') }}
-                            </span>
-                        </div>
-                </template>
+@php
+    $hasDiscount = ! $product->has_variant && $product->discount > 0;
+    $minimumQuantity = max(1, (int) $product->MOQ);
+@endphp
 
-                @if ($product->discount > 0)
-                    <div class="absolute top-4 right-4  lg:top-10 lg:right-10 z-10">
-                        <div
-                            class="bg-red-500 text-white px-3 py-1 rounded-md shadow-md transform transition-transform duration-300 hover:scale-105 flex items-center gap-1">
-                            <span class="font-bold ">
-                                {{ $product->has_variant ? $product->variants()->first()->discount : $product->discount }}%
-                            </span>
-                            <span class="text-xs ">
-                                {{ __('messages.off') }}
-                            </span>
-                        </div>
-                    </div>
-                @endif
+<div class="shop-container py-8 md:py-12">
 
-                <!-- Available Stock Indicator -->
-                @if ($product->quantity > 0 && !$product->has_variant)
-                    <div class="absolute z-10 bottom-4 left-4  flex items-center justify-center">
-                        <div
-                            class="bg-gray-500 text-white px-3 py-1 rounded-md font-medium transform text-[12px] md:text-sm">
-                            {{ $product->quantity }} <span
-                                class="text-[10px] md:text-xs">{{ __('messages.in_stock') }}</span>
-                        </div>
-                    </div>
-                @endif
-                
-                <img :src="selectedVariant ? selectedVariant.product_img : currentImage"
-                    :data-src="selectedVariant ? selectedVariant.product_img : currentImage"
-                    class="h-full w-full object-cover rounded-md object-center lazyload " loading="lazy">
+    {{-- Breadcrumb --}}
+    <nav class="mb-8 flex items-center gap-2 text-xs text-muted" aria-label="Breadcrumb">
+        <a href="{{ route('welcome') }}" wire:navigate class="hover:text-ink">{{ __('messages.home') }}</a>
+        <x-heroicon-m-chevron-right class="size-3" />
+        <a href="{{ route('products') }}" wire:navigate class="hover:text-ink">{{ __('messages.navigation.products') }}</a>
+        <x-heroicon-m-chevron-right class="size-3" />
+        <span class="truncate text-ink-soft">{{ $product->name }}</span>
+    </nav>
 
+    <div x-data="productDetail(@js($product), @js($product->variants), {{ $minimumQuantity }})"
+        class="grid gap-10 lg:grid-cols-12 lg:gap-16">
+
+        {{-- Gallery --}}
+        <div class="space-y-4 lg:col-span-7">
+            <div class="relative aspect-square overflow-hidden rounded-3xl bg-accent-soft/50">
+                <img :src="activeImage" alt="{{ $product->name }}" class="size-full object-cover" />
+
+                <div class="absolute left-4 top-4 flex gap-2">
+                    @if ($product->has_variant)
+                        <template x-if="selectedVariant?.discount > 0">
+                            <x-shop.badge tone="sale"><span x-text="'−' + selectedVariant.discount + '%'"></span></x-shop.badge>
+                        </template>
+                    @elseif ($hasDiscount)
+                        <x-shop.badge tone="sale">−{{ $product->discount }}%</x-shop.badge>
+                    @endif
+                </div>
             </div>
-            @php
-                $images = collect();
-                if ($product->has_variant) {
-                    foreach ($product->variants as $variant) {
-                        $images = $images->merge($variant->getMedia('images'));
-                    }
-                }
-                $images = $images->merge($product->getMedia('images'));
-            @endphp
-            @if ($images->count() > 0)
-                <div class="flex items-center gap-4 overflow-x-auto scrollbar-hide pb-2">
-                    @foreach ($images as $media)
-                        <div class="lg:p-2 p-1 h-16 w-16 lg:h-20 lg:w-20 border flex item-center justify-center rounded object-cover cursor-pointer hover:ring-1 hover:ring-slate-500 flex-shrink-0"
-                            :class="currentImage == '{{ $media->getUrl() }}' ? 'ring-1 ring-slate-500' : ''">
-                            <img src="{{ $media->getUrl('thumb') }}" data-src="{{ $media->getUrl() }}"
-                                class="rounded w-full h-full object-cover lazyload " loading="lazy"
-                                @click="currentImage = '{{ $media->getUrl() }}'; currentImageThumb = '{{ $media->getUrl('thumb') }}'; if(!selectedVariant) { selectedVariant = null; }else { selectedVariant.product_img = '{{ $media->getUrl() }}'; selectedVariant.product_img_thumb = '{{ $media->getUrl('thumb') }}'; }">
-                        </div>
+
+            @if ($this->galleryImages->count() > 1)
+                <div class="hide-scrollbar flex gap-3 overflow-x-auto pb-1">
+                    @foreach ($this->galleryImages as $image)
+                        <button type="button" wire:key="gallery-{{ $loop->index }}"
+                            @click="activeImage = @js($image['full'])"
+                            class="size-20 shrink-0 overflow-hidden rounded-xl border-2 bg-accent-soft/50 transition-colors md:size-24"
+                            :class="activeImage === @js($image['full']) ? 'border-ink' : 'border-transparent hover:border-line'">
+                            <img src="{{ $image['thumb'] }}" alt="" loading="lazy" class="size-full object-cover">
+                        </button>
                     @endforeach
                 </div>
             @endif
         </div>
 
-        <!-- Product Details -->
-        <div class="space-y-4 ">
-            <div class="flex justify-between lg:items-center flex-col lg:flex-row">
-                <div class="">
-                    <h2 class="text-2xl lg:text-3xl font-bold text-gray-900">{{ $product->name }}</h2>
+        {{-- Details --}}
+        <div class="lg:col-span-5">
+            <div class="space-y-8 lg:sticky lg:top-28">
 
-                    <!-- Category -->
-                    <div class=" ">
-                        <div class="text-xs lg:text-xl  my-3 text-gray-500">
-                            {{ $product->brand?->name }}
-                        </div>
-                        <div class="text-sm lg:text-xl  text-gray-500">
-                            {{ $product->category?->name }}
-                        </div>
-                    </div>
+                <header class="space-y-3">
+                    @if ($product->brand)
+                        <p class="text-[11px] font-medium uppercase tracking-[0.25em] text-accent">{{ $product->brand->name }}</p>
+                    @endif
+                    <h1 class="font-display text-4xl font-medium leading-tight text-ink md:text-5xl">{{ $product->name }}</h1>
+                    @if ($product->category)
+                        <p class="text-sm text-ink-soft">{{ $product->category->name }}</p>
+                    @endif
+                </header>
 
-                </div>
-
-                <!-- Pricing -->
-                <div class="mt-4 space-y-2">
-                    <div class="flex items-baseline justify-end gap-2">
-
-                        @if ($product->has_variant)
-                            <p class="text-2xl font-bold text-gray-900"
-                                x-text="getSelectedPrice().toLocaleString() + ' Ks'"></p>
+                {{-- Price --}}
+                <div class="border-y border-line py-6">
+                    @if ($product->has_variant)
+                        <div class="flex flex-wrap items-baseline gap-x-3">
+                            <span class="text-2xl font-medium tabular-nums md:text-3xl"
+                                :class="selectedVariant?.discount > 0 ? 'text-sale' : 'text-ink'">
+                                <span x-text="formatPrice(selectedPrice())"></span>
+                                <span class="text-[0.6em] font-normal text-ink-soft">{{ __('messages.mmk') }}</span>
+                            </span>
                             <template x-if="selectedVariant?.discount > 0">
-                                <span class="text-sm text-gray-500 line-through" x-show="selectedVariant"
-                                    x-text="selectedVariant?.mmk_price.toLocaleString() + 'ks' "></span> Ks
+                                <span class="text-sm text-muted line-through tabular-nums" x-text="formatPrice(selectedVariant.mmk_price)"></span>
                             </template>
-                        @else
-                            <p class="text-2xl font-bold text-gray-900">
-                                {{ $product->discount > 0 ? number_format($product->mmk_discount_price, 0) : number_format($product->mmk_price, 0) }}
-                                Ks
-                            </p>
+                        </div>
+                    @else
+                        <x-shop.price size="lg" :amount="$hasDiscount ? $product->mmk_discount_price : $product->mmk_price"
+                            :original="$hasDiscount ? $product->mmk_price : null" />
+                        @if ($product->quantity > 0)
+                            <p class="mt-2 text-xs text-ink-soft">{{ $product->quantity }} {{ __('messages.in_stock') }}</p>
                         @endif
-
-                        @if ($product->discount > 0)
-                            <p class="text-sm  text-gray-500 line-through"> {{ number_format($product->mmk_price, 0) }}
-                                Ks</p>
-                        @endif
-
-                    </div>
-                    <template x-if="selectedVariant?.discount > 0 ">
-                        <p class="text-red-600 text-end mb-2 text-sm ">
-                            {{ __('messages.product_detail.save') }} <span x-text="selectedVariant?.discount"></span>%
-                        </p>
-                    </template>
-                    @if ($product->discount > 0)
-                        <template x-if=" {{ $product->discount > 0 }}">
-                            <p class="text-red-600 text-end mb-2 text-sm">
-                                Save <span>{{ $product->discount }}</span>%
-                            </p>
-                        </template>
                     @endif
 
-
-                    <!-- Shipping & Return Status -->
-                    <div class="mt-6 flex flex-wrap justify-end  gap-4">
-                        <div class="flex items-center">
-                            <div class="relative">
-                                @if ($product->is_shipped)
-                                    <div
-                                        class="flex items-center gap-2 px-3 py-1.5 bg-green-100 text-green-800 rounded-full">
-                                        <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" viewBox="0 0 20 20"
-                                            fill="currentColor">
-                                            <path
-                                                d="M8 16.5a1.5 1.5 0 11-3 0 1.5 1.5 0 013 0zM15 16.5a1.5 1.5 0 11-3 0 1.5 1.5 0 013 0z" />
-                                            <path
-                                                d="M3 4a1 1 0 00-1 1v10a1 1 0 001 1h1.05a2.5 2.5 0 014.9 0H10a1 1 0 001-1V5a1 1 0 00-1-1H3zM14 7h4a1 1 0 011 1v6.05A2.5 2.5 0 0115.95 16H14a1 1 0 01-1-1v-8a1 1 0 011-1z" />
-                                        </svg>
-                                        <span
-                                            class="font-medium text-sm ">{{ __('messages.product_detail.free_shipping') }}</span>
-                                    </div>
-                                @else
-                                    <div
-                                        class="flex items-center gap-2 px-3 py-1.5 bg-gray-100 text-gray-600 rounded-full">
-                                        <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" viewBox="0 0 20 20"
-                                            fill="currentColor">
-                                            <path fill-rule="evenodd"
-                                                d="M5 9V7a5 5 0 0110 0v2a2 2 0 012 2v5a2 2 0 01-2 2H5a2 2 0 01-2-2v-5a2 2 0 012-2zm8-2v2H7V7a3 3 0 016 0z"
-                                                clip-rule="evenodd" />
-                                        </svg>
-                                        <span
-                                            class="font-medium text-sm ">{{ __('messages.product_detail.pickup_only') }}</span>
-                                    </div>
-                                @endif
-                            </div>
-                        </div>
-
-                        <div class="flex items-center">
-                            <div class="relative">
-                                @if ($product->is_return)
-                                    <div
-                                        class="flex items-center gap-2 px-3 py-1.5 bg-blue-100 text-blue-800 rounded-full">
-                                        <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" viewBox="0 0 20 20"
-                                            fill="currentColor">
-                                            <path fill-rule="evenodd"
-                                                d="M4 2a1 1 0 011 1v2.101a7.002 7.002 0 0111.601 2.566 1 1 0 11-1.885.666A5.002 5.002 0 005.999 7H9a1 1 0 010 2H4a1 1 0 01-1-1V3a1 1 0 011-1zm.008 9.057a1 1 0 011.276.61A5.002 5.002 0 0014.001 13H11a1 1 0 110-2h5a1 1 0 011 1v5a1 1 0 11-2 0v-2.101a7.002 7.002 0 01-11.601-2.566 1 1 0 01.61-1.276z"
-                                                clip-rule="evenodd" />
-                                        </svg>
-                                        <span
-                                            class="font-medium text-sm ">{{ __('messages.product_detail.returns_accepted') }}</span>
-                                    </div>
-                                @else
-                                    <div
-                                        class="flex items-center gap-2 px-3 py-1.5 bg-amber-100 text-amber-800 rounded-full">
-                                        <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" viewBox="0 0 20 20"
-                                            fill="currentColor">
-                                            <path fill-rule="evenodd"
-                                                d="M8.257 3.099c.765-1.36 2.722-1.36 3.486 0l5.58 9.92c.75 1.334-.213 2.98-1.742 2.98H4.42c-1.53 0-2.493-1.646-1.743-2.98l5.58-9.92zM11 13a1 1 0 11-2 0 1 1 0 012 0zm-1-8a1 1 0 00-1 1v3a1 1 0 002 0V6a1 1 0 00-1-1z"
-                                                clip-rule="evenodd" />
-                                        </svg>
-                                        <span
-                                            class="font-medium text-sm ">{{ __('messages.product_detail.no_returns') }}</span>
-                                    </div>
-                                @endif
-                            </div>
-                        </div>
-                    </div>
-
+                    <ul class="mt-5 space-y-2 text-sm text-ink-soft">
+                        <li class="flex items-center gap-3">
+                            @if ($product->is_shipped)
+                                <x-heroicon-o-truck class="size-5 text-accent" />
+                                {{ __('messages.product_detail.free_shipping') }}
+                            @else
+                                <x-heroicon-o-building-storefront class="size-5 text-accent" />
+                                {{ __('messages.product_detail.pickup_only') }}
+                            @endif
+                        </li>
+                        <li class="flex items-center gap-3">
+                            @if ($product->is_return)
+                                <x-heroicon-o-arrow-path class="size-5 text-accent" />
+                                {{ __('messages.product_detail.returns_accepted') }}
+                            @else
+                                <x-heroicon-o-no-symbol class="size-5 text-accent" />
+                                {{ __('messages.product_detail.no_returns') }}
+                            @endif
+                        </li>
+                    </ul>
                 </div>
 
-            </div>
-            <!-- Variants Selection -->
-            @if ($product->has_variant)
-                <div class="space-y-3">
-                    <h3 class="text-sm font-medium text-gray-900 ">
-                        {{ __('messages.product_detail.available_variants') }}
-                    </h3>
-                    <div class="flex items-center  gap-2">
-                        @foreach ($product->variants as $variant)
-                            <button
-                                @click="
-                                selectedVariant = {{ json_encode($variant) }};
-                                console.log(selectedVariant);
-                                currentImage = selectedVariant.product_img;"
-                                :class="{
-                                    'ring-1 bg-slate-200  ring-slate-500': selectedVariant?.id === {{ $variant->id }},
-                                    'bg-slate-50': selectedVariant?.id === {{ $variant->id }}
-                                }"
-                                class="px-4 py-1.5 text-sm border rounded-md  hover:border-slate-400 focus:outline-none">
-                                <div class="space-y-1">
-                                    <div class="font-medium">{{ $variant->name }}</div>
-                                </div>
-                            </button>
-                        @endforeach
-                    </div>
-                </div>
-
-                <!-- Dynamic Variant Attributes -->
-                <template x-if="selectedVariant?.attribute_values">
-                    <div class="space-y-3">
-                        <h3 class="text-sm font-medium text-gray-900 ">
-                            {{ __('messages.product_detail.specifications') }}
-                        </h3>
-                        <dl class="space-y-2">
-                            <template x-for="(attribute, index) in selectedVariant.attribute_values"
-                                :key="index">
-                                <div class="flex gap-4">
-                                    {{-- <dt class="text-sm font-medium text-gray-500" x-text="attribute.attribute"></dt> --}}
-                                    <template x-for="(value, vIndex) in attribute.value" :key="vIndex">
-                                        <dd class="text-sm inline border rounded px-2 bg-slate-50 text-gray-900"
-                                            x-text="value"></dd>
-                                    </template>
-                                </div>
-                            </template>
-                        </dl>
-                    </div>
-                </template>
-
-                {{-- <!-- Variant Attributes -->
-                @if ($variant->attributeValues)
-                    <div class="space-y-3">
-                        <h3 class="text-sm font-medium text-gray-900">Specifications</h3>
-                        <dl class="space-y-2">
-                            @foreach ($variant->attributeValues as $attributeValue)
-                                <div class="flex gap-4">
-                                    <dt class="text-sm font-medium text-gray-500">
-                                        {{ $attributeValue['attribute'] }}
-                                    </dt>
-                                    @foreach ($attributeValue['value'] as $value)
-                                    <dd class="text-sm inline  border rounded px-2 bg-slate-50  text-gray-900 col-span-2">
-                                        {{ $value }}
-                                    </dd>
-                                    @endforeach
-
-                                </div>
+                {{-- Variants & specifications --}}
+                @if ($product->has_variant)
+                    <div>
+                        <x-shop.label>{{ __('messages.product_detail.available_variants') }}</x-shop.label>
+                        <div class="flex flex-wrap gap-2">
+                            @foreach ($product->variants as $variant)
+                                <button type="button" wire:key="variant-{{ $variant->id }}"
+                                    @click="selectVariant(@js($variant))"
+                                    class="rounded-full border px-4 py-2 text-sm transition-colors"
+                                    :class="selectedVariant?.id === {{ $variant->id }} ? 'border-ink bg-ink text-canvas' : 'border-line bg-surface text-ink-soft hover:border-ink/40 hover:text-ink'">
+                                    {{ $variant->name }}
+                                </button>
                             @endforeach
-                        </dl>
+                        </div>
                     </div>
-                @endif --}}
-            @else
-                <!-- Product Attributes -->
-                @if ($product->attributeValues)
-                    <div class="space-y-3">
-                        <h3 class="text-sm font-medium text-gray-900">Specifications</h3>
-                        <dl class="space-y-2">
+
+                    <template x-if="selectedVariant?.attribute_values?.length">
+                        <div>
+                            <x-shop.label>{{ __('messages.product_detail.specifications') }}</x-shop.label>
+                            <dl class="divide-y divide-line border-y border-line text-sm">
+                                <template x-for="(attribute, index) in selectedVariant.attribute_values" :key="index">
+                                    <div class="flex justify-between gap-4 py-2.5">
+                                        <dt class="text-muted" x-text="attribute.attribute"></dt>
+                                        <dd class="text-end text-ink" x-text="[].concat(attribute.value).join(', ')"></dd>
+                                    </div>
+                                </template>
+                            </dl>
+                        </div>
+                    </template>
+                @elseif (! empty($product->attributeValues))
+                    <div>
+                        <x-shop.label>{{ __('messages.product_detail.specifications') }}</x-shop.label>
+                        <dl class="divide-y divide-line border-y border-line text-sm">
                             @foreach ($product->attributeValues as $attributeValue)
-                                <div class="flex gap-4">
-                                    <dt class="text-sm font-medium text-gray-500">
-                                        {{ $attributeValue['attribute'] }}
-                                    </dt>
-                                    @foreach ($attributeValue['value'] as $value)
-                                        <dd
-                                            class="text-sm inline  border rounded px-2 bg-slate-50  text-gray-900 col-span-2">
-                                            {{ $value }}
-                                        </dd>
-                                    @endforeach
+                                <div class="flex justify-between gap-4 py-2.5">
+                                    <dt class="text-muted">{{ $attributeValue['attribute'] }}</dt>
+                                    <dd class="text-end text-ink">{{ implode(', ', (array) $attributeValue['value']) }}</dd>
                                 </div>
                             @endforeach
                         </dl>
                     </div>
                 @endif
-            @endif
 
-            <!-- MOQ -->
-            <div class="text-sm text-gray-500 ">
-                {{ __('messages.product_detail.min_order') }}: {{ $product->MOQ }}
-                {{ __('messages.product_detail.pieces') }}
-            </div>
+                {{-- Quantity & add to cart --}}
+                <div class="space-y-3">
+                    <p class="text-xs text-muted">
+                        {{ __('messages.product_detail.min_order') }}: {{ $product->MOQ }} {{ __('messages.product_detail.pieces') }}
+                    </p>
 
-            <!-- Quantity Selector and Add to Cart -->
-            <div class="flex items-center gap-4">
-                <div class="flex items-center border rounded-md">
-                    <button @click="quantity > 1 ? quantity-- : null"
-                        class="px-3 py-2 border-r hover:bg-gray-100 hover:rounded ">
-                        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="currentColor"
-                            class="size-5">
-                            <path fill-rule="evenodd"
-                                d="M4 10a.75.75 0 0 1 .75-.75h10.5a.75.75 0 0 1 0 1.5H4.75A.75.75 0 0 1 4 10Z"
-                                clip-rule="evenodd" />
-                        </svg>
-                    </button>
-                    <input type="text" x-model="quantity" min="1"
-                        class="w-16 text-center border-none focus:ring-0 focus:outline-none"
-                        :min="{{ $product->MOQ }}">
-                    <button @click="quantity++" class="px-3 py-2 border-l hover:bg-gray-100  hover:rounded">
-                        <svg xmlns="http://www.w3.org/2000/svg" wire:loading.remove wire:target="quantity"
-                            viewBox="0 0 20 20" fill="currentColor" class="size-5">
-                            <path
-                                d="M10.75 4.75a.75.75 0 0 0-1.5 0v4.5h-4.5a.75.75 0 0 0 0 1.5h4.5v4.5a.75.75 0 0 0 1.5 0v-4.5h4.5a.75.75 0 0 0 0-1.5h-4.5v-4.5Z" />
-                        </svg>
-                        <x-filament::loading-indicator wire:loading wire:target="quantity" class="h-4 w-4" />
-                    </button>
+                    <div class="flex gap-3">
+                        <div class="flex h-12 items-center rounded-full border border-line bg-surface">
+                            <button type="button" @click="decrement()" class="flex size-12 items-center justify-center text-ink-soft hover:text-ink disabled:opacity-30"
+                                :disabled="quantity <= minimumQuantity" aria-label="−">
+                                <x-heroicon-m-minus class="size-4" />
+                            </button>
+                            <input type="number" x-model.number="quantity" :min="minimumQuantity"
+                                class="w-10 border-0 bg-transparent p-0 text-center text-sm tabular-nums text-ink focus:ring-0 [appearance:textfield] [&::-webkit-inner-spin-button]:appearance-none">
+                            <button type="button" @click="increment()" class="flex size-12 items-center justify-center text-ink-soft hover:text-ink" aria-label="+">
+                                <x-heroicon-m-plus class="size-4" />
+                            </button>
+                        </div>
+
+                        <x-shop.button size="lg" class="flex-1" x-on:click="addToCart()" wire:loading.attr="disabled" wire:target="addToCart">
+                            <x-heroicon-o-shopping-bag wire:loading.remove wire:target="addToCart" class="size-5" />
+                            <x-filament::loading-indicator wire:loading wire:target="addToCart" class="size-5" />
+                            {{ __('messages.product_detail.add_to_cart') }}
+                        </x-shop.button>
+                    </div>
                 </div>
-                <button @click="addToCart" wire:loading.attr="disabled"
-                    class="w-full bg-slate-900 text-white py-2 px-4 rounded hover:bg-slate-800 transition-colors ">
-                    <span wire:loading.remove wire:target="addToCart"> {{ __('messages.product_detail.add_to_cart') }}
-                    </span>
-                    <x-filament::loading-indicator wire:loading wire:target="addToCart" class="h-4 w-4" />
-                </button>
+
+                {{-- Description --}}
+                @if ($product->description)
+                    <div class="border-t border-line pt-8 text-sm leading-7 text-ink-soft [&_a]:text-accent-dark [&_a]:underline [&_li]:ms-5 [&_ol]:list-decimal [&_p]:mb-4 [&_ul]:list-disc">
+                        {!! $product->description !!}
+                    </div>
+                @endif
             </div>
-
-            <div class="mt-10 font-thin font-sans text-xs md:text-sm  prose text-justify" style="line-height:2rem">
-                {!! $product->description !!} </div>
-
         </div>
     </div>
 
-    <!-- Reviews Section -->
-    <div class="mt-16 mb-10">
+    {{-- Reviews --}}
+    <section class="mt-24 border-t border-line pt-16">
         <livewire:product-reviews :product="$product" />
-    </div>
+    </section>
 
-    <!-- Related Products Section -->
-    @if ($this->relatedProducts->isNotEmpty())
-        <div class="mt-16 mb-10">
-            <h2 class="text-2xl font-bold text-gray-900 font-bebas  mb-6 ">
-                {{ __('messages.product_detail.related_products') }}
-            </h2>
-            <div class="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-5 gap-4">
-                @foreach ($this->relatedProducts as $product)
-                    <x-product-item :$product />
+    {{-- Related products --}}
+    <section class="mt-24">
+        @if ($this->relatedProducts->isNotEmpty())
+            <x-shop.section-heading :title="__('messages.product_detail.related_products')" />
+            <div class="grid grid-cols-2 gap-x-4 gap-y-10 md:grid-cols-3 lg:grid-cols-5 lg:gap-x-6">
+                @foreach ($this->relatedProducts as $relatedProduct)
+                    <x-shop.product-card :product="$relatedProduct" type="related" />
                 @endforeach
             </div>
-        </div>
-    @else
-        <div class="flex items-center justify-center py-12">
-            <div class="text-center space-y-4">
-                <svg class="w-16 h-16 mx-auto text-gray-400" fill="none" stroke="currentColor"
-                    viewBox="0 0 24 24">
-                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5"
-                        d="M9.879 7.519c1.171-1.025 3.071-1.025 4.242 0 1.172 1.025 1.172 2.687 0 3.712-.203.179-.43.326-.67.442-.745.361-1.45.999-1.45 1.827v.75M21 12a9 9 0 11-18 0 9 9 0 0118 0zm-9 5.25h.008v.008H12v-.008z" />
-                </svg>
-                <h3 class="text-lg font-medium text-gray-900 ">
-                    {{ __('messages.product_detail.no_related_products') }}
-                </h3>
-                <p class="text-gray-500 ">
-                    {{ __('messages.product_detail.no_related_description') }}
-                </p>
-            </div>
-        </div>
-    @endif
-</div>
+        @else
+            <x-shop.empty-state icon="heroicon-o-squares-2x2"
+                :title="__('messages.product_detail.no_related_products')"
+                :description="__('messages.product_detail.no_related_description')" />
+        @endif
+    </section>
 
-<script>
-    function productDetail(product, variants) {
-        return {
-            currentImage: product.productImg,
-            currentImageThumb: product.productImgThumb,
-            selectedVariant: variants.length > 0 ? Object.assign({
-                product_img_thumb: variants[0].product_img_thumb ?? product.productImgThumb
-            }, variants[0]) : null,
-            quantity: 1,
+    <script>
+        function productDetail(product, variants, minimumQuantity) {
+            const firstVariant = variants.length > 0 ? variants[0] : null;
 
-            addToCart() {
-                // Call Livewire method with selectedVariant
-                this.$wire.addToCart(
-                    product.id,
-                    this.selectedVariant ? this.selectedVariant.id : null,
-                    this.quantity
-                )
-            },
+            return {
+                selectedVariant: firstVariant,
+                activeImage: firstVariant?.product_img || product.productImg,
+                minimumQuantity: minimumQuantity,
+                quantity: minimumQuantity,
 
-            getSelectedPrice() {
-                if (this.selectedVariant != null) {
-                    return this.selectedVariant.discount > 0 ?
-                        parseFloat(this.selectedVariant.mmk_discount_price) :
-                        parseFloat(this.selectedVariant.mmk_price);
-                }
-                return parseFloat(product.discount > 0 ?
-                    product.mmk_discount_price :
-                    product.mmk_price);
-            },
+                selectVariant(variant) {
+                    this.selectedVariant = variant;
+                    this.activeImage = variant.product_img || product.productImg;
+                },
 
-            formatPrice(price) {
-                return new Intl.NumberFormat('en-US', {
-                    minimumFractionDigits: 0,
-                    maximumFractionDigits: 0
-                }).format(price || 0);
-            }
+                increment() {
+                    this.quantity = Number(this.quantity) + 1;
+                },
+
+                decrement() {
+                    this.quantity = Math.max(this.minimumQuantity, Number(this.quantity) - 1);
+                },
+
+                selectedPrice() {
+                    const source = this.selectedVariant ?? product;
+
+                    return parseFloat(source.discount > 0 ? source.mmk_discount_price : source.mmk_price);
+                },
+
+                formatPrice(price) {
+                    return new Intl.NumberFormat('en-US', { maximumFractionDigits: 0 }).format(price || 0);
+                },
+
+                addToCart() {
+                    this.$wire.addToCart(product.id, this.selectedVariant?.id ?? null, this.quantity);
+                },
+            };
         }
-    }
-
-    // Keep the Alpine.data registration for compatibility
-    document.addEventListener('alpine:init', () => {
-        Alpine.data('productDetail', productDetail)
-    })
-</script>
+    </script>
+</div>

@@ -1,3 +1,65 @@
+# CLAUDE.md
+
+This file provides guidance to Claude Code (claude.ai/code) when working with code in this repository.
+
+## Project Overview
+
+Multi-vendor e-commerce / POS platform for Myanmar sellers (the README calls it a "Decentralization Powerful Application"). Each seller runs a storefront on their own domain, manages it through a Filament seller panel, and platform staff manage everything through an admin panel. The UI is bilingual: English (`en`) and Myanmar (`my`). Many code comments are in Burmese.
+
+## Commands
+
+```bash
+php artisan test --compact                                   # full suite (SQLite in-memory, see phpunit.xml)
+php artisan test --compact tests/Feature/OrderComponentTest.php
+php artisan test --compact --filter=testName
+vendor/bin/pint --dirty --format agent                       # format changed PHP files
+npm run dev / npm run build                                  # Vite + Tailwind v4
+```
+
+Fresh database setup (order matters, per README):
+1. `php artisan migrate`
+2. `php artisan shield:generate --all` (generate Filament Shield permissions; the README notes "seller permission only")
+3. `php artisan db:seed`
+
+Docker: `./docker-local.sh` (local, no SSL) and `./docker-prod.sh` (production). Locally the app is normally served by Herd.
+
+## Architecture
+
+### Legacy app skeleton
+The app keeps the pre-Laravel-11 structure even though it runs Laravel 13: `app/Http/Kernel.php` (middleware aliases such as `assignGlobeScope` and `checkUserSeller`), `app/Console/Kernel.php`, `app/Exceptions/Handler.php`, and `RouteServiceProvider`. There is no `bootstrap/providers.php`, and `bootstrap/app.php` is the old style. Register middleware and providers in these classes, not with the Laravel 11+ fluent API.
+
+### Multi-tenancy (stancl/tenancy, single database)
+- Tenants are identified by domain (`InitializeTenancyByDomain`). Central domains are listed in `config/tenancy.php` (`padaung.test`, `padaung.me`, `localhost`, …).
+- All tenancy bootstrappers are disabled, so every tenant shares one database. Isolation is done by hand:
+  - `AssignGlobeScope` middleware adds a `tenant_id` global scope to `Product`, `Brand`, `Category`, `Attribute`, `Exchange` and `Payment`.
+  - Seller-owned data is filtered by `seller_id`, usually via `CheckFilamentSellerUser::getSellerId()` inside a resource's `getEloquentQuery()` (these often call `withoutGlobalScopes` too).
+- A `Tenant` maps to sellers through the `tenant_seller` pivot. `EnsureSellerBelongsToTenant` stops a seller from logging in on another seller's domain.
+- **Routing branches on the host at file-load time.** `routes/web.php` checks `in_array(request()->getHost(), config('tenancy.central_domains'))`. Central domains load `auth.php`, the landing page, partner registration, import/export routes and Telegram webhooks. Tenant domains load `routes/tenant.php` (the storefront, mostly Livewire/Volt). Put new routes in the correct branch.
+
+### Auth guards and Filament panels
+| Guard | Model | Used by |
+|---|---|---|
+| `web` | `User` | storefront customers (session) |
+| `user` | `User` | Sanctum mobile API (`routes/api.php`, prefixed `/seller/{sellerId}`) |
+| `admin` | `Admin` | Admin panel at `/oh_my_admin` (central domains only, `CentralDomainOnly` and `SuperAdmin` middleware) |
+| `seller` | `Seller` | Seller panel at `/seller` (tenant domains, subscription-gated by `RedirectIfSubscriptionExpired`) |
+
+- Panel resources live in `app/Filament/Admin/...` and `app/Filament/Seller/...` (auto-discovered). Both panels use Filament Shield for role-based permissions.
+- **Seller staff:** a staff member is also a `Seller` row with `parent_id` set. `CheckFilamentSellerUser::getSellerId()` returns the owning seller's ID, and `getStaffId()` returns the staff member's ID (stored on orders). Always use these helpers instead of `auth()->id()` inside the seller panel.
+
+### Domain logic placement
+- Status constants live in `app/Helper/` (`OrderStatus`, `PurchaseStatus`, `ReturnStatus`, etc.), not in `app/Enums`.
+- Side effects such as stock changes, totals and notifications are mostly in `app/Observers/` (`OrderObserver`, `OrderProductObserver`, `OrderReturnProductObserver`, `VariantObserver`, …). Check the observers before adding equivalent logic elsewhere.
+- Services (`app/Services/`): `ProductService`, `ReturnService`, `PointService` (loyalty points and referrals), `TelegramCommandService` (Telegram bot; orders notify through the `SendOrderTelegramNotification` job).
+- Storefront cart: the `WithCart` trait and the `app/Livewire/Cart/*` sub-components (see `CART_REFACTORING.md`).
+- Media uses Spatie Media Library (e.g. the seller `logos` collection). PDFs/receipts use spatie/laravel-pdf. Thermal printing uses escpos-php. Excel import/export uses maatwebsite/excel (`app/Exports`, `app/Imports`).
+
+### Translations
+Seller panel resources read labels from `lang/{en,my}/filament/resources/*.php`. When you add or rename a label, update both locales. Tests such as `OrderReturnResourceLocalizationTest` assert both languages.
+
+### Feature docs in the repo root
+For deeper detail on a specific feature, see `CART_REFACTORING.md`, `DELIVERY_PAGE_README.md`, `IMPORT_EXPORT_README.md`, `RETURN_ORDER_README.md` and `WHOLESALE_DOCUMENTATION.md`.
+
 <laravel-boost-guidelines>
 === foundation rules ===
 

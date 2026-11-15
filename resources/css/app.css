@@ -1,4 +1,4 @@
-@import url("https://fonts.googleapis.com/css2?family=Bebas+Neue&family=Jost:wght@300;400;500;600;700&display=swap");
+@import url("https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,500;0,600;1,500&family=Jost:wght@300;400;500;600&display=swap");
 
 @import "tailwindcss";
 
@@ -44,10 +44,43 @@
     --font-serif: ui-serif, Georgia, Cambria, "Times New Roman", Times, serif;
     --font-mono: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas,
         "Liberation Mono", "Courier New", monospace;
-    --font-bebas: "Bebas Neue", "mm", "Jost", sans-serif, "cursive";
+    --font-display: "Cormorant Garamond", "mm", ui-serif, Georgia, serif;
+    /* Legacy alias: pages not yet redesigned still use `font-bebas` for headings. */
+    --font-bebas: var(--font-display);
     --font-jost: "Jost", "mm", sans-serif;
     --font-mm: "mm", "Jost", sans-serif;
     --font-square_mm: "square_mm", "Jost", sans-serif;
+
+    /* Storefront palette — "minimal luxury" */
+    --color-canvas: #faf8f5;
+    --color-surface: #ffffff;
+    --color-ink: #1c1917;
+    --color-ink-soft: #57534e;
+    --color-muted: #a8a29e;
+    --color-line: #e7e2da;
+    --color-accent: #b08d57;
+    --color-accent-dark: #8a6d3f;
+    --color-accent-soft: #f4ede3;
+    --color-sale: #9f1239;
+
+    --animate-fade-in: fadeIn 0.4s ease-out both;
+    --animate-fade-in-up: fadeInUp 0.5s ease-out both;
+}
+
+/* Centered page column used by every storefront page. */
+@utility shop-container {
+    margin-inline: auto;
+    width: 100%;
+    max-width: 80rem;
+    padding-inline: 1rem;
+
+    @media (width >= 40rem) {
+        padding-inline: 1.5rem;
+    }
+
+    @media (width >= 64rem) {
+        padding-inline: 2rem;
+    }
 }
 
 /* Required by all components */
@@ -107,65 +140,19 @@
 
 /* Myanmar placeholder font */
 
-/* Automatic Myanmar font handling */
-html:lang(my) {
-    font-family: "mm", sans-serif;
+/*
+ * Locale fonts are set once on <body> and inherited. Element-level overrides were
+ * removed so utility classes such as `font-display` can take effect.
+ */
+html:lang(my) body {
+    font-family: var(--font-mm);
 }
 
-html:lang(my) body,
-html:lang(my) h1,
-html:lang(my) h2,
-html:lang(my) h3,
-html:lang(my) h4,
-html:lang(my) h5,
-html:lang(my) h6,
-html:lang(my) p,
-html:lang(my) span,
-html:lang(my) li,
-html:lang(my) a,
-html:lang(my) div,
-html:lang(my) button,
-html:lang(my) input,
-html:lang(my) textarea,
-html:lang(my) select,
-html:lang(my) label,
-html:lang(my) th,
-html:lang(my) td {
-    font-family: "mm", "Jost", sans-serif;
-}
-
-/* Automatic English font handling */
-html:lang(en) {
-    font-family: "mm", "Jost", sans-serif;
-}
-
-html:lang(en) body,
-html:lang(en) h1,
-html:lang(en) h2,
-html:lang(en) h3,
-html:lang(en) h4,
-html:lang(en) h5,
-html:lang(en) h6,
-html:lang(en) p,
-html:lang(en) span,
-html:lang(en) li,
-html:lang(en) a,
-html:lang(en) div,
-html:lang(en) button,
-html:lang(en) input,
-html:lang(en) textarea,
-html:lang(en) select,
-html:lang(en) label,
-html:lang(en) th,
-html:lang(en) td {
-    font-family: "Jost", "mm", sans-serif;
+html:lang(en) body {
+    font-family: var(--font-jost);
 }
 
 /* Override for English text that should stay in English font */
-html:lang(my) .font-bebas {
-    font-family: "Bebas Neue", "jost", "mm", sans-serif !important;
-}
-
 html:lang(my) .font-sans {
     font-family: "Jost", sans-serif !important;
 }

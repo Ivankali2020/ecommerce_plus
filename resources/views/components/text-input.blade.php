@@ -4,12 +4,12 @@
     <input
         :type="type === 'password' ? (show ? 'text' : 'password') : type"
         @disabled($disabled)
-        {{ $attributes->merge(['class' => 'border border-gray-300 px-3 py-2 dark:border-gray-700 dark:bg-gray-900 dark:text-gray-300 focus:border-slate-500 dark:focus:border-slate-600 focus:outline-none focus:ring-0 rounded-md w-full']) }}
+        {{ $attributes->merge(['class' => 'w-full rounded-xl border border-line bg-surface px-4 py-2.5 text-sm text-ink placeholder:text-muted transition-colors focus:border-ink/50 focus:outline-none focus:ring-0']) }}
     >
     @if ($type === 'password')
         <button type="button"
             @click="show = !show"
-            class="absolute inset-y-0 right-0 z-10 px-3 flex items-center text-gray-400"
+            class="absolute inset-y-0 right-0 z-10 flex items-center px-3 text-muted hover:text-ink"
             tabindex="-1"
         >
             <svg x-show="!show" xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
