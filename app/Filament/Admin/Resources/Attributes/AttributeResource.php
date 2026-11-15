@@ -16,6 +16,7 @@ use Filament\Actions\ViewAction;
 use Filament\Facades\Filament;
 use Filament\Forms\Components\ColorPicker;
 use Filament\Forms\Components\Repeater;
+use Filament\Forms\Components\Repeater\TableColumn;
 use Filament\Forms\Components\Select;
 use Filament\Forms\Components\TextInput;
 use Filament\Resources\Resource;
@@ -84,17 +85,18 @@ class AttributeResource extends Resource
 
                         ])->columnSpan(['default' => 1, 'lg' => 1]),
 
-                        Section::make([
                             Repeater::make('values')
-                                ->relationship('values')->reorderable()
+                                // ->table([
+                                //     TableColumn::make('color_code'),
+                                //     TableColumn::make('value'),
+                                // ])
                                 ->label(__('filament/resources/attribute-resource.form.values'))
+                                ->relationship('values')->reorderable(false)
+                                ->compact()
                                 ->schema([
 
                                     ColorPicker::make('color_code')
-                                        ->live()->label(__('filament/resources/attribute-resource.form.color_code'))
-                                        ->afterStateUpdated(function ($state, Set $set) {
-                                            //  $response = Http::get('https://api.color.pizza/v1/?values='.Str::remove('#',$state)); will be update in v2
-                                        })
+                                        ->label(__('filament/resources/attribute-resource.form.color_code'))
                                         ->visible(function (Get $get) {
                                             // Try multiple approaches to access parent state
                                             $type = $get('../../type') ?? $get('../type') ?? $get('type');
@@ -103,17 +105,6 @@ class AttributeResource extends Resource
                                         })
                                         ->required(),
 
-                                    // TextInput::make('value')
-                                    //     ->live()->label(__('filament/resources/attribute-resource.form.value'))
-                                    //     ->placeholder(fn() => $loading ? 'Searching Color Name' : '')
-                                    //     ->visible(function (Get $get) {
-                                    //         // Try multiple approaches to access parent state
-                                    //         $type = $get('../../type') ?? $get('../type') ?? $get('type');
-
-                                    //         return $type !== AttributeType::Color;
-                                    //     })
-                                    //     ->required(),
-
                                     TextInput::make('value')
                                         // ->visible(function (Get $get) {
                                         //     // Try multiple approaches to access parent state
@@ -121,18 +112,17 @@ class AttributeResource extends Resource
 
                                         //     return $type === AttributeType::Text;
                                         // })
-                                        ->helperText('ဉပမာ - Sizes ဆိုရင် (xl,l,md), Colors ဆိုရင် (red,green,...), ...')
+                                        // ->helperText('ဉပမာ - Sizes ဆိုရင် (xl,l,md), Colors ဆိုရင် (red,green,...), ...')
                                         ->required()
                                         ->maxLength(255)
                                         ->label(__('filament/resources/attribute-resource.form.value')),
 
                                 ])
-                                ->columns(2),
-                        ])
-                            ->columnSpan(['default' => 1, 'lg' => 1])
-                            ->hidden(fn(Get $get) => blank($get('type'))),
-                            
-                    ])->columnSpanFull()                ,
+                                ->columns(2)
+                                ->hidden(fn(Get $get) => blank($get('type'))),
+
+
+                    ])->columnSpanFull(),
             ]);
     }
 
