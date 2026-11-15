@@ -6,6 +6,7 @@ use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Validation\Rules;
 use Livewire\Attributes\Layout;
+use RyanChandler\LaravelCloudflareTurnstile\Rules\Turnstile;
 use Livewire\Volt\Component;
 use App\Models\Tenant;
 use App\Models\Seller;
@@ -34,7 +35,7 @@ new #[Layout('layouts.guest')] class extends Component
     protected function getTurnstileValidationRules(): array
     {
         return [
-            'cfTurnstileResponse' => ['required', 'turnstile'],
+            'cfTurnstileResponse' => ['required', new Turnstile],
         ];
     }
 

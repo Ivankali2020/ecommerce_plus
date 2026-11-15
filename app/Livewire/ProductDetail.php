@@ -4,6 +4,7 @@ namespace App\Livewire;
 
 use App\Models\Product;
 use App\Traits\WithCart;
+use Illuminate\Support\Collection;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Cache;
 use Livewire\Attributes\Computed;
@@ -35,6 +36,27 @@ class ProductDetail extends Component
         }
 
         $this->type = $type;
+    }
+
+    /**
+     * All gallery images: every variant's images first, then the product's own.
+     *
+     * @return Collection<int, array{full: string, thumb: string}>
+     */
+    #[Computed]
+    public function galleryImages(): Collection
+    {
+        $media = $this->product->has_variant
+            ? $this->product->variants->flatMap(fn ($variant) => $variant->getMedia('images'))
+            : collect();
+
+        return $media
+            ->merge($this->product->getMedia('images'))
+            ->map(fn ($image): array => [
+                'full' => $image->getUrl(),
+                'thumb' => $image->getUrl('thumb'),
+            ])
+            ->values();
     }
 
     #[Computed]
@@ -79,9 +101,7 @@ class ProductDetail extends Component
                 'image' => $this->product->productImg ?? $this->product->getFirstMediaUrl('images'),
                 'url' => route('product', $this->product),
                 'type' => 'product',
-                'price' => $this->product->has_variant
-                    ? $this->product->variants->first()->mmk_price
-                    : $this->product->mmk_price,
+                'price' => $this->product->variants->first()?->mmk_price ?? $this->product->mmk_price,
                 'currency' => 'MMK',
             ],
         ]);
